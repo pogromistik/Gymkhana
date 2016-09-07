@@ -6,4 +6,7 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
     ],
+    'aliases' => [
+        '@pictures' => 'C:\xampp\htdocs\gymkhana74\pictures'
+    ]
 ];
