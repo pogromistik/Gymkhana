@@ -37,7 +37,7 @@ $this->title = 'Главная страница'
 			]);
 			?>
 			<div class="pt-20">
-				<table class="table">
+				<table class="table picture-preview">
 					<thead>
 					<tr>
 						<th>Изображение</th>
@@ -94,7 +94,7 @@ $this->title = 'Главная страница'
 			?>
 
 			<div class="pt-20">
-				<table class="table">
+				<table class="table picture-preview">
 					<thead>
 					<tr>
 						<th>Изображение</th>
@@ -150,7 +150,7 @@ $this->title = 'Главная страница'
 			]);
 			?>
 			<div class="pt-20">
-				<table class="table">
+				<table class="table picture-preview">
 					<thead>
 					<tr>
 						<th>Изображение</th>
