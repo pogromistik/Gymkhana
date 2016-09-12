@@ -6,19 +6,31 @@ use common\models\MainPhoto;
 use common\models\search\LinkSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
+use dosamigos\editable\EditableAction;
 
 /**
  * Site controller
  */
 class MainController extends BaseController
 {
+	public function actions()
+	{
+		return [
+			'update' => [
+				'class' => EditableAction::className(),
+				'modelClass' => MainPhoto::className(),
+				'forceCreate' => false
+			]
+		];
+	}
+
 	public function actionIndex()
 	{
 		$this->can('admin');
 
-		$sliders = MainPhoto::findAll(['type' => MainPhoto::PICTURES_SLIDER]);
-		$leftMenu = MainPhoto::findAll(['type' => MainPhoto::PICTURES_LEFT_MENU]);
-		$bottomMenu = MainPhoto::findAll(['type' => MainPhoto::PICTURES_BOTTOM_MENU]);
+		$sliders = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_SLIDER])->orderBy(['sort' => SORT_ASC])->all();
+		$leftMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_LEFT_MENU])->orderBy(['sort' => SORT_ASC])->all();
+		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->orderBy(['sort' => SORT_ASC])->all();
 
 		$searchModel = new LinkSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
