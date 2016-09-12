@@ -7,6 +7,7 @@ return [
         ],
     ],
     'aliases' => [
-        '@pictures' => 'C:\xampp\htdocs\gymkhana74\pictures'
+        '@pictures' => 'C:\xampp\htdocs\gymkhana74\pictures',
+        '@picturesView' => 'C:\xampp\htdocs\gymkhana74\pictures'
     ]
 ];
