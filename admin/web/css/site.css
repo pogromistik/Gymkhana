@@ -113,3 +113,7 @@ a.desc:after {
 img {
     max-width: 100%;
 }
+
+.picture-preview img {
+    max-width: 300px;
+}
