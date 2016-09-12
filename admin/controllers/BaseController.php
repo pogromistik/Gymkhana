@@ -17,14 +17,18 @@ class BaseController extends Controller
 	{
 		$this->can('admin');
 		
-		$fileName = 'file';
+		$fileName = 'attachment_48';
 		if (!file_exists(\Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type])) {
 			mkdir(\Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type]);
 		}
 		$uploadPath = \Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type];
-
+		//echo \yii\helpers\Json::encode($_FILES);
+		//return var_dump(json_encode($_FILES));
 		if (isset($_FILES[$fileName])) {
-			$file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+			$file = \yii\web\UploadedFile::getInstancesByName($fileName);
+
+			$file = $file[0];
 
 			$path_parts = pathinfo($file->name);
 			$fileName = microtime(true).'.'.$path_parts['extension'];
@@ -36,8 +40,14 @@ class BaseController extends Controller
 				$model->type = $type;
 				$model->fileName = $fileName;
 				$model->save();
-				echo \yii\helpers\Json::encode($file);
+				//echo \yii\helpers\Json::encode($_FILES);
+				return true;
+			} else {
+				\yii\helpers\Json::encode($file->error);
+				return false;
 			}
+		} else {
+			return 123;
 		}
 
 		return true;

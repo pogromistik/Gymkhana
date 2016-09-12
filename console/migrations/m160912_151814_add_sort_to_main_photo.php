@@ -1,29 +1,17 @@
 <?php
 
 use yii\db\Migration;
+use common\models\MainPhoto;
 
 class m160912_151814_add_sort_to_main_photo extends Migration
 {
     public function up()
     {
-
+        $this->addColumn(MainPhoto::tableName(), 'sort', $this->integer());
     }
 
     public function down()
     {
-        echo "m160912_151814_add_sort_to_main_photo cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn(MainPhoto::tableName(), 'sort');
     }
-
-    /*
-    // Use safeUp/safeDown to run migration code within a transaction
-    public function safeUp()
-    {
-    }
-
-    public function safeDown()
-    {
-    }
-    */
 }
