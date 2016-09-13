@@ -54,7 +54,8 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => array_filter([
-            ['label' => 'Главная страница', 'url' => ['/main/index']]
+            ['label' => 'Главная страница', 'url' => ['/main/index']],
+            ['label' => 'Новости', 'url' => ['/news/index']]
         ]),
     ]);
     NavBar::end();
