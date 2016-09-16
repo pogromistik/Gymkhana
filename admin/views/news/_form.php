@@ -16,8 +16,7 @@ use dosamigos\ckeditor\CKEditor;
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
 	<?= $form->field($model, 'previewText')->widget(CKEditor::className(), [
-		'options' => ['rows' => 6],
-		'preset'  => 'full'
+		'preset'  => 'basic'
 	]) ?>
 
 	<?= $form->field($model, 'isPublish')->checkbox() ?>
@@ -25,7 +24,7 @@ use dosamigos\ckeditor\CKEditor;
 	<?= $form->field($model, 'file')->fileInput() ?>
 
 	<div class="form-group">
-		<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 	</div>
 
 	<?php ActiveForm::end(); ?>
