@@ -38,7 +38,7 @@ class BaseController extends Controller
 						$model = new MainPhoto();
 				}
 				$model->type = $type;
-				$model->fileName = $fileName;
+				$model->fileName = '/' . MainPhoto::$filePath[$type] . '/' . $fileName;
 				$model->save();
 				//echo \yii\helpers\Json::encode($_FILES);
 				return true;
