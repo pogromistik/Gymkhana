@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\HelpModel;
 use common\models\Link;
 use common\models\MainPhoto;
 use common\models\search\LinkSearch;
@@ -52,11 +53,7 @@ class MainController extends BaseController
 		if (!$picture) {
 			throw new NotFoundHttpException('Изображение не найдено');
 		}
-		$filePath = Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$picture->type] . '/' . $picture->fileName;
-		if (file_exists($filePath)) {
-			unlink($filePath);
-		}
-		$picture->delete();
+		HelpModel::deletePhoto($picture, $picture->fileName);
 
 		return $this->redirect(['/main/index']);
 	}

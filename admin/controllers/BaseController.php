@@ -16,7 +16,7 @@ class BaseController extends Controller
 	public function actionUploadPictures($type, $modelName)
 	{
 		$this->can('admin');
-		
+
 		$fileName = 'attachment_48';
 		if (!file_exists(\Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type])) {
 			mkdir(\Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type]);
@@ -31,7 +31,7 @@ class BaseController extends Controller
 			$file = $file[0];
 
 			$path_parts = pathinfo($file->name);
-			$fileName = microtime(true).'.'.$path_parts['extension'];
+			$fileName = microtime(true) . '.' . $path_parts['extension'];
 			if ($file->saveAs($uploadPath . '/' . $fileName)) {
 				switch ($modelName) {
 					case HelpModel::MODEL_MAIN_PHOTO:
@@ -40,10 +40,12 @@ class BaseController extends Controller
 				$model->type = $type;
 				$model->fileName = '/' . MainPhoto::$filePath[$type] . '/' . $fileName;
 				$model->save();
+
 				//echo \yii\helpers\Json::encode($_FILES);
 				return true;
 			} else {
 				\yii\helpers\Json::encode($file->error);
+
 				return false;
 			}
 		} else {
@@ -55,7 +57,8 @@ class BaseController extends Controller
 
 	public function actionDownload($id, $dir, $name)
 	{
-		$file = Yii::getAlias($dir.''.$id);
+		$file = Yii::getAlias($dir . '' . $id);
+
 		return Yii::$app->response->sendFile($file, $name);
 	}
 }

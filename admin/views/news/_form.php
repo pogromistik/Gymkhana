@@ -21,6 +21,12 @@ use dosamigos\ckeditor\CKEditor;
 
 	<?= $form->field($model, 'isPublish')->checkbox() ?>
 
+	<?php if($model->previewImage) {
+		?>
+		<?= Html::img(Yii::getAlias('@picturesView').$model->previewImage, ['class' => 'previewImg']) ?>
+		<?php
+	}
+	?>
 	<?= $form->field($model, 'file')->fileInput() ?>
 
 	<div class="form-group">
