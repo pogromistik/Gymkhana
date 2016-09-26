@@ -55,7 +55,18 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => array_filter([
             ['label' => 'Главная страница', 'url' => ['/main/index']],
-            ['label' => 'Новости', 'url' => ['/news/index']]
+            ['label' => 'Новости', 'url' => ['/news/index']],
+            [
+                'label' => 'О проекте',
+                'items' => [
+                    ['label' => 'О проекте', 'url' => ['/about/index']],
+                    ['label' => 'Правила', 'url' => ['/about/regular']],
+                    ['label' => 'Маршалы', 'url' => ['/about/marshals']],
+                    ['label' => 'Помочь проекту', 'url' => ['/about/help']],
+                    ['label' => 'Адреса', 'url' => ['/about/address']],
+                    ['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
+                ],
+            ],
         ]),
     ]);
     NavBar::end();

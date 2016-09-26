@@ -13,6 +13,7 @@ class HelpModel extends Model
 {
 	const MODEL_MAIN_PHOTO = 1;
 	const MODEL_NEWS_SLIDER = 2;
+	const MODEL_ABOUT_SLIDER = 3;
 
 	public static function savePreviewPhoto($model, $folder)
 	{
@@ -33,6 +34,12 @@ class HelpModel extends Model
 	{
 		$dir = \Yii::getAlias('@pictures') . '/' . $folder . '/' . $folderId . '/slider';
 		if (!file_exists($dir)) {
+			if (!file_exists(\Yii::getAlias('@pictures') . '/' . $folder)) {
+				mkdir(\Yii::getAlias('@pictures') . '/' . $folder);
+			}
+			if (!file_exists(\Yii::getAlias('@pictures') . '/' . $folder . '/' . $folderId)) {
+				mkdir(\Yii::getAlias('@pictures') . '/' . $folder . '/' . $folderId);
+			}
 			mkdir($dir);
 		}
 
@@ -44,6 +51,11 @@ class HelpModel extends Model
 						$slider = new NewsSlider();
 						$slider->newsId = $model->newsId;
 						$slider->blockId = $model->id;
+						break;
+					case self::MODEL_ABOUT_SLIDER:
+						$slider = new AboutSlider();
+						$slider->blockId = $model->id;
+						break;
 				}
 
 				$fileName = microtime(true) . '.' . $file->extension;
