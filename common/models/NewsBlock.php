@@ -35,8 +35,8 @@ class NewsBlock extends \yii\db\ActiveRecord
     {
         return [
             [['newsId'], 'required'],
-            [['newsId', 'sliderText', 'sort'], 'integer'],
-            [['text'], 'string'],
+            [['newsId', 'sort'], 'integer'],
+            [['text', 'sliderText'], 'string'],
             [['newsId'], 'exist', 'skipOnError' => true, 'targetClass' => News::className(), 'targetAttribute' => ['newsId' => 'id']],
             [['slider'], 'file', 'extensions' => 'png, jpg', 'maxFiles' => 10]
         ];

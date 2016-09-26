@@ -10,7 +10,7 @@ class m160914_150332_add_news_block_table extends Migration
             'id'         => $this->primaryKey(),
             'newsId'     => $this->integer()->notNull(),
             'text'       => $this->text(),
-            'sliderText' => $this->integer(),
+            'sliderText' => $this->string(),
             'sort'       => $this->integer()
         ]);
         $this->addForeignKey('news_block_newsId', 'news_block', 'newsId', 'news', 'id');

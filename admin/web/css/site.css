@@ -117,3 +117,6 @@ img {
 .picture-preview img {
     max-width: 300px;
 }
+.previewImg {
+    max-width: 100px;
+}

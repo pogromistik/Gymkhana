@@ -79,6 +79,6 @@ class News extends \yii\db\ActiveRecord
 
     public function getNewsBlock()
     {
-        $this->hasMany(NewsBlock::tableName(), ['newsId' => 'id']);
+        return $this->hasMany(NewsBlock::className(), ['newsId' => 'id']);
     }
 }

@@ -162,7 +162,7 @@ $this->title = 'Главная страница'
 					<?php
 					foreach ($bottomMenu as $picture) { ?>
 						<tr>
-							<td><?= Html::img(Yii::getAlias('@picturesView') . $picture->fileName) ?></td>
+							<td><?= Html::img(Yii::getAlias('@picturesView') . '/' . MainPhoto::$filePath[$picture->type] . '/' . $picture->fileName) ?></td>
 							<td><?= Editable::widget([
 									'name'          => 'sort',
 									'value'         => $picture->sort,

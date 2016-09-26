@@ -53,4 +53,16 @@ class HelpModel extends Model
 			}
 		}
 	}
+	
+	public static function deletePhoto($picture, $fileName)
+	{
+		$filePath = Yii::getAlias('@pictures') . '/' . $fileName;
+		if (file_exists($filePath)) {
+			unlink($filePath);
+			$picture->delete();
+			
+			return true;
+		}
+		return false;
+	}
 }
