@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use common\models\AboutSlider;
 use common\models\HelpModel;
+use common\models\Regular;
+use common\models\search\RegularSearch;
 use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\AboutBlock;
@@ -152,5 +154,57 @@ class AboutController extends BaseController
         HelpModel::deletePhoto($picture, $picture->picture);
 
         return $this->redirect(['update', 'id' => $modelId]);
+    }
+    
+    public function actionRegular()
+    {
+        $this->can('admin');
+        
+        $searchModel = new RegularSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('regular', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionCreateRegular()
+    {
+        $model = new Regular();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['update-regular', 'id' => $model->id]);
+        } else {
+            return $this->render('create-regular', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionUpdateRegular($id)
+    {
+        if (($model = Regular::findOne($id)) !== null) {
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update-regular', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionDeleteRegular($id)
+    {
+        if (($model = Regular::findOne($id)) !== null) {
+            $model->delete();
+            return $this->redirect(['regular']);
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }
