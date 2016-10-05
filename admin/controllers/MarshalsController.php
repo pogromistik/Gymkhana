@@ -35,6 +35,8 @@ class MarshalsController extends BaseController
      */
     public function actionIndex()
     {
+        $this->can('admin');
+        
         $searchModel = new MarshalSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -51,6 +53,8 @@ class MarshalsController extends BaseController
      */
     public function actionView($id)
     {
+        $this->can('admin');
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -63,6 +67,8 @@ class MarshalsController extends BaseController
      */
     public function actionCreate()
     {
+        $this->can('admin');
+        
         $model = new Marshal();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -85,6 +91,8 @@ class MarshalsController extends BaseController
      */
     public function actionUpdate($id)
     {
+        $this->can('admin');
+        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -107,6 +115,8 @@ class MarshalsController extends BaseController
      */
     public function actionDelete($id)
     {
+        $this->can('admin');
+        
         $model = $this->findModel($id);
         if ($model->photo) {
             HelpModel::deleteFile($model->photo);

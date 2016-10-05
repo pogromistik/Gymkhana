@@ -7,6 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Marshal */
 
 $this->title = 'Добавить маршала';
+$this->params['breadcrumbs'][] = ['label' => 'О проекте'];
 $this->params['breadcrumbs'][] = ['label' => 'Маршалы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

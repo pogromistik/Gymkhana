@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\AboutSlider;
+use common\models\Contacts;
 use common\models\HelpModel;
 use common\models\Regular;
 use common\models\search\RegularSearch;
@@ -171,6 +172,8 @@ class AboutController extends BaseController
 
     public function actionCreateRegular()
     {
+        $this->can('admin');
+
         $model = new Regular();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -184,6 +187,8 @@ class AboutController extends BaseController
 
     public function actionUpdateRegular($id)
     {
+        $this->can('admin');
+
         if (($model = Regular::findOne($id)) !== null) {
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -200,11 +205,28 @@ class AboutController extends BaseController
 
     public function actionDeleteRegular($id)
     {
+        $this->can('admin');
+
         if (($model = Regular::findOne($id)) !== null) {
             $model->delete();
             return $this->redirect(['regular']);
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    public function actionContacts()
+    {
+        $this->can('admin');
+        
+        if (!$model = Contacts::find()->one()) {
+            $model = new Contacts();
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['contacts']);
+        }
+
+        return $this->render('contacts', ['model' => $model]);
     }
 }
