@@ -18,10 +18,10 @@ class BaseController extends Controller
 		$this->can('admin');
 
 		$fileName = 'attachment_48';
-		if (!file_exists(\Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type])) {
-			mkdir(\Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type]);
+		if (!file_exists(\Yii::getAlias('@files') . '/' . MainPhoto::$filePath[$type])) {
+			mkdir(\Yii::getAlias('@files') . '/' . MainPhoto::$filePath[$type]);
 		}
-		$uploadPath = \Yii::getAlias('@pictures') . '/' . MainPhoto::$filePath[$type];
+		$uploadPath = \Yii::getAlias('@files') . '/' . MainPhoto::$filePath[$type];
 		//echo \yii\helpers\Json::encode($_FILES);
 		//return var_dump(json_encode($_FILES));
 		if (isset($_FILES[$fileName])) {

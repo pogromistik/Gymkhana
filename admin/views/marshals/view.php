@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'photo',
 				'format'    => 'raw',
-				'value'     => Html::img(Yii::getAlias('@picturesView') . $model->photo)
+				'value'     => Html::img(Yii::getAlias('@filesView') . $model->photo)
 			],
 			'text1:ntext',
 			'text2:ntext',
@@ -43,12 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'motorcyclePhoto',
 				'format'    => 'raw',
-				'value'     => Html::img(Yii::getAlias('@picturesView') . $model->motorcyclePhoto)
+				'value'     => Html::img(Yii::getAlias('@filesView') . $model->motorcyclePhoto)
 			],
 			[
 				'attribute' => 'gif',
 				'format'    => 'raw',
-				'value'     => Html::img(Yii::getAlias('@picturesView') . $model->gif)
+				'value'     => Html::img(Yii::getAlias('@filesView') . $model->gif)
 			],
 			'link',
 		],
