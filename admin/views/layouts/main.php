@@ -61,7 +61,7 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'О проекте', 'url' => ['/about/index']],
                     ['label' => 'Правила', 'url' => ['/about/regular']],
-                    ['label' => 'Маршалы', 'url' => ['/about/marshals']],
+                    ['label' => 'Маршалы', 'url' => ['/marshals/index']],
                     ['label' => 'Помочь проекту', 'url' => ['/about/help']],
                     ['label' => 'Адреса', 'url' => ['/about/address']],
                     ['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
