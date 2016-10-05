@@ -62,9 +62,15 @@ AppAsset::register($this);
                     ['label' => 'О проекте', 'url' => ['/about/index']],
                     ['label' => 'Правила', 'url' => ['/about/regular']],
                     ['label' => 'Маршалы', 'url' => ['/marshals/index']],
-                    ['label' => 'Помочь проекту', 'url' => ['/about/help']],
-                    ['label' => 'Адреса', 'url' => ['/about/address']],
+                    ['label' => 'Контакты (помочь проекту + адреса)', 'url' => ['/about/contacts']],
                     ['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
+                ],
+            ],
+            [
+                'label' => 'Дополнительные страницы',
+                'items' => [
+                    ['label' => 'Страница в разработке', 'url' => ['/about/index']],
+                    ['label' => 'Страница не найдена', 'url' => ['/about/regular']]
                 ],
             ],
         ]),

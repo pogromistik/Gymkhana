@@ -8,6 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Маршалы';
+$this->params['breadcrumbs'][] = ['label' => 'О проекте'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="marshal-index">

@@ -7,6 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Marshal */
 
 $this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'О проекте'];
 $this->params['breadcrumbs'][] = ['label' => 'Маршалы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
