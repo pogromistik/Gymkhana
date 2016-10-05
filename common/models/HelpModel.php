@@ -17,7 +17,7 @@ class HelpModel extends Model
 
 	public static function savePreviewPhoto($model, $folder)
 	{
-		$dir = \Yii::getAlias('@pictures') . '/' . $folder . '/' . $model->id;
+		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
 		if (!file_exists($dir)) {
 			mkdir($dir);
 		}
@@ -32,10 +32,10 @@ class HelpModel extends Model
 
 	public static function saveOtherPhoto($model, $folder, $varName, $fileVar)
 	{
-		$dir = \Yii::getAlias('@pictures') . '/' . $folder . '/' . $model->id;
+		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
 		if (!file_exists($dir)) {
-			if (!file_exists(\Yii::getAlias('@pictures') . '/' . $folder)) {
-				mkdir(\Yii::getAlias('@pictures') . '/' . $folder);
+			if (!file_exists(\Yii::getAlias('@files') . '/' . $folder)) {
+				mkdir(\Yii::getAlias('@files') . '/' . $folder);
 			}
 			mkdir($dir);
 		}
@@ -50,13 +50,13 @@ class HelpModel extends Model
 
 	public static function saveSliderPhotos($model, $folder, $folderId, $typeModel)
 	{
-		$dir = \Yii::getAlias('@pictures') . '/' . $folder . '/' . $folderId . '/slider';
+		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $folderId . '/slider';
 		if (!file_exists($dir)) {
-			if (!file_exists(\Yii::getAlias('@pictures') . '/' . $folder)) {
-				mkdir(\Yii::getAlias('@pictures') . '/' . $folder);
+			if (!file_exists(\Yii::getAlias('@files') . '/' . $folder)) {
+				mkdir(\Yii::getAlias('@files') . '/' . $folder);
 			}
-			if (!file_exists(\Yii::getAlias('@pictures') . '/' . $folder . '/' . $folderId)) {
-				mkdir(\Yii::getAlias('@pictures') . '/' . $folder . '/' . $folderId);
+			if (!file_exists(\Yii::getAlias('@files') . '/' . $folder . '/' . $folderId)) {
+				mkdir(\Yii::getAlias('@files') . '/' . $folder . '/' . $folderId);
 			}
 			mkdir($dir);
 		}
@@ -86,7 +86,7 @@ class HelpModel extends Model
 
 	public static function deletePhoto($picture, $fileName)
 	{
-		$filePath = Yii::getAlias('@pictures') . '/' . $fileName;
+		$filePath = Yii::getAlias('@files') . '/' . $fileName;
 		if (file_exists($filePath)) {
 			unlink($filePath);
 			$picture->delete();
@@ -98,7 +98,7 @@ class HelpModel extends Model
 
 	public static function deleteFile($fileName)
 	{
-		$filePath = Yii::getAlias('@pictures') . '/' . $fileName;
+		$filePath = Yii::getAlias('@files') . '/' . $fileName;
 		if (file_exists($filePath)) {
 			unlink($filePath);
 

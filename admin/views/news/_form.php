@@ -23,7 +23,7 @@ use dosamigos\ckeditor\CKEditor;
 
 	<?php if($model->previewImage) {
 		?>
-		<?= Html::img(Yii::getAlias('@picturesView').$model->previewImage, ['class' => 'previewImg']) ?>
+		<?= Html::img(Yii::getAlias('@filesView').$model->previewImage, ['class' => 'previewImg']) ?>
 		<?php
 	}
 	?>
