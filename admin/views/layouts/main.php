@@ -66,13 +66,7 @@ AppAsset::register($this);
                     ['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
                 ],
             ],
-            [
-                'label' => 'Дополнительные страницы',
-                'items' => [
-                    ['label' => 'Страница в разработке', 'url' => ['/about/index']],
-                    ['label' => 'Страница не найдена', 'url' => ['/about/regular']]
-                ],
-            ],
+            ['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']]
         ]),
     ]);
     NavBar::end();
