@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'gif',
 				'format'    => 'raw',
-				'value'     => Html::img(Yii::getAlias('@filesView') . $model->gif)
+				'value'     => $model->gif ? Html::img(Yii::getAlias('@filesView') . $model->gif) : null
 			],
 			'link',
 		],
