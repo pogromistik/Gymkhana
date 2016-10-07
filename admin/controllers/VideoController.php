@@ -7,14 +7,13 @@ use common\models\VideoType;
 use Yii;
 use common\models\Video;
 use common\models\search\VideoSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * VideoController implements the CRUD actions for Video model.
  */
-class VideoController extends Controller
+class VideoController extends BaseController
 {
 	/**
 	 * @inheritdoc
@@ -37,6 +36,8 @@ class VideoController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->can('admin');
+		
 		$searchModel = new VideoSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -51,6 +52,8 @@ class VideoController extends Controller
 	
 	public function actionVideoType($typeId = null)
 	{
+		$this->can('admin');
+		
 		if ($typeId) {
 			$type = VideoType::findOne($typeId);
 			if (!$type) {
@@ -81,6 +84,8 @@ class VideoController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$this->can('admin');
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -93,6 +98,8 @@ class VideoController extends Controller
 	 */
 	public function actionCreate()
 	{
+		$this->can('admin');
+		
 		$model = new Video();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -114,6 +121,8 @@ class VideoController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+		$this->can('admin');
+		
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
