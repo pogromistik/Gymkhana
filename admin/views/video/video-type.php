@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<?= $form->field($type, 'title')->textInput(['maxlength' => true]) ?>
 
-	<?= $form->field($type, 'pictureFile')->fileInput() ?>
+	<?= $form->field($type, 'pictureFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 
 	<?= $form->field($type, 'status')->dropDownList(\common\models\VideoType::$statusesTitle) ?>
 
