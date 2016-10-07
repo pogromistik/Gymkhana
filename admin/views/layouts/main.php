@@ -73,6 +73,7 @@ AppAsset::register($this);
                     ['label' => 'Фотогалерея', 'url' => ['/about/regular']]
                 ],
             ],
+			['label' => 'Россия', 'url' => ['/russia/index']],
             [
                 'label' => 'Дополнительно',
                 'items' => [
