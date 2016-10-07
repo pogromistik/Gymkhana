@@ -66,7 +66,21 @@ AppAsset::register($this);
                     ['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
                 ],
             ],
-            ['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']]
+            [
+                'label' => 'Галерея',
+                'items' => [
+                    ['label' => 'Видеогалерея', 'url' => ['/video/index']],
+                    ['label' => 'Фотогалерея', 'url' => ['/about/regular']]
+                ],
+            ],
+            [
+                'label' => 'Дополнительно',
+                'items' => [
+                    ['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']],
+                    ['label' => 'Года', 'url' => ['/about/regular']],
+                    ['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']]
+                ],
+            ],
         ]),
     ]);
     NavBar::end();
