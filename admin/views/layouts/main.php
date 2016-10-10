@@ -78,7 +78,7 @@ AppAsset::register($this);
                 'label' => 'Дополнительно',
                 'items' => [
                     ['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']],
-                    ['label' => 'Года', 'url' => ['/about/regular']],
+                    ['label' => 'Года', 'url' => ['/additional/years']],
                     ['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']]
                 ],
             ],
