@@ -49,7 +49,7 @@ class BaseController extends Controller
 				return false;
 			}
 		} else {
-			return 123;
+			return 'Ошибка при загрузке файлов';
 		}
 
 		return true;
