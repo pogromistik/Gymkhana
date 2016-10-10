@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'year',
 				'format'    => 'raw',
 				'value'     => function (Year $year) {
-					return Html::a($year->i, ['/additional/year-view', 'yearId' => $year->id]);
+					return Html::a($year->year, ['/additional/year-view', 'yearId' => $year->id);
 				}
 			],
 			[
