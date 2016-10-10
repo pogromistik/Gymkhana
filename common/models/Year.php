@@ -51,4 +51,9 @@ class Year extends \yii\db\ActiveRecord
 			'status' => 'Статус',
 		];
 	}
+	
+	public static function getActive()
+	{
+		return self::findAll(['status' => self::STATUS_ACTIVE]);
+	}
 }

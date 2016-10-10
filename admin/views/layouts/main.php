@@ -70,7 +70,7 @@ AppAsset::register($this);
                 'label' => 'Галерея',
                 'items' => [
                     ['label' => 'Видеогалерея', 'url' => ['/video/index']],
-                    ['label' => 'Фотогалерея', 'url' => ['/about/regular']]
+                    ['label' => 'Фотогалерея', 'url' => ['/album/index']]
                 ],
             ],
 			['label' => 'Россия', 'url' => ['/russia/index']],
