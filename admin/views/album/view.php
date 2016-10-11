@@ -7,7 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Album */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Albums', 'url' => ['index']];
+$this->params['breadcrumbs'][] = 'Галерея';
+$this->params['breadcrumbs'][] = ['label' => 'Альбомы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="album-view">
@@ -15,11 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Уверены, что хотите удалить альбом со всеми фотографиями?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -28,13 +29,42 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'title',
-            'yearId',
+            [
+                'attribute' => 'yearId',
+                'format' => 'raw',
+                'value' => $model->year ? $model->year->year : null
+            ],
             'folder',
-            'cover',
-            'dateAdded',
+            [
+                'attribute' => 'dateAdded',
+                'format' => 'raw',
+                'value' => date("d.m.Y, H:i", $model->dateAdded)
+            ],
+            [
+                'attribute' => 'cover',
+                'format' => 'raw',
+                'value' => $model->cover ? Html::img(Yii::getAlias('@filesView') . $model->cover) : null
+            ]
         ],
     ]) ?>
+
+    <?php
+    $photos = $model->getPhotos();
+    if ($photos) {
+        ?>
+        <table class="table">
+            <tbody>
+            <?php foreach ($photos as $photo) {?>
+                <tr>
+                    <td><?= Html::img(Yii::getAlias('@filesView') . '/' . $model->folder . '/' . $photo) ?></td>
+                    <td><a href="#" data-id="<?=$model->folder . '/' . $photo?>" class="delete-album-photo">Удалить</a></td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+        <?php
+    }
+    ?>
 
 </div>

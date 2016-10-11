@@ -2,6 +2,7 @@
 
 namespace common\models\search;
 
+use common\models\Year;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -18,7 +19,7 @@ class AlbumSearch extends Album
 	public function rules()
 	{
 		return [
-			[['id', 'yearId', 'dateAdded'], 'integer'],
+			[['id', 'yearId'], 'integer'],
 			[['title', 'folder', 'cover'], 'safe'],
 		];
 	}
@@ -57,11 +58,18 @@ class AlbumSearch extends Album
 			return $dataProvider;
 		}
 
+		$findYear = $this->yearId;
+		if ($this->yearId) {
+			$year = Year::findOne(['year' => $this->yearId]);
+			if ($year) {
+				$findYear = $year->id;
+			}
+		}
+
 		// grid filtering conditions
 		$query->andFilterWhere([
 			'id'        => $this->id,
-			'yearId'    => $this->yearId,
-			'dateAdded' => $this->dateAdded,
+			'yearId'    => $findYear,
 		]);
 
 		$query->andFilterWhere(['like', 'title', $this->title])

@@ -72,4 +72,32 @@ class Album extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Year::className(), ['id' => 'yearId']);
 	}
+
+	public function getPhotos()
+	{
+		$photos = [];
+
+		$files = scandir(Yii::getAlias('@filesView').'/'.$this->folder);
+		foreach ($files as $file) {
+			if ($file != "." && $file != ".." && !is_dir(Yii::getAlias('@filesView').'/'.$this->folder.'/'.$file)) {
+				$photos[] = $file;
+			}
+		}
+
+		return $photos;
+	}
+
+	public function getCovers()
+	{
+		$photos = [];
+
+		$files = scandir(Yii::getAlias('@filesView').'/'.$this->folder.'/cover');
+		foreach ($files as $file) {
+			if ($file != "." && $file != "..") {
+				$photos[] = $file;
+			}
+		}
+
+		return $photos;
+	}
 }

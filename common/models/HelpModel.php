@@ -29,16 +29,30 @@ class HelpModel extends Model
 			$model->save(false);
 		}
 	}
-
-	public static function saveOtherPhoto($model, $folder, $varName, $fileVar)
+	
+	public static function createFolder($folder)
 	{
-		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
+		$dir = \Yii::getAlias('@files') . '/' . $folder;
 		if (!file_exists($dir)) {
-			if (!file_exists(\Yii::getAlias('@files') . '/' . $folder)) {
-				mkdir(\Yii::getAlias('@files') . '/' . $folder);
-			}
 			mkdir($dir);
 		}
+
+		return true;
+	}
+
+	public static function saveOtherPhoto($model, $folder, $varName, $fileVar, $isFullFolder = false)
+	{
+		if (!$isFullFolder) {
+			$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
+			if (!file_exists($dir)) {
+				self::createFolder($folder);
+				mkdir($dir);
+			}
+		} else {
+			$dir = \Yii::getAlias('@files') . '/' . $folder;
+			self::createFolder($folder);
+		}
+
 		$file = UploadedFile::getInstance($model, $fileVar);
 		if ($file) {
 			$fileName = microtime(true) . '.' . $file->extension;
@@ -96,9 +110,9 @@ class HelpModel extends Model
 		return false;
 	}
 
-	public static function deleteFile($fileName)
+	public static function deleteFile($folder)
 	{
-		$filePath = Yii::getAlias('@files') . '/' . $fileName;
+		$filePath = Yii::getAlias('@files') . '/' . $folder;
 		if (file_exists($filePath)) {
 			unlink($filePath);
 

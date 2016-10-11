@@ -74,7 +74,10 @@ class AlbumController extends BaseController
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$model->folder = 'albums/' . $model->year->year . '/' . $model->id;
 			$model->save(false);
-			HelpModel::saveOtherPhoto($model, 'albums/' . $model->year->year, 'cover', 'coverFile');
+			HelpModel::createFolder('albums/' . $model->year->year);
+			HelpModel::createFolder($model->folder);
+			
+			HelpModel::saveOtherPhoto($model, $model->folder . '/cover', 'cover', 'coverFile', true);
 
 			return $this->redirect(['update', 'id' => $model->id]);
 		} else {
@@ -120,8 +123,20 @@ class AlbumController extends BaseController
 	public function actionDelete($id)
 	{
 		$this->can('admin');
+		$model = $this->findModel($id);
+		if ($model->cover) {
+			$covers = $model->getCovers();
+			foreach ($covers as $cover) {
+				HelpModel::deleteFile($model->folder . '/cover/' . $cover);
+			}
+		}
 
-		$this->findModel($id)->delete();
+		$photos = $model->getPhotos();
+		foreach ($photos as $photo) {
+			HelpModel::deleteFile($model->folder . '/' . $photo);
+		}
+
+		$model->delete();
 
 		return $this->redirect(['index']);
 	}
@@ -142,5 +157,10 @@ class AlbumController extends BaseController
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
+	}
+
+	public function actionDeletePhoto($photoId)
+	{
+		return HelpModel::deleteFile($photoId);
 	}
 }
