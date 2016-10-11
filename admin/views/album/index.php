@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'folder',
             [
-                'attribute' => 'yearId',
+                'attribute' => 'dateAdded',
                 'format' => 'raw',
                 'value' => function (Album $album) {
                     return date("d.m.Y, H:i", $album->dateAdded);
