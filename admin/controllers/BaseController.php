@@ -31,7 +31,7 @@ class BaseController extends Controller
 			$file = $file[0];
 
 			$path_parts = pathinfo($file->name);
-			$fileName = microtime(true) . '.' . $path_parts['extension'];
+			$fileName = round(microtime(true)*1000) . '.' . $path_parts['extension'];
 			if ($file->saveAs($uploadPath . '/' . $fileName)) {
 				switch ($modelName) {
 					case HelpModel::MODEL_MAIN_PHOTO:
@@ -70,7 +70,7 @@ class BaseController extends Controller
 			$file = $file[0];
 
 			$path_parts = pathinfo($file->name);
-			$fileName = microtime(true) . '.' . $path_parts['extension'];
+			$fileName = round(microtime(true)*1000) . '.' . $path_parts['extension'];
 			if ($file->saveAs($uploadPath . '/' . $fileName)) {
 				return true;
 			} else {

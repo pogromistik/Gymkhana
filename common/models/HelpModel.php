@@ -23,7 +23,7 @@ class HelpModel extends Model
 		}
 		$file = UploadedFile::getInstance($model, 'file');
 		if ($file) {
-			$fileName = microtime(true) . '.' . $file->extension;
+			$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 			$file->saveAs($dir . '/' . $fileName);
 			$model->previewImage = '/' . $folder . '/' . $model->id . '/' . $fileName;
 			$model->save(false);
@@ -55,7 +55,7 @@ class HelpModel extends Model
 
 		$file = UploadedFile::getInstance($model, $fileVar);
 		if ($file) {
-			$fileName = microtime(true) . '.' . $file->extension;
+			$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 			$file->saveAs($dir . '/' . $fileName);
 			$model->$varName = '/' . $folder . '/' . $model->id . '/' . $fileName;
 			$model->save(false);
@@ -90,7 +90,7 @@ class HelpModel extends Model
 						break;
 				}
 
-				$fileName = microtime(true) . '.' . $file->extension;
+				$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 				$file->saveAs($dir . '/' . $fileName);
 				$slider->picture = '/' . $folder . '/' . $folderId . '/slider/' . $fileName;
 				$slider->save(false);
