@@ -8,6 +8,6 @@ return [
     ],
     'aliases' => [
         '@files' => 'C:\xampp\htdocs\gymkhana74\files',
-        '@filesView' => 'C:\xampp\htdocs\gymkhana74\files'
+        '@filesView' => 'http://files.gymkhana74.ru/'
     ]
 ];
