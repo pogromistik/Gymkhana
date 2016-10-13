@@ -77,7 +77,7 @@ class Album extends \yii\db\ActiveRecord
 	{
 		$photos = [];
 
-		$files = scandir(Yii::getAlias('@filesView').'/'.$this->folder);
+		$files = scandir(Yii::getAlias('@files').'/'.$this->folder);
 		foreach ($files as $file) {
 			if ($file != "." && $file != ".." && !is_dir(Yii::getAlias('@filesView').'/'.$this->folder.'/'.$file)) {
 				$photos[] = $file;

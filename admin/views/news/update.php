@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 					?>
 					<tr>
 						<td>
-							<?= Html::img($slider->picture) ?>
+							<?= Html::img(Yii::getAlias('@filesView').$slider->picture) ?>
 						</td>
 						<td><?= \dosamigos\editable\Editable::widget([
 								'name'          => 'sort',

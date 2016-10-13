@@ -104,7 +104,7 @@ class AlbumController extends BaseController
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			HelpModel::saveOtherPhoto($model, 'albums/' . $model->year->year, 'cover', 'coverFile');
 			
-			return $this->redirect(['update', 'id' => $model->id]);
+			return $this->redirect(['view', 'id' => $model->id]);
 		} else {
 			return $this->render('update', [
 				'model' => $model,
