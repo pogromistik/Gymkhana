@@ -3,7 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use backend\assets\AppAsset;
+use admin\assets\AppAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -79,7 +79,10 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']],
                     ['label' => 'Года', 'url' => ['/additional/years']],
-                    ['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']]
+                    ['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']],
+                    \Yii::$app->user->can('developer') ? ['label' => 'Шаблоны', 'url' => ['/additional/layouts']] : null,
+                    \Yii::$app->user->can('developer') ? ['label' => 'Страницы', 'url' => ['/pages/index']] : null,
+                    \Yii::$app->user->can('developer') ? ['label' => 'Пользователи', 'url' => ['/user/signup']] : null,
                 ],
             ],
         ]),

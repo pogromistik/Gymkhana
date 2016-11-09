@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace admin\controllers;
 
 use common\models\AboutSlider;
 use common\models\Contacts;

@@ -1,5 +1,5 @@
 <?php
-namespace backend\controllers;
+namespace admin\controllers;
 
 use common\models\HelpModel;
 use common\models\Link;
