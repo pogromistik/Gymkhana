@@ -1,5 +1,5 @@
 <?php
-namespace frontend\controllers;
+namespace site\controllers;
 
 use Yii;
 use yii\base\InvalidParamException;

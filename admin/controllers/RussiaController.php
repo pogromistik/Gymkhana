@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace admin\controllers;
 
 use Yii;
 use common\models\Russia;

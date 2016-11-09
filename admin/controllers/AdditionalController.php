@@ -1,7 +1,9 @@
 <?php
 
-namespace backend\controllers;
+namespace admin\controllers;
 
+use common\models\Layout;
+use common\models\search\LayoutSearch;
 use Yii;
 use common\models\Year;
 use common\models\search\YearSearch;
@@ -64,6 +66,48 @@ class AdditionalController extends BaseController
 
 		return $this->render('year-view', [
 			'year'    => $year,
+			'success' => $success
+		]);
+	}
+
+	public function actionLayouts()
+	{
+		$this->can('developer');
+
+		$searchModel = new LayoutSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+		return $this->render('layouts', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+
+	public function actionLayoutInfo($layoutId = null)
+	{
+		$this->can('developer');
+
+		if ($layoutId) {
+			$layout = Layout::findOne($layoutId);
+			if (!$layout) {
+				throw new NotFoundHttpException('Шаблон не найден');
+			}
+		} else {
+			$layout = new Layout();
+		}
+
+		$success = null;
+
+		if ($layout->load(\Yii::$app->request->post())) {
+			if ($layout->save()) {
+				$success = 'Шаблон ' . $layout->id . ' успешно сохранен';
+			} else {
+				return var_dump($layout->errors);
+			}
+		}
+
+		return $this->render('layout-info', [
+			'layout'  => $layout,
 			'success' => $success
 		]);
 	}

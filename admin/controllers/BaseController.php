@@ -1,16 +1,35 @@
 <?php
-namespace backend\controllers;
+namespace admin\controllers;
 
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use Yii;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 
 class BaseController extends Controller
 {
+	public $description = '';
+	public $pageTitle = '';
+	public $keywords = '';
+	public $url = '';
+
 	public function can($role)
 	{
+		if (!\Yii::$app->user->can($role)) {
+			throw new ForbiddenHttpException('Доступ запрещён');
+		}
 		return true;
+	}
+
+	public function init()
+	{
+		parent::init();
+
+		if (\Yii::$app->user->isGuest) {
+			$this->redirect(['/site/login']);
+			\Yii::$app->end();
+		}
 	}
 
 	public function actionUploadPictures($type, $modelName)
