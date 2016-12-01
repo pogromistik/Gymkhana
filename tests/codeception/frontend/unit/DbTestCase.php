@@ -7,5 +7,5 @@ namespace tests\codeception\frontend\unit;
  */
 class DbTestCase extends \yii\codeception\DbTestCase
 {
-    public $appConfig = '@tests/codeception/config/frontend/unit.php';
+    public $appConfig = '@tests/codeception/config/site/unit.php';
 }
