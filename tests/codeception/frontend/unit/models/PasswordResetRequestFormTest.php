@@ -75,7 +75,7 @@ class PasswordResetRequestFormTest extends DbTestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/frontend/unit/fixtures/data/models/user.php'
+                'dataFile' => '@tests/codeception/site/unit/fixtures/data/models/user.php'
             ],
         ];
     }

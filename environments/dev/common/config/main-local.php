@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=yii2advanced',
+            'dsn' => 'mysql:host=localhost;dbname=gymkhana',
             'username' => 'root',
-            'password' => '',
+            'password' => '000000',
             'charset' => 'utf8',
         ],
         'mailer' => [
@@ -17,4 +17,8 @@ return [
             'useFileTransport' => true,
         ],
     ],
+    'aliases' => [
+        '@files' => 'C:\xampp\htdocs\gymkhana74\files',
+        '@filesView' => 'http://files.gymkhana74.ru/'
+    ]
 ];
