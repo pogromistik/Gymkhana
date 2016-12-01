@@ -2,7 +2,6 @@
 
 namespace common\models;
 
-use common\models\helpers\Files;
 use Yii;
 use yii\helpers\Inflector;
 
@@ -64,6 +63,7 @@ class Page extends \yii\db\ActiveRecord
 			[['url', 'title', 'layoutId'], 'string', 'max' => 255],
 			['status', 'default', 'value' => 1],
 			['showInMenu', 'default', 'value' => 0],
+			['url', 'unique'],
 			[['layoutId'], 'exist', 'skipOnError' => true, 'targetClass' => Layout::className(), 'targetAttribute' => ['layoutId' => 'id']],
 		];
 	}
