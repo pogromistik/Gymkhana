@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $model->title;
 
 	<div class="row">
 		<div class="col-sm-6">
-			<?= $this->render('_form', [
+			<?= $this->render('//common/_page-form', [
 				'model' => $model,
 			]) ?>
 		</div>

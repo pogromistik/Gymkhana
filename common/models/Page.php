@@ -59,7 +59,7 @@ class Page extends \yii\db\ActiveRecord
 		return [
 			[['dateAdded', 'dateUpdated', 'title'], 'required'],
 			[['dateAdded', 'dateUpdated', 'parentId', 'status', 'showInMenu', 'sort'], 'integer'],
-			[['keywords', 'description', 'text'], 'string'],
+			[['keywords', 'description'], 'string'],
 			[['url', 'title', 'layoutId'], 'string', 'max' => 255],
 			['status', 'default', 'value' => 1],
 			['showInMenu', 'default', 'value' => 0],
@@ -85,7 +85,6 @@ class Page extends \yii\db\ActiveRecord
 			'status'      => 'Статус',
 			'showInMenu'  => 'Показывать в меню',
 			'sort'        => 'Сортировка',
-			'text'        => 'Текст',
 			'layoutId'    => 'Шаблон',
 		];
 	}
