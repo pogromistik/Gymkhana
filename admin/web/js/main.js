@@ -17,3 +17,33 @@ $('.delete-album-photo').click(function () {
         alert(error.responseText);
     });
 });
+
+function showBackDrop() {
+    $('<div class="modal-backdrop fade in"></div>').appendTo(document.body);
+}
+function hideBackDrop() {
+    $(".modal-backdrop").remove();
+}
+$(document).on("submit", '#pageForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: "/pages/ajax-update",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                hideBackDrop();
+                alert(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+
+});

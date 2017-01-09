@@ -9,7 +9,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-create">
 
-	<?= $this->render('_form', [
+	<?= $this->render('//common/_page-form', [
 		'model' => $model,
 	]) ?>
 
