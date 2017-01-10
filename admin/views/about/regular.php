@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\bootstrap\Collapse;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\RegularSearch */
@@ -14,6 +15,16 @@ $this->params['breadcrumbs'][] = 'Правила';
 <div class="regular-index">
 
 	<h1><?= Html::encode($this->title) ?></h1>
+	
+	<?= Collapse::widget([
+		'items' => [
+			[
+				'label'   => 'Настройки страницы',
+				'content' => $this->render('//common/_page-form', ['model' => $page])
+			],
+		]
+	]);
+	?>
 
 	<p>
 		<?= Html::a('Добавить правило', ['create-regular'], ['class' => 'btn btn-success']) ?>
