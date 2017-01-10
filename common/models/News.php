@@ -16,69 +16,97 @@ use yii\web\UploadedFile;
  * @property string      $previewText
  * @property string      $previewImage
  * @property integer     $isPublish
- *
+ * @property integer     $pageId
  * @property NewsBlock[] $newsBlock
+ * @property Page        $page
  */
 class News extends \yii\db\ActiveRecord
 {
-    public $file;
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'news';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['title', 'dateCreated', 'datePublish', 'dateUpdated', 'isPublish'], 'required'],
-            [['dateCreated', 'datePublish', 'dateUpdated', 'isPublish'], 'integer'],
-            [['previewText'], 'string'],
-            [['title', 'previewImage'], 'string', 'max' => 255],
-            [['file'], 'file', 'extensions' => 'png, jpg'],
-            [['isPublish'], 'default', 'value' => 1]
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id'           => 'ID',
-            'title'        => 'Название',
-            'dateCreated'  => 'Дата создания',
-            'datePublish'  => 'Дата публикации',
-            'dateUpdated'  => 'Дата обновления',
-            'previewText'  => 'Preview Text',
-            'previewImage' => 'Preview Image',
-            'isPublish'    => 'Опубликовать',
-            'file'         => 'Preview image'
-        ];
-    }
-
-    public function beforeValidate()
-    {
-        if ($this->isNewRecord) {
-            $this->dateCreated = time();
-            if (!$this->datePublish) {
-                $this->datePublish = time();
-            }
-        }
-        $this->dateUpdated = time();
-
-        return parent::beforeValidate();
-    }
-
-    public function getNewsBlock()
-    {
-        return $this->hasMany(NewsBlock::className(), ['newsId' => 'id']);
-    }
+	public $file;
+	
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'news';
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['title', 'dateCreated', 'datePublish', 'dateUpdated', 'isPublish'], 'required'],
+			[['dateCreated', 'datePublish', 'dateUpdated', 'isPublish', 'pageId'], 'integer'],
+			[['previewText'], 'string'],
+			[['title', 'previewImage'], 'string', 'max' => 255],
+			[['file'], 'file', 'extensions' => 'png, jpg'],
+			[['isPublish'], 'default', 'value' => 1]
+		];
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id'           => 'ID',
+			'title'        => 'Название',
+			'dateCreated'  => 'Дата создания',
+			'datePublish'  => 'Дата публикации',
+			'dateUpdated'  => 'Дата обновления',
+			'previewText'  => 'Preview Text',
+			'previewImage' => 'Preview Image',
+			'isPublish'    => 'Опубликовать',
+			'file'         => 'Preview image'
+		];
+	}
+	
+	public function beforeSave($insert)
+	{
+		if ($this->isNewRecord) {
+			$page = new Page();
+			$page->title = $this->title;
+			$page->layoutId = 'news';
+			$page->parentId = Page::findOne(['layoutId' => 'allNews'])->id;
+			$page->save();
+		}
+		return parent::beforeSave($insert);
+	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			$this->dateCreated = time();
+			if (!$this->datePublish) {
+				$this->datePublish = time();
+			}
+		}
+		$this->dateUpdated = time();
+		
+		return parent::beforeValidate();
+	}
+	
+	public function afterSave($insert, $changedAttributes)
+	{
+		if (in_array('title', $changedAttributes)) {
+			$page = $this->page;
+			$page->title = $this->title;
+			$page->save(false);
+		}
+		parent::afterSave($insert, $changedAttributes);
+	}
+	
+	public function getPage()
+	{
+		return $this->hasOne(Page::className(), ['id' => 'pageId']);
+	}
+	
+	public function getNewsBlock()
+	{
+		return $this->hasMany(NewsBlock::className(), ['newsId' => 'id']);
+	}
 }

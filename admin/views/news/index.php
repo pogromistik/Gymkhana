@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\bootstrap\Collapse;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\NewsSearch */
@@ -13,7 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="news-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+	
+	<?= Collapse::widget([
+		'items' => [
+			[
+				'label'   => 'Настройки страницы',
+				'content' => $this->render('//common/_page-form', ['model' => $page])
+			],
+		]
+	]);
+	?>
 
     <p>
         <?= Html::a('Create News', ['create'], ['class' => 'btn btn-success']) ?>
