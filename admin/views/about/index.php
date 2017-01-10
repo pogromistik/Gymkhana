@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\bootstrap\Collapse;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\AboutBlockSearch */
@@ -13,6 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="about-block-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+	
+	<?= Collapse::widget([
+		'items' => [
+			[
+				'label'   => 'Настройки страницы',
+				'content' => $this->render('//common/_page-form', ['model' => $page])
+			],
+		]
+	]);
+	?>
 
     <div class="alert alert-info">
         <b>Страница "о проекте" состоит из информационных блоков. </b> Блок - слайдер+текст.
