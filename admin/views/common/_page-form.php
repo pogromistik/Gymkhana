@@ -31,8 +31,6 @@ use dosamigos\ckeditor\CKEditor;
 
 	<?= $form->field($model, 'status')->dropDownList(\common\models\Page::$statusesTitle) ?>
 
-	<?= $form->field($model, 'showInMenu')->dropDownList(\common\models\Page::$showTitles) ?>
-
 	<?= $form->field($model, 'sort')->textInput() ?>
 
 	<?= $form->field($model, 'url')->textInput() ?>
