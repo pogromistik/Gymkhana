@@ -18,84 +18,85 @@ AppAsset::register($this);
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?= Html::csrfMetaTags() ?>
+	<?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
+	<?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php
-    NavBar::begin([
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-left'],
-        'items' => array_filter([
-            ['label' => 'Главная страница', 'url' => ['/main/index']],
-            ['label' => 'Новости', 'url' => ['/news/index']],
-            [
-                'label' => 'О проекте',
-                'items' => [
-                    ['label' => 'О проекте', 'url' => ['/about/index']],
-                    ['label' => 'Правила', 'url' => ['/about/regular']],
-                    ['label' => 'Маршалы', 'url' => ['/marshals/index']],
-                    ['label' => 'Контакты (помочь проекту + адреса)', 'url' => ['/about/contacts']],
-                    ['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
-                ],
-            ],
-            [
-                'label' => 'Галерея',
-                'items' => [
-                    ['label' => 'Видеогалерея', 'url' => ['/video/index']],
-                    ['label' => 'Фотогалерея', 'url' => ['/album/index']]
-                ],
-            ],
+	<?php
+	NavBar::begin([
+		'options' => [
+			'class' => 'navbar-inverse navbar-fixed-top',
+		],
+	]);
+	$menuItems = [];
+	if (Yii::$app->user->isGuest) {
+		$menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+		$menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+	} else {
+		$menuItems[] = '<li>'
+			. Html::beginForm(['/site/logout'], 'post')
+			. Html::submitButton(
+				'Logout (' . Yii::$app->user->identity->username . ')',
+				['class' => 'btn btn-link']
+			)
+			. Html::endForm()
+			. '</li>';
+	}
+	echo Nav::widget([
+		'options' => ['class' => 'navbar-nav navbar-right'],
+		'items'   => $menuItems,
+	]);
+	
+	echo Nav::widget([
+		'options' => ['class' => 'navbar-nav navbar-left'],
+		'items'   => array_filter([
+			['label' => 'Главная страница', 'url' => ['/main/index']],
+			['label' => 'Новости', 'url' => ['/news/index']],
+			[
+				'label' => 'О проекте',
+				'items' => [
+					['label' => 'О проекте', 'url' => ['/about/index']],
+					['label' => 'Правила', 'url' => ['/about/regular']],
+					['label' => 'Маршалы', 'url' => ['/marshals/index']],
+					['label' => 'Контакты (помочь проекту + адреса)', 'url' => ['/about/contacts']],
+					['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
+				],
+			],
+			[
+				'label' => 'Галерея',
+				'items' => [
+					['label' => 'Видеогалерея', 'url' => ['/video/index']],
+					['label' => 'Фотогалерея', 'url' => ['/album/index']]
+				],
+			],
 			['label' => 'Россия', 'url' => ['/russia/index']],
-            [
-                'label' => 'Дополнительно',
-                'items' => [
-                    ['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']],
-                    ['label' => 'Года', 'url' => ['/additional/years']],
-                    ['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']],
-                    \Yii::$app->user->can('developer') ? ['label' => 'Шаблоны', 'url' => ['/additional/layouts']] : null,
-                    \Yii::$app->user->can('developer') ? ['label' => 'Страницы', 'url' => ['/pages/index']] : null,
-                    \Yii::$app->user->can('developer') ? ['label' => 'Пользователи', 'url' => ['/user/signup']] : null,
-                ],
-            ],
-        ]),
-    ]);
-    NavBar::end();
-    ?>
+			[
+				'label' => 'Дополнительно',
+				'items' => [
+					['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']],
+					['label' => 'Года', 'url' => ['/additional/years']],
+					['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']],
+					\Yii::$app->user->can('developer') ? ['label' => 'Шаблоны', 'url' => ['/additional/layouts']] : null,
+					\Yii::$app->user->can('developer') ? ['label' => 'Страницы', 'url' => ['/pages/index']] : null,
+					\Yii::$app->user->can('developer') ? ['label' => 'Пользователи', 'url' => ['/user/signup']] : null,
+					['label' => 'Меню', 'url' => ['/menu/index']],
+				],
+			],
+		]),
+	]);
+	NavBar::end();
+	?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+		<?= Breadcrumbs::widget([
+			'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+		]) ?>
+		<?= Alert::widget() ?>
+		<?= $content ?>
     </div>
 </div>
 
