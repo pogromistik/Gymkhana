@@ -44,4 +44,15 @@ class Regular extends \yii\db\ActiveRecord
 			'sort' => 'Сортировка',
 		];
 	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
+	}
 }
