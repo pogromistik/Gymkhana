@@ -1,6 +1,7 @@
 <?php
 namespace site\controllers;
 
+use common\models\AboutBlock;
 use common\models\Link;
 use common\models\MainPhoto;
 use common\models\Page;
@@ -51,14 +52,16 @@ class SiteController extends BaseController
 		$this->description = $page->description;
 		$this->keywords = $page->keywords;
 		
+		$data = [];
 		switch ($page->layoutId) {
 			case 'about':
+				$data['blocks'] = AboutBlock::find()->orderBy(['sort' => SORT_ASC])->all();
 				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');
 				break;
 		}
 		
-		return $this->render($page->layoutId);
+		return $this->render($page->layoutId, ['data' => $data]);
 	}
 }

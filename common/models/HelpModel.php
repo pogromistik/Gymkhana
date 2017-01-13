@@ -93,7 +93,7 @@ class HelpModel extends Model
 				$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 				$file->saveAs($dir . '/' . $fileName);
 				$slider->picture = '/' . $folder . '/' . $folderId . '/slider/' . $fileName;
-				$slider->save(false);
+				$slider->save();
 			}
 		}
 	}

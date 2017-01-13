@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\AboutBlock;
+use yii\db\ActiveRecord;
 
 /**
  * AboutBlockSearch represents the model behind the search form about `common\models\AboutBlock`.
@@ -67,5 +68,10 @@ class AboutBlockSearch extends AboutBlock
             ->andFilterWhere(['like', 'sliderText', $this->sliderText]);
 
         return $dataProvider;
+    }
+    
+    public function beforeValidate()
+    {
+	    return ActiveRecord::beforeValidate();
     }
 }
