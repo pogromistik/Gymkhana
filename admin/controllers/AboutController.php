@@ -171,7 +171,7 @@ class AboutController extends BaseController
 	{
 		$this->can('admin');
 		
-		$page = Page::findOne(['layoutId' => 'regular']);
+		$page = Page::findOne(['layoutId' => 'regulars']);
 		if (!$page) {
 			throw new NotFoundHttpException('Страница не найдена');
 		}

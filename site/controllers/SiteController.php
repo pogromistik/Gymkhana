@@ -5,6 +5,7 @@ use common\models\AboutBlock;
 use common\models\Link;
 use common\models\MainPhoto;
 use common\models\Page;
+use common\models\Regular;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -56,6 +57,13 @@ class SiteController extends BaseController
 		switch ($page->layoutId) {
 			case 'about':
 				$data['blocks'] = AboutBlock::find()->orderBy(['sort' => SORT_ASC])->all();
+				break;
+			case 'regulars':
+				$data['regulars'] = [
+					1 => Regular::find()->orderBy(['sort' => SORT_ASC])->limit(3)->all(),
+					2 => Regular::find()->orderBy(['sort' => SORT_ASC])->limit(1)->offset(3)->all(),
+					3 => Regular::find()->orderBy(['sort' => SORT_ASC])->limit(2)->offset(4)->all(),
+				];
 				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');

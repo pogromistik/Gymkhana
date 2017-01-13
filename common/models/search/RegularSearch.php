@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Regular;
+use yii\db\ActiveRecord;
 
 /**
  * RegularSearch represents the model behind the search form about `common\models\Regular`.
@@ -66,5 +67,10 @@ class RegularSearch extends Regular
 		$query->andFilterWhere(['like', 'text', $this->text]);
 
 		return $dataProvider;
+	}
+	
+	public function beforeValidate()
+	{
+		return ActiveRecord::beforeValidate();
 	}
 }
