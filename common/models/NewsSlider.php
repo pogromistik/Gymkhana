@@ -69,4 +69,15 @@ class NewsSlider extends \yii\db\ActiveRecord
     {
         return $this->hasOne(News::className(), ['id' => 'newsId']);
     }
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
+	}
 }

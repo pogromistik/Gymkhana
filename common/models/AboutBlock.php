@@ -58,6 +58,17 @@ class AboutBlock extends \yii\db\ActiveRecord
 	 */
 	public function getAboutSliders()
 	{
-		return $this->hasMany(AboutSlider::className(), ['blockId' => 'id']);
+		return $this->hasMany(AboutSlider::className(), ['blockId' => 'id'])->orderBy(['sort' => SORT_ASC]);
+	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
 	}
 }
