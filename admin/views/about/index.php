@@ -12,8 +12,6 @@ $this->title = 'О проекте';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="about-block-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 	
 	<?= Collapse::widget([
 		'items' => [

@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="menu-item-form">
-    <h1><?= $this->title ?></h1>
 	
 	<?php if ($success) { ?>
         <div class="alert alert-success">Изменения успешно сохранены</div>

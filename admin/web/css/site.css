@@ -120,3 +120,32 @@ img {
 .previewImg {
     max-width: 100px;
 }
+
+.navbar-default {
+    background: #242423;
+}
+.navbar-default.sidebar ul li {
+    background: #242423;
+    color: #fff;
+}
+.navbar-default.sidebar ul li a {
+    color: #fff;
+}
+#wrapper {
+    background: #242423;
+}
+.navbar-default.sidebar ul li a.active, .navbar-default.sidebar ul li a:hover {
+    color: #fff;
+    background: #56a025;
+}
+
+.navbar-default ul.navbar-right li, .navbar-default ul.navbar-right li a:hover {
+    background: #56a025;
+    color: #fff;
+}
+.navbar-default ul.navbar-right li a {
+    color: #fff;
+}
+.dropdown-user {
+    padding: 0;
+}

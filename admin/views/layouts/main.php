@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -25,88 +26,139 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap">
-	<?php
-	NavBar::begin([
-		'options' => [
-			'class' => 'navbar-inverse navbar-fixed-top',
-		],
-	]);
-	$menuItems = [];
-	if (Yii::$app->user->isGuest) {
-		$menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-		$menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-	} else {
-		$menuItems[] = '<li>'
-			. Html::beginForm(['/site/logout'], 'post')
-			. Html::submitButton(
-				'Logout (' . Yii::$app->user->identity->username . ')',
-				['class' => 'btn btn-link']
-			)
-			. Html::endForm()
-			. '</li>';
-	}
-	echo Nav::widget([
-		'options' => ['class' => 'navbar-nav navbar-right'],
-		'items'   => $menuItems,
-	]);
-	
-	echo Nav::widget([
-		'options' => ['class' => 'navbar-nav navbar-left'],
-		'items'   => array_filter([
-			['label' => 'Главная страница', 'url' => ['/main/index']],
-			['label' => 'Новости', 'url' => ['/news/index']],
-			[
-				'label' => 'О проекте',
-				'items' => [
-					['label' => 'О проекте', 'url' => ['/about/index']],
-					['label' => 'Правила', 'url' => ['/about/regular']],
-					['label' => 'Маршалы', 'url' => ['/marshals/index']],
-					['label' => 'Контакты (помочь проекту + адреса)', 'url' => ['/about/contacts']],
-					['label' => 'Спонсоры', 'url' => ['/about/sponsors']],
-				],
-			],
-			[
-				'label' => 'Галерея',
-				'items' => [
-					['label' => 'Видеогалерея', 'url' => ['/video/index']],
-					['label' => 'Фотогалерея', 'url' => ['/album/index']]
-				],
-			],
-			['label' => 'Россия', 'url' => ['/russia/index']],
-			[
-				'label' => 'Дополнительно',
-				'items' => [
-					['label' => 'Дополнительные страницы', 'url' => ['/dop-pages/index']],
-					['label' => 'Года', 'url' => ['/additional/years']],
-					['label' => 'Картинки для предзагрузки', 'url' => ['/about/regular']],
-					\Yii::$app->user->can('developer') ? ['label' => 'Шаблоны', 'url' => ['/additional/layouts']] : null,
-					\Yii::$app->user->can('developer') ? ['label' => 'Страницы', 'url' => ['/pages/index']] : null,
-					\Yii::$app->user->can('developer') ? ['label' => 'Пользователи', 'url' => ['/user/signup']] : null,
-					['label' => 'Меню', 'url' => ['/menu/index']],
-				],
-			],
-		]),
-	]);
-	NavBar::end();
-	?>
+<div id="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!-- /.navbar-toggle -->
+            <a class="navbar-brand" href="/"><?= \Yii::$app->name ?></a>
+        </div>
+        <!-- /.navbar-header -->
 
-    <div class="container">
-		<?= Breadcrumbs::widget([
-			'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-		]) ?>
-		<?= Alert::widget() ?>
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="<?= Url::to(['/site/logout']) ?>" data-method='post'><i
+                                    class="fa fa-sign-out fa-fw"></i> <?= Yii::t('app', 'Выход') ?></a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="<?= Url::to(['/main/index']) ?>"><i
+                                    class="fa fa-table fa-fw"></i> Главная страница</a>
+                    </li>
+                    <li>
+                        <a href="<?= Url::to(['/news/index']) ?>"><i
+                                    class="fa fa-table fa-fw"></i> Новости</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> О проекте<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?= Url::to(['/about/index']) ?>"> О проекте</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/about/regular']) ?>"> Правила</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/marshals/index']) ?>"> Маршалы</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/about/contacts']) ?>"> Контакты (помочь проекту + адреса)</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/about/sponsors']) ?>"> Спонсоры</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Галерея<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?= Url::to(['/video/index']) ?>"> Видеогалерея</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/album/index']) ?>"> Фотогалерея</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="<?= Url::to(['/russia/index']) ?>"><i
+                                    class="fa fa-table fa-fw"></i> Россия</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Дополнительно<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?= Url::to(['/dop-pages/index']) ?>"> Дополнительные страницы</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/additional/years']) ?>"> Года</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['qq']) ?>"> Картинки для предзагрузки</a>
+                            </li>
+							<?php if (\Yii::$app->user->can('developer')) { ?>
+                                <li>
+                                    <a href="<?= Url::to(['/additional/layouts']) ?>"> Шаблоны</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/pages/index']) ?>"> Страницы</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/user/signup']) ?>"> Пользователи</a>
+                                </li>
+							<?php } ?>
+                            <li>
+                                <a href="<?= Url::to(['/menu/index']) ?>"> Меню</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header"><?= $this->title ?></h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="breadcrumbs">
+			<?= Breadcrumbs::widget([
+				'homeLink' => false,
+				'links'    => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+			]) ?>
+        </div>
 		<?= $content ?>
     </div>
+    <!-- /#page-wrapper -->
+
 </div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
 
 <?php $this->endBody() ?>
 </body>

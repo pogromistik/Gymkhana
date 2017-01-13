@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="contacts">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
 	<?php $form = ActiveForm::begin(); ?>
 
 	<?= $form->field($model, 'phone')->textarea(['rows' => 6]) ?>
