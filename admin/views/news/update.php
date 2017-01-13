@@ -19,8 +19,6 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="news-update">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
 	<div class="alert alert-info"><b>Информация для списка новостей</b></div>
 
 	<?= $this->render('_form', [

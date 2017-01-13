@@ -12,8 +12,6 @@ $this->title = 'News';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="news-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 	
 	<?= Collapse::widget([
 		'items' => [

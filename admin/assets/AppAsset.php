@@ -3,6 +3,7 @@
 namespace admin\assets;
 
 use yii\web\AssetBundle;
+use yii\bootstrap\BootstrapPluginAsset;
 
 /**
  * Main admin application asset bundle.
@@ -21,5 +22,7 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+	    BootstrapPluginAsset::class,
+	    SBAdminAsset::class,
     ];
 }

@@ -12,8 +12,6 @@ $this->title = 'Россия';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="russia-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 	
 	<?= Collapse::widget([
 		'items' => [

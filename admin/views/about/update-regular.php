@@ -12,8 +12,6 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="regular-update">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
 	<?= $this->render('_form-regular', [
 		'model' => $model,
 	]) ?>

@@ -15,8 +15,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="years-view">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
 	<?php if ($success) { ?>
 		<div class="alert alert-success">
 			Информация обновлена

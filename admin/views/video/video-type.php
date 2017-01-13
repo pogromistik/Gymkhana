@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="video-create">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
 	<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
 	<?= $form->field($type, 'title')->textInput(['maxlength' => true]) ?>

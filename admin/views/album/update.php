@@ -14,9 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="album-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+    
     <div class="alert alert-info">Добавить фотографии</div>
 
     <p>

@@ -14,8 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="years-index">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
 	<p>
 		<?= Html::a('Добавить год', ['/additional/year-view'], ['class' => 'btn btn-success']) ?>
 	</p>

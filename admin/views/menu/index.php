@@ -14,8 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="menu-item-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <h3>Группы</h3>
     <p>
 		<?= Html::a('Добавить группу', ['change-group'], ['class' => 'btn btn-success']) ?>

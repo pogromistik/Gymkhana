@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = 'О проекте';
 $this->params['breadcrumbs'][] = 'Правила';
 ?>
 <div class="regular-index">
-
-	<h1><?= Html::encode($this->title) ?></h1>
 	
 	<?= Collapse::widget([
 		'items' => [
