@@ -1,6 +1,8 @@
 <?php
 namespace site\controllers;
 
+use common\models\Link;
+use common\models\MainPhoto;
 use common\models\Page;
 use yii\web\NotFoundHttpException;
 
@@ -12,7 +14,7 @@ class SiteController extends BaseController
 	public function actions()
 	{
 		return [
-			'error'   => [
+			'error' => [
 				'class' => 'yii\web\ErrorAction',
 			]
 		];
@@ -20,7 +22,23 @@ class SiteController extends BaseController
 	
 	public function actionIndex()
 	{
-		return 1;
+		$page = Page::findOne(['layoutId' => 'main']);
+		$this->pageTitle = $page->title;
+		$this->description = $page->description;
+		$this->keywords = $page->keywords;
+		$this->layout = 'main-page';
+		
+		$slider = MainPhoto::findAll(['type' => MainPhoto::PICTURES_SLIDER]);
+		$leftMenu = MainPhoto::findAll(['type' => MainPhoto::PICTURES_LEFT_MENU]);
+		$bottomMenu = MainPhoto::findAll(['type' => MainPhoto::PICTURES_BOTTOM_MENU]);
+		$social = Link::find()->all();
+		
+		return $this->render('main-page', [
+			'slider'     => $slider,
+			'leftMenu'   => $leftMenu,
+			'bottomMenu' => $bottomMenu,
+			'social'     => $social
+		]);
 	}
 	
 	public function actionShow($url = null)
@@ -33,6 +51,14 @@ class SiteController extends BaseController
 		$this->description = $page->description;
 		$this->keywords = $page->keywords;
 		
-		return $this->render('index');
+		switch ($page->layoutId) {
+			case 'about':
+				break;
+			default:
+				throw new NotFoundHttpException('Страница не найдена');
+				break;
+		}
+		
+		return $this->render($page->layoutId);
 	}
 }
