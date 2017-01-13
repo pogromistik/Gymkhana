@@ -7,9 +7,10 @@ use Yii;
 /**
  * This is the model class for table "groups_menu".
  *
- * @property integer $id
- * @property string  $title
- * @property integer $sort
+ * @property integer    $id
+ * @property string     $title
+ * @property integer    $sort
+ * @property MenuItem[] $items
  */
 class GroupMenu extends \yii\db\ActiveRecord
 {
@@ -54,5 +55,10 @@ class GroupMenu extends \yii\db\ActiveRecord
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function getItems()
+	{
+		return $this->hasMany(MenuItem::className(), ['groupsMenuId' => 'id']);
 	}
 }

@@ -1,0 +1,296 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: "Exo";
+    src: url(../fonts/Exo%202%20Regular%20Expanded.eot);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Exo";
+    src: url(../fonts/Exo%202%20Regular%20Expanded.otf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+.main-menu-content .col-md-6, .main-menu-content .col-md-3{
+    border-bottom: 1px solid #242423;
+    border-right: 1px solid #242423;
+}
+
+/* квадратные фотки */
+.col1-3 {
+    width: 100%;
+    background: #333;
+    float: left;
+    position: relative;
+    overflow:hidden;
+}
+.col2-3 {
+    width: 100%;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    float: left;
+    position: relative
+}
+.col1-3.grey {
+    padding: 90px 35px 17px 35px;
+    width: 100%;
+    text-align: center
+}
+.col1-3.auto, .col2-3.auto {
+    height: auto;
+}
+.col1-3.double {
+    height: 560px;
+}
+.col2-3.half {
+    height: 280px;
+}
+.col2-3.grey, .col3-3.grey, .col4-3.grey {
+    padding: 75px 80px;
+    background: #333;
+    text-align: center;
+}
+.grey.heading-section {
+    padding: 60px 55px 43px 55px
+}
+
+.col2-3.grey.no-padding {
+    padding: 75px 0px 74px 0px;
+}
+
+.col1-3.grey-bottom {
+    padding: 30px 35px;
+    background: #333;
+    z-index: 33;
+}
+.col2-3.grey-bottom {
+    padding: 45px 50px 32px 50px;
+    background: #333;
+}
+.element .col1-3, .element .col2-3, .element .col3-3 {
+    margin: 0
+}
+
+/* основная часть */
+.main-menu-content{
+    color: #56a025;
+}
+.main-menu-content .menu{
+    background: #56a025!important;
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #232324;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 30px;
+    padding: 0 50px;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid #242423;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+
+/* кнопки "Поехали!"*/
+.col1-3 .bottom {
+    padding: 23px 35px 12px;
+    bottom: 0px;
+}
+a:hover .bottom {
+    background: #393939;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+a:hover .bottom p {
+    color: #fff;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+
+/* Квадратные фотки при наведении */
+.images {
+    display: block;
+    position: relative;
+    background: #000;
+}
+
+.images img {
+    width: 100%;
+    display: block;
+    max-width: 100% !important;
+    z-index: 9
+}
+.images.dark img {
+    opacity: 0.3;
+    background: #000;
+}
+img {
+    box-shadow: #000 0 0 0
+}
+
+
+.sliphoveritemTitle {
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    font-family: 'Exo';
+    padding: 0px!important;
+}
+
+.sliphoveritemTitle span {
+    font-size: 11px;
+    display: block;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 2px;
+    margin-top: 3px;
+    padding-top: 8px;
+    color: #ccc;
+    font-family: 'Exo', sans-serif;
+    text-transform: uppercase;
+}
+
+/* Основное меню */
+ul.unordered-list, .hentry ul {
+    list-style: none;
+    line-height: 1.5;
+    padding: 0px 0px 13px 0px;
+    font-size: 16px;
+    font-family: 'Exo';
+}
+
+ol {
+    list-style: decimal;
+    line-height: 1.5;
+    padding: 0px 0px 13px 30px;
+    font-size: 16px;
+    font-family: 'Lora', Georgia, "Times New Roman", Times, serif;
+}
+.child ul.unordered-list, .child .hentry ul, .child ol {
+    padding: 10px 30px 0 50px;
+}
+ul.unordered-list li a, .hentry ul li a, ol li a {
+    color: #ccc;
+    text-decoration: none;
+    border-bottom: 1px solid #ccc;
+}
+ul.unordered-list li a:hover, .hentry ul li a:hover, ol li a:hover {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+}
+ul.unordered-list.services-list {
+    font-size: 24px;
+    line-height: 1.3;
+    margin-top: 15px;
+    padding: 0px;
+    bottom: 0;
+    position: absolute;
+    width: 100%
+}
+ul.unordered-list.services-list li {
+    padding: 32px 75px 33px 55px;
+    border-top: 1px solid #242423;
+    text-align: left !important;
+    position: relative
+}
+ul.unordered-list.services-list li span.arrow {
+    position: absolute;
+    right: 55px;
+    top: 36px;
+    float: none;
+}
+
+ul.unordered-list.services-list a li {
+    color: #ccc;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+ul.unordered-list.services-list a:hover li {
+    color: #fff;
+    background: #393939;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+
+#bottom-menu-mobile {
+    display: none;
+}
+.bottom-menu-mobile {
+    text-align: center;
+}
+.bottom-menu-mobile h2 {
+    padding: 10px 20px;
+}
+.bottom-menu-mobile li {
+    padding: 20px 10px;
+    border-top: 1px solid #242423;
+}
+
+/* Новости */
+.main_news img{
+    width: 100%;
+    padding: 0!important;
+}
+.main_news{
+    position: relative;
+}
+.main_news .text_title{
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    padding: 10px;
+    color: #000000;
+    background: rgba(255, 255, 255, .75);
+    text-transform: uppercase;
+    font-size: 22px;
+}
+.main_news .text_descript{
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 80%;
+    padding: 10px;
+    color: #000000;
+    background: rgba(255, 255, 255, .75);
+    line-height: 16px;
+}
+
+/* Надписи на главной новости */
+.my-button {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+.my-button-top {
+    position: absolute;
+    width: 80%;
+    padding: 20px 10px;
+    color: #333;
+    background: rgba(255, 255, 255, .75);
+    line-height: 16px;
+    top: 0;
+    left: -100%;
+    transition: all 1.5s;
+    text-transform: uppercase;
+    font-size: 22px;
+    font-weight: 700;
+}
+.my-button-bottom {
+    position: absolute;
+    width: 80%;
+    padding: 10px;
+    color: #000000;
+    background: rgba(255, 255, 255, .75);
+    line-height: 16px;
+    bottom: 40px;
+    right: -100%;
+    transition: all 1.5s;
+}
