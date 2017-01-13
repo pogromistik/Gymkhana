@@ -28,9 +28,9 @@ class SiteController extends BaseController
 		$this->keywords = $page->keywords;
 		$this->layout = 'main-page';
 		
-		$slider = MainPhoto::findAll(['type' => MainPhoto::PICTURES_SLIDER]);
-		$leftMenu = MainPhoto::findAll(['type' => MainPhoto::PICTURES_LEFT_MENU]);
-		$bottomMenu = MainPhoto::findAll(['type' => MainPhoto::PICTURES_BOTTOM_MENU]);
+		$slider = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_SLIDER])->orderBy(['sort' => SORT_ASC])->all();
+		$leftMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_LEFT_MENU])->orderBy(['sort' => SORT_ASC])->all();
+		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->orderBy(['sort' => SORT_ASC])->all();
 		$social = Link::find()->all();
 		
 		return $this->render('main-page', [
