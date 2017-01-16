@@ -112,9 +112,12 @@ PagesAsset::register($this);
             </div>
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <h4>Контакты</h4>
-                8 909 909 99 99<br>
-                gymkhana74@gmail.ru<br>
-                Ледовая арена "Трактор", каждый вторник с 19:00
+                <?php
+                /** @var \common\models\Contacts $contacts */
+                $contacts = \common\models\Contacts::find()->one(); ?>
+                <?= $contacts->phone ?><br>
+                <?= $contacts->email ?><br>
+                <?= $contacts->smallInfo ?>
             </div>
         </div>
         <!-- сылка на разработчика -->
