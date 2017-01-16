@@ -4,6 +4,7 @@ namespace site\controllers;
 use common\models\AboutBlock;
 use common\models\Link;
 use common\models\MainPhoto;
+use common\models\Marshal;
 use common\models\Page;
 use common\models\Regular;
 use yii\web\NotFoundHttpException;
@@ -64,6 +65,9 @@ class SiteController extends BaseController
 					2 => Regular::find()->orderBy(['sort' => SORT_ASC])->limit(1)->offset(3)->all(),
 					3 => Regular::find()->orderBy(['sort' => SORT_ASC])->limit(2)->offset(4)->all(),
 				];
+				break;
+			case  'marshals':
+				$data['marshals'] = Marshal::find()->orderBy(['sort' => SORT_ASC])->all();
 				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');

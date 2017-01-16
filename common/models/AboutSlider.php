@@ -63,8 +63,6 @@ class AboutSlider extends \yii\db\ActiveRecord
 			if (!$this->sort) {
 				$this->sort = self::find()->max('sort') + 1;
 			}
-			
-			var_dump($this->sort);
 		}
 		
 		return parent::beforeValidate();

@@ -18,13 +18,14 @@ use Yii;
  * @property string  $motorcyclePhoto
  * @property string  $gif
  * @property string  $link
+ * @property integer $sort
  */
 class Marshal extends \yii\db\ActiveRecord
 {
 	public $photoFile;
 	public $motorFile;
 	public $gifFile;
-
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -32,7 +33,7 @@ class Marshal extends \yii\db\ActiveRecord
 	{
 		return 'marshals';
 	}
-
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -43,9 +44,10 @@ class Marshal extends \yii\db\ActiveRecord
 			[['text1', 'text2', 'text3'], 'string'],
 			[['name', 'post', 'photo', 'motorcycle', 'motorcyclePhoto', 'gif', 'link'], 'string', 'max' => 255],
 			[['photoFile', 'motorFile', 'gifFile'], 'file'],
+			[['sort'], 'integer']
 		];
 	}
-
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -66,6 +68,18 @@ class Marshal extends \yii\db\ActiveRecord
 			'gif'             => 'Гифка мотоцикла',
 			'gifFile'         => 'Гифка мотоцикла',
 			'link'            => 'Ссылка на соц. сети',
+			'sort'            => 'Сортировка'
 		];
+	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
 	}
 }
