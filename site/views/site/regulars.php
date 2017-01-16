@@ -10,7 +10,7 @@ use yii\bootstrap\Html;
     <div class="row">
         <div class="col-md-6 hidden-sm hidden-xs">
             <div class="full-logo">
-				<?= Html::img('img/logo_full_chb.png', [
+				<?= Html::img('/img/logo_full_chb.png', [
 					'alt'   => $this->context->pageTitle,
 					'title' => $this->context->pageTitle
 				]) ?>
@@ -37,13 +37,13 @@ use yii\bootstrap\Html;
 							<?php } ?>
                             <div class="regular_img">
                                 <div class=".img img1">
-									<?= Html::img('img/img1.png', [
+									<?= Html::img('/img/img1.png', [
 										'alt'   => $this->context->pageTitle,
 										'title' => $this->context->pageTitle
 									]) ?>
                                 </div>
                                 <div class=".img img2">
-									<?= Html::img('img/img2.jpg', [
+									<?= Html::img('/img/img2.jpg', [
 										'alt'   => $this->context->pageTitle,
 										'title' => $this->context->pageTitle
 									]) ?>

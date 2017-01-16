@@ -43,13 +43,13 @@ PagesAsset::register($this);
                         <a href="/">
 
                             <div class="logo1">
-								<?= \yii\bootstrap\Html::img('img/logo_green.png', [
+								<?= \yii\bootstrap\Html::img('/img/logo_green.png', [
 									'alt'   => 'Мотоджимхана Челябинск',
 									'title' => 'Мотоджимхана Челябинск'
 								]) ?>
                             </div>
                             <div class="logo2">
-								<?= \yii\bootstrap\Html::img('img/logo.png', [
+								<?= \yii\bootstrap\Html::img('/img/logo.png', [
 									'alt'   => 'Мотоджимхана Челябинск',
 									'title' => 'Мотоджимхана Челябинск'
 								]) ?>
