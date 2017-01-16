@@ -2,6 +2,7 @@
 namespace site\controllers;
 
 use common\models\AboutBlock;
+use common\models\Contacts;
 use common\models\Link;
 use common\models\MainPhoto;
 use common\models\Marshal;
@@ -68,6 +69,10 @@ class SiteController extends BaseController
 				break;
 			case  'marshals':
 				$data['marshals'] = Marshal::find()->orderBy(['sort' => SORT_ASC])->all();
+				break;
+			case 'address':
+				$data['contacts'] = Contacts::find()->one();
+				$data['social'] = Link::find()->all();
 				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');

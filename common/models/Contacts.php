@@ -24,32 +24,33 @@ class Contacts extends \yii\db\ActiveRecord
 	{
 		return 'contacts';
 	}
-
+	
 	/**
 	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
-			[['phone', 'addr', 'time'], 'required'],
-			[['time'], 'string'],
+			[['phone', 'addr', 'time', 'smallInfo'], 'required'],
+			[['time', 'smallInfo'], 'string'],
 			[['phone', 'email', 'addr', 'card', 'cardInfo'], 'string', 'max' => 255],
 		];
 	}
-
+	
 	/**
 	 * @inheritdoc
 	 */
 	public function attributeLabels()
 	{
 		return [
-			'id'       => 'ID',
-			'phone'    => 'Телефон',
-			'email'    => 'Email',
-			'addr'     => 'Адрес',
-			'time'     => 'Время',
-			'card'     => 'Банковская карта',
-			'cardInfo' => 'Информация по карте (напр. ФИО)',
+			'id'        => 'ID',
+			'phone'     => 'Телефон',
+			'email'     => 'Email',
+			'addr'      => 'Адрес',
+			'time'      => 'Время',
+			'card'      => 'Банковская карта',
+			'cardInfo'  => 'Информация по карте (напр. ФИО)',
+			'smallInfo' => 'Информация для подвала'
 		];
 	}
 }

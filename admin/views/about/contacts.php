@@ -26,8 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	]) ?>
 
 	<?= $form->field($model, 'card')->textInput() ?>
-
+	
 	<?= $form->field($model, 'cardInfo')->textarea(['rows' => 6]) ?>
+	
+	<?= $form->field($model, 'smallInfo')->textarea() ?>
 
 	<div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
