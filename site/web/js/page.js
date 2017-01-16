@@ -223,7 +223,7 @@ $(".regular_img .img2").click(function(){
 /*------ПАСХАЛКА С МОТОЦИКЛОМ----------*/
 $("#37").click(function(){
   var now = Math.round(new Date().getTime() / 1000);;
-  $(".k-gif").html('<img src="img/marshal/003.gif?'+now+'">');
+  $(".k-gif").html('<img src="/img/003.gif?'+now+'">');
   $(".k-gif").offset($("#37").offset());
   $(".k-gif img").height($("#37").height());
   $(this).hide();

@@ -29,8 +29,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'motorFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 
     <?= $form->field($model, 'gifFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
-
-    <?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
+    
+	<?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
