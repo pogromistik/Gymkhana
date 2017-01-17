@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Russia */
+/* @var $model common\models\City */
 
 $this->title = 'Добавить город';
 $this->params['breadcrumbs'][] = ['label' => 'Россия', 'url' => ['index']];

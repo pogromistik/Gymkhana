@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use yii\bootstrap\Collapse;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\search\RussiaSearch */
+/* @var $searchModel common\models\search\CitySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Россия';

@@ -4,8 +4,8 @@ namespace admin\controllers;
 
 use common\models\Page;
 use Yii;
-use common\models\Russia;
-use common\models\search\RussiaSearch;
+use common\models\City;
+use common\models\search\CitySearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -38,7 +38,7 @@ class RussiaController extends BaseController
 			throw new NotFoundHttpException('Страница не найдена');
 		}
 		
-		$searchModel = new RussiaSearch();
+		$searchModel = new CitySearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
 		return $this->render('index', [
@@ -73,7 +73,7 @@ class RussiaController extends BaseController
 	{
 		$this->can('admin');
 		
-		$model = new Russia();
+		$model = new City();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -125,14 +125,15 @@ class RussiaController extends BaseController
 	/**
 	 * Finds the Russia model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 
 	 *
-	 * @param integer $id
-	 * @return Russia the loaded model
+*@param integer $id
+	 * @return City the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = Russia::findOne($id)) !== null) {
+		if (($model = City::findOne($id)) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
