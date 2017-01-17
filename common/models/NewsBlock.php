@@ -56,8 +56,20 @@ class NewsBlock extends \yii\db\ActiveRecord
             'slider'     => 'Слайдер'
         ];
     }
-
-    /**
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->where(['newsId' => $this->newsId])->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
+	}
+	
+	
+	/**
      * @return \yii\db\ActiveQuery
      */
     public function getNews()

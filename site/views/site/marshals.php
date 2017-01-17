@@ -8,7 +8,7 @@ use yii\bootstrap\Html;
 
 <div id="content" class="marshals">
     <div class="k-gif"></div>
-	<?php foreach ($data['marshals'] as $marshal) { ?>
+	<?php foreach ($data['marshals'] as $id => $marshal) { ?>
         <div class="container marshal">
             <div class="title text-center">
                 <h4><?= $marshal->name ?></h4>
@@ -26,7 +26,7 @@ use yii\bootstrap\Html;
                 <div class="col-md-3 col-sm-6 item">
                     <div class="my-button">
                         <div class="my-button-border-right"></div>
-						<p><?= $marshal->text1 ?></p>
+                        <p><?= $marshal->text1 ?></p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 item">
@@ -37,7 +37,7 @@ use yii\bootstrap\Html;
 							<?= Html::img(\Yii::getAlias('@filesView') . '/' . $marshal->motorcyclePhoto, [
 								'alt'   => $marshal->motorcycle,
 								'title' => $marshal->motorcycle,
-								'id'    => '37'
+								'id'    => ($id == 0) ? '37' : $id
 							]) ?>
                         </p>
                     </div>

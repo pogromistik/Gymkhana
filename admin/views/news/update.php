@@ -104,7 +104,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 
 	<?= $form->field($newBlock, 'text')->widget(CKEditor::className(), [
 		'options' => ['id' => 'newBlock'],
-		'preset'  => 'basic',
+		'preset'  => 'advent',
 
 	]) ?>
 

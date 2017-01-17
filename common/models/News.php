@@ -73,6 +73,8 @@ class News extends \yii\db\ActiveRecord
 			$page->layoutId = 'news';
 			$page->parentId = Page::findOne(['layoutId' => 'allNews'])->id;
 			$page->save();
+			
+			$this->pageId = $page->id;
 		}
 		return parent::beforeSave($insert);
 	}

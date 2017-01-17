@@ -6,8 +6,10 @@ use common\models\Contacts;
 use common\models\Link;
 use common\models\MainPhoto;
 use common\models\Marshal;
+use common\models\News;
 use common\models\Page;
 use common\models\Regular;
+use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -73,6 +75,17 @@ class SiteController extends BaseController
 			case 'address':
 				$data['contacts'] = Contacts::find()->one();
 				$data['social'] = Link::find()->all();
+				break;
+			case 'allNews':
+				$pages = Page::find()->where(['layoutId' => 'news']);
+				$pagination = new Pagination([
+					'defaultPageSize' => 10,
+					'totalCount'      => $pages->count(),
+				]);
+				$data['pages'] = $pages->orderBy(['dateAdded' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
+				$data['pagination'] = $pagination;
+				break;
+			case 'news':
 				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');

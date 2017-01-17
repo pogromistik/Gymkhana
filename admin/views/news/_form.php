@@ -16,7 +16,7 @@ use dosamigos\ckeditor\CKEditor;
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
 	<?= $form->field($model, 'previewText')->widget(CKEditor::className(), [
-		'preset'  => 'basic'
+		'preset'  => 'advent'
 	]) ?>
 
 	<?= $form->field($model, 'isPublish')->checkbox() ?>
