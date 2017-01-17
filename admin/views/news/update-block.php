@@ -8,6 +8,10 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use dosamigos\ckeditor\CKEditor;
 
+$this->params['breadcrumbs'][] = ['label' => 'Новости', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $block->news->title, 'url' => ['update', 'id' => $block->news->id]];
+$this->params['breadcrumbs'][] = 'Блок' . $block->id;
+
 $this->title = 'Редактирование блока ' . $block->id . ' для новости ' . $block->news->title;
 ?>
 
@@ -21,7 +25,7 @@ $this->title = 'Редактирование блока ' . $block->id . ' дл�
 
 <?= $form->field($block, 'text')->widget(CKEditor::className(), [
 	'options' => ['id' => 'newBlock'],
-	'preset'  => 'basic',
+	'preset'  => 'advent',
 
 ]) ?>
 
@@ -51,7 +55,7 @@ $this->title = 'Редактирование блока ' . $block->id . ' дл�
 		?>
 		<tr>
 			<td>
-				<?= Html::img($slider->picture) ?>
+				<?= Html::img(Yii::getAlias('@filesView').$slider->picture) ?>
 			</td>
 			<td><?= \dosamigos\editable\Editable::widget([
 					'name'          => 'sort',
