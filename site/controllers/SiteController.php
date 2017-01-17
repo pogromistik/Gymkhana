@@ -86,6 +86,9 @@ class SiteController extends BaseController
 				$data['pagination'] = $pagination;
 				break;
 			case 'news':
+				$data['page'] = $page;
+				$data['oldNews'] = Page::find()->where(['layoutId' => 'news'])->andWhere(['not', ['id' => $page->id]])
+					->orderBy(['dateAdded' => SORT_DESC])->limit(6)->all();
 				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');
