@@ -5,12 +5,12 @@ namespace common\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Russia;
+use common\models\City;
 
 /**
  * RussiaSearch represents the model behind the search form about `common\models\Russia`.
  */
-class RussiaSearch extends Russia
+class CitySearch extends City
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class RussiaSearch extends Russia
      */
     public function search($params)
     {
-        $query = Russia::find();
+        $query = City::find();
 
         // add conditions that should always apply here
 

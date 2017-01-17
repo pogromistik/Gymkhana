@@ -62,7 +62,7 @@ PagesAsset::register($this);
                     <ul class="nav navbar-nav navbar-right">
 						<?php
 						/** @var GroupMenu $group */
-						foreach (GroupMenu::find()->all() as $group) { ?>
+						foreach (GroupMenu::find()->orderBy(['sort' => SORT_ASC])->all() as $group) { ?>
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?= $group->title ?> <b
                                             class="caret"></b></a>
