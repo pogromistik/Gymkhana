@@ -128,14 +128,22 @@ class SiteController extends BaseController
 			if (!$album) {
 				throw new NotFoundHttpException('Страница не найдена');
 			}
+			$otherAlbums = Album::find()->where(['yearId' => $album->yearId])->all();
 			$this->layout = 'album';
+			$this->pageTitle = $album->title;
+			
 			return $this->render('album', [
-				'album' => $album
+				'album'       => $album,
+				'otherAlbums' => $otherAlbums
 			]);
 		}
+		$this->pageTitle = 'Фотогалерея ' . $year->year;
+		$otherYears = Year::find()->where(['status' => Year::STATUS_ACTIVE])->all();
+		
 		return $this->render('albums', [
-			'year' => $year,
-			'albums' => $albums
+			'year'       => $year,
+			'albums'     => $albums,
+			'otherYears' => $otherYears
 		]);
 	}
 }

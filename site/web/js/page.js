@@ -196,13 +196,15 @@ $(".video_galery .two").css({"padding-top": $(".video_galery .top img").height()
 
 
 /*------СПИСОК ГОДОВ В ГАЛЕРЕЕ ПРИ НАВЕДЕНИИ--------*/
-/*
-$(".one-albums h1").click(function(){
+
+$(".album h3").click(function(){
   $(".al-bg-none").fadeIn(400);
 });
-$(".al-bg-none").click(function(){
-  $(this).fadeOut(400);
-});*/
+/*------СПИСОК ВСЕХ АЛЬБОМОВ В ГАЛЕРЕЕ ФИГУР------*/
+    $(".album-title").click(function(){
+        $(".al-bg-none").fadeIn(400);
+        $('body').css({'overflow': 'hidden'});
+    });
 /*------СПИСОК ВСЕХ ФИГУР------*/
 $(".figure h3").click(function(){
   $(".al-bg-none").fadeIn(400);

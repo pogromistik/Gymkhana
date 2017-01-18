@@ -2,8 +2,10 @@
 /**
  * @var \common\models\Year    $year
  * @var \common\models\Album[] $albums
+ * @var \common\models\Year[]  $otherYears
  */
 use yii\bootstrap\Html;
+
 ?>
 
 <div id="content" class="opacity-menu album">
@@ -21,11 +23,11 @@ use yii\bootstrap\Html;
                     <div class="col-sm-4 col-xs-6">
                         <a href="/photogallery/<?= $year->year ?>/<?= $album->id ?>">
                             <figure class="images">
-			                    <?= Html::img(Yii::getAlias('@filesView') . $album->cover, [
-				                    'alt'   => $album->title,
-				                    'title' => $album->title,
-				                    'class' => "slip"
-			                    ]) ?>
+								<?= Html::img(Yii::getAlias('@filesView') . $album->cover, [
+									'alt'   => $album->title,
+									'title' => $album->title,
+									'class' => "slip"
+								]) ?>
                             </figure>
                         </a>
                     </div>
@@ -33,4 +35,15 @@ use yii\bootstrap\Html;
             </div>
         </div>
     </div>
+</div>
+
+<div class="al-bg-none">
+    <a href="/photogallery">выбрать другой год</a><br>
+	<?php foreach ($otherYears as $otherYear) { ?>
+        <a href="/photogallery/<?= $otherYear->year ?>/<?= $otherYear->id ?>"
+           class="<?= ($otherYear->id == $year->id) ? 'active' : null ?>">
+			<?= $otherYear->year ?>
+        </a>
+        <br>
+	<?php } ?>
 </div>

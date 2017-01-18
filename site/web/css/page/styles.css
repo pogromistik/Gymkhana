@@ -969,7 +969,13 @@ nav .dropdown-menu li a:hover{
      margin: 0;
      color: #fff;
  }
- .album-title:hover {
+ .album-title:hover h3 {
      color: #56a025;
+     cursor: pointer;
+ }
+ .al-bg-none .active {
+     color: #56a025;
+ }
+ .album h3:hover {
      cursor: pointer;
  }
