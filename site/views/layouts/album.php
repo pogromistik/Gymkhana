@@ -4,9 +4,9 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use site\assets\PagesAsset;
+use site\assets\AlbumAsset;
 
-PagesAsset::register($this);
+AlbumAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

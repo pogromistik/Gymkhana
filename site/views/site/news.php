@@ -9,7 +9,10 @@ $news = $data['page']->news;
 $oldNews = $data['oldNews'];
 $blocks = $news->newsBlock;
 ?>
-<script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>
+
+<?php
+$this->registerJsFile('http://vk.com/js/api/openapi.js', ['position' => yii\web\View::POS_HEAD]);
+?>
 
 <div id="content" class="news">
 	

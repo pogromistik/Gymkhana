@@ -2,6 +2,7 @@
 namespace site\controllers;
 
 use common\models\AboutBlock;
+use common\models\Album;
 use common\models\City;
 use common\models\Contacts;
 use common\models\Link;
@@ -10,6 +11,7 @@ use common\models\Marshal;
 use common\models\News;
 use common\models\Page;
 use common\models\Regular;
+use common\models\Year;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 
@@ -94,11 +96,46 @@ class SiteController extends BaseController
 			case 'russia':
 				$data['cities'] = City::find()->where(['showInRussiaPage' => 1])->orderBy(['title' => SORT_ASC])->all();
 				break;
+			case 'photoGallery':
+				$years = Year::find()->where(['status' => Year::STATUS_ACTIVE]);
+				$pagination = new Pagination([
+					'defaultPageSize' => 10,
+					'totalCount'      => $years->count(),
+				]);
+				$data['years'] = $years->orderBy(['year' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
+				$data['pagination'] = $pagination;
+				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');
 				break;
 		}
 		
-		return $this->render($page->layoutId, ['data' => $data]);
+		return $this->render($page->layoutId, ['data' => $data, 'page' => $page]);
+	}
+	
+	public function actionAlbums($year, $album = null)
+	{
+		$year = Year::findOne(['year' => $year]);
+		if (!$year) {
+			throw new NotFoundHttpException('Страница не найдена');
+		}
+		$albums = Album::findAll(['yearId' => $year->id]);
+		if (!$albums) {
+			throw new NotFoundHttpException('Страница не найдена');
+		}
+		if ($album) {
+			$album = Album::findOne($album);
+			if (!$album) {
+				throw new NotFoundHttpException('Страница не найдена');
+			}
+			$this->layout = 'album';
+			return $this->render('album', [
+				'album' => $album
+			]);
+		}
+		return $this->render('albums', [
+			'year' => $year,
+			'albums' => $albums
+		]);
 	}
 }
