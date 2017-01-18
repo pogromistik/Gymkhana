@@ -44,12 +44,14 @@ class HelpModel extends Model
 	{
 		if (!$isFullFolder) {
 			$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
+			$saveDirName = '/' . $folder . '/' . $model->id;
 			if (!file_exists($dir)) {
 				self::createFolder($folder);
 				mkdir($dir);
 			}
 		} else {
 			$dir = \Yii::getAlias('@files') . '/' . $folder;
+			$saveDirName = '/' . $folder;
 			self::createFolder($folder);
 		}
 
@@ -57,7 +59,7 @@ class HelpModel extends Model
 		if ($file) {
 			$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 			$file->saveAs($dir . '/' . $fileName);
-			$model->$varName = '/' . $folder . '/' . $model->id . '/' . $fileName;
+			$model->$varName = $saveDirName . $fileName;
 			$model->save(false);
 		}
 	}
