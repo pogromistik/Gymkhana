@@ -3,6 +3,7 @@
 namespace admin\controllers;
 
 use common\models\HelpModel;
+use common\models\Page;
 use Yii;
 use common\models\Album;
 use common\models\search\AlbumSearch;
@@ -28,57 +29,59 @@ class AlbumController extends BaseController
 			],
 		];
 	}
-
-	/**
-	 * Lists all Album models.
-	 * @return mixed
-	 */
+	
 	public function actionIndex()
 	{
 		$this->can('admin');
-
+		
+		$page = Page::findOne(['layoutId' => 'photoGallery']);
+		if (!$page) {
+			throw new NotFoundHttpException('Страница не найдена');
+		}
+		
 		$searchModel = new AlbumSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		
 		return $this->render('index', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
+			'page'         => $page
 		]);
 	}
-
+	
 	/**
 	 * Displays a single Album model.
 	 *
 	 * @param integer $id
-	 *
 	 * @return mixed
 	 */
 	public function actionView($id)
 	{
 		$this->can('admin');
-
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
 	}
-
+	
 	/**
 	 * Creates a new Album model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 *
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
 		$model = new Album();
-
+		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$model->folder = 'albums/' . $model->year->year . '/' . $model->id;
 			$model->save(false);
 			HelpModel::createFolder('albums/' . $model->year->year);
 			HelpModel::createFolder($model->folder);
 			
-			HelpModel::saveOtherPhoto($model, $model->folder . '/cover', 'cover', 'coverFile', true);
-
+			HelpModel::saveOtherPhoto($model, $model->folder . '/cover/', 'cover', 'coverFile', true);
+			
 			return $this->redirect(['update', 'id' => $model->id]);
 		} else {
 			return $this->render('create', [
@@ -86,23 +89,22 @@ class AlbumController extends BaseController
 			]);
 		}
 	}
-
+	
 	/**
 	 * Updates an existing Album model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 *
 	 * @param integer $id
-	 *
 	 * @return mixed
 	 */
 	public function actionUpdate($id)
 	{
 		$this->can('admin');
-
+		
 		$model = $this->findModel($id);
-
+		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			HelpModel::saveOtherPhoto($model, 'albums/' . $model->year->year, 'cover', 'coverFile');
+			HelpModel::saveOtherPhoto($model, $model->folder . '/cover/', 'cover', 'coverFile', true);
 			
 			return $this->redirect(['view', 'id' => $model->id]);
 		} else {
@@ -111,13 +113,12 @@ class AlbumController extends BaseController
 			]);
 		}
 	}
-
+	
 	/**
 	 * Deletes an existing Album model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 *
 	 * @param integer $id
-	 *
 	 * @return mixed
 	 */
 	public function actionDelete($id)
@@ -130,23 +131,22 @@ class AlbumController extends BaseController
 				HelpModel::deleteFile($model->folder . '/cover/' . $cover);
 			}
 		}
-
+		
 		$photos = $model->getPhotos();
 		foreach ($photos as $photo) {
 			HelpModel::deleteFile($model->folder . '/' . $photo);
 		}
-
+		
 		$model->delete();
-
+		
 		return $this->redirect(['index']);
 	}
-
+	
 	/**
 	 * Finds the Album model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 *
 	 * @param integer $id
-	 *
 	 * @return Album the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
@@ -158,7 +158,7 @@ class AlbumController extends BaseController
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
 	}
-
+	
 	public function actionDeletePhoto($photoId)
 	{
 		return HelpModel::deleteFile($photoId);

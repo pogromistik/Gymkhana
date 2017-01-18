@@ -19,6 +19,14 @@ use common\models\Year;
     <?= $form->field($model, 'description')->textarea() ?>
 
     <?= $form->field($model, 'yearId')->dropDownList(ArrayHelper::map(Year::getActive(), 'id', 'year')) ?>
+	
+	<?php if (!$model->isNewRecord) { ?>
+		<div class="row">
+            <div class="col-sm-2">
+				<?= Html::img(Yii::getAlias('@filesView') . $model->cover) ?>
+            </div>
+        </div>
+	<?php } ?>
 
     <?= $form->field($model, 'coverFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 

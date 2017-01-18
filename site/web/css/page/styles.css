@@ -938,3 +938,18 @@ nav .dropdown-menu li a:hover{
 .al-bg-none a:hover {
     color: #56a025;
 }
+ .album_link {
+     width: 100%;
+     font-size: 84px;
+     padding: 10px 40px;
+     background: linear-gradient(to left, #ffffff, #242423);
+     margin-bottom: 30px;
+     color: #242423;
+ }
+ .album_link:hover {
+     color: #fff;
+     text-decoration: none;
+ }
+ .albums a:hover {
+     text-decoration: none;
+ }
