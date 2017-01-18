@@ -953,3 +953,23 @@ nav .dropdown-menu li a:hover{
  .albums a:hover {
      text-decoration: none;
  }
+ .album img {
+     width: 100%;
+ }
+ .album-view {
+     background: #393939;
+     padding-top: 20px;
+ }
+ .album-title {
+     padding-bottom: 20px;
+ }
+ .album-title h3{
+     text-transform: uppercase;
+     padding: 0;
+     margin: 0;
+     color: #fff;
+ }
+ .album-title:hover {
+     color: #56a025;
+     cursor: pointer;
+ }

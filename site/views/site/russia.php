@@ -48,7 +48,7 @@ use yii\bootstrap\Html;
     <div class="bottom-list"><a href="#list"><img src="/img/bottom.png"></a></div>
 
 <?php
-$script = '';
 $this->registerCSSFile('http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css');
 $this->registerJsFile('http://code.jquery.com/jquery-1.10.2.js', ['position' => yii\web\View::POS_HEAD]);
 $this->registerJsFile('http://code.jquery.com/ui/1.10.4/jquery-ui.js', ['position' => yii\web\View::POS_HEAD]);
+?>
