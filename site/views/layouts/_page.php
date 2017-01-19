@@ -45,19 +45,25 @@ use common\models\MenuItem;
 						<?php
 						/** @var GroupMenu $group */
 						foreach (GroupMenu::find()->orderBy(['sort' => SORT_ASC])->all() as $group) { ?>
-							<li class="dropdown">
-								<a data-toggle="dropdown" class="dropdown-toggle" href="#"><?= $group->title ?> <b
-										class="caret"></b></a>
-								<ul role="menu" class="dropdown-menu">
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?= $group->title ?> <b
+                                            class="caret"></b></a>
+                                <ul role="menu" class="dropdown-menu">
 									<?php
 									/** @var MenuItem $item */
 									foreach ($group->items as $item) { ?>
-										<li><a href="<?= $item->link ? $item->link : '/'.$item->page->url ?>">
+                                        <li><a href="<?= $item->link ? $item->link : '/'.$item->page->url ?>">
 												<?= $item->title ? $item->title : $item->page->title ?></a>
-										</li>
+                                        </li>
 									<?php } ?>
-								</ul>
-							</li>
+                                </ul>
+                            </li>
+						<?php } ?>
+						<?php
+						foreach (MenuItem::find()->orderBy(['sort' => SORT_ASC])->andWhere(['groupsMenuId' => null])->all() as $item) { ?>
+                            <li><a href="<?= $item->link ? $item->link : '/'.$item->page->url ?>">
+									<?= $item->title ? $item->title : $item->page->title ?></a>
+                            </li>
 						<?php } ?>
 					</ul>
 				</div>
