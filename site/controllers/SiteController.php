@@ -62,6 +62,8 @@ class SiteController extends BaseController
 		
 		$data = [];
 		switch ($page->layoutId) {
+			case 'main':
+				return $this->redirect('/');
 			case 'about':
 				$data['blocks'] = AboutBlock::find()->orderBy(['sort' => SORT_ASC])->all();
 				break;
