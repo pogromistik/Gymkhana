@@ -12,6 +12,12 @@ use yii\grid\GridView;
 $this->title = 'Меню';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<div class="alert alert-info">
+    Создание и редактирование пунктов меню для всех страниц, кроме главной. Меню главной страницы настраивается в разделе
+    "<?= Html::a('Главная страница', ['/main/index']) ?>"
+</div>
+
 <div class="menu-item-index">
 
     <h3>Группы</h3>
