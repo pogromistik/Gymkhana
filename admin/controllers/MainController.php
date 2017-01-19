@@ -38,7 +38,7 @@ class MainController extends BaseController
 		}
 		
 		$sliders = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_SLIDER])->orderBy(['sort' => SORT_ASC])->all();
-		$leftMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_LEFT_MENU])->orderBy(['sort' => SORT_ASC])->all();
+		$leftMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_RIGHT_MENU])->orderBy(['sort' => SORT_ASC])->all();
 		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->orderBy(['sort' => SORT_ASC])->all();
 		
 		$searchModel = new MainMenuSearch();

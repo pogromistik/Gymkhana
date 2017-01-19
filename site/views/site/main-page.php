@@ -3,9 +3,12 @@ use yii\bootstrap\Html;
 
 /**
  * @var \common\models\MainPhoto[] $slider
- * @var \common\models\MainPhoto[] $leftMenu
+ * @var \common\models\MainPhoto[] $rightMenu
  * @var \common\models\MainPhoto[] $bottomMenu
  * @var \common\models\Link[]      $social
+ * @var \common\models\News        $news
+ * @var \common\models\MainMenu    $menuItem
+ * @var \common\models\Year[]      $years
  */
 ?>
 
@@ -55,15 +58,25 @@ use yii\bootstrap\Html;
 				<?php } ?>
             </div>
             <!-- end main nav -->
-            <nav id="main-nav">
-                <div id="menu-close-button">&times;</div>
-
-                <ul id="options" class="option-set clearfix" data-option-key="filter">
-                    <li><a href="project/about/">Кто?</a></li>
-                    <li><a href="russia/russia/">Где?</a></li>
-                    <li><a href="project/address.html">Когда?</a></li>
-                </ul>
-            </nav>
+			<?php if ($menuItems['green']) {
+				?>
+                <nav id="main-nav">
+                    <ul id="options" class="option-set clearfix" data-option-key="filter">
+						<?php
+						foreach ($menuItems['green'] as $menuItem) {
+							$page = $menuItem->page;
+							?>
+                            <li><a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+									<?= $menuItem->title ? $menuItem->title : $page->title ?>
+                                </a></li>
+							<?php
+						}
+						?>
+                    </ul>
+                </nav>
+				<?php
+			}
+			?>
         </div>
     </section>
     <!-- =========================
@@ -74,61 +87,105 @@ use yii\bootstrap\Html;
         <div class="menu-bottom">
             <div class="row c-black">
                 <div class="col-md-6 main_news">
-                    <a href="news/archive/pervyij-etap-chempionata-urala-po-moto-dzhimxane-na-vyistavke-auto-show.html">
-                        <img src="img/news/6/small.jpg"
-                             alt="ПЕРВЫЙ ЭТАП ЧЕМПИОНАТА УРАЛА ПО МОТО ДЖИМХАНЕ НА ВЫСТАВКЕ «AUTO SHOW»"
-                             title="ПЕРВЫЙ ЭТАП ЧЕМПИОНАТА УРАЛА ПО МОТО ДЖИМХАНЕ НА ВЫСТАВКЕ «AUTO SHOW»"/>
+                    <a href="/<?= $news->page->url ?>">
+						<?= Html::img(Yii::getAlias('@filesView') . $news->previewImage, [
+							'alt'   => $news->title,
+							'title' => $news->title
+						]) ?>
                         <div class="my-button">
                             <div class="my-button-top">Главная новость</div>
                         </div>
-                        <div class="my-button">
-                            <div class="my-button-bottom">28 мая 2016 года, в субботу, в Челябинске пройдет уникальное
-                                событие – первый этап Чемпионата Уральского региона по мото джимхане!
+						<?php if ($news->previewText) { ?>
+                            <div class="my-button">
+                                <div class="my-button-bottom">
+									<?= $news->previewText ?>
+                                </div>
                             </div>
-                        </div>
-
+						<?php } ?>
                     </a>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-sm-6 height1">
-                            <div class="element  col1-3 home photography b-b">
-                                <a href="project/help.html" title="">
-                                    <figure class="images">
-                                        <img src="img/menu/tPCWJiz45OA.jpg" alt="Помочь проекту" class="slip"/>
-                                    </figure>
-                                </a>
+                            <div class="element  col1-3 b-b">
+								<?php if ($menuItem = reset($menuItems['animateSquare'])) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . reset($bottomMenu), [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="element  col1-3 home webdesign b-b b-l">
-                                <a href="project/marshal/" title="">
-                                    <figure class="images">
-                                        <img src="img/menu/B9k1SExMXCA.jpg" alt="Маршалы" class="slip"/>
-                                    </figure>
-                                </a>
+                            <div class="element  col1-3 b-b b-l">
+								<?php
+								$next = next($menuItems['animateSquare']);
+								$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+								if ($menuItem) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									$next = next($bottomMenu);
+									$folder = $next ? $next : reset($bottomMenu);
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="element  clearfix col1-3 home grey height0">
+                            <div class="element  clearfix col1-3 grey">
                                 <div class="icons team"></div>
-                                <h3>Стандартные фигуры</h3>
-                                <a href="competition/figure/" data-title="Who?" class="splink">
-                                    <div class="bottom">
-                                        <p>Поехали!</p>
-                                    </div>
-                                </a>
+								<?php if ($menuItem = reset($menuItems['graySquare'])) {
+									$page = $menuItem->page;
+									?>
+                                    <h3><?= $menuItem->title ? $menuItem->title : $page->title ?></h3>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>"
+                                       data-title="Who?" class="splink">
+                                        <div class="bottom">
+                                            <p>Поехали!</p>
+                                        </div>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="element  clearfix col1-3 home portfolio illustration b-l">
-                                <a href="project/regular.html" title="">
-                                    <figure class="images">
-                                        <img src="img/menu/h7qUv85F28s.jpg" alt="Правила" class="slip"/>
-                                    </figure>
-                                </a>
+                            <div class="element  clearfix col1-3 b-l">
+								<?php
+								$next = next($menuItems['animateSquare']);
+								$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+								if ($menuItem) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									$next = next($bottomMenu);
+									$folder = $next ? $next : reset($bottomMenu);
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                     </div>
@@ -139,23 +196,42 @@ use yii\bootstrap\Html;
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
-                                <div class="element  clearfix col1-3 home grey height0">
+                                <div class="element  clearfix col1-3">
                                     <div class="icons illustration"></div>
-                                    <h3>Трассы соревнований</h3>
-                                    <a href="competition/figure/" data-title="What?" class="splink">
-                                        <div class="bottom">
-                                            <p>Поехали!</p>
-                                        </div>
-                                    </a>
+									<?php if ($menuItem = next($menuItems['graySquare'])) {
+										$page = $menuItem->page;
+										?>
+                                        <h3><?= $menuItem->title ? $menuItem->title : $page->title ?></h3>
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>"
+                                           data-title="Who?" class="splink">
+                                            <div class="bottom">
+                                                <p>Поехали!</p>
+                                            </div>
+                                        </a>
+									<?php } ?>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
-                                <div class="element  clearfix col1-3 portfolio photography home"><a
-                                            href="project/sponsors.html" title="">
-                                        <figure class="images">
-                                            <img src="img/menu/DSC_9221.jpg" alt="Спонсоры" class="slip"/>
-                                        </figure>
-                                    </a>
+                                <div class="element  clearfix col1-3">
+									<?php
+									$next = next($menuItems['animateSquare']);
+									$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+									if ($menuItem) {
+										$page = $menuItem->page;
+										$title = $menuItem->title ? $menuItem->title : $page->title;
+										$next = next($bottomMenu);
+										$folder = $next ? $next : reset($bottomMenu);
+										?>
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                            <figure class="images">
+												<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+													'alt'   => $title,
+													'title' => $title,
+													'class' => 'slip'
+												]) ?>
+                                            </figure>
+                                        </a>
+									<?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -164,23 +240,42 @@ use yii\bootstrap\Html;
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
-                                <div class="element  clearfix col1-3 portfolio photography home">
-                                    <a href="news/archive/" title="">
-                                        <figure class="images">
-                                            <img src="img/menu/l8Z8IeXD19o.jpg" alt="Архив новостей" class="slip"/>
-                                        </figure>
-                                    </a>
+                                <div class="element  clearfix col1-3">
+									<?php
+									$next = next($menuItems['animateSquare']);
+									$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+									if ($menuItem) {
+										$page = $menuItem->page;
+										$title = $menuItem->title ? $menuItem->title : $page->title;
+										$next = next($bottomMenu);
+										$folder = $next ? $next : reset($bottomMenu);
+										?>
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                            <figure class="images">
+												<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+													'alt'   => $title,
+													'title' => $title,
+													'class' => 'slip'
+												]) ?>
+                                            </figure>
+                                        </a>
+									<?php } ?>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
-                                <div class="element  clearfix col1-3 home grey height0">
+                                <div class="element  clearfix col1-3 grey height0">
                                     <div class="icons network"></div>
-                                    <h3>Трассы тренировок</h3>
-                                    <a href="competition/figure/" data-title="Where?" class="splink">
-                                        <div class="bottom">
-                                            <p>Поехали!</p>
-                                        </div>
-                                    </a>
+									<?php if ($menuItem = next($menuItems['graySquare'])) {
+										$page = $menuItem->page;
+										?>
+                                        <h3><?= $menuItem->title ? $menuItem->title : $page->title ?></h3>
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>"
+                                           data-title="Who?" class="splink">
+                                            <div class="bottom">
+                                                <p>Поехали!</p>
+                                            </div>
+                                        </a>
+									<?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -192,22 +287,47 @@ use yii\bootstrap\Html;
                 <div class="col-md-3">
                     <div class="row">
                         <div class="col-md-12 col-sm-6">
-                            <div class="element  clearfix col1-3 portfolio photography home b-b">
-                                <a href="competition/result/" title="">
-                                    <figure class="images">
-                                        <img src="img/menu/BzPZ2VUgbz0.jpg" alt="Результаты соревнований" class="slip"/>
-                                    </figure>
-                                </a>
+                            <div class="element  clearfix col1-3 b-b">
+								<?php
+								$next = next($menuItems['animateSquare']);
+								$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+								if ($menuItem) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									$next = next($bottomMenu);
+									$folder = $next ? $next : reset($bottomMenu);
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                         <div class="col-md-12 col-sm-6">
-                            <div class="element  clearfix col1-3 home portfolio illustration">
-
-                                <figure class="images">
-                                    <img src="img/menu/DSC_9196.jpg" alt="<img src='img/menu/DSC_9196.jpg'/>"
-                                         class="slip"/>
-                                </figure>
-
+                            <div class="element  clearfix col1-3">
+								<?php
+								$menuItem = next($menuItems['animateSquare']) ? next($menuItems['animateSquare']) : reset($menuItems['animateSquare']);
+								if ($menuItem) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									$folder = next($bottomMenu) ? next($bottomMenu) : reset($bottomMenu);
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                     </div>
@@ -217,23 +337,13 @@ use yii\bootstrap\Html;
                     <div class="element  clearfix col2-3 home grey no-padding height2">
                         <h2 class="menushka"><strong>Менюшка</strong></h2>
                         <ul class="unordered-list services-list">
-                            <a href="project/about/">
-                                <li>О проекте</li>
-                            </a>
-                            <a href="news/archive/">
-                                <li>Новости</li>
-                            </a>
-                            <a href="competition/predstoyashhie-etapyi/">
-                                <li>Соревнования</li>
-                            </a>
-                            <a href="gallery/photogallery/">
-                                <li>Галерея</li>
-                            </a>
-                            <a href="russia/russia/">
-                                <li>Россия</li>
-                            </a>
-
-                            <!--<a href="#"><li>Social Media <span class="arrow">→</span></li></a>-->
+							<?php foreach ($menuItems['main'] as $menuItem) {
+								$page = $menuItem->page;
+								?>
+                                <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                    <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
+                                </a>
+							<?php } ?>
                         </ul>
                     </div>
                 </div>
@@ -241,22 +351,49 @@ use yii\bootstrap\Html;
                 <div class="col-md-3">
                     <div class="row">
                         <div class="col-md-12 col-sm-6">
-                            <div class="element  clearfix col1-3 home portfolio illustration b-b">
-                                <a href="russia/ural.html" title="">
-                                    <figure class="images">
-                                        <img src="img/menu/C_nGuOzBTFQ.jpg" alt="Урал" class="slip"/>
-                                    </figure>
-                                </a>
+                            <div class="element  clearfix col1-3 b-b">
+								<?php
+								$next = next($menuItems['animateSquare']);
+								$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+								if ($menuItem) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									$next = next($bottomMenu);
+									$folder = $next ? $next : reset($bottomMenu);
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                         <div class="col-md-12 col-sm-6">
-                            <div class="element  clearfix col1-3 home portfolio illustration">
-
-                                <figure class="images">
-                                    <img src="img/menu/3hsmlkRxGSA.jpg" alt="<img src='img/menu/3hsmlkRxGSA.jpg'/>"
-                                         class="slip"/>
-                                </figure>
-
+                            <div class="element  clearfix col1-3">
+								<?php
+								$next = next($menuItems['animateSquare']);
+								$menuItem = $next ? $next : reset($menuItems['animateSquare']);
+								if ($menuItem) {
+									$page = $menuItem->page;
+									$title = $menuItem->title ? $menuItem->title : $page->title;
+									$next = next($bottomMenu);
+									$folder = $next ? $next : reset($bottomMenu);
+									?>
+                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                        <figure class="images">
+											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
+												'alt'   => $title,
+												'title' => $title,
+												'class' => 'slip'
+											]) ?>
+                                        </figure>
+                                    </a>
+								<?php } ?>
                             </div>
                         </div>
                     </div>
@@ -273,37 +410,30 @@ use yii\bootstrap\Html;
                 <div class="bottom-menu-mobile">
                     <h2><strong>Менюшка</strong></h2>
                     <ul>
-                        <a href="project/about/">
-                            <li>О проекте</li>
-                        </a>
-                        <a href="news/archive/">
-                            <li>Новости</li>
-                        </a>
-                        <a href="competition/predstoyashhie-etapyi/">
-                            <li>Соревнования</li>
-                        </a>
-                        <a href="gallery/photogallery/">
-                            <li>Галерея</li>
-                        </a>
-                        <a href="russia/russia/">
-                            <li>Россия</li>
-                        </a>
+						<?php foreach ($menuItems['main'] as $menuItem) {
+							$page = $menuItem->page;
+							?>
+                            <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
+                                <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
+                            </a>
+						<?php } ?>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 main_news">
-                <a href="news/archive/pervyij-etap-chempionata-urala-po-moto-dzhimxane-na-vyistavke-auto-show.html">
-                    <img src="img/news/6/small.jpg"
-                         alt="ПЕРВЫЙ ЭТАП ЧЕМПИОНАТА УРАЛА ПО МОТО ДЖИМХАНЕ НА ВЫСТАВКЕ «AUTO SHOW»"
-                         title="ПЕРВЫЙ ЭТАП ЧЕМПИОНАТА УРАЛА ПО МОТО ДЖИМХАНЕ НА ВЫСТАВКЕ «AUTO SHOW»"/>
+                <a href="<?= $news->page->url ?>">
+					<?= Html::img(Yii::getAlias('@filesView') . $news->previewImage, [
+						'alt'   => $news->title,
+						'title' => $news->title
+					]) ?>
                     <div class="my-button">
                         <div class="my-button-top">Главная новость</div>
                     </div>
                     <div class="my-button">
-                        <div class="my-button-bottom">28 мая 2016 года, в субботу, в Челябинске пройдет уникальное
-                            событие – первый этап Чемпионата Уральского региона по мото джимхане!
+                        <div class="my-button-bottom">
+							<?= $news->previewText ?>
                         </div>
                     </div>
                 </a>
@@ -324,27 +454,21 @@ use yii\bootstrap\Html;
 <aside id="right-feature">
     <div class="ov-h">
         <!-- === RIGHT ITEM === -->
-        <div class="right-item right-item-1" data-stellar-background-ratio="0.3">
+        <div class="right-item right-item-1"
+             style="background-image: url(<?= Yii::getAlias('@filesView') . reset($rightMenu) ?>)"
+             data-stellar-background-ratio="0.3">
             <div class="right-item-overlay">
                 <div>
                     <div class="right-item-title">
                         ФОТОГАЛЕРЕЯ
                     </div>
 
-
                     <div class="right-item-icons">
-
-                        <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=12">2016</a>
-                        <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=11">2015</a>
-                        <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=10">2014</a>
-
-
+                        <?php foreach ($years as $year) { ?>
+                            <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
+                               data-lightbox="feature" href="/photogallery/<?= $year->year ?>"><?= $year->year ?></a>
+                        <?php } ?>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -353,7 +477,9 @@ use yii\bootstrap\Html;
 
     <div class="ov-h">
         <!-- === RIGHT ITEM === -->
-        <div class="right-item right-item-2" data-stellar-background-ratio="0.3">
+        <div class="right-item right-item-2"
+             style="background-image: url(<?= Yii::getAlias('@filesView') . next($rightMenu) ?>)"
+             data-stellar-background-ratio="0.3">
             <div class="right-item-overlay">
                 <div>
                     <div class="right-item-title">
@@ -378,7 +504,9 @@ use yii\bootstrap\Html;
 
     <div class="ov-h">
         <!-- === RIGHT ITEM === -->
-        <div class="right-item right-item-3" data-stellar-background-ratio="0.3">
+        <div class="right-item right-item-3"
+             style="background-image: url(<?= Yii::getAlias('@filesView') . next($rightMenu) ?>)"
+             data-stellar-background-ratio="0.3">
             <div class="right-item-overlay">
                 <div>
                     <div class="right-item-title">

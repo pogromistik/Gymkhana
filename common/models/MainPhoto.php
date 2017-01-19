@@ -16,12 +16,12 @@ use Yii;
 class MainPhoto extends \yii\db\ActiveRecord
 {
 	const PICTURES_SLIDER = 1;
-	const PICTURES_LEFT_MENU = 2;
+	const PICTURES_RIGHT_MENU = 2;
 	const PICTURES_BOTTOM_MENU = 3;
 
 	public static $filePath = [
 		self::PICTURES_SLIDER      => 'main/slider',
-		self::PICTURES_LEFT_MENU   => 'left_menu',
+		self::PICTURES_RIGHT_MENU  => 'left_menu',
 		self::PICTURES_BOTTOM_MENU => 'bottom_menu'
 	];
 

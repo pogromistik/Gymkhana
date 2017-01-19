@@ -223,21 +223,6 @@ a:focus   {
     background-position-x: center !important;
     background-size: auto;
 }
-.right-item-1 {
-    background-image: url(../img/fea1.jpg)
-}
-.right-item-2 {
-    background-image: url(../img/fea2.jpg)
-}
-.right-item-3 {
-    background-image: url(../img/fea3.jpg)
-}
-.right-item-4 {
-    background-image: url(../img/fea4.jpg)
-}
-.right-item-5 {
-    background-image: url(../img/fea5.jpg)
-}
 .right-item-overlay {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.3);
