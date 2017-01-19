@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  * @property string      $previewImage
  * @property integer     $isPublish
  * @property integer     $pageId
+ * @property integer     $secure
  * @property NewsBlock[] $newsBlock
  * @property Page        $page
  */
@@ -39,11 +40,12 @@ class News extends \yii\db\ActiveRecord
 	{
 		return [
 			[['title', 'dateCreated', 'datePublish', 'dateUpdated', 'isPublish'], 'required'],
-			[['dateCreated', 'datePublish', 'dateUpdated', 'isPublish', 'pageId'], 'integer'],
+			[['dateCreated', 'datePublish', 'dateUpdated', 'isPublish', 'pageId', 'secure'], 'integer'],
 			[['previewText'], 'string'],
 			[['title', 'previewImage'], 'string', 'max' => 255],
 			[['file'], 'file', 'extensions' => 'png, jpg'],
-			[['isPublish'], 'default', 'value' => 1]
+			[['isPublish'], 'default', 'value' => 1],
+			[['secure'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -61,7 +63,8 @@ class News extends \yii\db\ActiveRecord
 			'previewText'  => 'Preview Text',
 			'previewImage' => 'Preview Image',
 			'isPublish'    => 'Опубликовать',
-			'file'         => 'Preview image'
+			'file'         => 'Preview image',
+			'secure'       => 'Закрепить сверху'
 		];
 	}
 	
@@ -76,6 +79,7 @@ class News extends \yii\db\ActiveRecord
 			
 			$this->pageId = $page->id;
 		}
+		
 		return parent::beforeSave($insert);
 	}
 	
