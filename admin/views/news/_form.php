@@ -18,8 +18,10 @@ use dosamigos\ckeditor\CKEditor;
 	<?= $form->field($model, 'previewText')->widget(CKEditor::className(), [
 		'preset'  => 'advent'
 	]) ?>
-
+	
 	<?= $form->field($model, 'isPublish')->checkbox() ?>
+	
+	<?= $form->field($model, 'secure')->checkbox() ?>
 
 	<?php if($model->previewImage) {
 		?>

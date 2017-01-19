@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \common\models\Page $news
+ * @var \common\models\News $news
  */
 use yii\bootstrap\Html;
 use yii\widgets\LinkPager;
@@ -14,21 +14,21 @@ use yii\widgets\LinkPager;
 			</div>
 		</div>
 		
-		<?php foreach ($data['pages'] as $news) {
-			$oneNews = $news->news;
+		<?php foreach ($data['news'] as $news) {
+			$page = $news->page;
 			?>
 			<div class="col-md-offset-4 col-md-8 col-sm-12 all-news z-2">
 				<div class="item text-right">
-					<a href="/<?= $news->url ?>">
+					<a href="/<?= $page->url ?>">
 						<div class="row">
 							<div class="col-md-offset-3 col-md-7 col-sm-9 col-sm-offset-0 col-xs-7 text-left preview-text">
-								<h3><?= $oneNews->title ?></h3>
-								<?= $oneNews->previewText ?>
+								<h3><?= $news->title ?></h3>
+								<?= $news->previewText ?>
 							</div>
 							<div class="col-md-2 col-sm-3 col-xs-5">
-								<?= Html::img(\Yii::getAlias('@filesView') . $oneNews->previewImage, [
-									'alt'   => $oneNews->title,
-									'title' => $oneNews->title,
+								<?= Html::img(\Yii::getAlias('@filesView') . $news->previewImage, [
+									'alt'   => $news->title,
+									'title' => $news->title,
 								]) ?>
 								<img src="img/news/1/Kvadrat_dlya_novosti.jpg">
 							</div>

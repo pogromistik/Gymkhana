@@ -42,6 +42,8 @@ class SiteController extends BaseController
 		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->orderBy(['sort' => SORT_ASC])->all();
 		$social = Link::find()->all();
 		
+		$news = News::find()->where(['isPublish' => 1])->one();
+		
 		return $this->render('main-page', [
 			'slider'     => $slider,
 			'leftMenu'   => $leftMenu,
@@ -82,16 +84,20 @@ class SiteController extends BaseController
 				$data['social'] = Link::find()->all();
 				break;
 			case 'allNews':
-				$pages = Page::find()->where(['layoutId' => 'news']);
+				$news = News::find()->where(['isPublish' => 1]);
 				$pagination = new Pagination([
 					'defaultPageSize' => 10,
-					'totalCount'      => $pages->count(),
+					'totalCount'      => $news->count(),
 				]);
-				$data['pages'] = $pages->orderBy(['dateAdded' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
+				$data['news'] = $news->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
 				$data['pagination'] = $pagination;
 				break;
 			case 'news':
 				$data['page'] = $page;
+				$news = $page;
+				if (!$page->news || !$page->news->isPublish) {
+					throw new NotFoundHttpException();
+				}
 				$data['oldNews'] = Page::find()->where(['layoutId' => 'news'])->andWhere(['not', ['id' => $page->id]])
 					->orderBy(['dateAdded' => SORT_DESC])->limit(6)->all();
 				break;
