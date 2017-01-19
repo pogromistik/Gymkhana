@@ -8,7 +8,7 @@ use yii\bootstrap\Collapse;
 /* @var $searchModel common\models\search\NewsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'News';
+$this->title = 'Новости';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="news-index">
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	?>
 
     <p>
-        <?= Html::a('Create News', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить новость', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
