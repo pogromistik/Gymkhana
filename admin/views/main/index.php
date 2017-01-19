@@ -148,7 +148,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'class'    => 'file-upload'
 			],
 			'pluginOptions' => [
-				'uploadUrl'    => Url::to(['base/upload-pictures', 'type' => MainPhoto::PICTURES_LEFT_MENU, 'modelName' => HelpModel::MODEL_MAIN_PHOTO]),
+				'uploadUrl'    => Url::to(['base/upload-pictures', 'type' => MainPhoto::PICTURES_RIGHT_MENU, 'modelName' => HelpModel::MODEL_MAIN_PHOTO]),
 				'maxFileCount' => 10
 			]
 		]);

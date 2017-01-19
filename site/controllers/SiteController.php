@@ -6,6 +6,7 @@ use common\models\Album;
 use common\models\City;
 use common\models\Contacts;
 use common\models\Link;
+use common\models\MainMenu;
 use common\models\MainPhoto;
 use common\models\Marshal;
 use common\models\News;
@@ -38,17 +39,32 @@ class SiteController extends BaseController
 		$this->layout = 'main-page';
 		
 		$slider = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_SLIDER])->orderBy(['sort' => SORT_ASC])->all();
-		$leftMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_LEFT_MENU])->orderBy(['sort' => SORT_ASC])->all();
-		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->orderBy(['sort' => SORT_ASC])->all();
+		$rightMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_RIGHT_MENU])->select('fileName')
+			->orderBy(['sort' => SORT_ASC])->asArray()->column();
+		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->select('fileName')
+			->orderBy(['sort' => SORT_ASC])->asArray()->column();
+		shuffle($bottomMenu);
 		$social = Link::find()->all();
 		
-		$news = News::find()->where(['isPublish' => 1])->one();
+		$news = News::find()->where(['isPublish' => 1])->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->one();
+		
+		$menuItems = [
+			'green'         => MainMenu::find()->where(['type' => MainMenu::TYPE_GREEN_ITEMS])->orderBy(['sort' => SORT_ASC])->all(),
+			'animateSquare' => MainMenu::find()->where(['type' => MainMenu::TYPE_ANIMATE_SQUARE])->orderBy(['sort' => SORT_ASC])->all(),
+			'main'          => MainMenu::find()->where(['type' => MainMenu::TYPE_MAIN_ITEMS])->orderBy(['sort' => SORT_ASC])->all(),
+			'graySquare'    => MainMenu::find()->where(['type' => MainMenu::TYPE_BIG_GRAY_SQUARE])->orderBy(['sort' => SORT_ASC])->all(),
+		];
+		
+		$years = Year::find()->where(['status' => Year::STATUS_ACTIVE])->orderBy(['year' => SORT_DESC])->limit(4)->all();
 		
 		return $this->render('main-page', [
 			'slider'     => $slider,
-			'leftMenu'   => $leftMenu,
+			'rightMenu'  => $rightMenu,
 			'bottomMenu' => $bottomMenu,
-			'social'     => $social
+			'social'     => $social,
+			'news'       => $news,
+			'menuItems'  => $menuItems,
+			'years'      => $years
 		]);
 	}
 	
@@ -94,7 +110,6 @@ class SiteController extends BaseController
 				break;
 			case 'news':
 				$data['page'] = $page;
-				$news = $page;
 				if (!$page->news || !$page->news->isPublish) {
 					throw new NotFoundHttpException();
 				}
