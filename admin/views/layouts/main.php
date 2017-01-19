@@ -82,9 +82,6 @@ AppAsset::register($this);
                                 <a href="<?= Url::to(['/marshals/index']) ?>"> Маршалы</a>
                             </li>
                             <li>
-                                <a href="<?= Url::to(['/about/contacts']) ?>"> Контакты (помочь проекту + адреса)</a>
-                            </li>
-                            <li>
                                 <a href="<?= Url::to(['/about/sponsors']) ?>"> Спонсоры</a>
                             </li>
                         </ul>
@@ -110,7 +107,10 @@ AppAsset::register($this);
                                     class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="<?= Url::to(['/dop-pages/index']) ?>"> Дополнительные страницы</a>
+                                <a href="<?= Url::to(['/additional/links']) ?>"> Ссылки на соц сети</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/about/contacts']) ?>"> Контактная информация</a>
                             </li>
                             <li>
                                 <a href="<?= Url::to(['/additional/years']) ?>"> Года</a>
