@@ -1,12 +1,12 @@
 <?php
 /**
- * @var MainPhoto[]                     $sliders
- * @var MainPhoto[]                     $leftMenu
- * @var MainPhoto[]                     $bottomMenu
- * @var \yii\web\View                   $this
- * @var common\models\search\LinkSearch $searchModel
- * @var yii\data\ActiveDataProvider     $dataProvider
- * @var \common\models\Page             $page
+ * @var MainPhoto[]                         $sliders
+ * @var MainPhoto[]                         $leftMenu
+ * @var MainPhoto[]                         $bottomMenu
+ * @var \yii\web\View                       $this
+ * @var common\models\search\MainMenuSearch $searchModel
+ * @var yii\data\ActiveDataProvider         $dataProvider
+ * @var \common\models\Page                 $page
  */
 use yii\helpers\Html;
 use common\models\MainPhoto;
@@ -30,6 +30,55 @@ $this->params['breadcrumbs'][] = $this->title;
 	]
 ]);
 ?>
+
+<h3>0. Меню</h3>
+<p>
+	<?= Html::a('Добавить пункт меню', ['view-menu'], ['class' => 'btn btn-success']) ?>
+</p>
+<?= GridView::widget([
+	'dataProvider' => $dataProvider,
+	'filterModel'  => $searchModel,
+	'columns'      => [
+		['class' => 'yii\grid\SerialColumn'],
+
+		[
+			'attribute' => 'type',
+			'format'    => 'raw',
+			'value'     => function (\common\models\MainMenu $item) {
+				return \common\models\MainMenu::$typesTitle[$item->type];
+			}
+		],
+		[
+			'attribute' => 'pageId',
+			'format'    => 'raw',
+			'value'     => function (\common\models\MainMenu $item) {
+				return $item->pageId ? $item->page->title : '';
+			}
+		],
+		'title',
+		'sort',
+		[
+			'format' => 'raw',
+			'value'  => function (\common\models\MainMenu $item) {
+				return Html::a('<span class="fa fa-edit"></span>', ['/main/view-menu', 'id' => $item->id], [
+					'class' => 'btn btn-primary'
+				]);
+			}
+		],
+		[
+			'format' => 'raw',
+			'value'  => function (\common\models\MainMenu $item) {
+				return Html::a('<span class="fa fa-remove"></span>', ['/main/delete-menu', 'id' => $item->id], [
+					'class' => 'btn btn-danger',
+					'data'  => [
+						'confirm' => 'Уверены, что хотите удалить этот пункт?',
+						'method'  => 'post',
+					]
+				]);
+			}
+		]
+	],
+]); ?>
 
 <div class="row">
     <div class="col-xs-12">

@@ -3,9 +3,11 @@ namespace admin\controllers;
 
 use common\models\HelpModel;
 use common\models\Link;
+use common\models\MainMenu;
 use common\models\MainPhoto;
 use common\models\Page;
 use common\models\search\LinkSearch;
+use common\models\search\MainMenuSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use dosamigos\editable\EditableAction;
@@ -39,7 +41,7 @@ class MainController extends BaseController
 		$leftMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_LEFT_MENU])->orderBy(['sort' => SORT_ASC])->all();
 		$bottomMenu = MainPhoto::find()->where(['type' => MainPhoto::PICTURES_BOTTOM_MENU])->orderBy(['sort' => SORT_ASC])->all();
 		
-		$searchModel = new LinkSearch();
+		$searchModel = new MainMenuSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
 		return $this->render('index', [
@@ -150,5 +152,39 @@ class MainController extends BaseController
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
+	}
+	
+	public function actionViewMenu($id = null)
+	{
+		/** @var MainMenu $item */
+		$item = null;
+		if ($id) {
+			$item = MainMenu::findOne($id);
+			if (!$item) {
+				throw new NotFoundHttpException('Пункт меню не найден');
+			}
+		} else {
+			$item = new MainMenu();
+		}
+		
+		if ($item->load(Yii::$app->request->post())) {
+			if ($item->save()) {
+				return $this->redirect(['index']);
+			} else {
+				return var_dump($item->errors);
+			}
+		}
+		
+		return $this->render('view-menu', ['item' => $item]);
+	}
+	
+	public function actionDeleteMenu($id)
+	{
+		$item = MainMenu::findOne($id);
+		if (!$item) {
+			throw new NotFoundHttpException('Пункт меню не найден');
+		}
+		$item->delete();
+		return $this->redirect(['index']);
 	}
 }
