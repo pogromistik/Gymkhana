@@ -11,6 +11,7 @@ use Yii;
  * @property string  $link
  * @property string  $title
  * @property string  $class
+ * @property $sort
  */
 class Link extends \yii\db\ActiveRecord
 {
@@ -28,7 +29,9 @@ class Link extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
+			[['link', 'title'], 'required'],
 			[['link', 'title', 'class'], 'string', 'max' => 255],
+			['sort', 'integer']
 		];
 	}
 
@@ -42,6 +45,18 @@ class Link extends \yii\db\ActiveRecord
 			'link'  => 'Ссылка',
 			'title' => 'Название',
 			'class' => 'Класс',
+			'sort' => 'Сортировка'
 		];
+	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
 	}
 }

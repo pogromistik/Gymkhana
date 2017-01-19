@@ -232,7 +232,7 @@ class AboutController extends BaseController
 		}
 	}
 	
-	public function actionContacts()
+	public function actionContacts($success = null)
 	{
 		$this->can('admin');
 		
@@ -241,9 +241,9 @@ class AboutController extends BaseController
 		}
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['contacts']);
+			return $this->redirect(['contacts', 'success' => true]);
 		}
 		
-		return $this->render('contacts', ['model' => $model]);
+		return $this->render('contacts', ['model' => $model, 'success' => $success]);
 	}
 }
