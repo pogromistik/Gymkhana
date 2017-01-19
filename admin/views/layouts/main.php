@@ -116,7 +116,7 @@ AppAsset::register($this);
                                 <a href="<?= Url::to(['/additional/years']) ?>"> Года</a>
                             </li>
                             <li>
-                                <a href="<?= Url::to(['qq']) ?>"> Картинки для предзагрузки</a>
+                                <a href="<?= Url::to(['/additional/preloader']) ?>"> Картинки для предзагрузки</a>
                             </li>
 							<?php if (\Yii::$app->user->can('developer')) { ?>
                                 <li>

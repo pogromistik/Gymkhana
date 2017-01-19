@@ -36,7 +36,19 @@ MainPageAsset::register($this);
 
         <!-- === pre loader logo === -->
         <div class="logo-preloader">
-
+			<?php
+			$pictures = \common\models\Files::find()->select('folder')->where(['type' => \common\models\Files::TYPE_LOAD_PICTURES])
+				->asArray()->column();
+			$time = date("s", time());
+			$time = $time % 10;
+			if ($time > count($pictures)) $time = count($pictures);
+			if ($time == 0) $time = 1;
+			$time -= 1;
+			?>
+	        <?= Html::img(\Yii::getAlias('@filesView') . '/' . $pictures[$time], [
+		        'alt'   => 'Мотоджимхана в Челябинске',
+		        'title' => 'Мотоджимхана в Челябинске'
+	        ]) ?>
         </div>
 
     </div>

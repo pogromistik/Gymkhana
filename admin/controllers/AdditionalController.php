@@ -2,6 +2,7 @@
 
 namespace admin\controllers;
 
+use common\models\Files;
 use common\models\Layout;
 use common\models\Link;
 use common\models\search\LayoutSearch;
@@ -142,7 +143,7 @@ class AdditionalController extends BaseController
 		}
 		
 		return $this->render('link-info', [
-			'model'  => $model,
+			'model'   => $model,
 			'success' => $success
 		]);
 	}
@@ -154,6 +155,46 @@ class AdditionalController extends BaseController
 			throw new NotFoundHttpException('Ссылка не найдена');
 		}
 		$model->delete();
+		
 		return $this->redirect('links');
+	}
+	
+	public function actionPreloader($success = false)
+	{
+		$file = new Files();
+		if ($file->load(Yii::$app->request->post())) {
+			$result = $file->saveFile(Files::TYPE_LOAD_PICTURES);
+			if ($result) {
+				return $this->redirect(['preloader', 'success' => true]);
+			} else {
+				return var_dump($result);
+			}
+		}
+		
+		$preloaders = Files::findAll(['type' => Files::TYPE_LOAD_PICTURES]);
+		
+		return $this->render('preloader', [
+			'file'       => $file,
+			'preloaders' => $preloaders,
+			'success'    => $success
+		]);
+	}
+	
+	public function actionRemoveFile($id)
+	{
+		$file = Files::findOne($id);
+		if (!$file) {
+			return 'Файл не найден';
+		}
+		$folder = $file->folder;
+		if (!$file->delete()) {
+			return 'Невозможно удалить файл';
+		}
+		$filePath = \Yii::getAlias('@files') . '/' . $folder;
+		if (file_exists($filePath)) {
+			unlink($filePath);
+		}
+		
+		return true;
 	}
 }

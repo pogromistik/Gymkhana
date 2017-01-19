@@ -47,3 +47,20 @@ $(document).on("submit", '#pageForm', function (e) {
     });
 
 });
+
+$('.removeFile').click(function () {
+    if (confirm("Уверены, что хотите удалить этот файл?")) {
+        var id = $(this).data('id');
+        $.get('/additional/remove-file', {
+            id: id
+        }).done(function (data) {
+            if (data == true) {
+                location.reload(true);
+            } else {
+                alert(data);
+            }
+        }).fail(function (error) {
+            alert(error.responseText);
+        });
+    }
+});
