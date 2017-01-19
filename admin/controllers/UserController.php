@@ -36,4 +36,11 @@ class UserController extends BaseController
 		
 		return $this->render('signup', ['model' => $signup]);
 	}
+	
+	public function actionHelp()
+	{
+		$this->can('admin');
+		
+		return $this->render('help');
+	}
 }

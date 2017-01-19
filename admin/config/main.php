@@ -12,6 +12,7 @@ return [
 	'timeZone'            => 'Asia/Yekaterinburg',
 	'name'                => 'gymkhana74',
 	'basePath'            => dirname(__DIR__),
+	'defaultRoute'        => 'user/help',
 	'controllerNamespace' => 'admin\controllers',
 	'bootstrap'           => ['log'],
 	'modules'             => [],

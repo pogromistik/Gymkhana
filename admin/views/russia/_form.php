@@ -8,6 +8,12 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<div class="alert alert-info">
+    <b>Для отображения города на карте требуются параметры top и left. Берутся они с сайта
+        <a href="http://card.gymkhana74.ru/" target="_blank">card.gymkhana74.ru</a>. Необходимо перейти на сайт, поставить точку в нужном месте
+    на карте и навести курсор на эту точку. Первая цифра - это параметр left, вторая цифра - параметр top.</b>
+</div>
+
 <div class="russia-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -15,15 +21,15 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'title')->textInput() ?>
 
     <?= $form->field($model, 'link')->textInput() ?>
-
-    <?= $form->field($model, 'top')->textInput() ?>
 	
 	<?= $form->field($model, 'left')->textInput() ?>
+    
+    <?= $form->field($model, 'top')->textInput() ?>
 	
 	<?= $form->field($model, 'showInRussiaPage')->checkbox() ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

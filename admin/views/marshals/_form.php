@@ -27,8 +27,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'motorcycle')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'motorFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
-
-    <?= $form->field($model, 'gifFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 	
 	<?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
     
