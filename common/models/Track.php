@@ -12,6 +12,7 @@ use Yii;
  * @property integer $documentId
  * @property string  $description
  * @property string  $title
+ * @property integer $sort
  * @property Files   $document
  */
 class Track extends \yii\db\ActiveRecord
@@ -33,7 +34,7 @@ class Track extends \yii\db\ActiveRecord
 	{
 		return [
 			[['description', 'title'], 'required'],
-			[['documentId'], 'integer'],
+			[['documentId', 'sort'], 'integer'],
 			[['description'], 'string'],
 			[['photoPath', 'title'], 'string', 'max' => 255],
 			[['photoFile'], 'file'],
@@ -51,12 +52,24 @@ class Track extends \yii\db\ActiveRecord
 			'documentId'  => 'Документ',
 			'description' => 'Описание',
 			'title'       => 'Заголовок',
-			'photoFile'   => 'Фотография'
+			'photoFile'   => 'Фотография',
+			'sort'        => 'Сортировка'
 		];
 	}
 	
 	public function getDocument()
 	{
 		return $this->hasOne(Files::className(), ['id' => 'documentId']);
+	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord) {
+			if (!$this->sort) {
+				$this->sort = self::find()->max('sort') + 1;
+			}
+		}
+		
+		return parent::beforeValidate();
 	}
 }
