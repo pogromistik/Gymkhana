@@ -23,13 +23,21 @@ use dosamigos\ckeditor\CKEditor;
 	
 	<?= $form->field($model, 'secure')->checkbox() ?>
 
+    <div class="alert alert-info">
+        Пропорции изображения должны быть 1:1
+    </div>
 	<?php if($model->previewImage) {
 		?>
-		<?= Html::img(Yii::getAlias('@filesView').$model->previewImage, ['class' => 'previewImg']) ?>
+        <table class="table">
+            <tr>
+                <td><?= $form->field($model, 'file')->fileInput() ?></td>
+                <td><?= Html::img(Yii::getAlias('@filesView').$model->previewImage, ['class' => 'previewImg']) ?></td>
+            </tr>
+        </table>
 		<?php
-	}
-	?>
-	<?= $form->field($model, 'file')->fileInput() ?>
+	} else { ?>
+		<?= $form->field($model, 'file')->fileInput() ?>
+    <?php } ?>
 
 	<div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

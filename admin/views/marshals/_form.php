@@ -15,7 +15,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'post')->textInput(['maxlength' => true]) ?>
-	
+
+    <div class="alert alert-info">
+        Рекомендуемые пропорции 97:50
+    </div>
 	<?php if ($model->photo) { ?>
         <table class="table">
             <tbody>
@@ -40,7 +43,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'text3')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'motorcycle')->textInput(['maxlength' => true]) ?>
-	
+    
 	<?php if ($model->photo) { ?>
         <table class="table">
             <tbody>

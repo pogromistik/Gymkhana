@@ -21,6 +21,9 @@ use dosamigos\ckeditor\CKEditor;
 
     <?= $form->field($model, 'sliderText')->textInput(['maxlength' => true]) ?>
 
+    <div class="alert alert-info">
+        Рекомендуемые пропорции 217:100
+    </div>
     <?= $form->field($model, 'slider[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
 
     <?= $form->field($model, 'sort')->textInput() ?>
