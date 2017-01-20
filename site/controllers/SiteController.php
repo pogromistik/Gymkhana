@@ -5,6 +5,7 @@ use common\models\AboutBlock;
 use common\models\Album;
 use common\models\City;
 use common\models\Contacts;
+use common\models\Files;
 use common\models\Link;
 use common\models\MainMenu;
 use common\models\MainPhoto;
@@ -12,6 +13,7 @@ use common\models\Marshal;
 use common\models\News;
 use common\models\Page;
 use common\models\Regular;
+use common\models\Track;
 use common\models\Year;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
@@ -128,6 +130,9 @@ class SiteController extends BaseController
 				$data['years'] = $years->orderBy(['year' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
 				$data['pagination'] = $pagination;
 				break;
+			case 'tracks':
+				$data['tracks'] = Track::find()->orderBy(['sort' => SORT_ASC])->all();
+				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');
 				break;
@@ -168,5 +173,15 @@ class SiteController extends BaseController
 			'albums'     => $albums,
 			'otherYears' => $otherYears
 		]);
+	}
+	
+	public function actionDownload($id)
+	{
+		$file = Files::findOne($id);
+		if (!$file) {
+			return 'не найден файл';
+		}
+		
+		return \Yii::$app->response->sendFile(\Yii::getAlias('@files') . '/' . $file->folder, $file->originalTitle);
 	}
 }

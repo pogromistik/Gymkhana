@@ -37,6 +37,7 @@ class Track extends \yii\db\ActiveRecord
 			[['documentId', 'sort'], 'integer'],
 			[['description'], 'string'],
 			[['photoPath', 'title'], 'string', 'max' => 255],
+			[['description'], 'string', 'max' => 605],
 			[['photoFile'], 'file'],
 		];
 	}

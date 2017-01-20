@@ -10,6 +10,11 @@ use yii\widgets\ActiveForm;
 $document = new \common\models\Files();
 ?>
 
+<div class="alert alert-info">
+    Рекомендуемые размеры изображения - 1400x687, или хотя бы те же пропорции (16:9). Если высота будет меньше (в пропорции) - текст на
+    странице может отображаться криво.
+</div>
+
 <div class="track-form">
 	
 	<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -37,7 +42,7 @@ $document = new \common\models\Files();
 		<?= $form->field($model, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 	<?php } ?>
 	
-	<?php if ($model->photoPath) { ?>
+	<?php if ($model->documentId) { ?>
         <table class="table">
             <tbody>
             <tr>
