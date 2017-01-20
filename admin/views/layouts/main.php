@@ -99,6 +99,18 @@ AppAsset::register($this);
                         </ul>
                     </li>
                     <li>
+                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Фигуры и трассы<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?= Url::to(['/tracks/index']) ?>"> Скачать трассы</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/figures/index']) ?>"> Результаты базовых фигур</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="<?= Url::to(['/russia/index']) ?>"><i
                                     class="fa fa-table fa-fw"></i> Россия</a>
                     </li>

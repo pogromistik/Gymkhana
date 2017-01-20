@@ -51,7 +51,7 @@ class m170110_152808_insert_layouts extends Migration
 			'title' => 'Базовые фигуры'
 		]);
 		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'downloadFigure',
+			'id'    => 'tracks',
 			'title' => 'Скачать фигуры'
 		]);
 		$this->insert(\common\models\Layout::tableName(), [
