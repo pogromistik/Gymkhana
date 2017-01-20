@@ -197,4 +197,14 @@ class AdditionalController extends BaseController
 		
 		return true;
 	}
+	
+	public function actionDownloadFile($id)
+	{
+		$file = Files::findOne($id);
+		if (!$file) {
+			throw new NotFoundHttpException('Файл не найден');
+		}
+		
+		return \Yii::$app->response->sendFile( Yii::getAlias('@files') . '/' . $file->folder, $file->originalTitle);
+	}
 }

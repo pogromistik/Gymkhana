@@ -15,8 +15,23 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'post')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+	
+	<?php if ($model->photo) { ?>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+	                <?= $form->field($model, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+                </td>
+                <td>
+	                <?= Html::img(Yii::getAlias('@filesView') . '/' . $model->photo) ?>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+	<?php } else { ?>
+		<?= $form->field($model, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+    <?php } ?>
 
     <?= $form->field($model, 'text1')->textarea(['rows' => 6]) ?>
 
@@ -25,8 +40,23 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'text3')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'motorcycle')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'motorFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+	
+	<?php if ($model->photo) { ?>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+	                <?= $form->field($model, 'motorFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+                </td>
+                <td>
+					<?= Html::img(Yii::getAlias('@filesView') . '/' . $model->motorcyclePhoto) ?>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+	<?php } else { ?>
+		<?= $form->field($model, 'motorFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+	<?php } ?>
 	
 	<?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
     

@@ -70,7 +70,7 @@ class Files extends \yii\db\ActiveRecord
 		return parent::beforeValidate();
 	}
 	
-	public function saveFile($type)
+	public function saveFile($type, $oneFile = false)
 	{
 		$folder = null;
 		$var = null;
@@ -102,13 +102,20 @@ class Files extends \yii\db\ActiveRecord
 				$item->originalTitle = $file->name;
 				$item->title = uniqid() . '.' . $file->extension;
 				$item->folder = $folder . '/' . $item->title;
-				$file->saveAs($dir . '/' . $item->title);
+				if (!$file->saveAs($dir . '/' . $item->title)) {
+					return 'error saveAs';
+				}
 				if (!$item->save()) {
 					return $item->errors;
 				}
+				if ($oneFile) {
+					return $item->id;
+				}
 			}
 		}
-		
+		if ($oneFile) {
+			return false;
+		}
 		return true;
 	}
 }
