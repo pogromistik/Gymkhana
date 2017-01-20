@@ -110,6 +110,10 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 
 	<?= $form->field($newBlock, 'sliderText')->textInput(['maxlength' => true]) ?>
 
+    <div class="alert alert-info">
+        Рекомендуемые пропорции 213:100
+    </div>
+    
 	<?= $form->field($newBlock, 'slider[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
 
 	<?= $form->field($newBlock, 'sort')->textInput(['maxlength' => true]) ?>

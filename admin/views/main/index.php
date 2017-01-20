@@ -83,6 +83,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
     <div class="col-xs-12">
         <h3>1. Слайдер</h3>
+        <div class="alert alert-info">
+            Рекомендуемые пропорции изображения 16:9. В любом случае, все изображения должны быть одинаковых пропорций.
+        </div>
 		<?= FileInput::widget([
 			'name'          => 'attachment_48[]',
 			'options'       => [
@@ -139,6 +142,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="col-xs-12">
         <h3>2. Левое меню</h3>
+        <div class="alert alert-info">
+            Рекомендуемые пропорции изображения 3:2.
+        </div>
 		<?= FileInput::widget([
 			'name'          => 'attachment_48[]',
 			'options'       => [
@@ -196,6 +202,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="col-xs-12">
         <h3>3. Нижнее меню</h3>
+        <div class="alert alert-info">
+            Пропорции изображения должны быть 1:1
+        </div>
 		<?= FileInput::widget([
 			'name'          => 'attachment_48[]',
 			'options'       => [
