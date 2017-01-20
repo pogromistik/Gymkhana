@@ -41,6 +41,10 @@ return [
 			'showScriptName'  => false,
 			'rules'           => [
 				[
+					'pattern' => 'download/<id:\w+>',
+					'route'   => 'site/download'
+				],
+				[
 					'pattern' => 'photogallery/<year:\w+>/<album:\w+>',
 					'route'   => 'site/albums'
 				],

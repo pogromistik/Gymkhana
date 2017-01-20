@@ -9,6 +9,14 @@
 		font-size: 14px;
 	}
 }
+@media (max-width: 1400px){
+	.tracks .item .picture {
+		width: 60%;
+	}
+	.tracks .item .info {
+		width: 40%;
+	}
+}
 @media (max-width: 1330px) {
 	.slider .slider_text {
 	    padding: 10px;
@@ -39,11 +47,17 @@
 	.news_list div {
 		font-size: 12px;
 	}
+	.tracks .item .info {
+		font-size: 12px;
+	}
 }
 
 @media (max-width: 1122px) {
 	.slider .slider_text {
 	    width: 40%;
+	}
+	.tracks .item .info {
+		font-size: 10px;
 	}
 }
 
@@ -88,11 +102,30 @@
 		font-size: 14px;
 		padding-right: 12px;
 	}
+	.tracks .description {
+		padding: 10px 20px;
+	}
+}
+
+@media (max-width: 934px) {
+	.slider .slider_text {
+		font-size: 18px;
+	}
+	.tracks .item .picture {
+		width: 100%;
+	}
+	.tracks .link {
+		position: relative;
+	}
+	.tracks .item .info {
+		position: relative;
+		width: 100%;
+	}
 }
 
 @media (max-width: 847px) {
 	.slider .slider_text {
-	    font-size: 18px;
+		font-size: 18px;
 	}
 }
 
