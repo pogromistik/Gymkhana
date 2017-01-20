@@ -17,6 +17,8 @@ $document = new \common\models\Files();
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 	
 	<?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    
+	<?= $form->field($model, 'sort')->textInput() ?>
 	
 	<?php if ($model->photoPath) { ?>
         <table class="table">
@@ -43,7 +45,8 @@ $document = new \common\models\Files();
 					<?= $form->field($document, 'file')->fileInput(['multiple' => false]) ?>
                 </td>
                 <td>
-                    <a href="<?= Yii::getAlias('@filesView') . '/' . $model->document->folder ?>" target="_blank"><?= $model->document->originalTitle ?></a>
+                    <a href="<?= Yii::getAlias('@filesView') . '/' . $model->document->folder ?>"
+                       target="_blank"><?= $model->document->originalTitle ?></a>
                 </td>
             </tr>
             </tbody>
