@@ -138,7 +138,7 @@ AppAsset::register($this);
                                     <a href="<?= Url::to(['/pages/index']) ?>"> Страницы</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/user/signup']) ?>"> Пользователи</a>
+                                    <a href="<?= Url::to(['/user/admin']) ?>"> Пользователи</a>
                                 </li>
 							<?php } ?>
                             <li>
