@@ -133,6 +133,8 @@ class SiteController extends BaseController
 			case 'tracks':
 				$data['tracks'] = Track::find()->orderBy(['sort' => SORT_ASC])->all();
 				break;
+			case 'championship':
+				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');
 				break;
