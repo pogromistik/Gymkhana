@@ -27,28 +27,16 @@ class m170110_152808_insert_layouts extends Migration
 			'title' => 'Видеогалерея'
 		]);
 		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'steps',
-			'title' => 'Предстоящие этапы'
+			'id'    => 'competitions',
+			'title' => 'Соревнования'
 		]);
 		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'stage',
-			'title' => 'Предстоящий этап'
+			'id'    => 'notFound',
+			'title' => 'Страница не найдена'
 		]);
 		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'competitionsResult',
-			'title' => 'Результаты соревнований (общая страница)'
-		]);
-		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'Результаты соревнований (детальная страница)',
-			'title' => 'Главная'
-		]);
-		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'figuresResult',
-			'title' => 'Результаты базовых фигур'
-		]);
-		$this->insert(\common\models\Layout::tableName(), [
-			'id'    => 'figureResult',
-			'title' => 'Базовые фигуры'
+			'id'    => 'inDevelop',
+			'title' => 'Страница в разработке'
 		]);
 		$this->insert(\common\models\Layout::tableName(), [
 			'id'    => 'tracks',
