@@ -13,7 +13,7 @@ class m160914_150332_add_news_block_table extends Migration
             'sliderText' => $this->string(),
             'sort'       => $this->integer()
         ]);
-        $this->addForeignKey('news_block_newsId', 'news_block', 'newsId', 'News', 'id');
+        $this->addForeignKey('news_block_newsId', 'news_block', 'newsId', 'news', 'id');
     }
 
     public function down()

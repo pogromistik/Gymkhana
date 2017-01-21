@@ -30,7 +30,7 @@ class MainPhoto extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'Main_Photo';
+		return 'main_photo';
 	}
 
 	/**
