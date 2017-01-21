@@ -6,7 +6,7 @@ class m160913_145333_add_News_table extends Migration
 {
 	public function up()
 	{
-		$this->createTable('News', [
+		$this->createTable('news', [
 			'id'           => $this->primaryKey(),
 			'title'        => $this->string()->notNull(),
 			'dateCreated'  => $this->integer()->notNull(),
