@@ -15,7 +15,7 @@ class m160926_100800_create_about_slider_table extends Migration
             'picture' => $this->string()->notNull(),
             'sort'    => $this->integer()
         ]);
-        $this->addForeignKey('about_slider_blockId', 'about_slider', 'blockId', 'about_block', 'id');
+        //$this->addForeignKey('about_slider_blockId', 'about_slider', 'blockId', 'about_block', 'id');
     }
 
     public function down()

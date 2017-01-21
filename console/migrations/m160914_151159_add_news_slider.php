@@ -13,8 +13,8 @@ class m160914_151159_add_news_slider extends Migration
             'picture' => $this->string()->notNull(),
             'sort'    => $this->integer()
         ]);
-        $this->addForeignKey('news_slider_newsId', 'news_slider', 'newsId', 'news', 'id');
-        $this->addForeignKey('news_slider_blockId', 'news_slider', 'blockId', 'news_block', 'id');
+        //$this->addForeignKey('news_slider_newsId', 'news_slider', 'newsId', 'news', 'id');
+        //$this->addForeignKey('news_slider_blockId', 'news_slider', 'blockId', 'news_block', 'id');
     }
 
     public function down()
