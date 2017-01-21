@@ -27,7 +27,7 @@ class BaseController extends Controller
 		parent::init();
 
 		if (\Yii::$app->user->isGuest) {
-			$this->redirect(['/site/login']);
+			$this->redirect(['/user/login']);
 			\Yii::$app->end();
 		}
 	}

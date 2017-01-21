@@ -12,10 +12,25 @@ return [
 	'timeZone'            => 'Asia/Yekaterinburg',
 	'name'                => 'gymkhana74',
 	'basePath'            => dirname(__DIR__),
-	'defaultRoute'        => 'user/help',
+	'defaultRoute'        => 'help/index',
 	'controllerNamespace' => 'admin\controllers',
 	'bootstrap'           => ['log'],
-	'modules'             => [],
+	'modules'             => [
+		'user' => [
+			'class'              => \dektrium\user\Module::class,
+			'enableRegistration' => false,
+			'admins'             => ['nadia'],
+			'controllerMap'      => [
+				'security' => \admin\controllers\SecurityController::class
+			],
+			'modelMap'           => [
+				'User' => \dektrium\user\models\User::className()
+			],
+		],
+		'rbac'     => [
+			'class' => 'dektrium\rbac\Module',
+		],
+	],
 	'components'          => [
 		'request'      => [
 			'csrfParam' => '_csrf-admin',
