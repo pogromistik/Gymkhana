@@ -27,7 +27,7 @@ class m161024_145149_create_pages_table extends Migration
 			'layoutId'    => $this->string()->notNull()
 		]);
 
-		$this->addForeignKey('pages_layoutId', 'pages', 'layoutId', 'layouts', 'id');
+		//$this->addForeignKey('pages_layoutId', 'pages', 'layoutId', 'layouts', 'id');
 	}
 
 	/**
