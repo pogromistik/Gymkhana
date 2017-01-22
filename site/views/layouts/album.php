@@ -17,7 +17,7 @@ AlbumAsset::register($this);
     <meta name="description" content="<?= $this->context->description ?>">
     <meta name="keywords" content="<?= $this->context->keywords ?>">
 	<?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->context->pageTitle) ?></title>
+    <title>Мотоджимхана: <?= Html::encode($this->context->pageTitle) ?></title>
 	<?php $this->head() ?>
 </head>
 <body>
