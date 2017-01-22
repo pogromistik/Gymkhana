@@ -16,7 +16,7 @@ use yii\filters\VerbFilter;
 /**
  * TracksController implements the CRUD actions for Track model.
  */
-class TracksController extends Controller
+class TracksController extends BaseController
 {
 	/**
 	 * @inheritdoc
@@ -35,6 +35,7 @@ class TracksController extends Controller
 	
 	public function actionIndex()
 	{
+		$this->can('admin');
 		$page = Page::findOne(['layoutId' => 'tracks']);
 		if (!$page) {
 			throw new NotFoundHttpException('Страница не найдена');
@@ -52,6 +53,7 @@ class TracksController extends Controller
 	
 	public function actionCreateOrUpdate($id = null, $success = null)
 	{
+		$this->can('admin');
 		$model = new Track();
 		if ($id) {
 			$model = $this->findModel($id);
@@ -92,6 +94,7 @@ class TracksController extends Controller
 	 */
 	public function actionDelete($id)
 	{
+		$this->can('admin');
 		$model = $this->findModel($id);
 		if ($model->photoPath) {
 			HelpModel::deleteFile($model->photoPath);

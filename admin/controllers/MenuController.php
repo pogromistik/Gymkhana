@@ -14,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * MenuController implements the CRUD actions for MenuItem model.
  */
-class MenuController extends Controller
+class MenuController extends BaseController
 {
 	/**
 	 * @inheritdoc
@@ -38,6 +38,7 @@ class MenuController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->can('admin');
 		$searchModel = new MenuItemSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -60,6 +61,7 @@ class MenuController extends Controller
 	 */
 	public function actionCreate()
 	{
+		$this->can('admin');
 		$model = new MenuItem();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -73,6 +75,7 @@ class MenuController extends Controller
 	
 	public function actionChangeGroup($id = null, $success = false)
 	{
+		$this->can('admin');
 		if ($id) {
 			$model = GroupMenu::findOne($id);
 			if (!$model) {
@@ -102,6 +105,7 @@ class MenuController extends Controller
 	 */
 	public function actionUpdate($id, $success = false)
 	{
+		$this->can('admin');
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -123,6 +127,7 @@ class MenuController extends Controller
 	 */
 	public function actionDelete($id)
 	{
+		$this->can('admin');
 		$this->findModel($id)->delete();
 		
 		return $this->redirect(['index']);
@@ -130,6 +135,7 @@ class MenuController extends Controller
 	
 	public function actionDeleteGroup($id)
 	{
+		$this->can('admin');
 		$model = GroupMenu::findOne($id);
 		if (!$model) {
 			throw new NotFoundHttpException();

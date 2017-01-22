@@ -72,6 +72,7 @@ class AlbumController extends BaseController
 	 */
 	public function actionCreate()
 	{
+		$this->can('admin');
 		$model = new Album();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -161,6 +162,7 @@ class AlbumController extends BaseController
 	
 	public function actionDeletePhoto($photoId)
 	{
+		$this->can('admin');
 		return HelpModel::deleteFile($photoId);
 	}
 }
