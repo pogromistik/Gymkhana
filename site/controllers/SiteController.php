@@ -74,6 +74,7 @@ class SiteController extends BaseController
 	{
 		$page = Page::findOne(['url' => $url]);
 		if (!$page) {
+			$this->pageTitle = 'Страница не найдена';
 			throw new NotFoundHttpException('Страница не найдена');
 		}
 		$this->pageTitle = $page->title;
@@ -146,12 +147,12 @@ class SiteController extends BaseController
 							$years = Year::findAll(['status' => Year::STATUS_ACTIVE]);
 							$data['map'][$page->layoutId] = [
 								'title' => $page->title,
-								'url' => $page->url
+								'url'   => $page->url
 							];
 							foreach ($years as $year) {
 								$data['map'][$page->layoutId]['children'][] = [
 									'title' => $year->year,
-									'url' => '/photogallery/'.$year->year
+									'url'   => '/photogallery/' . $year->year
 								];
 							}
 							break;
@@ -159,13 +160,13 @@ class SiteController extends BaseController
 							$tracks = Track::find()->orderBy(['sort' => SORT_ASC])->all();
 							$data['map'][$page->layoutId] = [
 								'title' => $page->title,
-								'url' => $page->url
+								'url'   => $page->url
 							];
 							/** @var Track $track */
 							foreach ($tracks as $track) {
 								$data['map'][$page->layoutId]['children'][] = [
 									'title' => $track->title,
-									'url' => $page->url
+									'url'   => $page->url
 								];
 							}
 							break;
@@ -179,6 +180,7 @@ class SiteController extends BaseController
 				}
 				break;
 			default:
+				$this->pageTitle = 'Страница не найдена';
 				throw new NotFoundHttpException('Страница не найдена');
 				break;
 		}
@@ -186,8 +188,7 @@ class SiteController extends BaseController
 		return $this->render($page->layoutId, ['data' => $data, 'page' => $page]);
 	}
 	
-	public
-	function actionAlbums($year, $album = null)
+	public function actionAlbums($year, $album = null)
 	{
 		$year = Year::findOne(['year' => $year]);
 		if (!$year) {
@@ -221,8 +222,7 @@ class SiteController extends BaseController
 		]);
 	}
 	
-	public
-	function actionDownload($id)
+	public function actionDownload($id)
 	{
 		$file = Files::findOne($id);
 		if (!$file) {
