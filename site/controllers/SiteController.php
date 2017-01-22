@@ -135,6 +135,49 @@ class SiteController extends BaseController
 				break;
 			case 'championship':
 				break;
+			case 'sitemap':
+				$pages = Page::find()->where(['not', ['layoutId' => 'news']])->orWhere(['parentId' => 'null'])->all();
+				/** @var Page $page */
+				foreach ($pages as $page) {
+					switch ($page->layoutId) {
+						case 'sitemap':
+							break;
+						case 'photoGallery':
+							$years = Year::findAll(['status' => Year::STATUS_ACTIVE]);
+							$data['map'][$page->layoutId] = [
+								'title' => $page->title,
+								'url' => $page->url
+							];
+							foreach ($years as $year) {
+								$data['map'][$page->layoutId]['children'][] = [
+									'title' => $year->year,
+									'url' => '/photogallery/'.$year->year
+								];
+							}
+							break;
+						case 'tracks':
+							$tracks = Track::find()->orderBy(['sort' => SORT_ASC])->all();
+							$data['map'][$page->layoutId] = [
+								'title' => $page->title,
+								'url' => $page->url
+							];
+							/** @var Track $track */
+							foreach ($tracks as $track) {
+								$data['map'][$page->layoutId]['children'][] = [
+									'title' => $track->title,
+									'url' => $page->url
+								];
+							}
+							break;
+						default:
+							$data['map'][$page->layoutId] = [
+								'title' => $page->title,
+								'url'   => $page->url
+							];
+							break;
+					}
+				}
+				break;
 			default:
 				throw new NotFoundHttpException('Страница не найдена');
 				break;
@@ -143,7 +186,8 @@ class SiteController extends BaseController
 		return $this->render($page->layoutId, ['data' => $data, 'page' => $page]);
 	}
 	
-	public function actionAlbums($year, $album = null)
+	public
+	function actionAlbums($year, $album = null)
 	{
 		$year = Year::findOne(['year' => $year]);
 		if (!$year) {
@@ -177,7 +221,8 @@ class SiteController extends BaseController
 		]);
 	}
 	
-	public function actionDownload($id)
+	public
+	function actionDownload($id)
 	{
 		$file = Files::findOne($id);
 		if (!$file) {
