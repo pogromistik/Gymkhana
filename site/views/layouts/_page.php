@@ -82,20 +82,9 @@ use common\models\MenuItem;
 			<div class="col-md-8 col-sm-6 col-xs-12">
 				<h4>Навигация по сайту</h4>
 				<ul>
-					<li><a href="/">О проекте</a></li>
-					<li><a href="/">Правила</a></li>
-					<li><a href="/">Маршалы</a></li>
-					<li><a href="/">Помочь проекту</a></li>
-					<li><a href="/">Адреса</a></li>
-					<li><a href="/">Спонсоры</a></li>
-					<li><a href="/">Предстоящие этапы</a></li>
-					<li><a href="/">Результаты соревнований</a></li>
-					<li><a href="/">Результаты базовых фигур</a></li>
-					<li><a href="/">Скачать фигуры</a></li>
-					<li><a href="/">Фотогалерея</a></li>
-					<li><a href="/">Видеогалерея</a></li>
-					<li><a href="/">Россия</a></li>
-					<li><a href="/">Урал</a></li>
+                    <?php foreach (\common\models\Page::findAll(['parentId' => null]) as $page) { ?>
+                        <li><a href="/<?=$page->url?>"><?= $page->title ?></a></li>
+                    <?php } ?>
 				</ul>
 			</div>
 			<div class="col-md-4 col-sm-6 col-xs-12">
