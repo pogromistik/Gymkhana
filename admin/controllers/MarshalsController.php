@@ -104,7 +104,7 @@ class MarshalsController extends BaseController
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			HelpModel::saveOtherPhoto($model, 'marshals', 'photo', 'photoFile');
-			HelpModel::saveOtherPhoto($model, 'marshals', 'motorcycle', 'motorFile');
+			HelpModel::saveOtherPhoto($model, 'marshals', 'motorcyclePhoto', 'motorFile');
 			HelpModel::saveOtherPhoto($model, 'marshals', 'gif', 'gifFile');
 			
 			return $this->redirect(['view', 'id' => $model->id]);
