@@ -417,6 +417,12 @@ use yii\bootstrap\Html;
                                 <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
                             </a>
 						<?php } ?>
+                        <a href="/photogallery">
+                            <li>Фотогалерея</li>
+                        </a>
+                        <a href="/sitemap">
+                            <li>Карта сайта</li>
+                        </a>
                     </ul>
                 </div>
             </div>
