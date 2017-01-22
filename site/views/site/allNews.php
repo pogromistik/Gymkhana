@@ -30,7 +30,6 @@ use yii\widgets\LinkPager;
 									'alt'   => $news->title,
 									'title' => $news->title,
 								]) ?>
-								<img src="img/news/1/Kvadrat_dlya_novosti.jpg">
 							</div>
 						</div>
 					</a>
