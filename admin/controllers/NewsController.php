@@ -187,6 +187,7 @@ class NewsController extends BaseController
 	
 	public function actionUpdateBlock($id)
 	{
+		$this->can('admin');
 		$block = NewsBlock::findOne($id);
 		if (!$block) {
 			throw new NotFoundHttpException('Блок не найден');

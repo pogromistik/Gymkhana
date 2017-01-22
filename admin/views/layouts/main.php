@@ -60,92 +60,94 @@ AppAsset::register($this);
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
-                    <li>
-                        <a href="<?= Url::to(['/main/index']) ?>"><i
-                                    class="fa fa-table fa-fw"></i> Главная страница</a>
-                    </li>
-                    <li>
-                        <a href="<?= Url::to(['/news/index']) ?>"><i
-                                    class="fa fa-table fa-fw"></i> Новости</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> О проекте<span
-                                    class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="<?= Url::to(['/about/index']) ?>"> О проекте</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/about/regular']) ?>"> Правила</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/marshals/index']) ?>"> Маршалы</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/about/sponsors']) ?>"> Спонсоры</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Галерея<span
-                                    class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="<?= Url::to(['/video/index']) ?>"> Видеогалерея</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/album/index']) ?>"> Фотогалерея</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Фигуры и трассы<span
-                                    class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="<?= Url::to(['/tracks/index']) ?>"> Скачать трассы</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/figures/index']) ?>"> Результаты базовых фигур</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="<?= Url::to(['/russia/index']) ?>"><i
-                                    class="fa fa-table fa-fw"></i> Россия</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Дополнительно<span
-                                    class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="<?= Url::to(['/additional/links']) ?>"> Ссылки на соц сети</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/about/contacts']) ?>"> Контактная информация</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/additional/years']) ?>"> Года</a>
-                            </li>
-                            <li>
-                                <a href="<?= Url::to(['/additional/preloader']) ?>"> Картинки для предзагрузки</a>
-                            </li>
-							<?php if (\Yii::$app->user->can('developer')) { ?>
+					<?php if (\Yii::$app->user->can('admin')) { ?>
+                        <li>
+                            <a href="<?= Url::to(['/main/index']) ?>"><i
+                                        class="fa fa-table fa-fw"></i> Главная страница</a>
+                        </li>
+                        <li>
+                            <a href="<?= Url::to(['/news/index']) ?>"><i
+                                        class="fa fa-table fa-fw"></i> Новости</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> О проекте<span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="<?= Url::to(['/additional/layouts']) ?>"> Шаблоны</a>
+                                    <a href="<?= Url::to(['/about/index']) ?>"> О проекте</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/pages/index']) ?>"> Страницы</a>
+                                    <a href="<?= Url::to(['/about/regular']) ?>"> Правила</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/user/admin']) ?>"> Пользователи</a>
+                                    <a href="<?= Url::to(['/marshals/index']) ?>"> Маршалы</a>
                                 </li>
-							<?php } ?>
-                            <li>
-                                <a href="<?= Url::to(['/menu/index']) ?>"> Меню</a>
-                            </li>
-                        </ul>
-                    </li>
+                                <li>
+                                    <a href="<?= Url::to(['/about/sponsors']) ?>"> Спонсоры</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Галерея<span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?= Url::to(['/video/index']) ?>"> Видеогалерея</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/album/index']) ?>"> Фотогалерея</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Фигуры и трассы<span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?= Url::to(['/tracks/index']) ?>"> Скачать трассы</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/figures/index']) ?>"> Результаты базовых фигур</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="<?= Url::to(['/russia/index']) ?>"><i
+                                        class="fa fa-table fa-fw"></i> Россия</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Дополнительно<span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?= Url::to(['/additional/links']) ?>"> Ссылки на соц сети</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/about/contacts']) ?>"> Контактная информация</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/additional/years']) ?>"> Года</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/additional/preloader']) ?>"> Картинки для предзагрузки</a>
+                                </li>
+								<?php if (\Yii::$app->user->can('developer')) { ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/additional/layouts']) ?>"> Шаблоны</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= Url::to(['/pages/index']) ?>"> Страницы</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= Url::to(['/user/admin']) ?>"> Пользователи</a>
+                                    </li>
+								<?php } ?>
+                                <li>
+                                    <a href="<?= Url::to(['/menu/index']) ?>"> Меню</a>
+                                </li>
+                            </ul>
+                        </li>
+					<?php } ?>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

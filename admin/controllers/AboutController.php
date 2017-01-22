@@ -48,6 +48,7 @@ class AboutController extends BaseController
 	
 	public function actionIndex()
 	{
+		$this->can('admin');
 		$searchModel = new AboutBlockSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -71,6 +72,7 @@ class AboutController extends BaseController
 	 */
 	public function actionView($id)
 	{
+		$this->can('admin');
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -84,6 +86,7 @@ class AboutController extends BaseController
 	 */
 	public function actionCreate()
 	{
+		$this->can('admin');
 		$model = new AboutBlock();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -106,6 +109,7 @@ class AboutController extends BaseController
 	 */
 	public function actionUpdate($id)
 	{
+		$this->can('admin');
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -128,6 +132,7 @@ class AboutController extends BaseController
 	 */
 	public function actionDelete($id)
 	{
+		$this->can('admin');
 		$sliderPictures = AboutSlider::findAll(['blockId' => $id]);
 		foreach ($sliderPictures as $picture) {
 			HelpModel::deletePhoto($picture, $picture->picture);

@@ -13,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * DopPageController implements the CRUD actions for DopPage model.
  */
-class DopPagesController extends Controller
+class DopPagesController extends BaseController
 {
     /**
      * @inheritdoc
@@ -36,6 +36,7 @@ class DopPagesController extends Controller
      */
     public function actionIndex()
     {
+	    $this->can('admin');
         $searchModel = new DopPageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -52,6 +53,7 @@ class DopPagesController extends Controller
      */
     public function actionView($id)
     {
+	    $this->can('admin');
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -64,6 +66,7 @@ class DopPagesController extends Controller
      */
     public function actionCreate()
     {
+	    $this->can('admin');
         $model = new DopPage();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -84,6 +87,7 @@ class DopPagesController extends Controller
      */
     public function actionUpdate($id)
     {
+	    $this->can('admin');
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -104,6 +108,7 @@ class DopPagesController extends Controller
      */
     public function actionDelete($id)
     {
+	    $this->can('admin');
         $model = $this->findModel($id);
         if ($model->picture) {
             HelpModel::deleteFile($model->picture);

@@ -118,6 +118,7 @@ class AdditionalController extends BaseController
 	
 	public function actionLinks()
 	{
+		$this->can('admin');
 		$searchModel = new LinkSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -129,6 +130,7 @@ class AdditionalController extends BaseController
 	
 	public function actionLinkInfo($id = null, $success = null)
 	{
+		$this->can('admin');
 		if ($id) {
 			$model = Link::findOne($id);
 			if (!$model) {
@@ -150,6 +152,7 @@ class AdditionalController extends BaseController
 	
 	public function actionDeleteLink($id)
 	{
+		$this->can('admin');
 		$model = Link::findOne($id);
 		if (!$model) {
 			throw new NotFoundHttpException('Ссылка не найдена');
@@ -161,6 +164,7 @@ class AdditionalController extends BaseController
 	
 	public function actionPreloader($success = false)
 	{
+		$this->can('admin');
 		$file = new Files();
 		if ($file->load(Yii::$app->request->post())) {
 			$result = $file->saveFile(Files::TYPE_LOAD_PICTURES);
@@ -182,6 +186,7 @@ class AdditionalController extends BaseController
 	
 	public function actionRemoveFile($id)
 	{
+		$this->can('admin');
 		$file = Files::findOne($id);
 		if (!$file) {
 			return 'Файл не найден';
@@ -200,6 +205,7 @@ class AdditionalController extends BaseController
 	
 	public function actionDownloadFile($id)
 	{
+		$this->can('admin');
 		$file = Files::findOne($id);
 		if (!$file) {
 			throw new NotFoundHttpException('Файл не найден');

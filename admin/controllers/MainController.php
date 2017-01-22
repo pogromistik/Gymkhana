@@ -76,6 +76,7 @@ class MainController extends BaseController
 	 */
 	public function actionViewLink($id)
 	{
+		$this->can('admin');
 		return $this->render('view-link', [
 			'model' => $this->findModelLink($id),
 		]);
@@ -89,6 +90,7 @@ class MainController extends BaseController
 	 */
 	public function actionCreateLink()
 	{
+		$this->can('admin');
 		$model = new Link();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -110,6 +112,7 @@ class MainController extends BaseController
 	 */
 	public function actionUpdateLink($id)
 	{
+		$this->can('admin');
 		$model = $this->findModelLink($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -131,6 +134,7 @@ class MainController extends BaseController
 	 */
 	public function actionDeleteLink($id)
 	{
+		$this->can('admin');
 		$this->findModelLink($id)->delete();
 		
 		return $this->redirect(['index']);
@@ -156,6 +160,7 @@ class MainController extends BaseController
 	
 	public function actionViewMenu($id = null)
 	{
+		$this->can('admin');
 		/** @var MainMenu $item */
 		$item = null;
 		if ($id) {
@@ -180,6 +185,7 @@ class MainController extends BaseController
 	
 	public function actionDeleteMenu($id)
 	{
+		$this->can('admin');
 		$item = MainMenu::findOne($id);
 		if (!$item) {
 			throw new NotFoundHttpException('Пункт меню не найден');
