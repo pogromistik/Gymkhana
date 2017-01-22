@@ -22,6 +22,10 @@ html, body {
     font-family: "Exo";
 }
 
+.opacity-menu {
+    overflow: hidden;
+}
+
 small {
     color: #ccc;
 }
