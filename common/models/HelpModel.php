@@ -59,7 +59,7 @@ class HelpModel extends Model
 		if ($file) {
 			$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 			$file->saveAs($dir . '/' . $fileName);
-			$model->$varName = $saveDirName . $fileName;
+			$model->$varName = $saveDirName . '/' .$fileName;
 			$model->save(false);
 		}
 	}
