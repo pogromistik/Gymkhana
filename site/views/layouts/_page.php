@@ -84,7 +84,14 @@ use common\models\MenuItem;
                 <h4>Навигация по сайту</h4>
                 <ul>
 					<?php foreach (\common\models\Page::findAll(['parentId' => null]) as $page) { ?>
-                        <li><a href="<?= ($page->url == '/') ?: '/' ?><?= $page->url ?>"><?= $page->title ?></a></li>
+                        <?php
+                        if ($page->url == '/') {
+                            $url = '/';
+                        } else {
+                            $url = '/' . $page->url;
+                        }
+                        ?>
+                        <li><a href="<?= $url ?>"><?= $page->title ?></a></li>
 					<?php } ?>
                 </ul>
             </div>
