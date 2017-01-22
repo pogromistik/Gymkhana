@@ -17,9 +17,6 @@ class HelpModel extends Model
 
 	public static function savePreviewPhoto($model, $folder)
 	{
-		if (!file_exists(\Yii::getAlias('@files') . '/' . $folder)) {
-			mkdir(\Yii::getAlias('@files') . '/' . $folder);
-		}
 		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
 		if (!file_exists($dir)) {
 			mkdir($dir);
@@ -62,7 +59,7 @@ class HelpModel extends Model
 		if ($file) {
 			$fileName = round(microtime(true)*1000) . '.' . $file->extension;
 			$file->saveAs($dir . '/' . $fileName);
-			$model->$varName = $saveDirName . '/' . $fileName;
+			$model->$varName = $saveDirName . $fileName;
 			$model->save(false);
 		}
 	}
