@@ -6,7 +6,7 @@ use yii\bootstrap\Html;
 
 ?>
 
-<div id="content" class="container">
+<div id="content" class="container small-height">
     <ul>
 		<?php foreach ($data['map'] as $layout => $info) { ?>
             <li>

@@ -37,6 +37,11 @@ $(function(){
 });
 
 $(document).ready(function() {
+    if ($('#content').hasClass('small-height')) {
+        var margin = $('.footer').outerHeight()+50;
+        $('.footer').css({'margin-top': '-' + margin + 'px'});
+    }
+
    $(".top_nav.logo img")
         .mouseover(function() {
             $(".logo2").hide();
