@@ -22,6 +22,10 @@ html, body {
     font-family: "Exo";
 }
 
+body > #content {
+    min-height: 100%;
+}
+
 .opacity-menu {
     overflow: hidden;
 }
