@@ -138,19 +138,19 @@ class SiteController extends BaseController
 				break;
 			case 'sitemap':
 				$pages = Page::find()->where(['not', ['layoutId' => 'news']])->orWhere(['parentId' => 'null'])->all();
-				/** @var Page $page */
-				foreach ($pages as $page) {
-					switch ($page->layoutId) {
+				/** @var Page $mapPage */
+				foreach ($pages as $mapPage) {
+					switch ($mapPage->layoutId) {
 						case 'sitemap':
 							break;
 						case 'photoGallery':
 							$years = Year::findAll(['status' => Year::STATUS_ACTIVE]);
-							$data['map'][$page->layoutId] = [
-								'title' => $page->title,
-								'url'   => $page->url
+							$data['map'][$mapPage->layoutId] = [
+								'title' => $mapPage->title,
+								'url'   => $mapPage->url
 							];
 							foreach ($years as $year) {
-								$data['map'][$page->layoutId]['children'][] = [
+								$data['map'][$mapPage->layoutId]['children'][] = [
 									'title' => $year->year,
 									'url'   => '/photogallery/' . $year->year
 								];
@@ -158,22 +158,22 @@ class SiteController extends BaseController
 							break;
 						case 'tracks':
 							$tracks = Track::find()->orderBy(['sort' => SORT_ASC])->all();
-							$data['map'][$page->layoutId] = [
-								'title' => $page->title,
-								'url'   => $page->url
+							$data['map'][$mapPage->layoutId] = [
+								'title' => $mapPage->title,
+								'url'   => $mapPage->url
 							];
 							/** @var Track $track */
 							foreach ($tracks as $track) {
-								$data['map'][$page->layoutId]['children'][] = [
+								$data['map'][$mapPage->layoutId]['children'][] = [
 									'title' => $track->title,
-									'url'   => $page->url
+									'url'   => $mapPage->url
 								];
 							}
 							break;
 						default:
-							$data['map'][$page->layoutId] = [
-								'title' => $page->title,
-								'url'   => $page->url
+							$data['map'][$mapPage->layoutId] = [
+								'title' => $mapPage->title,
+								'url'   => $mapPage->url
 							];
 							break;
 					}
