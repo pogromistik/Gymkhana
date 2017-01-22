@@ -487,14 +487,14 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="right-item-icons">
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="gallery/videogallery/polevskoj/"><img
+                           data-lightbox="feature" href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
                                     src="img/icon/pol.png"></a>
                         <a class="animated wow fadeInDown inv" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="gallery/videogallery/lekczii/"><img src="img/icon/lec.png"></a>
+                           data-lightbox="feature" href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img src="img/icon/lec.png"></a>
                         <a class="animated wow fadeInDown inv" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="gallery/videogallery/blog/"><img src="img/icon/blog.png"></a>
+                           data-lightbox="feature" href="https://www.youtube.com/playlist?list=PLPRuX9QmtJacPekTI3n_AIiU9BS39mmyQ"><img src="img/icon/blog.png"></a>
                         <a class="animated wow fadeInDown inv" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="gallery/videogallery/dzhimxana/"><img
+                           data-lightbox="feature" href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
                                     src="img/icon/gm.png"></a>
                     </div>
                 </div>
@@ -514,13 +514,13 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="right-item-icons">
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=103">Eraser</a>
+                           data-lightbox="feature" href="/championship">Eraser</a>
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=102">Shiso GP</a>
+                           data-lightbox="feature" href="/championship">Shiso GP</a>
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=45">Pita GP</a>
+                           data-lightbox="feature" href="/championship">Pita GP</a>
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="index.php?id=14">GP8</a>
+                           data-lightbox="feature" href="/championship">GP8</a>
                     </div>
                 </div>
             </div>
