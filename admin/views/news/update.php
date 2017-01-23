@@ -102,7 +102,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 		}
 		?>
 		<?= Html::a('Редактировать блок', ['/news/update-block', 'id' => $newsBlock->id],
-			['class' => 'btn btn-success']) ?>
+			['class' => 'btn btn-success']) ?><br>
 	<?php } ?>
 
     <h3>Добавить новый блок</h3>

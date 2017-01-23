@@ -71,7 +71,7 @@ $this->title = 'Редактирование блока ' . $block->id . ' дл�
 				])
 				?></td>
 			<td>
-				<?= Html::a('Удалить', ['/news/delete-slider', 'id' => $slider->id, 'modelId' => $block->news->id, 'action' => 'update-block'],
+				<?= Html::a('Удалить', ['/news/delete-slider', 'id' => $slider->id, 'modelId' => $block->id, 'action' => 'update-block'],
 					['data' => [
 						'confirm' => 'Вы уверены, что хотите удалить это изображение?',
 						'method'  => 'post',
