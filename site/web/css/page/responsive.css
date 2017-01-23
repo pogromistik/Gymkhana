@@ -177,6 +177,14 @@
     .system-page h3 {
         font-size: 16px;
     }
+
+    .big-hide {
+        display: block;
+    }
+
+    .big-show {
+        display: none;
+    }
 }
 
 @media (max-width: 652px) {

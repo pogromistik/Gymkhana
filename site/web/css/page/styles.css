@@ -1243,3 +1243,14 @@ nav .dropdown-menu li a:hover {
 .tracks img {
     width: 100%;
 }
+
+.big-hide {
+    display: none;
+    padding: 10px;
+}
+.big-hide .item.motorcycle {
+    text-align: left;
+}
+#content .big-hide .item.motorcycle img {
+    max-width: 200px;
+}
