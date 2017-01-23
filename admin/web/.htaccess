@@ -8,3 +8,6 @@
 
            # use index.php as index file
            DirectoryIndex index.php
+
+php_value post_max_size 32M
+php_value upload_max_filesize 32M
