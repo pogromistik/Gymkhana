@@ -22,7 +22,7 @@ use yii\bootstrap\Html;
 				]) ?>
             </div>
 
-            <div class="row">
+            <div class="row big-show">
                 <div class="col-md-3 col-sm-6 item">
                     <div class="my-button">
                         <div class="my-button-border-right"></div>
@@ -57,6 +57,28 @@ use yii\bootstrap\Html;
                             <a href="<?= $marshal->link ?>" target="_blank"><?= $marshal->link ?></a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="row big-hide">
+                <div class="col-sm-12 item">
+	                <?= $marshal->text1 ?>
+                </div>
+                <div class="col-sm-12 item">
+	                <?= $marshal->text2 ?>
+                </div>
+                <div class="col-sm-12 item">
+	                <?= $marshal->text3 ?>
+                </div>
+                <div class="col-sm-12 item motorcycle">
+	                <?= $marshal->motorcycle ?>
+		            <?= Html::img(\Yii::getAlias('@filesView') . '/' . $marshal->motorcyclePhoto, [
+			            'alt'   => $marshal->motorcycle,
+			            'title' => $marshal->motorcycle
+		            ]) ?>
+                </div>
+                <div class="col-sm-12 item">
+                    <a href="<?= $marshal->link ?>" target="_blank"><?= $marshal->link ?></a>
                 </div>
             </div>
         </div>
