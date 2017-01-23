@@ -40,7 +40,7 @@ use yii\bootstrap\Html;
 <div class="al-bg-none">
     <a href="/photogallery">выбрать другой год</a><br>
 	<?php foreach ($otherYears as $otherYear) { ?>
-        <a href="/photogallery/<?= $otherYear->year ?>/<?= $otherYear->id ?>"
+        <a href="/photogallery/<?= $otherYear->year ?>"
            class="<?= ($otherYear->id == $year->id) ? 'active' : null ?>">
 			<?= $otherYear->year ?>
         </a>
