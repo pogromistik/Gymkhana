@@ -78,6 +78,7 @@ class AlbumController extends BaseController
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$model->folder = 'albums/' . $model->year->year . '/' . $model->id;
 			$model->save(false);
+			HelpModel::createFolder('albums');
 			HelpModel::createFolder('albums/' . $model->year->year);
 			HelpModel::createFolder($model->folder);
 			
