@@ -109,7 +109,7 @@ class NewsController extends BaseController
 	 * @param integer $id
 	 * @return mixed
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate($id, $success = false)
 	{
 		$this->can('admin');
 		$model = $this->findModel($id);
@@ -120,7 +120,7 @@ class NewsController extends BaseController
 			if ($newBlock->save()) {
 				HelpModel::saveSliderPhotos($newBlock, 'news', $model->id, HelpModel::MODEL_NEWS_SLIDER);
 				
-				return $this->redirect(['view', 'id' => $model->id]);
+				return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
 			} else {
 				return var_dump($newBlock->errors);
 			}
@@ -130,11 +130,12 @@ class NewsController extends BaseController
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			HelpModel::savePreviewPhoto($model, 'news');
 			
-			return $this->redirect(['view', 'id' => $model->id]);
+			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
 		} else {
 			return $this->render('update', [
 				'model'    => $model,
-				'newBlock' => $newBlock
+				'newBlock' => $newBlock,
+				'success' => $success
 			]);
 		}
 	}

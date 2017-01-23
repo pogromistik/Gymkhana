@@ -10,6 +10,7 @@ use kartik\file\FileInput;
 /**
  * @var common\models\NewsBlock $newBlock
  * @var common\models\NewsBlock $newSlider
+ * @var integer                 $success
  */
 
 $this->title = 'Редактировать новость: ' . $model->title;
@@ -17,23 +18,28 @@ $this->params['breadcrumbs'][] = ['label' => 'Новости', 'url' => ['index'
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
+
+<?php if ($success) { ?>
+    <div class="alert alert-success">Изменеения успешно сохранены</div>
+<?php } ?>
+
 <div class="news-update">
 
-	<div class="alert alert-info"><b>Информация для списка новостей</b></div>
-
+    <div class="alert alert-info"><b>Информация для списка новостей</b></div>
+	
 	<?= $this->render('_form', [
 		'model' => $model,
 	]) ?>
 
-	<div class="alert alert-info">
-		<b>Новость</b><br>
-		Новость состоит из блоков: слайдер+текст. Можно добавить только слайдер или только текст.
-		Блоки сортируются по полю "сортировка" от меньшего к большему.
-		На слайдер можно добавить текст, но не обязательно.
-	</div>
-
+    <div class="alert alert-info">
+        <b>Новость</b><br>
+        Новость состоит из блоков: слайдер+текст. Можно добавить только слайдер или только текст.
+        Блоки сортируются по полю "сортировка" от меньшего к большему.
+        На слайдер можно добавить текст, но не обязательно.
+    </div>
+	
 	<?php
-
+	
 	foreach ($model->newsBlock as $newsBlock) {
 		?>
 		<?= $newsBlock->sort ?>
@@ -50,23 +56,23 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 				<?php
 			}
 			?>
-			<table class="table">
-				<thead>
-				<tr>
-					<th>Изображение</th>
-					<th>Сортировка</th>
-					<th></th>
-				</tr>
-				</thead>
-				<tbody>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Изображение</th>
+                    <th>Сортировка</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
 				<?php
 				foreach ($newsBlock->newsSliders as $slider) {
 					?>
-					<tr>
-						<td>
-							<?= Html::img(Yii::getAlias('@filesView').$slider->picture) ?>
-						</td>
-						<td><?= \dosamigos\editable\Editable::widget([
+                    <tr>
+                        <td>
+							<?= Html::img(Yii::getAlias('@filesView') . $slider->picture) ?>
+                        </td>
+                        <td><?= \dosamigos\editable\Editable::widget([
 								'name'          => 'sort',
 								'value'         => $slider->sort,
 								'url'           => '/news/update-slider',
@@ -79,19 +85,19 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 								]
 							])
 							?></td>
-						<td>
+                        <td>
 							<?= Html::a('Удалить', ['/news/delete-slider', 'id' => $slider->id, 'modelId' => $model->id, 'action' => 'update'],
 								['data' => [
 									'confirm' => 'Вы уверены, что хотите удалить это изображение?',
 									'method'  => 'post',
 								]]) ?>
-						</td>
-					</tr>
+                        </td>
+                    </tr>
 					<?php
 				}
 				?>
-				</tbody>
-			</table>
+                </tbody>
+            </table>
 			<?php
 		}
 		?>
@@ -99,28 +105,28 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			['class' => 'btn btn-success']) ?>
 	<?php } ?>
 
-	<h3>Добавить новый блок</h3>
+    <h3>Добавить новый блок</h3>
 	<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-
+	
 	<?= $form->field($newBlock, 'text')->widget(CKEditor::className(), [
 		'options' => ['id' => 'newBlock'],
 		'preset'  => 'advent',
-
+	
 	]) ?>
-
+	
 	<?= $form->field($newBlock, 'sliderText')->textInput(['maxlength' => true]) ?>
 
     <div class="alert alert-info">
         Рекомендуемые пропорции 213:100
     </div>
-    
+	
 	<?= $form->field($newBlock, 'slider[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
-
+	
 	<?= $form->field($newBlock, 'sort')->textInput(['maxlength' => true]) ?>
 
-	<div class="form-group">
+    <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-	</div>
-
+    </div>
+	
 	<?php ActiveForm::end(); ?>
 </div>
