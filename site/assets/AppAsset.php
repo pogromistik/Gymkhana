@@ -20,7 +20,8 @@ class AppAsset extends AssetBundle
 		'js/jquery.sliphover.min.js',
 		'js/jquery.stellar.min.js',
 		'js/owl.carousel.min.js',
-		'js/smoothscroll.min.js'
+		'js/smoothscroll.min.js',
+		'js/bootstrap.min.js',
 	];
 	public $depends = [
 		'yii\web\YiiAsset',
