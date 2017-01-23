@@ -32,6 +32,12 @@ class SiteController extends BaseController
 		];
 	}
 	
+	public function actionError()
+	{
+		$this->pageTitle = 'Страница не найдена';
+		return $this->render('error');
+	}
+	
 	public function actionIndex()
 	{
 		$page = Page::findOne(['layoutId' => 'main']);
