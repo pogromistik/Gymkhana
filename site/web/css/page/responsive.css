@@ -87,7 +87,7 @@
 }
 
 @media (max-width: 991px) {
-    .one_russia .item {
+    .russia .one_russia .item {
         font-size: 44px;
     }
 
@@ -196,7 +196,7 @@
         font-size: 12px;
     }
 
-    .one_russia .item {
+    .russia .one_russia .item {
         font-size: 24px;
     }
 
@@ -242,7 +242,7 @@
         font-size: 10px;
     }
 
-    .one_russia .item {
+    .russia .one_russia .item {
         font-size: 18px;
     }
 }
