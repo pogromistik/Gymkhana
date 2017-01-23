@@ -74,7 +74,7 @@ $(document).ready(function() {
   });
 
   equalizer($('.regular_img .img'));
-  equalizer($('.marshal .item'));
+  equalizer($('.big-show .item'));
   equalizer($('.figure .description .item'));
 
   //Страница в разработке и страница не найдена
