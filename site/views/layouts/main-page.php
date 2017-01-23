@@ -16,6 +16,7 @@ MainPageAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?= $this->context->description ?>">
     <meta name="keywords" content="<?= $this->context->keywords ?>">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="64x64">
 	<?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->context->pageTitle) ?></title>
 	<?php $this->head() ?>
