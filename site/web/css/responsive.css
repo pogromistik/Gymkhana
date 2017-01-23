@@ -407,6 +407,9 @@ RESPONSIVE FIXES
 	.page-title-2 h1 {
 		font-size: 36px;
 	}
+	ul.navbar-nav {
+		background: #242423;
+	}
 }
  
  @media (max-width: 569px) {

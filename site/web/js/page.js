@@ -38,7 +38,7 @@ $(function(){
 
 $(document).ready(function() {
     if ($('#content').hasClass('small-height')) {
-        var margin = $('.footer').outerHeight()+50;
+        var margin = $('.footer').outerHeight();
         $('.footer').css({'margin-top': '-' + margin + 'px'});
     }
 
