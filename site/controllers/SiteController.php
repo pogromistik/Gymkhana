@@ -140,7 +140,7 @@ class SiteController extends BaseController
 			case 'tracks':
 				$data['tracks'] = Track::find()->orderBy(['sort' => SORT_ASC])->all();
 				break;
-			case 'championship':
+			case 'competitions':
 				break;
 			case 'sitemap':
 				$pages = Page::find()->where(['not', ['layoutId' => 'news']])->orWhere(['parentId' => 'null'])->all();
