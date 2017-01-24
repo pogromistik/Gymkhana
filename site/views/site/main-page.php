@@ -434,13 +434,11 @@ use yii\bootstrap\Html;
 						'alt'   => $news->title,
 						'title' => $news->title
 					]) ?>
-                    <div class="my-button">
-                        <div class="my-button-top">Главная новость</div>
+                    <div class="news-mobile-top">
+                        Главная новость
                     </div>
-                    <div class="my-button">
-                        <div class="my-button-bottom">
-							<?= $news->previewText ?>
-                        </div>
+                    <div class="news-mobile-bottom">
+	                    <?= $news->previewText ?>
                     </div>
                 </a>
             </div>
