@@ -499,9 +499,8 @@ RESPONSIVE FIXES
     .main-menu-content .menu {
         height: 160px;
     }
-
-    .main-menu-content ul {
-        padding-top: 40px;
+    .social {
+        float: none;
     }
 }
 
