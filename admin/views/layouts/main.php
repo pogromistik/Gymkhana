@@ -85,6 +85,9 @@ AppAsset::register($this);
                                 <li>
                                     <a href="<?= Url::to(['/about/sponsors']) ?>"> Спонсоры</a>
                                 </li>
+                                <li>
+                                    <a href="<?= Url::to(['/about/help-project']) ?>"> Помочь проекту</a>
+                                </li>
                             </ul>
                         </li>
                         <li>

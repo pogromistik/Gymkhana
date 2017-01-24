@@ -77,28 +77,28 @@ class BaseController extends Controller
 
 		return true;
 	}
-
+	
 	public function actionUploadAlbumPictures($folder)
 	{
 		$this->can('admin');
-
+		
 		$fileName = 'albums_photo';
-
+		
 		$uploadPath = \Yii::getAlias('@files') . '/' . $folder;
-
+		
 		if (isset($_FILES[$fileName])) {
-
+			
 			$file = \yii\web\UploadedFile::getInstancesByName($fileName);
-
+			
 			$file = $file[0];
-
+			
 			$path_parts = pathinfo($file->name);
 			$fileName = round(microtime(true)*1000) . '.' . $path_parts['extension'];
 			if ($file->saveAs($uploadPath . '/' . $fileName)) {
 				return true;
 			} else {
 				\yii\helpers\Json::encode($file->error);
-
+				
 				return false;
 			}
 		} else {

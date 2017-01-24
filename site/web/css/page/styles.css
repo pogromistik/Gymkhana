@@ -1253,17 +1253,55 @@ nav .dropdown-menu li a:hover {
     display: none;
     padding: 10px;
 }
+
 .big-hide .item.motorcycle {
     text-align: left;
 }
+
 #content .big-hide .item.motorcycle img {
     max-width: 200px;
 }
 
-.reconstruction p{
+.reconstruction p {
     color: #d2d2d2;
 }
 
 .reconstruction h3, .reconstruction h4 {
     color: #fff;
+}
+
+.help_project img {
+    width: 100%;
+}
+
+.help_project div {
+    padding: 0;
+    margin: 0;
+}
+
+.help_project .sliphoveritemTitle {
+    font-size: 10px;
+}
+
+.help_project {
+    display: table;
+}
+
+.help_project .text {
+    padding: 10px;
+    height: 100%;
+    display: table;
+}
+
+.help_project .text .item {
+    border: 1px solid #fff;
+    padding: 10px;
+    color: #fff;
+    vertical-align: middle;
+    display: table-cell;
+    text-align: center;
+}
+
+.help_project .text .item.card {
+    font-size: 18px;
 }

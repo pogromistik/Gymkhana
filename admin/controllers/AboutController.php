@@ -5,6 +5,7 @@ namespace admin\controllers;
 use common\models\AboutSlider;
 use common\models\Contacts;
 use common\models\HelpModel;
+use common\models\HelpProject;
 use common\models\Page;
 use common\models\Regular;
 use common\models\search\RegularSearch;
@@ -73,6 +74,7 @@ class AboutController extends BaseController
 	public function actionView($id)
 	{
 		$this->can('admin');
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -250,5 +252,29 @@ class AboutController extends BaseController
 		}
 		
 		return $this->render('contacts', ['model' => $model, 'success' => $success]);
+	}
+	
+	public function actionHelpProject($success = null)
+	{
+		$this->can('admin');
+		
+		$page = Page::findOne(['layoutId' => 'helpProject']);
+		if (!$page) {
+			throw new NotFoundHttpException('Страница не найдена');
+		}
+		
+		$model = HelpProject::find()->one();
+		if (!$model) {
+			$model = new HelpProject();
+		}
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['help-project', 'success' => true]);
+		}
+		
+		return $this->render('help-project', [
+			'page'    => $page,
+			'model'   => $model,
+			'success' => $success
+		]);
 	}
 }

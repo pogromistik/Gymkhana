@@ -6,6 +6,7 @@ use common\models\Album;
 use common\models\City;
 use common\models\Contacts;
 use common\models\Files;
+use common\models\HelpProject;
 use common\models\Link;
 use common\models\MainMenu;
 use common\models\MainPhoto;
@@ -127,6 +128,15 @@ class SiteController extends BaseController
 				break;
 			case 'russia':
 				$data['cities'] = City::find()->where(['showInRussiaPage' => 1])->orderBy(['title' => SORT_ASC])->all();
+				break;
+			case 'helpProject':
+				/** @var HelpProject $model */
+				$model = HelpProject::find()->one();
+				$data['model'] = $model;
+				$data['card'] = Contacts::find()->one();
+				$photos = $model->getPhotos();
+				shuffle($photos);
+				$data['photos'] = $photos;
 				break;
 			case 'photoGallery':
 				$years = Year::find()->where(['status' => Year::STATUS_ACTIVE]);
