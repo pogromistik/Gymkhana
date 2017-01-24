@@ -200,7 +200,7 @@ class SiteController extends BaseController
 		if (!$year) {
 			throw new NotFoundHttpException('Страница не найдена');
 		}
-		$albums = Album::findAll(['yearId' => $year->id]);
+		$albums = Album::find()->where(['yearId' => $year->id])->orderBy(['dateAdded' => SORT_DESC])->all();
 		if (!$albums) {
 			throw new NotFoundHttpException('Страница не найдена');
 		}
