@@ -1259,3 +1259,11 @@ nav .dropdown-menu li a:hover {
 #content .big-hide .item.motorcycle img {
     max-width: 200px;
 }
+
+.reconstruction p{
+    color: #d2d2d2;
+}
+
+.reconstruction h3, .reconstruction h4 {
+    color: #fff;
+}
