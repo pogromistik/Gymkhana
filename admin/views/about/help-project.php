@@ -52,6 +52,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?php ActiveForm::end(); ?>
 	
 	<?php if ($model->imgFolder) { ?>
+        <div class="alert alert-info">
+            Пропорции изображения должны быть 1:1<br>
+            Максимальное число загружаемых файлов: 20
+        </div>
 		<?= FileInput::widget([
 			'name'          => 'albums_photo[]',
 			'options'       => [

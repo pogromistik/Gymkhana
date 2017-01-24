@@ -21,6 +21,10 @@ $this->params['breadcrumbs'][] = 'Редактирование';
         <?=Html::a('Все фотографии', ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
     </p>
 
+    <div class="alert alert-info">
+        Максимальное число загружаемых файлов: 20
+    </div>
+    
     <?= FileInput::widget([
         'name'          => 'albums_photo[]',
         'options'       => [
@@ -29,7 +33,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
         ],
         'pluginOptions' => [
             'uploadUrl'    => Url::to(['base/upload-album-pictures', 'folder' => $model->folder]),
-            'maxFileCount' => 10
+            'maxFileCount' => 20
         ]
     ]);
     ?>
