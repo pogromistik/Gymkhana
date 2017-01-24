@@ -520,13 +520,13 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="right-item-icons">
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="/championship">Eraser</a>
+                           data-lightbox="feature" href="/competitions">Eraser</a>
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="/championship">Shiso GP</a>
+                           data-lightbox="feature" href="/competitions">Shiso GP</a>
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="/championship">Pita GP</a>
+                           data-lightbox="feature" href="/competitions">Pita GP</a>
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="/championship">GP8</a>
+                           data-lightbox="feature" href="/competitions">GP8</a>
                     </div>
                 </div>
             </div>
