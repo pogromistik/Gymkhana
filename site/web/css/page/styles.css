@@ -1159,6 +1159,11 @@ nav .dropdown-menu li a:hover {
     width: 100%;
 }
 
+.album div {
+    padding: 0;
+    margin: 0;
+}
+
 .album-view {
     background: #393939;
     padding-top: 20px;
