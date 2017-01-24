@@ -13,7 +13,7 @@ use yii\bootstrap\Html;
         <div class="col-md-6 hidden-sm hidden-xs z-1">
             <div class="full-logo">
                 <img src="/img/logo_full_chb.png">
-                <h3>2014</h3>
+                <h3><?= $year->year ?></h3>
             </div>
         </div>
 
