@@ -83,7 +83,7 @@ use common\models\MenuItem;
             <div class="col-md-8 col-sm-6 col-xs-12">
                 <h4>Навигация по сайту</h4>
                 <ul>
-					<?php foreach (\common\models\Page::findAll(['parentId' => null]) as $page) { ?>
+					<?php foreach (\common\models\Page::find()->where(['parentId' => null])->orderBy(['sort' => SORT_ASC])->all() as $page) { ?>
                         <?php
                         if ($page->url == '/') {
                             $url = '/';
