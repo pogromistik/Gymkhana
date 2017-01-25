@@ -34,8 +34,10 @@ return [
         'setWritable' => [
             'admin/runtime',
             'admin/web/assets',
-            'site/runtime',
-            'site/web/assets',
+	        'site/runtime',
+	        'site/web/assets',
+	        'champ/runtime',
+	        'champ/web/assets',
         ],
         'setExecutable' => [
             'yii',
@@ -43,7 +45,8 @@ return [
         ],
         'setCookieValidationKey' => [
             'admin/config/main-local.php',
-            'site/config/main-local.php',
+	        'site/config/main-local.php',
+	        'champ/config/main-local.php',
         ],
     ],
     'Production' => [
@@ -51,8 +54,10 @@ return [
         'setWritable' => [
             'admin/runtime',
             'admin/web/assets',
-            'site/runtime',
-            'site/web/assets',
+	        'site/runtime',
+	        'site/web/assets',
+	        'champ/runtime',
+	        'champ/web/assets',
         ],
         'setExecutable' => [
             'yii',
@@ -60,6 +65,7 @@ return [
         'setCookieValidationKey' => [
             'admin/config/main-local.php',
             'site/config/main-local.php',
+	        'champ/config/main-local.php',
         ],
     ],
 ];
