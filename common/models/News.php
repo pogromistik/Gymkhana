@@ -87,9 +87,9 @@ class News extends \yii\db\ActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateCreated = time();
-			if (!$this->datePublish) {
-				$this->datePublish = time();
-			}
+		}
+		if ($this->isPublish) {
+			$this->datePublish = time();
 		}
 		$this->dateUpdated = time();
 		
