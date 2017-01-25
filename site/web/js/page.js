@@ -37,8 +37,11 @@ $(function () {
 
 $(document).ready(function () {
     if ($('#content').hasClass('small-height')) {
-        var margin = $('.footer').outerHeight();
-        $('.footer').css({'margin-top': '-' + margin + 'px'});
+        var width = screen.width;
+        if (width >= 800) {
+            var margin = $('.footer').outerHeight();
+            $('.footer').css({'margin-top': '-' + margin + 'px'});
+        }
     }
 
     $(".top_nav.logo img")
