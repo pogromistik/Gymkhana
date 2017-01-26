@@ -60,7 +60,7 @@ AppAsset::register($this);
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
-					<?php if (\Yii::$app->user->can('admin')) { ?>
+	                <?php if (\Yii::$app->user->can('admin')) { ?>
                         <li>
                             <a href="<?= Url::to(['/main/index']) ?>"><i
                                         class="fa fa-table fa-fw"></i> Главная страница</a>
@@ -134,7 +134,7 @@ AppAsset::register($this);
                                 <li>
                                     <a href="<?= Url::to(['/additional/preloader']) ?>"> Картинки для предзагрузки</a>
                                 </li>
-								<?php if (\Yii::$app->user->can('developer')) { ?>
+				                <?php if (\Yii::$app->user->can('developer')) { ?>
                                     <li>
                                         <a href="<?= Url::to(['/additional/layouts']) ?>"> Шаблоны</a>
                                     </li>
@@ -144,13 +144,24 @@ AppAsset::register($this);
                                     <li>
                                         <a href="<?= Url::to(['/user/admin']) ?>"> Пользователи</a>
                                     </li>
-								<?php } ?>
+				                <?php } ?>
                                 <li>
                                     <a href="<?= Url::to(['/menu/index']) ?>"> Меню</a>
                                 </li>
                             </ul>
                         </li>
-					<?php } ?>
+	                <?php } ?>
+	                <?php if (\Yii::$app->user->can('competitions')) { ?>
+                        <li class="competitions">
+                            <a href="#"><i class="fa fa-motorcycle fa-fw"></i> СОРЕВНОВАНИЯ<span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
+                                </li>
+                            </ul>
+                        </li>
+	                <?php } ?>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
