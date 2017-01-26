@@ -29,7 +29,8 @@
         "2amigos/yii2-editable-widget": "^0.1.4",
         "2amigos/yii2-ckeditor-widget": "~1.0",
         "dektrium/yii2-user": "~0.9.6",
-        "dektrium/yii2-rbac": "~0.3.0"
+        "dektrium/yii2-rbac": "~0.3.0",
+        "kartik-v/yii2-widgets": "*"
     },
     "config": {
         "process-timeout": 1800
