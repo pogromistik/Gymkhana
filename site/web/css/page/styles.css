@@ -345,6 +345,10 @@ nav .navbar-brand img {
     height: 100%;
 }
 
+nav .active {
+    color: #fff;
+}
+
 nav .navbar-brand {
     padding: 0;
 }
