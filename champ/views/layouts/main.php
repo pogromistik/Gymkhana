@@ -28,7 +28,7 @@ AppAsset::register($this);
     <div class="white-menu">
         <!-- меню -->
         <div class="container">
-            <nav role="navigation" class="navbar">
+            <nav role="navigation" class="navbar" id = "nav">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -41,8 +41,11 @@ AppAsset::register($this);
                 <!-- Collection of nav links, forms, and other content for toggling -->
                 <div id="navbarCollapse" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/">Главная</a>
+                        </li>
                         <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle active" href="#">Итем <b
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">Итем <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
                                 <li><a href="/che/">Итем</a></li>

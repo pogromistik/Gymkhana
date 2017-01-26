@@ -24,3 +24,19 @@ $('.list .item .toggle .title').click(function () {
     }
     elem.parent().find('.info').slideToggle();
 });
+
+//активный пункт меню
+(function() {
+    var current = '/' + window.location.pathname.split('/')[1];
+    $( "#nav a" ).each(function() {
+        var elem = $(this);
+        if (elem.attr('href') == current) {
+            var ul = elem.closest('ul');
+            if (ul.hasClass('dropdown-menu')) {
+                ul.parent().find('.dropdown-toggle').addClass('active');
+            } else {
+                elem.addClass('active');
+            }
+        }
+    });
+})();
