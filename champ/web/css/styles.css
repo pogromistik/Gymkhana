@@ -1,0 +1,241 @@
+@font-face {
+    font-family: "Exo";
+    src: url(../fonts/Exo%202%20Regular%20Expanded.eot);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Exo";
+    src: url(../fonts/Exo%202%20Regular%20Expanded.otf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'Exo', sans-serif;
+    background: #f4f4f4;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.mobile-only {
+    display: none!important;
+}
+
+.img {
+    padding: 0px;
+}
+
+ul {
+    margin: 0px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
+
+.pt-20 {
+    padding-top: 20px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.pt-40 {
+    padding-top: 40px;
+}
+
+.pt-50 {
+    padding-top: 50px;
+}
+
+.pb-10 {
+    padding-bottom: 10px;
+}
+
+.pb-20 {
+    padding-bottom: 20px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.pb-40 {
+    padding-bottom: 40px;
+}
+
+.pb-50 {
+    padding-bottom: 50px;
+}
+
+.pl-10 {
+    padding-left: 10px;
+}
+
+.pl-20 {
+    padding-left: 20px;
+}
+
+.pl-30 {
+    padding-left: 30px;
+}
+
+.pl-40 {
+    padding-left: 40px;
+}
+
+.pl-50 {
+    padding-left: 50px;
+}
+
+.pr-10 {
+    padding-right: 10px;
+}
+
+.pr-20 {
+    padding-right: 20px;
+}
+
+.pr-30 {
+    padding-right: 30px;
+}
+
+.pr-40 {
+    padding-right: 40px;
+}
+
+.pr-50 {
+    padding-right: 50px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+}
+/*==== Шапка сайта ====*/
+
+ul.contact {
+    float: right;
+    padding-right: 15px;
+}
+
+ul.contact li {
+    list-style: none;
+    display: inline;
+    padding-left: 30px;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.navbar-nav > li > a {
+    padding-bottom: 15px;
+}
+
+nav .navbar-brand img {
+    height: 100%;
+}
+
+nav .navbar-brand {
+    padding: 0;
+}
+
+nav li > a {
+    color: #404040;
+}
+
+nav li > .active {
+    border-bottom: 2px solid#000;
+}
+
+nav .navbar-toggle {
+    border-color: #ddd;
+}
+
+nav .navbar-toggle .icon-bar {
+    background: #888
+}
+
+.dropdown-menu > li > a {
+    padding: 10px;
+    color: #fff;
+}
+.dropdown-menu > li > a:hover {
+    padding-left: 15px;
+    background: #686c73;
+    color: #fff;
+}
+
+.navbar-right .dropdown-menu {
+    left: 0;
+    right: auto;
+    background: #686c73;
+}
+
+.navbar-nav > li {
+    padding-bottom: 20px;
+}
+
+.nav > li > a {
+    padding: 10px 5px;
+    margin: 0 8px;
+}
+
+.content {
+    padding-top: 30px;
+}
+
+.list .item {
+    padding: 5px 10px;
+}
+
+.list .item .toggle {
+    position: relative;
+}
+
+.list .item .toggle .title {
+    color: #4b4e53;
+    padding: 5px 10px;
+    height: 30px;
+    z-index: 10;
+    cursor: pointer;
+    position: relative;
+}
+
+.list .item .toggle .title:hover {
+    text-decoration: underline;
+}
+
+.list .item .toggle .background {
+    height: 30px;
+    background: #4b4e53;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: none;
+    z-index: 1;
+}
+
+.list .info {
+    display: none;
+}
