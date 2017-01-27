@@ -1,38 +1,37 @@
 <?php
-
+/**
+ * @var \yii\web\View                    $this
+ * @var \common\models\DocumentSection[] $sections
+ */
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+use yii\bootstrap\Html;
+
 ?>
 
 
 <div class="container">
-	<div class="list">
-		<div class="item">
-			<div class="toggle">
-				<div class="background"></div>
-				<div class="title">
-					Документы ассоциации
-				</div>
-				<div class="info">
-					<ul>
-						<li>Документ 1</li>
-						<li>Документ 2</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="item">
-			<div class="toggle">
-				<div class="background"></div>
-				<div class="title">Частные регламенты</div>
-				<div class="info">
-					<ul>
-						<li>Документ 3</li>
-						<li>Документ 4</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="list">
+		<?php foreach ($sections as $section) {
+			$files = $section->files;
+			?>
+            <div class="item">
+                <div class="toggle">
+                    <div class="background"></div>
+                    <div class="title">
+						<?= $section->title ?>
+                    </div>
+					<?php if ($files) { ?>
+                        <div class="info">
+                            <ul>
+								<?php foreach ($files as $file) { ?>
+                                <li><?= Html::a($file->title, ['/base/download', 'id' => $file->id]) ?></li >
+                            <?php } ?>
+                            </ul>
+                        </div>
+					<?php } ?>
+                </div>
+            </div>
+		<?php } ?>
+    </div>
 </div>

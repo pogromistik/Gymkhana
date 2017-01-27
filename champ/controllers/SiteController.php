@@ -2,6 +2,7 @@
 namespace app\controllers;
 
 use common\models\AssocNews;
+use common\models\DocumentSection;
 use Yii;
 use yii\data\Pagination;
 
@@ -32,7 +33,7 @@ class SiteController extends BaseController
 			'totalCount'      => $news->count(),
 		]);
 		$news = $news->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
-
+		
 		return $this->render('index', [
 			'news'       => $news,
 			'pagination' => $pagination
@@ -42,5 +43,19 @@ class SiteController extends BaseController
 	public function actionNews($id)
 	{
 		return $id;
+	}
+	
+	public function actionDocuments()
+	{
+		$this->pageTitle = 'Документы';
+		$this->description = 'Документы, относящиеся к мото джимхане';
+		$this->keywords = 'регламент соревнований, регламент мото джимхана, правила проведения соревнований, мото джимхана правила, 
+		мото джимхана классы, классы мото джимханы';
+		
+		$sections = DocumentSection::findAll(['status' => 1]);
+		
+		return $this->render('documents', [
+			'sections' => $sections
+		]);
 	}
 }
