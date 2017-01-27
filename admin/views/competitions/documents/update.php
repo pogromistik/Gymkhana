@@ -2,6 +2,7 @@
 
 use yii\grid\GridView;
 use yii\bootstrap\Html;
+use dosamigos\editable\Editable;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\AssocNews */
@@ -15,7 +16,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 
 <?php if ($success) { ?>
-	<div class="alert alert-success">Изменения успешно сохранены</div>
+    <div class="alert alert-success">Изменения успешно сохранены</div>
 <?php } ?>
 
 <div class="documents-sections-update">
@@ -27,29 +28,63 @@ $this->params['breadcrumbs'][] = 'Редактирование';
     <h3>Загруженные файлы</h3>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
-		'filterModel' => $searchModel,
-		'columns' => [
+		'filterModel'  => $searchModel,
+		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
-			'title:ntext',
+			[
+				'attribute' => 'title',
+				'format'    => 'raw',
+				'value'     => function (\common\models\OverallFile $item) {
+					return Editable::widget([
+						'name'          => 'title',
+						'value'         => $item->title,
+						'url'           => '/competitions/documents/update-file',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $item->id,
+							'value'     => $item->title,
+							'placement' => 'right',
+						]
+					]);
+				}
+			],
+			
+			[
+				'attribute' => 'fileName',
+				'format'    => 'raw',
+				'value'     => function (\common\models\OverallFile $item) {
+					return Editable::widget([
+						'name'          => 'fileName',
+						'value'         => $item->fileName,
+						'url'           => '/competitions/documents/update-file',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $item->id,
+							'value'     => $item->fileName,
+							'placement' => 'right',
+						]
+					]);
+				}
+			],
 			
 			[
 				'format' => 'raw',
 				'value'  => function (\common\models\OverallFile $item) {
-					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $item->id], [
+					return Html::a('Скачать', ['download', 'id' => $item->id], [
 						'class' => 'btn btn-primary'
 					]);
 				}
 			],
+			
 			[
 				'format' => 'raw',
 				'value'  => function (\common\models\OverallFile $item) {
-					return Html::a('<span class="fa fa-remove"></span>', ['delete', 'id' => $item->id], [
-						'class' => 'btn btn-danger',
-						'data'  => [
-							'confirm' => 'Уверены, что хотите заблокировать этот раздел?',
-							'method'  => 'post',
-						]
+					return Html::a('<span class="fa fa-remove"></span>', ['delete-file', 'id' => $item->id], [
+						'class'   => 'btn btn-danger removeOverallFile',
+						'data-id' => $item->id
 					]);
 				}
 			]

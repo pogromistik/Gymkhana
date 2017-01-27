@@ -52,9 +52,9 @@ class OverallFile extends \yii\db\ActiveRecord
 			'date'       => 'Date',
 			'modelClass' => 'Model Class',
 			'modelId'    => 'Model ID',
-			'title'      => 'Title',
-			'fileName'   => 'File Name',
-			'filePath'   => 'File Path',
+			'title'      => 'Название (отображается пользователю)',
+			'fileName'   => 'Имя файла (под этим названием скачивается файл)',
+			'filePath'   => 'Папка',
 			'files'      => 'Файлы'
 		];
 	}

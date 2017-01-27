@@ -7,30 +7,24 @@ use common\models\DocumentSection;
 use common\models\OverallFile;
 use common\models\search\DocumentSectionSearch;
 use common\models\search\OverallFileSearch;
+use dosamigos\editable\EditableAction;
 use Yii;
-use common\models\AssocNews;
-use common\models\search\AssocNewsSearch;
 use yii\base\Exception;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * NewsController implements the CRUD actions for AssocNews model.
  */
 class DocumentsController extends BaseController
 {
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
+	public function actions()
 	{
 		return [
-			'verbs' => [
-				'class'   => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-				],
-			],
+			'update-file' => [
+				'class'       => EditableAction::className(),
+				'modelClass'  => OverallFile::className(),
+				'forceCreate' => false
+			]
 		];
 	}
 	
@@ -89,7 +83,7 @@ class DocumentsController extends BaseController
 			$file = new OverallFile();
 			$documentId = null;
 			if ($file->load(Yii::$app->request->post())) {
-				$file->saveFile($model->id, OverallFile::className());
+				$file->saveFile($model->id, DocumentSection::className());
 				if ($documentId == 'error saveAs') {
 					throw new Exception('Возникла ошибка при сохранении файла. Проверьте директиву upload_max_filesize');
 				}
@@ -113,5 +107,49 @@ class DocumentsController extends BaseController
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
+	}
+	
+	public function actionDownload($id, $dir = null, $name = null)
+	{
+		$this->can('competitions');
+		
+		$file = OverallFile::findOne($id);
+		if (!$file) {
+			throw new NotFoundHttpException('Файл не найден.');
+		}
+		
+		return \Yii::$app->response->sendFile(\Yii::getAlias('@files') . '/' . $file->filePath, $file->fileName);
+	}
+	
+	public function actionRemoveFile($id)
+	{
+		$this->can('competitions');
+		
+		$file = OverallFile::findOne($id);
+		if (!$file) {
+			return 'Файл не найден';
+		}
+		$folder = $file->filePath;
+		if (!$file->delete()) {
+			return 'Невозможно удалить файл';
+		}
+		$filePath = \Yii::getAlias('@files') . '/' . $folder;
+		if (file_exists($filePath)) {
+			unlink($filePath);
+		}
+		
+		return true;
+	}
+	
+	public function actionChangeStatus($id)
+	{
+		$model = $this->findModel($id);
+		if ($model->status) {
+			$model->status = 0;
+		} else {
+			$model->status = 1;
+		}
+		$model->save();
+		return $this->redirect('index');
 	}
 }
