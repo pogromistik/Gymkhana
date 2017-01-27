@@ -5,6 +5,7 @@ use common\models\AssocNews;
 use common\models\DocumentSection;
 use Yii;
 use yii\data\Pagination;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -42,7 +43,16 @@ class SiteController extends BaseController
 	
 	public function actionNews($id)
 	{
-		return $id;
+		$news = AssocNews::findOne($id);
+		if (!$news || $news->datePublish > time()) {
+			throw new NotFoundHttpException('Новость не найдена');
+		}
+		$this->pageTitle = $news->title ? $news->title : 'Новость от ' . date("d.m.Y", $news->datePublish);
+		$this->layout = 'main-with-img';
+		
+		return $this->render('news', [
+			'news' => $news
+		]);
 	}
 	
 	public function actionDocuments()
