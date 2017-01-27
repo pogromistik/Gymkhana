@@ -3,16 +3,21 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\DocumentSection;
+use common\models\OverallFile;
+use common\models\search\DocumentSectionSearch;
+use common\models\search\OverallFileSearch;
 use Yii;
 use common\models\AssocNews;
 use common\models\search\AssocNewsSearch;
+use yii\base\Exception;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * NewsController implements the CRUD actions for AssocNews model.
  */
-class NewsController extends BaseController
+class DocumentsController extends BaseController
 {
 	/**
 	 * @inheritdoc
@@ -38,7 +43,7 @@ class NewsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$searchModel = new AssocNewsSearch();
+		$searchModel = new DocumentSectionSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
 		return $this->render('index', [
@@ -47,20 +52,22 @@ class NewsController extends BaseController
 		]);
 	}
 	
-	/**
-	 * Creates a new AssocNews model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 *
-	 * @return mixed
-	 */
 	public function actionCreate()
 	{
 		$this->can('competitions');
 		
-		$model = new AssocNews();
-		$model->datePublishHuman = date('d.m.Y', time());
+		$model = new DocumentSection();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$file = new OverallFile();
+			$documentId = null;
+			if ($file->load(Yii::$app->request->post())) {
+				$documentId = $file->saveFile($model->id, DocumentSection::className());
+				if ($documentId === 'error saveAs') {
+					throw new Exception('Возникла ошибка при сохранении файла. Проверьте директиву upload_max_filesize');
+				}
+			}
+			
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
 		} else {
 			return $this->render('create', [
@@ -69,57 +76,39 @@ class NewsController extends BaseController
 		}
 	}
 	
-	/**
-	 * Updates an existing AssocNews model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 *
-	 * @param integer $id
-	 * @param bool    $success
-	 * @return mixed
-	 */
 	public function actionUpdate($id, $success = false)
 	{
 		$this->can('competitions');
 		
 		$model = $this->findModel($id);
+		$searchModel = new OverallFileSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['modelClass' => DocumentSection::className(), 'modelId' => $model->id]);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$file = new OverallFile();
+			$documentId = null;
+			if ($file->load(Yii::$app->request->post())) {
+				$file->saveFile($model->id, OverallFile::className());
+				if ($documentId == 'error saveAs') {
+					throw new Exception('Возникла ошибка при сохранении файла. Проверьте директиву upload_max_filesize');
+				}
+			}
+			
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
-		} else {
-			return $this->render('update', [
-				'model'   => $model,
-				'success' => $success
-			]);
 		}
+		
+		return $this->render('update', [
+			'model'        => $model,
+			'success'      => $success,
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
 	}
 	
-	/**
-	 * Deletes an existing AssocNews model.
-	 * If deletion is successful, the browser will be redirected to the 'index' page.
-	 *
-	 * @param integer $id
-	 * @return mixed
-	 */
-	public function actionDelete($id)
-	{
-		$this->can('competitions');
-		
-		$this->findModel($id)->delete();
-		
-		return $this->redirect(['index']);
-	}
-	
-	/**
-	 * Finds the AssocNews model based on its primary key value.
-	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 *
-	 * @param integer $id
-	 * @return AssocNews the loaded model
-	 * @throws NotFoundHttpException if the model cannot be found
-	 */
 	protected function findModel($id)
 	{
-		if (($model = AssocNews::findOne($id)) !== null) {
+		if (($model = DocumentSection::findOne($id)) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');

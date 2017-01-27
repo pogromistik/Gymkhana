@@ -159,6 +159,9 @@ AppAsset::register($this);
                                 <li>
                                     <a href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
                                 </li>
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
+                                </li>
                             </ul>
                         </li>
 	                <?php } ?>
