@@ -40,3 +40,18 @@ $('.list .item .toggle .title').click(function () {
         }
     });
 })();
+
+/*------МЕНЮ ПРИ ПРОЛИСТЫВАНИИ-------*/
+$(function () {
+    $(window).scroll(function () {
+        var width = screen.width;
+        if (width >= 991) {
+            var top = $(this).scrollTop();
+            if (top == 0) {
+                $(".header").css({"background": "none"});
+            } else {
+                $(".header").css({"background": "#f4f4f4"});
+            }
+        }
+    });
+});

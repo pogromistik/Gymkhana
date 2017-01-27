@@ -1,0 +1,15 @@
+@media (max-width: 1200px) {
+    .background-img {
+        width: 30%;
+    }
+
+    .detail-news {
+        width: 70%;
+    }
+}
+
+@media (max-width: 860px) {
+    .background-img {
+        display: none;
+    }
+}
