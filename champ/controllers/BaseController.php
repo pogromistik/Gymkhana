@@ -3,9 +3,11 @@ namespace app\controllers;
 
 use common\models\HelpModel;
 use common\models\MainPhoto;
+use common\models\OverallFile;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 
 class BaseController extends Controller
 {
@@ -13,11 +15,14 @@ class BaseController extends Controller
 	public $pageTitle = '';
 	public $keywords = '';
 	public $url = '';
-
-	public function actionDownload($id, $dir, $name)
+	
+	public function actionDownload($id)
 	{
-		$file = Yii::getAlias($dir . '' . $id);
-
-		return Yii::$app->response->sendFile($file, $name);
+		$file = OverallFile::findOne($id);
+		if (!$file) {
+			throw new NotFoundHttpException('Файл не найден');
+		}
+		
+		return \Yii::$app->response->sendFile(\Yii::getAlias('@files') . '/' . $file->filePath, $file->fileName);
 	}
 }
