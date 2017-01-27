@@ -63,7 +63,7 @@ class TracksController extends BaseController
 		$documentId = null;
 		if ($file->load(Yii::$app->request->post())) {
 			$documentId = $file->saveFile(Files::TYPE_DOCUMENTS, true);
-			if ($documentId == 'error saveAs') {
+			if ($documentId === 'error saveAs') {
 				throw new Exception('Возникла ошибка при сохранении файла. Проверьте директиву upload_max_filesize');
 			}
 		}
