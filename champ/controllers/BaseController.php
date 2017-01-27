@@ -1,5 +1,5 @@
 <?php
-namespace app\controllers;
+namespace champ\controllers;
 
 use common\models\HelpModel;
 use common\models\MainPhoto;

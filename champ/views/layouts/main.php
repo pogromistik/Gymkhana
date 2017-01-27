@@ -3,7 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\assets\AppAsset;
+use champ\assets\AppAsset;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
