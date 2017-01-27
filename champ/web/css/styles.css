@@ -17,10 +17,27 @@ body {
     height: 100%;
     font-family: 'Exo', sans-serif;
     background: #f4f4f4;
+    color: #4b4e53;
 }
 
 a:link {
     text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.content a, h1, h2, h3, h4 {
+    color: #4b4e53;
+}
+
+.content a {
+    text-decoration: underline;
+}
+
+.content a:hover {
+    color: #56a025;
 }
 
 img {
@@ -28,7 +45,7 @@ img {
 }
 
 .mobile-only {
-    display: none!important;
+    display: none !important;
 }
 
 .img {
@@ -37,10 +54,6 @@ img {
 
 ul {
     margin: 0px;
-}
-
-a:hover {
-    text-decoration: none;
 }
 
 .pt-10 {
@@ -130,6 +143,7 @@ a:hover {
     right: 0;
     z-index: 10000;
 }
+
 /*==== Шапка сайта ====*/
 
 ul.contact {
@@ -164,7 +178,7 @@ nav li > a {
 }
 
 nav li > .active {
-    border-bottom: 2px solid#000;
+    border-bottom: 2px solid #000;
 }
 
 nav .navbar-toggle {
@@ -179,13 +193,14 @@ nav .navbar-toggle .icon-bar {
     padding: 10px;
     color: #fff;
 }
+
 .dropdown-menu > li > a:hover {
     padding-left: 15px;
     background: #686c73;
     color: #fff;
 }
 
-.navbar-right .dropdown-menu {
+.navbar-left .dropdown-menu {
     left: 0;
     right: auto;
     background: #686c73;
@@ -205,7 +220,9 @@ nav .navbar-toggle .icon-bar {
 }
 
 .content {
-    padding-top: 30px;
+    padding: 60px 20px 0 20px;
+    position: relative;
+    z-index: 100;
 }
 
 .list .item {
@@ -242,4 +259,45 @@ nav .navbar-toggle .icon-bar {
 
 .list .info {
     display: none;
+}
+
+h2 {
+    text-transform: uppercase;
+}
+
+.news h3 {
+    margin: 30px 0 20px;
+    font-size: 20px;
+}
+
+.news .item {
+    padding-bottom: 30px;
+}
+
+.news .item .date {
+    padding-bottom: 5px;
+}
+
+.pagination {
+    color: #4b4e53;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    background-color: #56a025;
+    border-color: #56a025;
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: #4b4e53;
+}
+
+.background-img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40%;
+    z-index: 1;
+}
+.background-img img {
+    width: 100%;
 }

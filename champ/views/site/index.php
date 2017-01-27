@@ -1,38 +1,43 @@
 <?php
+/**
+ * @var \yii\web\View              $this
+ * @var \common\models\AssocNews[] $news
+ * @var \yii\data\Pagination       $pagination
+ */
 
-/* @var $this yii\web\View */
+use yii\widgets\LinkPager;
+use yii\helpers\Url;
+use yii\bootstrap\Html;
 
-$this->title = 'My Yii Application';
 ?>
 
+<h2><?= $this->context->pageTitle ?></h2>
 
-<div class="container content">
-    <div class="list">
-        <div class="item">
-            <div class="toggle">
-                <div class="background"></div>
-                <div class="title">
-                    Документы ассоциации
+<div class="z-100">
+    <div class="news">
+        <h3>Новости</h3>
+		<?php foreach ($news as $item) { ?>
+            <div class="item">
+                <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
+                <div class="preview_text">
+					<?= $item->previewText ?>
                 </div>
-                <div class="info">
-                    <ul>
-                        <li>Документ 1</li>
-                        <li>Документ 2</li>
-                    </ul>
-                </div>
+				<?php if ($item->link || $item->fullText) {
+					if ($item->link) {
+						$link = $item->link;
+					} else {
+						$link = Url::to(['/site/news', 'id' => $item->id]);
+					}
+					?>
+                    <div class="text-left">
+						<?= Html::a('Читать далее ...', $link) ?>
+                    </div>
+				<?php } ?>
             </div>
-        </div>
-        <div class="item">
-            <div class="toggle">
-                <div class="background"></div>
-                <div class="title">Частные регламенты</div>
-                <div class="info">
-                    <ul>
-                        <li>Документ 3</li>
-                        <li>Документ 4</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+		<?php } ?>
+    </div>
+
+    <div class="text-left">
+		<?= LinkPager::widget(['pagination' => $pagination]) ?>
     </div>
 </div>
