@@ -178,7 +178,7 @@ nav li > a {
 }
 
 nav li > .active {
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid #4b4e53;
 }
 
 nav .navbar-toggle {
@@ -304,4 +304,8 @@ h2 {
 
 .detail-news {
     width: 60%;
+}
+
+.white-menu {
+    border-top: 2px solid #4b4e53
 }
