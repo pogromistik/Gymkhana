@@ -12,7 +12,7 @@ return [
 	'timeZone'            => 'Asia/Yekaterinburg',
 	'name'                => 'gymkhana74-champ',
 	'basePath'            => dirname(__DIR__),
-	'controllerNamespace' => 'app\controllers',
+	'controllerNamespace' => 'champ\controllers',
 	'bootstrap'           => ['log'],
 	'modules'             => [
 	],
