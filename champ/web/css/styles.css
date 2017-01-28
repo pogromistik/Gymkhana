@@ -223,6 +223,7 @@ nav .navbar-toggle .icon-bar {
     padding: 60px 20px 0 20px;
     position: relative;
     z-index: 100;
+    width: 60%;
 }
 
 .list .item {
@@ -303,7 +304,7 @@ h2 {
 }
 
 .detail-news {
-    width: 60%;
+    width: 80%;
 }
 
 .white-menu {
