@@ -30,7 +30,7 @@ AppAsset::register($this);
 
 <h1 style="display: none"><?= $this->context->pageTitle ?></h1>
 
-<div class="container">
+<div class="container-fluid">
     <div class="content">
         <div id="page-wrapper">
             <div class="breadcrumbs">

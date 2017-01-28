@@ -7,7 +7,7 @@ use yii\helpers\Url;
 <div class="header">
     <div class="white-menu">
         <!-- меню -->
-        <div class="container">
+        <div class="container-fluid">
             <nav role="navigation" class="navbar" id="nav">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -28,10 +28,11 @@ use yii\helpers\Url;
                             <a href="<?= Url::to(['site/documents']) ?>">Документы</a>
                         </li>
                         <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">Итем <b
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">Соревнования <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/che/">Итем</a></li>
+                                <li><a href="/che/">Расписание</a></li>
+                                <li><a href="/che/">Результаты</a></li>
                             </ul>
                         </li>
                         <li>
