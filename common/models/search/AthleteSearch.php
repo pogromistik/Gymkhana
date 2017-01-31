@@ -1,0 +1,90 @@
+<?php
+
+namespace common\models\search;
+
+use Yii;
+use yii\base\Model;
+use yii\data\ActiveDataProvider;
+use common\models\Athlete;
+use yii\db\ActiveRecord;
+
+/**
+ * AthleteSearch represents the model behind the search form about `common\models\Athlete`.
+ */
+class AthleteSearch extends Athlete
+{
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['id', 'login', 'cityId', 'athleteClassId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
+			[['firstName', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken'], 'safe'],
+		];
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function scenarios()
+	{
+		// bypass scenarios() implementation in the parent class
+		return Model::scenarios();
+	}
+	
+	/**
+	 * Creates data provider instance with search query applied
+	 *
+	 * @param array $params
+	 *
+	 * @return ActiveDataProvider
+	 */
+	public function search($params)
+	{
+		$query = Athlete::find();
+		
+		// add conditions that should always apply here
+		
+		$dataProvider = new ActiveDataProvider([
+			'query' => $query,
+		]);
+		
+		$this->load($params);
+		
+		if (!$this->validate()) {
+			// uncomment the following line if you do not want to return any records when validation fails
+			// $query->where('0=1');
+			return $dataProvider;
+		}
+		
+		// grid filtering conditions
+		$query->andFilterWhere([
+			'id'               => $this->id,
+			'login'            => $this->login,
+			'cityId'           => $this->cityId,
+			'athleteClassId'   => $this->athleteClassId,
+			'number'           => $this->number,
+			'status'           => $this->status,
+			'createdAt'        => $this->createdAt,
+			'updatedAt'        => $this->updatedAt,
+			'hasAccount'       => $this->hasAccount,
+			'lastActivityDate' => $this->lastActivityDate,
+		]);
+		
+		$query->andFilterWhere(['like', 'firstName', $this->firstName])
+			->andFilterWhere(['like', 'lastName', $this->lastName])
+			->andFilterWhere(['like', 'phone', $this->phone])
+			->andFilterWhere(['like', 'email', $this->email])
+			->andFilterWhere(['like', 'authKey', $this->authKey])
+			->andFilterWhere(['like', 'passwordHash', $this->passwordHash])
+			->andFilterWhere(['like', 'passwordResetToken', $this->passwordResetToken]);
+		
+		return $dataProvider;
+	}
+	
+	public function beforeValidate()
+	{
+		return ActiveRecord::beforeValidate();
+	}
+}
