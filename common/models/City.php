@@ -34,7 +34,8 @@ class City extends \yii\db\ActiveRecord
 			[['showInRussiaPage'], 'integer'],
 			[['top', 'left'], 'number'],
 			[['title', 'link'], 'string'],
-			[['showInRussiaPage'], 'default', 'value' => 1]
+			[['showInRussiaPage'], 'default', 'value' => 1],
+			['title', 'unique']
 		];
 	}
 	
