@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\InternalClass;
 use common\models\RegionalGroup;
 use dosamigos\editable\EditableAction;
 use Yii;
@@ -21,6 +22,11 @@ class ChampionshipsController extends BaseController
 			'update-group' => [
 				'class'       => EditableAction::className(),
 				'modelClass'  => RegionalGroup::className(),
+				'forceCreate' => false
+			],
+			'update-class' => [
+				'class'       => EditableAction::className(),
+				'modelClass'  => InternalClass::className(),
 				'forceCreate' => false
 			]
 		];
@@ -79,7 +85,7 @@ class ChampionshipsController extends BaseController
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
 		} else {
 			return $this->render('update', [
-				'model' => $model,
+				'model'   => $model,
 				'success' => $success
 			]);
 		}
@@ -126,5 +132,36 @@ class ChampionshipsController extends BaseController
 		} else {
 			return 'Возникла ошибка при добавлении группы';
 		}
+	}
+	
+	public function actionAddClass()
+	{
+		$this->can('competitions');
+		
+		$class = new InternalClass();
+		if ($class->load(\Yii::$app->request->post()) && $class->save()) {
+			return true;
+		}
+		
+		return 'Возникла ошибка при добавлении класса';
+	}
+	
+	public function actionChangeClassStatus($id, $status)
+	{
+		$this->can('competitions');
+		
+		$class = InternalClass::findOne($id);
+		if (!$class) {
+			return 'Класс не найден';
+		}
+		if (!array_key_exists($status, InternalClass::$statusesTitle)) {
+			return 'Статус не существует';
+		}
+		$class->status = $status;
+		if ($class->save()) {
+			return true;
+		}
+		
+		return 'Возникла ошибка при добавлении класса';
 	}
 }

@@ -8,18 +8,19 @@ use Yii;
 /**
  * This is the model class for table "championships".
  *
- * @property integer       $id
- * @property string        $title
- * @property string        $description
- * @property integer       $yearId
- * @property integer       $status
- * @property integer       $groupId
- * @property integer       $regionGroupId
- * @property integer       $dateAdded
- * @property integer       $dateUpdated
- * @property Year          $year
- * @property RegionalGroup $regionalGroup
- * @property Stage[]       $stages
+ * @property integer         $id
+ * @property string          $title
+ * @property string          $description
+ * @property integer         $yearId
+ * @property integer         $status
+ * @property integer         $groupId
+ * @property integer         $regionGroupId
+ * @property integer         $dateAdded
+ * @property integer         $dateUpdated
+ * @property Year            $year
+ * @property RegionalGroup   $regionalGroup
+ * @property Stage[]         $stages
+ * @property InternalClass[] $internalClasses
  */
 class Championship extends \yii\db\ActiveRecord
 {
@@ -119,5 +120,10 @@ class Championship extends \yii\db\ActiveRecord
 	public function getStages()
 	{
 		return $this->hasMany(Stage::className(), ['championshipId' => 'id'])->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC]);
+	}
+	
+	public function getInternalClasses()
+	{
+		return $this->hasMany(InternalClass::className(), ['championshipId' => 'id']);
 	}
 }

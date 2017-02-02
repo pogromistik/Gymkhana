@@ -76,4 +76,11 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
 		<?php } ?>
     </table>
+	
+	<?php if ($model->internalClasses) { ?>
+        <h3>Классы награждения</h3>
+		<?= $this->render('_classes', [
+			'model' => $model,
+		]) ?>
+	<?php } ?>
 </div>
