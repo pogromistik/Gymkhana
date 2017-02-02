@@ -19,6 +19,7 @@ use Yii;
  * @property integer       $dateUpdated
  * @property Year          $year
  * @property RegionalGroup $regionalGroup
+ * @property Stage[]       $stages
  */
 class Championship extends \yii\db\ActiveRecord
 {
@@ -57,7 +58,7 @@ class Championship extends \yii\db\ActiveRecord
 			[['description'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated'], 'required'],
 			[['yearId', 'status', 'groupId', 'regionGroupId', 'dateAdded', 'dateUpdated'], 'integer'],
-			['regionGroupId', 'required', 'when' => function($model) {
+			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
 			}],
 			[['title'], 'string', 'max' => 255],
@@ -113,5 +114,10 @@ class Championship extends \yii\db\ActiveRecord
 	public function getRegionalGroup()
 	{
 		return $this->hasOne(RegionalGroup::className(), ['id' => 'regionGroupId']);
+	}
+	
+	public function getStages()
+	{
+		return $this->hasMany(Stage::className(), ['championshipId' => 'id'])->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC]);
 	}
 }

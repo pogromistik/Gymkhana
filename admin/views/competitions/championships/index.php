@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'yearId',
 				'format'    => 'raw',
 				'filter'    => Html::activeDropDownList($searchModel, 'yearId',
-                    ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year'),
+					ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year'),
 					['class' => 'form-control', 'prompt' => 'Укажите год']),
 				'value'     => function (Championship $championship) {
 					return $championship->year->year;
@@ -54,6 +54,36 @@ $this->params['breadcrumbs'][] = $this->title;
 					['class' => 'form-control', 'prompt' => 'Выберите раздел']),
 				'value'     => function (Championship $championship) {
 					return Championship::$groupsTitle[$championship->groupId];
+				}
+			],
+			[
+				'format' => 'raw',
+				'label'  => 'Этапы',
+				'value'  => function (Championship $championship) {
+					$html = '';
+					$stages = $championship->stages;
+					if ($stages) {
+						$html = '<ul>';
+						foreach ($stages as $stage) {
+							$title = $stage->title;
+							if ($stage->dateOfThe) {
+								$title .= ', ' . $stage->dateOfTheHuman;
+							}
+							$html .= '<li>' . Html::a($title, ['/competitions/stages/update', 'id' => $stage->id],
+									['target' => '_blank']) . '</li>';
+						}
+						$html .= '</ul>';
+					}
+					
+					return $html;
+				}
+			],
+			[
+				'format' => 'raw',
+				'value'  => function (Championship $championship) {
+					return Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $championship->id], [
+						'class' => 'btn btn-default'
+					]);
 				}
 			],
 			[

@@ -178,4 +178,9 @@ class HelpModel extends Model
 		
 		return false;
 	}
+	
+	public static function mb_ucfirst($name)
+	{
+		return mb_strtoupper(mb_substr($name, 0, 1)) . mb_substr($name, 1);
+	}
 }

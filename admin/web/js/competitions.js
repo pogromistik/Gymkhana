@@ -69,5 +69,45 @@ $(document).on("submit", '#newRegionalGroup', function (e) {
             alert(result);
         }
     });
+});
 
+$(document).on("submit", '#newCityForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    var action = form.data('action');
+    var actionType = form.data('action-type');
+    $.ajax({
+        url: "/competitions/help/add-city",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['success'] == true) {
+                switch (actionType) {
+                    case 'withId':
+                        location.href = action+'&success=1';
+                        break;
+                    case 'withoutId':
+                        location.href = action+'?success=1';
+                        break;
+                }
+            } else if (result['hasCity'] == true) {
+                switch (actionType) {
+                    case 'withId':
+                        location.href = action+'&errorCity=1';
+                        break;
+                    case 'withoutId':
+                        location.href = action+'?errorCity=1';
+                        break;
+                }
+            } else {
+                hideBackDrop();
+                alert('Возникла ошибка при сохранении данных');
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
 });

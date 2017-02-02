@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\City;
+use yii\db\ActiveRecord;
 
 /**
  * RussiaSearch represents the model behind the search form about `common\models\Russia`.
@@ -67,5 +68,10 @@ class CitySearch extends City
         ]);
 
         return $dataProvider;
+    }
+    
+    public function beforeValidate()
+    {
+	    return ActiveRecord::beforeValidate();
     }
 }
