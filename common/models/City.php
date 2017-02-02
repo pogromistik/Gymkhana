@@ -59,4 +59,9 @@ class City extends \yii\db\ActiveRecord
 		$this->showInRussiaPage = 1;
 		parent::init();
 	}
+	
+	public function beforeValidate()
+	{
+		return parent::beforeValidate();
+	}
 }

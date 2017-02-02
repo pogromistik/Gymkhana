@@ -87,8 +87,8 @@ class Athlete extends \yii\db\ActiveRecord
 			$this->createdAt = time();
 		}
 		$this->updatedAt = time();
-		$this->firstName = self::mb_ucfirst($this->firstName);
-		$this->lastName = self::mb_ucfirst($this->lastName);
+		$this->firstName = HelpModel::mb_ucfirst($this->firstName);
+		$this->lastName = HelpModel::mb_ucfirst($this->lastName);
 		
 		return parent::beforeValidate();
 	}
@@ -101,11 +101,6 @@ class Athlete extends \yii\db\ActiveRecord
 	public function getAthleteClass()
 	{
 		return $this->hasOne(AthletesClass::className(), ['id' => 'athleteClassId']);
-	}
-	
-	private static function mb_ucfirst($name)
-	{
-		return mb_strtoupper(mb_substr($name, 0, 1)) . mb_substr($name, 1);
 	}
 	
 	public function getCity()

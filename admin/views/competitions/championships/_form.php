@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 use common\models\Year;
 use yii\helpers\ArrayHelper;
 use common\models\Championship;
@@ -27,14 +27,16 @@ use kartik\widgets\Select2;
 	<?= $form->field($model, 'groupId')->hiddenInput()->label(false)->error(false) ?>
 	
     <?php if ($model->groupId == Championship::GROUPS_REGIONAL) { ?>
-	<?= $form->field($model, 'regionGroupId')->widget(Select2::classname(), [
+	<?= $form->field($model, 'regionGroupId',
+		    ['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Если в списке нет необходимого раздела - создайте его в форме ниже.
+</div>{input}</div>'])->widget(Select2::classname(), [
 		'name'    => 'kv-type-01',
 		'data'    => \yii\helpers\ArrayHelper::map(\common\models\RegionalGroup::find()->all(), 'id', 'title'),
 		'options' => [
 			'placeholder' => 'Выберите раздел. Добавить новый раздел можно ниже',
 		],
 	]) ?>
-        <div class="alert alert-info">Если в списке нет необходимого раздела - создайте его в форме ниже</div>
     <?php } ?>
 
     <div class="form-group">

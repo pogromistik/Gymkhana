@@ -1,15 +1,13 @@
 <?php
 
 use common\models\Championship;
+use yii\bootstrap\Html;
 
 /**
  * @var \yii\web\View $this
  * @var Championship  $model
  * @var integer       $success
  */
-
-/* @var $this yii\web\View */
-/* @var $model common\models\Championship */
 
 $this->title = 'Редактировать чемпионат: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Разделы чемпионатов', 'url' => ['index']];
@@ -24,6 +22,11 @@ $this->params['breadcrumbs'][] = 'Редактирование';
             Изменения успешно сохранены
         </div>
     <?php } ?>
+    
+    <div class="pb-20"><?=  Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $model->id], [
+	    'class' => 'btn btn-success',
+	    'title' => 'Просмотр'
+        ]); ?></div>
     
 	<?= $this->render('_form', [
 		'model' => $model,

@@ -1,12 +1,7 @@
 <?php
 
-use yii\helpers\Html;
-
-
-/* @var $this yii\web\View */
-/* @var $model common\models\Athlete */
 /**
- * @var \yii\base\View         $this
+ * @var \yii\web\View          $this
  * @var \common\models\Athlete $model
  * @var int                    $success
  * @var int                    $errorCity
@@ -18,17 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="athlete-create">
 	
-	<?= $this->render('_city-form') ?>
-	
-	<?php if ($success) { ?>
-        <br>
-        <div class="alert alert-success">Город добавлен</div>
-	<?php } ?>
-	
-	<?php if ($errorCity) { ?>
-        <br>
-        <div class="alert alert-warning">Город уже существует</div>
-	<?php } ?>
+	<?= $this->render('//competitions/common/_city-form', ['errorCity' => $errorCity, 'success' => $success, 'actionType' => 'withoutId']) ?>
 
     <hr>
 

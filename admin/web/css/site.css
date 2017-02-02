@@ -165,8 +165,62 @@ img {
     width: 100%;
 }
 
-.navbar-default.sidebar ul li.competitions > a{
+.navbar-default.sidebar ul li.competitions > a {
     color: #337ab7;
     background: #464644;
     font-weight: bold;
+}
+
+.none-block {
+    display: none;
+}
+
+.input-with-description .text {
+    background: #f1f1f1;
+    margin-bottom: 2px;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
+
+.pt-20 {
+    padding-top: 20px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.pt-40 {
+    padding-top: 40px;
+}
+
+.pt-50 {
+    padding-top: 50px;
+}
+
+.pb-10 {
+    padding-bottom: 10px;
+}
+
+.pb-20 {
+    padding-bottom: 20px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.pb-40 {
+    padding-bottom: 40px;
+}
+
+.pb-50 {
+    padding-bottom: 50px;
 }
