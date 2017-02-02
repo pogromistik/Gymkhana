@@ -111,3 +111,47 @@ $(document).on("submit", '#newCityForm', function (e) {
         }
     });
 });
+
+$(document).on("submit", '#ajaxForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    var url = form.attr('action');
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                hideBackDrop();
+                alert(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
+
+$('.change-status').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var url = elem.data('action');
+    var id = elem.data('id');
+    var status = elem.data('status');
+    $.get(url, {
+        id: id, status: status
+    }).done(function (data) {
+        if (data == true) {
+            location.reload(true);
+        } else {
+            alert(data);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+})

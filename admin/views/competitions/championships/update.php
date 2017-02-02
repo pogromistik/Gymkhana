@@ -28,9 +28,21 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	    'title' => 'Просмотр'
         ]); ?></div>
     
-	<?= $this->render('_form', [
-		'model' => $model,
-	]) ?>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3>Информация о чемпионате</h3>
+		    <?= $this->render('_form', [
+			    'model' => $model,
+		    ]) ?>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h3>Классы чемпионата</h3>
+		    <?= $this->render('_classes', [
+			    'model' => $model,
+		    ]) ?>
+        </div>
+    </div>
+	
 	
 	<?php if ($model->groupId == Championship::GROUPS_REGIONAL) { ?>
 		<?= $this->render('_groups-form') ?>
