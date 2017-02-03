@@ -59,8 +59,13 @@ class InternalClass extends \yii\db\ActiveRecord
 		];
 	}
 	
-	public static function getActiveClasses()
+	public static function getActiveClasses($championshipId = null)
 	{
-		return self::find()->where(['status' => self::STATUS_ACTIVE])->all();
+		$result = self::find()->where(['status' => self::STATUS_ACTIVE]);
+		if ($championshipId) {
+			$result = $result->andWhere(['championshipId' => $championshipId]);
+		}
+		
+		return $result->all();
 	}
 }

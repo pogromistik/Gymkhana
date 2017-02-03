@@ -68,6 +68,8 @@ class Motorcycle extends \yii\db\ActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 		}
+		$this->model = trim($this->model);
+		$this->mark = trim($this->mark);
 		$this->dateUpdated = time();
 		
 		return parent::beforeValidate();
