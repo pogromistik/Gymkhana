@@ -19,10 +19,13 @@ use Yii;
  * @property integer       $startRegistration
  * @property integer       $endRegistration
  * @property integer       $status
+ * @property integer       $countRace
  * @property string        $class
+ *
  * @property AthletesClass $classModel
  * @property Championship  $championship
  * @property City          $city
+ * @property Participant[] $participants
  */
 class Stage extends \yii\db\ActiveRecord
 {
@@ -52,6 +55,14 @@ class Stage extends \yii\db\ActiveRecord
 		return 'stages';
 	}
 	
+	public function init()
+	{
+		parent::init();
+		if ($this->isNewRecord) {
+			$this->countRace = 2;
+		}
+	}
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -68,10 +79,13 @@ class Stage extends \yii\db\ActiveRecord
 				'startRegistration',
 				'endRegistration',
 				'status',
-				'class'
+				'class',
+				'countRace'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman'], 'string', 'max' => 255],
-			['description', 'string']
+			['description', 'string'],
+			[['countRace'], 'integer', 'max' => 5],
+			[['countRace'], 'integer', 'min' => 1]
 		];
 	}
 	
@@ -97,6 +111,7 @@ class Stage extends \yii\db\ActiveRecord
 			'endRegistrationHuman'   => 'Завершение регистрации',
 			'status'                 => 'Статус',
 			'class'                  => 'Класс соревнования',
+			'countRace'              => 'Количество заездов'
 		];
 	}
 	
@@ -147,5 +162,10 @@ class Stage extends \yii\db\ActiveRecord
 	public function getCity()
 	{
 		return $this->hasOne(City::className(), ['id' => 'cityId']);
+	}
+	
+	public function getParticipants()
+	{
+		return $this->hasMany(Participant::className(), ['stageId' => 'id'])->orderBy(['sort' => SORT_ASC]);
 	}
 }

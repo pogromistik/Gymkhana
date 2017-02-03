@@ -1,0 +1,106 @@
+<?php
+
+use yii\helpers\Html;
+use yii\grid\GridView;
+use dosamigos\editable\Editable;
+
+/**
+ * @var \common\models\Participant              $participant
+ * @var \common\models\Stage                    $stage
+ * @var \yii\data\ActiveDataProvider            $dataProvider
+ * @var \common\models\search\ParticipantSearch $searchModel
+ * @var \yii\web\View                           $this
+ */
+
+$this->title = 'Участники';
+$this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/stages/view', 'id' => $stage->id]];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<?= $this->render('_form', [
+	'model' => $participant,
+]) ?>
+
+<div class="participant-index">
+	<?= GridView::widget([
+		'dataProvider' => $dataProvider,
+		'filterModel'  => $searchModel,
+		'columns'      => [
+			['class' => 'yii\grid\SerialColumn'],
+			
+			[
+				'attribute' => 'athleteId',
+				'format'    => 'raw',
+				'value'     => function (\common\models\Participant $item) {
+					return $item->athlete->getFullName();
+				}
+			],
+			[
+				'attribute' => 'motorcycleId',
+				'format'    => 'raw',
+				'value'     => function (\common\models\Participant $item) {
+					return $item->motorcycle->getFullTitle();
+				}
+			],
+			[
+				'attribute' => 'internalClassId',
+				'format'    => 'raw',
+				'value'     => function (\common\models\Participant $item) {
+					return Editable::widget([
+						'name'          => 'internalClassId',
+						'value'         => $item->internalClassId ? $item->internalClass->title : null,
+						'url'           => 'update',
+						'type'          => 'select',
+						'mode'          => 'pop',
+						'clientOptions' => [
+							'pk'        => $item->id,
+							'placement' => 'right',
+							'select'   => [
+								'width' => '124px'
+							],
+							'source'    => \yii\helpers\ArrayHelper::map(\common\models\InternalClass::getActiveClasses(), 'id', 'title'),
+						]
+					]);
+				}
+			],
+			[
+				'attribute' => 'number',
+				'format'    => 'raw',
+				'value'     => function (\common\models\Participant $item) {
+					return Editable::widget([
+						'name'          => 'number',
+						'value'         => $item->number,
+						'url'           => 'update',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $item->id,
+							'value'     => $item->number,
+							'placement' => 'right',
+						]
+					]);
+				}
+			],
+			[
+				'attribute' => 'sort',
+				'format'    => 'raw',
+				'value'     => function (\common\models\Participant $item) {
+					return Editable::widget([
+						'name'          => 'sort',
+						'value'         => $item->sort,
+						'url'           => 'update',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $item->id,
+							'value'     => $item->sort,
+							'placement' => 'right',
+						]
+					]);
+				}
+			],
+			
+			['class' => 'yii\grid\ActionColumn'],
+		],
+	]); ?>
+</div>

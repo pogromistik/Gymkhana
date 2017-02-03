@@ -12,9 +12,12 @@ $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="stage-update">
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+	
+	<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
+	<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
+	
+	<?= $this->render('_form', [
+		'model' => $model,
+	]) ?>
 
 </div>

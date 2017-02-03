@@ -154,4 +154,27 @@ $('.change-status').click(function (e) {
     }).fail(function (error) {
         alert(error.responseText);
     });
-})
+});
+
+$(document).on("submit", '.raceTimeForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: '/competitions/participants/add-time',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                hideBackDrop();
+                alert(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});

@@ -224,3 +224,7 @@ img {
 .pb-50 {
     padding-bottom: 50px;
 }
+
+.raceTimeForm .form-group {
+    margin-bottom: 0;
+}
