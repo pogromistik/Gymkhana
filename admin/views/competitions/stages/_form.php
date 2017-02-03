@@ -30,6 +30,8 @@ use kartik\widgets\DateTimePicker;
 	
 	<?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
 	
+	<?= $form->field($model, 'countRace')->textInput(['maxlength' => true]) ?>
+	
 	<?= $form->field($model, 'dateOfTheHuman')->widget(DatePicker::classname(), [
 		'options'       => ['placeholder' => 'Введите дату проведения соревнований'],
 		'removeButton'  => false,

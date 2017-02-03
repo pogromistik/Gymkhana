@@ -77,4 +77,9 @@ class Motorcycle extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Athlete::className(), ['id' => 'athleteId']);
 	}
+	
+	public function getFullTitle()
+	{
+		return $this->mark . ' ' . $this->model;
+	}
 }

@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
 		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
     </p>
 	
 	<?= DetailView::widget([
@@ -32,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value'     => $model->city->title
 			],
 			'description',
+			'countRace',
 			[
 				'attribute' => 'dateAdded',
 				'value'     => date("d.m.Y, H:i", $model->dateAdded)

@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\db\Expression;
+use yii\db\Query;
 
 /**
  * This is the model class for table "athletes".
@@ -106,5 +108,19 @@ class Athlete extends \yii\db\ActiveRecord
 	public function getCity()
 	{
 		return $this->hasOne(City::className(), ['id' => 'cityId']);
+	}
+	
+	public static function getActiveAthletes()
+	{
+		$query = Athlete::find();
+		$query->from([self::tableName(), Motorcycle::tableName()]);
+		$query->select('Athletes.*');
+		$query->andWhere(new Expression('`Athletes`.`id` = `Motorcycles`.`athleteId`'));
+		return $query->all();
+	}
+	
+	public function getFullName()
+	{
+		return $this->lastName . ' ' . $this->firstName;
 	}
 }

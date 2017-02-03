@@ -58,4 +58,9 @@ class InternalClass extends \yii\db\ActiveRecord
 			'status'         => 'Статус'
 		];
 	}
+	
+	public static function getActiveClasses()
+	{
+		return self::find()->where(['status' => self::STATUS_ACTIVE])->all();
+	}
 }
