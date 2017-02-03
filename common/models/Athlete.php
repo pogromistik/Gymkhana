@@ -89,8 +89,8 @@ class Athlete extends \yii\db\ActiveRecord
 			$this->createdAt = time();
 		}
 		$this->updatedAt = time();
-		$this->firstName = HelpModel::mb_ucfirst($this->firstName);
-		$this->lastName = HelpModel::mb_ucfirst($this->lastName);
+		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
+		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
 		
 		return parent::beforeValidate();
 	}

@@ -17,7 +17,7 @@ function newAthlete(data) {
         data: data,
         success: function (result) {
             if (result['success'] == true) {
-                location.href = '/competitions/athlete/view?id='+result['data'];
+                location.href = '/competitions/athlete/update?id='+result['data'];
             } else {
                 hideBackDrop();
                 $('.complete').html(result['data']);

@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'select'   => [
 								'width' => '124px'
 							],
-							'source'    => \yii\helpers\ArrayHelper::map(\common\models\InternalClass::getActiveClasses(), 'id', 'title'),
+							'source'    => \yii\helpers\ArrayHelper::map(\common\models\InternalClass::getActiveClasses($item->championshipId), 'id', 'title'),
 						]
 					]);
 				}

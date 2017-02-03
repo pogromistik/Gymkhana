@@ -166,6 +166,6 @@ class Stage extends \yii\db\ActiveRecord
 	
 	public function getParticipants()
 	{
-		return $this->hasMany(Participant::className(), ['stageId' => 'id'])->orderBy(['sort' => SORT_ASC]);
+		return $this->hasMany(Participant::className(), ['stageId' => 'id'])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 	}
 }

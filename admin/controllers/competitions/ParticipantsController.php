@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use common\models\Athlete;
+use common\models\Motorcycle;
 use common\models\Stage;
 use common\models\Time;
 use dosamigos\editable\EditableAction;
@@ -107,7 +108,7 @@ class ParticipantsController extends Controller
 	public function getSubCatList($athleteId)
 	{
 		$athlete = Athlete::findOne($athleteId);
-		$motorcycles = $athlete->motorcycles;
+		$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => Motorcycle::STATUS_ACTIVE])->all();
 		$result = [];
 		foreach ($motorcycles as $motorcycle) {
 			$result[] = ['id' => $motorcycle->id, 'name' => $motorcycle->model . ' ' . $motorcycle->mark];

@@ -41,7 +41,7 @@ use common\models\AthletesClass;
 	]) ?>
 
     <?= $form->field($model, 'internalClassId')->dropDownList(
-            ArrayHelper::map(InternalClass::findAll(['status' => InternalClass::STATUS_ACTIVE]), 'id', 'title'),
+            ArrayHelper::map(InternalClass::getActiveClasses($model->championshipId), 'id', 'title'),
         ['prompt' => 'Выберите класс награждения']) ?>
 
     <?= $form->field($model, 'number')->textInput() ?>

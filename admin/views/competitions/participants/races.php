@@ -38,15 +38,19 @@ $attempt = 0;
         <div class="row">
 			<?= $form->field($timeModel, 'stageId')->hiddenInput()->label(false)->error(false) ?>
 			<?= $form->field($timeModel, 'participantId')->hiddenInput()->label(false)->error(false) ?>
-            <?php if ($timeModel->id) { ?>
-	            <?= $form->field($timeModel, 'id')->hiddenInput()->label(false)->error(false) ?>
-            <?php } ?>
+			<?php if ($timeModel->id) { ?>
+				<?= $form->field($timeModel, 'id')->hiddenInput()->label(false)->error(false) ?>
+			<?php } ?>
             <div class="col-sm-1"><?= $participant->number ?></div>
             <div class="col-sm-3"><?= $participant->athlete->getFullName() ?></div>
             <div class="col-sm-3"><?= $participant->motorcycle->getFullTitle() ?></div>
             <div class="col-sm-2">
 				<?= $form->field($timeModel, 'timeForHuman')->widget(MaskedInput::classname(), [
-					'mask' => '99:99.99'
+					'mask'    => '99:99.99',
+					'options' => [
+						'id'    => 'timeForHuman' . $participant->id . '-' . $attempt,
+						'class' => 'form-control'
+					]
 				])->label(false) ?>
             </div>
             <div class="col-sm-1"><?= $form->field($timeModel, 'fine')->textInput()->label(false) ?></div>
