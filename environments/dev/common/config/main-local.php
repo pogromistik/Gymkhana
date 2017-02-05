@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=gymkhana',
-            'username' => 'root',
-            'password' => '000000',
+            'dsn' => 'pgsql:host=localhost;dbname=gymkhana',
+            'username' => 'postgres',
+            'password' => 'oogeec4cai',
             'charset' => 'utf8',
         ],
         'mailer' => [
