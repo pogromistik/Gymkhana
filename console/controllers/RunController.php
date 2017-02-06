@@ -298,6 +298,6 @@ class RunController extends Controller
 	
 	public function actionFixMenu()
 	{
-		MainMenu::updateAll(['pageId' => null]);
+		MenuItem::updateAll(['groupsMenuId' => null]);
 	}
 }
