@@ -24,7 +24,7 @@ class Video extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'video';
+		return 'Video';
 	}
 
 	/**

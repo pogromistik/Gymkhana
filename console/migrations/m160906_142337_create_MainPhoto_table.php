@@ -12,7 +12,7 @@ class m160906_142337_create_MainPhoto_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('main_photo', [
+		$this->createTable('MainPhoto', [
 			'id'        => $this->primaryKey(),
 			'fileName'  => $this->string(),
 			'type'      => $this->integer(),
@@ -25,6 +25,6 @@ class m160906_142337_create_MainPhoto_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('Main_Photo');
+		$this->dropTable('MainPhoto');
 	}
 }

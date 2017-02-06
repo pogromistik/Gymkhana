@@ -12,7 +12,7 @@ class m161010_153129_create_albums_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('albums', [
+		$this->createTable('Albums', [
 			'id'          => $this->primaryKey(),
 			'title'       => $this->string()->notNull(),
 			'yearId'      => $this->integer()->notNull(),
@@ -28,6 +28,6 @@ class m161010_153129_create_albums_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('albums');
+		$this->dropTable('Albums');
 	}
 }

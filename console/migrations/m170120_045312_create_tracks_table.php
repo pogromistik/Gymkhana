@@ -12,7 +12,7 @@ class m170120_045312_create_tracks_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('tracks', [
+		$this->createTable('Tracks', [
 			'id'          => $this->primaryKey(),
 			'photoPath'   => $this->string(),
 			'documentId'  => $this->integer(),
@@ -26,6 +26,6 @@ class m170120_045312_create_tracks_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('tracks');
+		$this->dropTable('Tracks');
 	}
 }

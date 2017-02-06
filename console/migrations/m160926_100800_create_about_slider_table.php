@@ -9,7 +9,7 @@ class m160926_100800_create_about_slider_table extends Migration
 {
     public function up()
     {
-        $this->createTable('about_slider', [
+        $this->createTable('AboutSlider', [
             'id'      => $this->primaryKey(),
             'blockId' => $this->integer()->notNull(),
             'picture' => $this->string()->notNull(),
@@ -20,6 +20,6 @@ class m160926_100800_create_about_slider_table extends Migration
 
     public function down()
     {
-        $this->dropTable('about_slider');
+        $this->dropTable('AboutSlider');
     }
 }

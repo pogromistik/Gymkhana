@@ -26,7 +26,7 @@ class Album extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'albums';
+		return 'Albums';
 	}
 
 	/**

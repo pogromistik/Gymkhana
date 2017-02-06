@@ -12,10 +12,10 @@ class m161007_155437_create_russia_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('russia', [
+		$this->createTable('Russia', [
 			'id'    => $this->primaryKey(),
-			'title' => $this->integer()->notNull(),
-			'link'  => $this->integer(),
+			'title' => $this->string()->notNull(),
+			'link'  => $this->string(),
 			'top'   => $this->float(),
 			'left'  => $this->float()
 		]);
@@ -26,6 +26,6 @@ class m161007_155437_create_russia_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('russia');
+		$this->dropTable('Russia');
 	}
 }
