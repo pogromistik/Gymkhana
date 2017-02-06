@@ -53,7 +53,7 @@ class StagesController extends Controller
 			return $this->redirect(['view', 'id' => $model->id]);
 		} else {
 			return $this->render('create', [
-				'model' => $model,
+				'model'     => $model,
 				'errorCity' => $errorCity,
 				'success'   => $success
 			]);
@@ -97,5 +97,16 @@ class StagesController extends Controller
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
+	}
+	
+	public function actionResult($stageId)
+	{
+		$stage = $this->findModel($stageId);
+		$participants = $stage->getParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
+		
+		return $this->render('result', [
+			'stage'        => $stage,
+			'participants' => $participants
+		]);
 	}
 }

@@ -228,3 +228,12 @@ img {
 .raceTimeForm .form-group {
     margin-bottom: 0;
 }
+
+.results td, .results th {
+    vertical-align: middle!important;
+    border-collapse: collapse;
+    border: 1px solid #dddddd;
+}
+.results {
+    border-top: 1px solid #dddddd;
+}
