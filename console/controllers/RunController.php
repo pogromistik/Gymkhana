@@ -6,7 +6,6 @@ use common\models\City;
 use common\models\AboutBlock;
 use common\models\AboutSlider;
 use common\models\Album;
-use common\models\City;
 use common\models\Contacts;
 use common\models\DopPage;
 use common\models\Files;
@@ -24,7 +23,6 @@ use common\models\NewsSlider;
 use common\models\Page;
 use common\models\Regular;
 use common\models\Track;
-use common\models\User;
 use common\models\Year;
 use yii\console\Controller;
 use yii\db\Query;
@@ -33,7 +31,6 @@ class RunController extends Controller
 {
 	public static function actionInsertCities()
 	{
-		//file_put_contents('admin/web/files/test.txt', '1');
 		$filePath = 'admin/web/files/cities.xlsx';
 		
 		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
@@ -78,6 +75,7 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
 	public function actionInsertTables()
 	{
 		$transaction = \Yii::$app->db->beginTransaction();
@@ -342,25 +340,5 @@ class RunController extends Controller
 			$item->save(false);
 		}
 		$transaction->commit();
-	}
-	
-	public function actionFixes()
-	{
-		$track = Track::findOne(1);
-		$track->documentId = 18;
-		$track->save();
-		
-		$track = Track::findOne(2);
-		$track->documentId = 17;
-		$track->save();
-		
-		$track = Track::findOne(3);
-		$track->documentId = 16;
-		$track->save();
-		
-		AboutSlider::updateAll(['blockId' => 5], ['blockId' => 1]);
-		AboutSlider::updateAll(['blockId' => 6], ['blockId' => 2]);
-		AboutSlider::updateAll(['blockId' => 7], ['blockId' => 3]);
-		AboutSlider::updateAll(['blockId' => 8], ['blockId' => 4]);
 	}
 }

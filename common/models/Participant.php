@@ -48,7 +48,7 @@ class Participant extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'participants';
+		return 'Participants';
 	}
 	
 	/**

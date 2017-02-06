@@ -18,7 +18,7 @@ class DocumentSection extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'document_sections';
+		return 'DocumentSections';
 	}
 	
 	/**

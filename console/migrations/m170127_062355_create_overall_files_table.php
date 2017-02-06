@@ -12,7 +12,7 @@ class m170127_062355_create_overall_files_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('overall_files', [
+		$this->createTable('OverallFiles', [
 			'id'         => $this->primaryKey(),
 			'userId'     => $this->integer(),
 			'date'       => $this->integer(),
@@ -29,6 +29,6 @@ class m170127_062355_create_overall_files_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('overall_files');
+		$this->dropTable('OverallFiles');
 	}
 }

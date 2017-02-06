@@ -28,7 +28,7 @@ class InternalClass extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'internal_classes';
+		return 'InternalClasses';
 	}
 	
 	/**

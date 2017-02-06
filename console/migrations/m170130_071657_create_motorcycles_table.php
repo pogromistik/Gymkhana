@@ -12,7 +12,7 @@ class m170130_071657_create_motorcycles_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('motorcycles', [
+		$this->createTable('Motorcycles', [
 			'id'              => $this->primaryKey(),
 			'athleteId'       => $this->integer()->notNull(),
 			'mark'            => $this->string()->notNull(),
@@ -29,6 +29,6 @@ class m170130_071657_create_motorcycles_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('motorcycles');
+		$this->dropTable('Motorcycles');
 	}
 }

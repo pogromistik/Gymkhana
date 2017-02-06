@@ -12,7 +12,7 @@ class m170127_062222_create_document_sections_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('document_sections', [
+		$this->createTable('DocumentSections', [
 			'id'     => $this->primaryKey(),
 			'title'  => $this->string()->notNull(),
 			'status' => $this->integer()->notNull()->defaultValue(1)
@@ -24,6 +24,6 @@ class m170127_062222_create_document_sections_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('document_sections');
+		$this->dropTable('DocumentSections');
 	}
 }

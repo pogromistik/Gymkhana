@@ -12,7 +12,7 @@ class m170203_075002_create_times_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('times', [
+		$this->createTable('Times', [
 			'id'            => $this->primaryKey(),
 			'participantId' => $this->integer()->notNull(),
 			'stageId'       => $this->integer()->notNull(),
@@ -28,6 +28,6 @@ class m170203_075002_create_times_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('times');
+		$this->dropTable('Times');
 	}
 }

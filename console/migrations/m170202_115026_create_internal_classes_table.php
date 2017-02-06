@@ -12,7 +12,7 @@ class m170202_115026_create_internal_classes_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('internal_classes', [
+		$this->createTable('InternalClasses', [
 			'id'             => $this->primaryKey(),
 			'title'          => $this->string()->notNull(),
 			'description'    => $this->text(),
@@ -26,6 +26,6 @@ class m170202_115026_create_internal_classes_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('internal_classes');
+		$this->dropTable('InternalClasses');
 	}
 }

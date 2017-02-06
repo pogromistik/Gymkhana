@@ -9,7 +9,7 @@ class m170131_112954_create_regional_groups_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('regional_groups', [
+		$this->createTable('RegionalGroups', [
 			'id'            => $this->primaryKey(),
 			'title'         => $this->string()->notNull()
 		]);
@@ -20,6 +20,6 @@ class m170131_112954_create_regional_groups_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('regional_groups');
+		$this->dropTable('RegionalGroups');
 	}
 }
