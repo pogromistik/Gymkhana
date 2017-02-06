@@ -12,7 +12,7 @@ class m170131_113053_create_stages_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('stages', [
+		$this->createTable('Stages', [
 			'id'                => $this->primaryKey(),
 			'championshipId'    => $this->integer()->notNull(),
 			'title'             => $this->string()->notNull(),
@@ -34,6 +34,6 @@ class m170131_113053_create_stages_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('stages');
+		$this->dropTable('Stages');
 	}
 }

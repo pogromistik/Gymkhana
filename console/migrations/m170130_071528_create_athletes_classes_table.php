@@ -12,7 +12,7 @@ class m170130_071528_create_athletes_classes_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('athletes_classes', [
+		$this->createTable('AthletesClasses', [
 			'id'          => $this->primaryKey(),
 			'title'       => $this->string()->notNull(),
 			'percent'     => $this->integer()->notNull(),
@@ -26,6 +26,6 @@ class m170130_071528_create_athletes_classes_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('athletes_classes');
+		$this->dropTable('AthletesClasses');
 	}
 }

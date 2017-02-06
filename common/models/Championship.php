@@ -47,7 +47,7 @@ class Championship extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'championships';
+		return 'Championships';
 	}
 	
 	/**

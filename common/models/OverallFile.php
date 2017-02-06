@@ -26,7 +26,7 @@ class OverallFile extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'overall_files';
+		return 'OverallFiles';
 	}
 	
 	/**

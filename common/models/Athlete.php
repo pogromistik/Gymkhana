@@ -37,7 +37,7 @@ class Athlete extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'athletes';
+		return 'Athletes';
 	}
 	
 	/**

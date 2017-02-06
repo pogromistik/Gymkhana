@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="championship-create">
     
-    <h3>Добавить этап</h3>
+    <h3>Создать чемпионат</h3>
 	<?= $this->render('_form', [
 		'model'   => $model,
 		'groupId' => $groupId

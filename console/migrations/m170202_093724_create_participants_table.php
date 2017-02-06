@@ -12,7 +12,7 @@ class m170202_093724_create_participants_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('participants', [
+		$this->createTable('Participants', [
 			'id'              => $this->primaryKey(),
 			'championshipId'  => $this->integer()->notNull(),
 			'stageId'         => $this->integer()->notNull(),
@@ -34,6 +34,6 @@ class m170202_093724_create_participants_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('participants');
+		$this->dropTable('Participants');
 	}
 }

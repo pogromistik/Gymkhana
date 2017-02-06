@@ -12,7 +12,7 @@ class m170126_121223_create_assoc_news_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('assoc_news', [
+		$this->createTable('AssocNews', [
 			'id'          => $this->primaryKey(),
 			'title'       => $this->string(),
 			'previewText' => $this->text()->notNull(),
@@ -30,6 +30,6 @@ class m170126_121223_create_assoc_news_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('assoc_news');
+		$this->dropTable('AssocNews');
 	}
 }

@@ -26,7 +26,7 @@ class AssocNews extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'assoc_news';
+		return 'AssocNews';
 	}
 	
 	/**

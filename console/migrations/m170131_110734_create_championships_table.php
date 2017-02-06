@@ -12,7 +12,7 @@ class m170131_110734_create_championships_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('championships', [
+		$this->createTable('Championships', [
 			'id'            => $this->primaryKey(),
 			'title'         => $this->string(),
 			'description'   => $this->text(),
@@ -30,6 +30,6 @@ class m170131_110734_create_championships_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('championships');
+		$this->dropTable('Championships');
 	}
 }

@@ -17,7 +17,7 @@ class RegionalGroup extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'regional_groups';
+		return 'RegionalGroups';
 	}
 	
 	/**

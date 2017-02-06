@@ -12,7 +12,7 @@ class m170130_070329_create_athletes_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('athletes', [
+		$this->createTable('Athletes', [
 			'id'                 => $this->primaryKey(),
 			'login'              => $this->integer()->unique(),
 			'firstName'          => $this->string()->notNull(),
@@ -38,6 +38,6 @@ class m170130_070329_create_athletes_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('athletes');
+		$this->dropTable('Athletes');
 	}
 }
