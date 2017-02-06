@@ -37,6 +37,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new AboutBlock();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -46,6 +49,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Page();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -55,6 +61,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new AboutSlider();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -64,6 +73,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Album();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -73,6 +85,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new City();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -82,6 +97,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Contacts();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -91,6 +109,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new DopPage();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -100,6 +121,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Files();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -109,6 +133,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new GroupMenu();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -118,6 +145,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new HelpProject();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -136,6 +166,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Link();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -145,6 +178,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new MainMenu();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -154,6 +190,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new MainPhoto();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -163,6 +202,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Marshal();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -172,6 +214,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new MenuItem();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -181,6 +226,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new News();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -190,6 +238,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new NewsBlock();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -199,6 +250,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new NewsSlider();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -208,6 +262,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Regular();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -217,6 +274,9 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Track();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
@@ -226,10 +286,18 @@ class RunController extends Controller
 		foreach ($items as $block) {
 			$item = new Year();
 			foreach ($item->attributes as $attribute => $value) {
+				if ($attribute == 'id') {
+					continue;
+				}
 				$item->$attribute = $block[$attribute];
 			}
 			$item->save(false);
 		}
 		$transaction->commit();
+	}
+	
+	public function actionFixMenu()
+	{
+		MainMenu::updateAll(['pageId' => null]);
 	}
 }
