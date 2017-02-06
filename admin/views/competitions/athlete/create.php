@@ -13,7 +13,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="athlete-create">
 	
-	<?= $this->render('//competitions/common/_city-form', ['errorCity' => $errorCity, 'success' => $success, 'actionType' => 'withoutId']) ?>
+	<?= $this->render('//competitions/common/_city-form', [
+		'errorCity'  => $errorCity,
+		'success'    => $success,
+		'url'        => '/competitions/athlete/create',
+		'actionType' => 'withoutId'
+	]) ?>
 
     <hr>
 

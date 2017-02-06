@@ -7,11 +7,14 @@
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
+if (!isset($url)) {
+    $url = Url::current();
+}
 ?>
 <h3>Добавить город</h3>
 <?= Html::beginForm('', 'post', [
 	'id'               => 'newCityForm',
-	'data-action'      => Url::current(),
+	'data-action'      => $url,
 	'data-action-type' => $actionType
 ]) ?>
 <div class="form-group">

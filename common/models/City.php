@@ -13,6 +13,8 @@ use Yii;
  * @property double  $top
  * @property double  $left
  * @property integer $showInRussiaPage
+ * @property string  $federalDistrict
+ * @property string  $region
  */
 class City extends \yii\db\ActiveRecord
 {
@@ -33,9 +35,9 @@ class City extends \yii\db\ActiveRecord
 			[['title'], 'required'],
 			[['showInRussiaPage'], 'integer'],
 			[['top', 'left'], 'number'],
-			[['title', 'link'], 'string'],
+			[['title', 'link', 'federalDistrict', 'region'], 'string'],
 			[['showInRussiaPage'], 'default', 'value' => 1],
-			['title', 'unique']
+			['title', 'unique'],
 		];
 	}
 	
@@ -50,7 +52,9 @@ class City extends \yii\db\ActiveRecord
 			'link'             => 'Ссылка',
 			'top'              => 'Top',
 			'left'             => 'Left',
-			'showInRussiaPage' => 'Показывать на странице "Россия"'
+			'showInRussiaPage' => 'Показывать на странице "Россия"',
+			'federalDistrict'  => 'Федеральный округ',
+			'region'           => 'Регион'
 		];
 	}
 	
