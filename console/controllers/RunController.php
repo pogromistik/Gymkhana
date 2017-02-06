@@ -296,8 +296,23 @@ class RunController extends Controller
 		$transaction->commit();
 	}
 	
-	public function actionFixMenu()
+	public function actionFixes()
 	{
-		MenuItem::updateAll(['pageId' => null]);
+		$track = Track::findOne(1);
+		$track->documentId = 18;
+		$track->save();
+		
+		$track = Track::findOne(2);
+		$track->documentId = 17;
+		$track->save();
+		
+		$track = Track::findOne(3);
+		$track->documentId = 16;
+		$track->save();
+		
+		AboutSlider::updateAll(['blockId' => 5], ['blockId' => 1]);
+		AboutSlider::updateAll(['blockId' => 6], ['blockId' => 2]);
+		AboutSlider::updateAll(['blockId' => 7], ['blockId' => 3]);
+		AboutSlider::updateAll(['blockId' => 8], ['blockId' => 4]);
 	}
 }
