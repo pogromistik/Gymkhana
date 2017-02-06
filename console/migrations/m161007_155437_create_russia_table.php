@@ -14,7 +14,7 @@ class m161007_155437_create_russia_table extends Migration
 	{
 		$this->createTable('russia', [
 			'id'    => $this->primaryKey(),
-			'title' => $this->integer()->notNull(),
+			'title' => $this->string()->notNull(),
 			'link'  => $this->integer(),
 			'top'   => $this->float(),
 			'left'  => $this->float()
