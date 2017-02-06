@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\City */
@@ -27,6 +28,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'top')->textInput() ?>
 	
 	<?= $form->field($model, 'showInRussiaPage')->checkbox() ?>
+	
+	<?= $form->field($model, 'regionId')->widget(Select2::classname(), [
+		'name'    => 'kv-type-01',
+		'data'    => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+		'options' => [
+			'placeholder' => 'Выберите регион...',
+		],
+	]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
