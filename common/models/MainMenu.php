@@ -35,7 +35,7 @@ class MainMenu extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'main_menu';
+		return 'MainMenu';
 	}
 	
 	/**

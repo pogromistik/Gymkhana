@@ -25,7 +25,7 @@ class NewsBlock extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'news_block';
+        return 'NewsBlock';
     }
 
     /**

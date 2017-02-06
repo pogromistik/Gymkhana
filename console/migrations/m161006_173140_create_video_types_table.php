@@ -12,7 +12,7 @@ class m161006_173140_create_video_types_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('video_types', [
+		$this->createTable('VideoTypes', [
 			'id'      => $this->primaryKey(),
 			'title'   => $this->string()->notNull(),
 			'status'  => $this->integer()->notNull()->defaultValue(1),
@@ -25,6 +25,6 @@ class m161006_173140_create_video_types_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('video_types');
+		$this->dropTable('VideoTypes');
 	}
 }

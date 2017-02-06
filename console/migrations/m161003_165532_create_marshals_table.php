@@ -12,7 +12,7 @@ class m161003_165532_create_marshals_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('marshals', [
+		$this->createTable('Marshals', [
 			'id'              => $this->primaryKey(),
 			'name'            => $this->string()->notNull(),
 			'post'            => $this->string(),
@@ -32,6 +32,6 @@ class m161003_165532_create_marshals_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('marshals');
+		$this->dropTable('Marshals');
 	}
 }

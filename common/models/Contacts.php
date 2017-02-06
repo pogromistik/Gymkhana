@@ -22,7 +22,7 @@ class Contacts extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'contacts';
+		return 'Contacts';
 	}
 	
 	/**

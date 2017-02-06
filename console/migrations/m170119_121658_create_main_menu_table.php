@@ -12,7 +12,7 @@ class m170119_121658_create_main_menu_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('main_menu', [
+		$this->createTable('MainMenu', [
 			'id'     => $this->primaryKey(),
 			'title'  => $this->string(),
 			'sort'   => $this->integer()->notNull(),
@@ -27,6 +27,6 @@ class m170119_121658_create_main_menu_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('main_menu');
+		$this->dropTable('MainMenu');
 	}
 }

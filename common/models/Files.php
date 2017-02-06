@@ -29,7 +29,7 @@ class Files extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'files';
+		return 'Files';
 	}
 	
 	/**

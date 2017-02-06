@@ -12,7 +12,7 @@ class m161005_154750_create_contacts_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('contacts', [
+		$this->createTable('Contacts', [
 			'id'       => $this->primaryKey(),
 			'phone'    => $this->string()->notNull(),
 			'email'    => $this->string(),
@@ -28,6 +28,6 @@ class m161005_154750_create_contacts_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('contacts');
+		$this->dropTable('Contacts');
 	}
 }

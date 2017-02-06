@@ -12,7 +12,7 @@ class m161010_145414_create_years_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('years', [
+		$this->createTable('Years', [
 			'id'     => $this->primaryKey(),
 			'year'   => $this->integer()->notNull(),
 			'status' => $this->integer()->notNull()->defaultValue(1)
@@ -24,6 +24,6 @@ class m161010_145414_create_years_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('years');
+		$this->dropTable('Years');
 	}
 }

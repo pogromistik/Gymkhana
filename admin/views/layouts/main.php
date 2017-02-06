@@ -67,10 +67,10 @@ AppAsset::register($this);
                         </li>
                         <li>
                             <a href="<?= Url::to(['/news/index']) ?>"><i
-                                        class="fa fa-table fa-fw"></i> Новости</a>
+                                        class="fa fa-newspaper-o fa-fw"></i> Новости</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> О проекте<span
+                            <a href="#"><i class="fa fa-info-circle fa-fw"></i> О проекте<span
                                         class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -91,7 +91,7 @@ AppAsset::register($this);
                             </ul>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Галерея<span
+                            <a href="#"><i class="fa fa-picture-o fa-fw"></i> Галерея<span
                                         class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -103,7 +103,7 @@ AppAsset::register($this);
                             </ul>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Фигуры и трассы<span
+                            <a href="#"><i class="fa fa-rocket fa-fw"></i> Фигуры и трассы<span
                                         class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -116,10 +116,10 @@ AppAsset::register($this);
                         </li>
                         <li>
                             <a href="<?= Url::to(['/russia/index']) ?>"><i
-                                        class="fa fa-table fa-fw"></i> Россия</a>
+                                        class="fa fa fa-globe fa-fw" ></i> Россия</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Дополнительно<span
+                            <a href="#"><i class="fa fa-cog fa-fw"></i> Дополнительно<span
                                         class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
