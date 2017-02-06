@@ -14,7 +14,9 @@ use Yii;
  * @property double  $left
  * @property integer $showInRussiaPage
  * @property string  $federalDistrict
- * @property string  $region
+ * @property string  $regionId
+ *
+ * @property Region  $region
  */
 class City extends \yii\db\ActiveRecord
 {
@@ -33,9 +35,9 @@ class City extends \yii\db\ActiveRecord
 	{
 		return [
 			[['title'], 'required'],
-			[['showInRussiaPage'], 'integer'],
+			[['showInRussiaPage', 'regionId'], 'integer'],
 			[['top', 'left'], 'number'],
-			[['title', 'link', 'federalDistrict', 'region'], 'string'],
+			[['title', 'link', 'federalDistrict'], 'string'],
 			[['showInRussiaPage'], 'default', 'value' => 1],
 			['title', 'unique'],
 		];
@@ -54,7 +56,7 @@ class City extends \yii\db\ActiveRecord
 			'left'             => 'Left',
 			'showInRussiaPage' => 'Показывать на странице "Россия"',
 			'federalDistrict'  => 'Федеральный округ',
-			'region'           => 'Регион'
+			'regionId'         => 'Регион'
 		];
 	}
 	
@@ -67,5 +69,10 @@ class City extends \yii\db\ActiveRecord
 	public function beforeValidate()
 	{
 		return parent::beforeValidate();
+	}
+	
+	public function getRegion()
+	{
+		return $this->hasOne(Region::className(), ['id' => 'regionId']);
 	}
 }

@@ -21,6 +21,7 @@ use common\models\News;
 use common\models\NewsBlock;
 use common\models\NewsSlider;
 use common\models\Page;
+use common\models\Region;
 use common\models\Regular;
 use common\models\Track;
 use common\models\Year;
@@ -59,12 +60,27 @@ class RunController extends Controller
 		
 		foreach ($array as $i => $data) {
 			echo $i . PHP_EOL;
+			if ($data['region'] == 'Москва') {
+				$data['region'] = 'Московская область';
+			} elseif ($data['region'] == 'Санкт-Петербург') {
+				$data['region'] = 'Ленинградская область';
+			}
+			$region = Region::findOne(['title' => (string)$data['region']]);
+			if (!$region) {
+				$region = new Region();
+				$region->title = (string)$data['region'];
+				if (!$region->save()) {
+					var_dump($region->errors);
+					
+					return false;
+				}
+			}
 			$city = City::findOne(["title" => (string)$data['title']]);
 			if (!$city) {
 				$city = new City();
 				$city->title = (string)$data['title'];
 			}
-			$city->region = (string)$data['region'];
+			$city->regionId = $region->id;
 			$city->federalDistrict = (string)$data['federalDistrict'];
 			if (!$city->save()) {
 				var_dump($city->errors);
