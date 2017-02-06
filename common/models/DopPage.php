@@ -28,7 +28,7 @@ class DopPage extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'dop_pages';
+		return 'DopPages';
 	}
 
 	/**

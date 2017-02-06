@@ -19,7 +19,7 @@ class HelpProject extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'help_project';
+		return 'HelpProject';
 	}
 	
 	/**

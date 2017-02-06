@@ -9,7 +9,7 @@ class m160926_100732_create_about_blocks_table extends Migration
 {
     public function up()
     {
-        $this->createTable('about_block', [
+        $this->createTable('AboutBlock', [
             'id'         => $this->primaryKey(),
             'text'       => $this->text(),
             'sliderText' => $this->string(),
@@ -19,6 +19,6 @@ class m160926_100732_create_about_blocks_table extends Migration
 
     public function down()
     {
-        $this->dropTable('about_block');
+        $this->dropTable('AboutBlock');
     }
 }

@@ -20,7 +20,7 @@ class AboutSlider extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'about_slider';
+		return 'AboutSlider';
 	}
 	
 	/**

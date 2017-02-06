@@ -26,7 +26,7 @@ class Year extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'years';
+		return 'Years';
 	}
 
 	/**

@@ -12,7 +12,7 @@ class m161024_145149_create_pages_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('pages', [
+		$this->createTable('Pages', [
 			'id'          => $this->primaryKey(),
 			'dateAdded'   => $this->integer()->notNull(),
 			'dateUpdated' => $this->integer()->notNull(),
@@ -26,8 +26,6 @@ class m161024_145149_create_pages_table extends Migration
 			'sort'        => $this->integer(),
 			'layoutId'    => $this->string()->notNull()
 		]);
-
-		//$this->addForeignKey('pages_layoutId', 'pages', 'layoutId', 'layouts', 'id');
 	}
 
 	/**
@@ -35,6 +33,6 @@ class m161024_145149_create_pages_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('pages');
+		$this->dropTable('Pages');
 	}
 }

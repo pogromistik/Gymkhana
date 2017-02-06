@@ -12,7 +12,7 @@ class m170112_114027_create_menu_items_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('menu_items', [
+		$this->createTable('MenuItems', [
 			'id'          => $this->primaryKey(),
 			'groupsMenuId' => $this->integer(),
 			'title'       => $this->string(),
@@ -27,6 +27,6 @@ class m170112_114027_create_menu_items_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('menu_items');
+		$this->dropTable('MenuItems');
 	}
 }

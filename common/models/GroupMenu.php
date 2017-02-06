@@ -19,7 +19,7 @@ class GroupMenu extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'groups_menu';
+		return 'GroupsMenu';
 	}
 	
 	/**

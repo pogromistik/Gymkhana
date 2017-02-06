@@ -6,7 +6,7 @@ class m160914_151159_add_news_slider extends Migration
 {
     public function up()
     {
-        $this->createTable('news_slider', [
+        $this->createTable('NewsSlider', [
             'id'      => $this->primaryKey(),
             'newsId'  => $this->integer()->notNull(),
             'blockId' => $this->integer()->notNull(),
@@ -19,7 +19,7 @@ class m160914_151159_add_news_slider extends Migration
 
     public function down()
     {
-        $this->dropTable('news_slider');
+        $this->dropTable('NewsSlider');
     }
 
     /*

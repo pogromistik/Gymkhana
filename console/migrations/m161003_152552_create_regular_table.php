@@ -12,7 +12,7 @@ class m161003_152552_create_regular_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('regular', [
+		$this->createTable('Regular', [
 			'id'   => $this->primaryKey(),
 			'text' => $this->text()->notNull(),
 			'sort' => $this->integer()
@@ -24,6 +24,6 @@ class m161003_152552_create_regular_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('regular');
+		$this->dropTable('Regular');
 	}
 }

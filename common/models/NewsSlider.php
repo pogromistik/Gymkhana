@@ -23,7 +23,7 @@ class NewsSlider extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'news_slider';
+        return 'NewsSlider';
     }
 
     /**

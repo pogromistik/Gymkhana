@@ -6,11 +6,11 @@ class m170117_104938_rename_Russia_in_Cities extends Migration
 {
     public function safeUp()
     {
-    	$this->renameTable('russia', 'cities');
+    	$this->renameTable('Russia', 'Cities');
     }
 
     public function safeDown()
     {
-    	$this->renameTable('cities', 'russia');
+    	$this->renameTable('Cities', 'Russia');
     }
 }

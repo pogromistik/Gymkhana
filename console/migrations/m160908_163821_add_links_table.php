@@ -6,7 +6,7 @@ class m160908_163821_add_links_table extends Migration
 {
 	public function up()
 	{
-		$this->createTable('links', [
+		$this->createTable('Links', [
 			'id'    => $this->primaryKey(),
 			'link'  => $this->string(),
 			'title' => $this->string(),
@@ -16,7 +16,7 @@ class m160908_163821_add_links_table extends Migration
 
 	public function down()
 	{
-		$this->dropTable('links');
+		$this->dropTable('Links');
 	}
 
 	/*

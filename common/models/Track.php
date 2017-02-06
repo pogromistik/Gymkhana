@@ -24,7 +24,7 @@ class Track extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'tracks';
+		return 'Tracks';
 	}
 	
 	/**

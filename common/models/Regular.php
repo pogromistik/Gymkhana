@@ -18,7 +18,7 @@ class Regular extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'regular';
+		return 'Regular';
 	}
 
 	/**
