@@ -12,7 +12,7 @@ class m161005_160415_create_dop_pages_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('dop_pages', [
+		$this->createTable('DopPages', [
 			'id'      => $this->primaryKey(),
 			'title'   => $this->string()->notNull(),
 			'picture' => $this->string(),
@@ -25,6 +25,6 @@ class m161005_160415_create_dop_pages_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('dop_pages');
+		$this->dropTable('DopPages');
 	}
 }

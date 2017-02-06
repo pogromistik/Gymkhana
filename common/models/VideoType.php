@@ -29,7 +29,7 @@ class VideoType extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'video_types';
+		return 'VideoTypes';
 	}
 
 	/**

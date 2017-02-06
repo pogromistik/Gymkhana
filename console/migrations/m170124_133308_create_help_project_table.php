@@ -12,7 +12,7 @@ class m170124_133308_create_help_project_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('help_project', [
+		$this->createTable('HelpProject', [
 			'id'        => $this->primaryKey(),
 			'imgFolder' => $this->string(),
 			'text1'     => $this->string(),
@@ -25,6 +25,6 @@ class m170124_133308_create_help_project_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('help_project');
+		$this->dropTable('HelpProject');
 	}
 }

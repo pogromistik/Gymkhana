@@ -12,12 +12,12 @@ class m161024_144905_create_layouts_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('layouts', [
+		$this->createTable('Layouts', [
 			'id'    => $this->string()->notNull(),
 			'title' => $this->string()->notNull()
 		]);
 
-		$this->addPrimaryKey('layouts_id', 'layouts', 'id');
+		$this->addPrimaryKey('Layouts_id', 'Layouts', 'id');
 	}
 
 	/**
@@ -25,6 +25,6 @@ class m161024_144905_create_layouts_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('layouts');
+		$this->dropTable('Layouts');
 	}
 }

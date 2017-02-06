@@ -12,7 +12,7 @@ class m170119_092821_create_files_table extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->createTable('files', [
+		$this->createTable('Files', [
 			'id'            => $this->primaryKey(),
 			'originalTitle' => $this->string()->notNull(),
 			'title'         => $this->string()->notNull(),
@@ -27,6 +27,6 @@ class m170119_092821_create_files_table extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->dropTable('files');
+		$this->dropTable('Files');
 	}
 }

@@ -23,7 +23,7 @@ class AboutBlock extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'about_block';
+		return 'AboutBlock';
 	}
 
 	/**

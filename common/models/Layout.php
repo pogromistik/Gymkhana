@@ -19,7 +19,7 @@ class Layout extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'layouts';
+		return 'Layouts';
 	}
 
 	/**

@@ -12,7 +12,7 @@ class m170112_113954_create_groups_menu_table extends Migration
 	 */
 	public function up()
 	{
-		$this->createTable('groups_menu', [
+		$this->createTable('GroupsMenu', [
 			'id'    => $this->primaryKey(),
 			'title' => $this->string()->notNull(),
 			'sort'  => $this->integer()->notNull()
@@ -24,6 +24,6 @@ class m170112_113954_create_groups_menu_table extends Migration
 	 */
 	public function down()
 	{
-		$this->dropTable('groups_menu');
+		$this->dropTable('GroupsMenu');
 	}
 }

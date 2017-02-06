@@ -6,7 +6,7 @@ class m160914_150332_add_news_block_table extends Migration
 {
     public function up()
     {
-        $this->createTable('news_block', [
+        $this->createTable('NewsBlock', [
             'id'         => $this->primaryKey(),
             'newsId'     => $this->integer()->notNull(),
             'text'       => $this->text(),
@@ -18,7 +18,7 @@ class m160914_150332_add_news_block_table extends Migration
 
     public function down()
     {
-        $this->dropTable('news_block');
+        $this->dropTable('NewsBlock');
     }
 
     /*
