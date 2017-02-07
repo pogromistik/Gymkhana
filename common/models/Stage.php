@@ -149,6 +149,14 @@ class Stage extends \yii\db\ActiveRecord
 		}
 	}
 	
+	public function afterSave($insert, $changedAttributes)
+	{
+		parent::afterSave($insert, $changedAttributes);
+		if ($insert) {
+			AssocNews::createStandardNews(AssocNews::TEMPLATE_STAGE, $this);
+		}
+	}
+	
 	public function getChampionship()
 	{
 		return $this->hasOne(Championship::className(), ['id' => 'championshipId']);
