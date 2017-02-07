@@ -16,6 +16,11 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
 	<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
 	<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
+	<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
+		[
+			'class'   => 'btn btn-default stageCalcResult',
+			'data-id' => $model->id
+		]) ?>
 	
 	<?= $this->render('_form', [
 		'model' => $model,
