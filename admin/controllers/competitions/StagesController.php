@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use common\models\Participant;
 use Yii;
 use common\models\Stage;
 use common\models\search\StageSearch;
@@ -108,5 +109,31 @@ class StagesController extends Controller
 			'stage'        => $stage,
 			'participants' => $participants
 		]);
+	}
+	
+	public function actionCalculationResult($id)
+	{
+		$stage = Stage::findOne($id);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		
+		/** @var Participant[] $participants */
+		$participants = Participant::find()->where(['stageId' => $stage->id])->orderBy(['bestTime' => SORT_ASC])->all();
+		$place = 1;
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($participants as $participant) {
+			$participant->place = $place++;
+			$participant->placeOfClass = Participant::find()->where(['stageId' => $stage->id])
+					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				
+				return var_dump($participant->errors);
+			}
+		}
+		$transaction->commit();
+		
+		return true;
 	}
 }

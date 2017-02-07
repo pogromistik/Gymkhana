@@ -53,7 +53,7 @@ $place = 1;
                 <td></td>
             <?php } ?>
 			<td rowspan="<?=$stage->countRace?>"><?= $participant->humanBestTime ?></td>
-			<td rowspan="<?=$stage->countRace?>"></td>
+			<td rowspan="<?=$stage->countRace?>"><?= $participant->placeOfClass ?></td>
 		</tr>
 		<?php
 		$attempt = 1;

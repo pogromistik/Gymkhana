@@ -82,3 +82,21 @@ $('.removeOverallFile').click(function (e) {
         });
     }
 });
+
+$('.stageCalcResult').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите пересчитать результаты этого этапа?")) {
+        var id = $(this).data('id');
+        $.get('/competitions/stages/calculation-result', {
+            id: id
+        }).done(function (data) {
+            if (data == true) {
+                location.href = '/competitions/stages/result?stageId='+id;
+            } else {
+                alert(data);
+            }
+        }).fail(function (error) {
+            alert(error.responseText);
+        });
+    }
+});
