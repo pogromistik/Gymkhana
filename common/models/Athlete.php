@@ -114,8 +114,8 @@ class Athlete extends \yii\db\ActiveRecord
 	{
 		$query = Athlete::find();
 		$query->from([self::tableName(), Motorcycle::tableName()]);
-		$query->select('"athletes".*');
-		$query->andWhere(new Expression('"athletes"."id" = "motorcycles"."athleteId"'));
+		$query->select('"Athletes".*');
+		$query->andWhere(new Expression('"Athletes"."id" = "Motorcycles"."athleteId"'));
 		return $query->all();
 	}
 	

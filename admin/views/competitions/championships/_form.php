@@ -38,6 +38,19 @@ use kartik\widgets\Select2;
 		],
 	]) ?>
     <?php } ?>
+	
+	<?php if ($model->groupId != Championship::GROUPS_RUSSIA) { ?>
+		<?= $form->field($model, 'regionId',
+			['inputTemplate' => '<div class="input-with-description"><div class="text">
+Если все этапы чемпионата будут проходить в одном регионе - укажите его.
+</div>{input}</div>'])->widget(Select2::classname(), [
+			'name'    => 'kv-type-01',
+			'data'    => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+			'options' => [
+				'placeholder' => 'Выберите регион...',
+			],
+		]) ?>
+    <?php } ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

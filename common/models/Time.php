@@ -64,7 +64,7 @@ class Time extends \yii\db\ActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->attemptNumber = self::find()->where(['participantId' => $this->participantId,
-			                                            'stageId'       => $this->stageId])->max('attemptNumber') + 1;
+			                                            'stageId'       => $this->stageId])->max('"attemptNumber"') + 1;
 		}
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
@@ -91,7 +91,7 @@ class Time extends \yii\db\ActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		$participant = $this->participant;
 		$participant->bestTime = self::find()->where(['participantId' => $this->participantId,
-		                                              'stageId'       => $this->stageId])->min('resultTime');
+		                                              'stageId'       => $this->stageId])->min('"resultTime"');
 		$participant->save();
 	}
 	
