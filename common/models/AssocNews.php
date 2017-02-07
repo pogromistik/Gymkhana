@@ -19,6 +19,9 @@ use Yii;
  */
 class AssocNews extends \yii\db\ActiveRecord
 {
+	const TEMPLATE_CHAMPIONSHIP = 1;
+	const TEMPLATE_STAGE = 2;
+	
 	public $datePublishHuman;
 	
 	/**
@@ -85,5 +88,57 @@ class AssocNews extends \yii\db\ActiveRecord
 		if ($this->datePublish) {
 			$this->datePublishHuman = date('d.m.Y', $this->datePublish);
 		}
+	}
+	
+	public static function createStandardNews($template, $model)
+	{
+		switch ($template) {
+			case self::TEMPLATE_CHAMPIONSHIP:
+				/** @var Championship $championship */
+				$championship = $model;
+				$news = new AssocNews();
+				$news->previewText = 'В ' . $championship->year->year . ' году ';
+				if ($championship->status == Championship::STATUS_PAST) {
+					$news->previewText .= 'прошел ';
+				} else {
+					$news->previewText .= 'предстоит ';
+				}
+				$news->previewText .= $championship->title;
+				if ($championship->regionId) {
+					$news->previewText .= '. Регион проведения: ' . $championship->region->title;
+				}
+				$news->previewText .= '.';
+				$news->save();
+				break;
+			case self::TEMPLATE_STAGE:
+				/** @var Stage $stage */
+				$stage = $model;
+				$news = new AssocNews();
+				$news->previewText = 'В городе ' . $stage->city->title . ' ';
+				if ($stage->status == Stage::STATUS_PAST) {
+					$news->previewText .= 'прошел ';
+				} else {
+					$news->previewText .= 'предстоит ';
+				}
+				$news->previewText .= $stage->title . ', входящий в ' . $stage->championship->title;
+				if ($stage->location) {
+					$news->previewText .= '.<br>Место проведения этапа: ' . $stage->location;
+				}
+				if ($stage->dateOfThe) {
+					$news->previewText .= '.<br>Дата проведения: ' . $stage->dateOfTheHuman;
+				}
+				if ($stage->startRegistration) {
+					$news->previewText .= '.<br>Начало регистрации: ' . $stage->startRegistrationHuman;
+				}
+				if ($stage->endRegistration) {
+					$news->previewText .= ', завершение регистрации: ' . $stage->endRegistrationHuman;
+				}
+				$news->previewText .='.';
+				$news->save();
+				break;
+			
+		}
+		
+		return true;
 	}
 }

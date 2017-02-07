@@ -23,6 +23,7 @@ use Yii;
  * @property RegionalGroup   $regionalGroup
  * @property Stage[]         $stages
  * @property InternalClass[] $internalClasses
+ * @property Region          $region
  */
 class Championship extends \yii\db\ActiveRecord
 {
@@ -110,6 +111,14 @@ class Championship extends \yii\db\ActiveRecord
 		return parent::beforeValidate();
 	}
 	
+	public function afterSave($insert, $changedAttributes)
+	{
+		parent::afterSave($insert, $changedAttributes);
+		if ($insert) {
+			AssocNews::createStandardNews(AssocNews::TEMPLATE_CHAMPIONSHIP, $this);
+		}
+	}
+	
 	public function getYear()
 	{
 		return $this->hasOne(Year::className(), ['id' => 'yearId']);
@@ -128,5 +137,10 @@ class Championship extends \yii\db\ActiveRecord
 	public function getInternalClasses()
 	{
 		return $this->hasMany(InternalClass::className(), ['championshipId' => 'id']);
+	}
+	
+	public function getRegion()
+	{
+		return $this->hasOne(Region::className(), ['id' => 'regionId']);
 	}
 }
