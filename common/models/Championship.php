@@ -17,6 +17,8 @@ use Yii;
  * @property integer         $regionGroupId
  * @property integer         $dateAdded
  * @property integer         $dateUpdated
+ * @property integer         $regionId
+ *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
  * @property Stage[]         $stages
@@ -58,7 +60,7 @@ class Championship extends \yii\db\ActiveRecord
 		return [
 			[['description'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated'], 'required'],
-			[['yearId', 'status', 'groupId', 'regionGroupId', 'dateAdded', 'dateUpdated'], 'integer'],
+			[['yearId', 'status', 'groupId', 'regionGroupId', 'dateAdded', 'dateUpdated', 'regionId'], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
 			}],
@@ -81,6 +83,7 @@ class Championship extends \yii\db\ActiveRecord
 			'regionGroupId' => 'Региональный раздел',
 			'dateAdded'     => 'Дата создания',
 			'dateUpdated'   => 'Дата редактирования',
+			'regionId'      => 'Регион проведения чемпионата'
 		];
 	}
 	
