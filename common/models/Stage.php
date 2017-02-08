@@ -37,14 +37,16 @@ class Stage extends \yii\db\ActiveRecord
 	const STATUS_PAST = 2;
 	const STATUS_START_REGISTRATION = 3;
 	const STATUS_END_REGISTRATION = 4;
-	const STATUS_PRESENT = 5;
+	const STATUS_CALCULATE_RESULTS = 5;
+	const STATUS_PRESENT = 6;
 	
 	public static $statusesTitle = [
 		self::STATUS_UPCOMING           => 'Предстоящий этап',
 		self::STATUS_START_REGISTRATION => 'Открыта регистрация на этап',
 		self::STATUS_END_REGISTRATION   => 'Завершена регистрация на этап',
 		self::STATUS_PRESENT            => 'Текущий этап',
-		self::STATUS_PAST               => 'Прошедший этап'
+		self::STATUS_CALCULATE_RESULTS  => 'Подсчёт результатов',
+		self::STATUS_PAST               => 'Прошедший этап',
 	];
 	
 	/**
@@ -175,5 +177,30 @@ class Stage extends \yii\db\ActiveRecord
 	public function getParticipants()
 	{
 		return $this->hasMany(Participant::className(), ['stageId' => 'id'])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
+	}
+	
+	public function placesCalculate()
+	{
+		Participant::updateAll(['place' => null, 'placeOfClass' => null], ['stageId' => $this->id]);
+		/** @var Participant[] $participants */
+		$participants = Participant::find()->where(['stageId' => $this->id])->orderBy(['bestTime' => SORT_ASC])->all();
+		$place = 1;
+		$transaction = \Yii::$app->db->beginTransaction();
+		/** @var Participant $first */
+		$first = reset($participants);
+		foreach ($participants as $participant) {
+			$participant->place = $place++;
+			$participant->placeOfClass = Participant::find()->where(['stageId' => $this->id])
+					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
+			$participant->percent = round($participant->bestTime / $first->bestTime * 100, 2);
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				
+				return var_dump($participant->errors);
+			}
+		}
+		$transaction->commit();
+		
+		return true;
 	}
 }
