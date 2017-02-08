@@ -21,11 +21,13 @@ use Yii;
  * @property integer       $dateAdded
  * @property integer       $status
  * @property integer       $placeOfClass
+ * @property integer       $percent
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
  * @property InternalClass $internalClass
  * @property Time[]        $times
+ * @property Stage         $stage
  */
 class Participant extends \yii\db\ActiveRecord
 {
@@ -58,6 +60,7 @@ class Participant extends \yii\db\ActiveRecord
 	{
 		return [
 			[['championshipId', 'stageId', 'athleteId', 'motorcycleId', 'dateAdded'], 'required'],
+			['percent', 'number'],
 			[[
 				'championshipId',
 				'stageId',
@@ -96,6 +99,7 @@ class Participant extends \yii\db\ActiveRecord
 			'sort'            => 'Сортировка',
 			'dateAdded'       => 'Дата добавления',
 			'status'          => 'Статус',
+			'percent'         => 'Рейтинг'
 		];
 	}
 	
@@ -113,9 +117,20 @@ class Participant extends \yii\db\ActiveRecord
 		parent::afterFind();
 		if ($this->bestTime) {
 			$min = str_pad(floor($this->bestTime / 60000), 2, '0', STR_PAD_LEFT);
-			$sec = str_pad(floor(($this->bestTime - $min*60000)/1000), 2, '0', STR_PAD_LEFT);
-			$mls = str_pad(($this->bestTime-$min*60000-$sec*1000)/10, 2, '0', STR_PAD_LEFT);
-			$this->humanBestTime = $min.':'.$sec.'.'.$mls;
+			$sec = str_pad(floor(($this->bestTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(($this->bestTime - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
+			$this->humanBestTime = $min . ':' . $sec . '.' . $mls;
+		}
+	}
+	
+	public function afterSave($insert, $changedAttributes)
+	{
+		parent::afterSave($insert, $changedAttributes);
+		$stage = $this->stage;
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			if (array_key_exists('bestTime', $changedAttributes)) {
+				$stage->placesCalculate();
+			}
 		}
 	}
 	
@@ -155,5 +170,10 @@ class Participant extends \yii\db\ActiveRecord
 	public function getTimes()
 	{
 		return $this->hasMany(Time::className(), ['participantId' => 'id']);
+	}
+	
+	public function getStage()
+	{
+		return $this->hasOne(Stage::className(), ['id' => 'stageId']);
 	}
 }

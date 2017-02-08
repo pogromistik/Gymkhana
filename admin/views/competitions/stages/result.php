@@ -25,7 +25,8 @@ $place = 1;
 		<th>Время</th>
 		<th>Штраф</th>
 		<th>Лучшее время</th>
-		<th>Место в классе</th>
+        <th>Место в классе</th>
+        <th>Рейтинг</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -53,7 +54,8 @@ $place = 1;
                 <td></td>
             <?php } ?>
 			<td rowspan="<?=$stage->countRace?>"><?= $participant->humanBestTime ?></td>
-			<td rowspan="<?=$stage->countRace?>"><?= $participant->placeOfClass ?></td>
+            <td rowspan="<?=$stage->countRace?>"><?= $participant->placeOfClass ?></td>
+            <td rowspan="<?=$stage->countRace?>"><?= $participant->percent ?>%</td>
 		</tr>
 		<?php
 		$attempt = 1;
