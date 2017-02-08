@@ -34,6 +34,8 @@ class ChampionshipsController extends BaseController
 	
 	public function actionIndex($groupId = null)
 	{
+		$this->can('competitions');
+		
 		if (!$groupId) {
 			return $this->render('select-group');
 		}
@@ -57,6 +59,8 @@ class ChampionshipsController extends BaseController
 	 */
 	public function actionView($id)
 	{
+		$this->can('competitions');
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -64,6 +68,8 @@ class ChampionshipsController extends BaseController
 	
 	public function actionCreate($groupId)
 	{
+		$this->can('competitions');
+		
 		$model = new Championship();
 		$model->groupId = $groupId;
 		
@@ -79,6 +85,8 @@ class ChampionshipsController extends BaseController
 	
 	public function actionUpdate($id, $success = false)
 	{
+		$this->can('competitions');
+		
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -101,6 +109,8 @@ class ChampionshipsController extends BaseController
 	 */
 	public function actionDelete($id)
 	{
+		$this->can('competitions');
+		
 		$this->findModel($id)->delete();
 		
 		return $this->redirect(['index']);
@@ -117,6 +127,8 @@ class ChampionshipsController extends BaseController
 	 */
 	protected function findModel($id)
 	{
+		$this->can('competitions');
+		
 		if (($model = Championship::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -126,6 +138,8 @@ class ChampionshipsController extends BaseController
 	
 	public function actionAddGroup()
 	{
+		$this->can('competitions');
+		
 		$group = new RegionalGroup();
 		if ($group->load(\Yii::$app->request->post()) && $group->save()) {
 			return true;

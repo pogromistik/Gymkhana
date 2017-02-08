@@ -186,6 +186,8 @@ class AthleteController extends BaseController
 	
 	public function actionCreateCabinet($athleteId)
 	{
+		$this->can('competitions');
+		
 		$athlete = Athlete::findOne($athleteId);
 		if (!$athlete) {
 			return 'Спортсмен не найден';
