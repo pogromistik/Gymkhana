@@ -21,7 +21,7 @@ return [
 			'csrfParam' => '_csrf-champ',
 		],
 		'user'         => [
-			'identityClass'   => 'common\models\User',
+			'identityClass'   => 'common\models\Athlete',
 			'enableAutoLogin' => true,
 			'identityCookie'  => ['name' => '_identity-champ', 'httpOnly' => true],
 		],

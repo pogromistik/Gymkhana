@@ -3,8 +3,11 @@
 namespace common\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "athletes".
@@ -30,8 +33,66 @@ use yii\db\Query;
  * @property AthletesClass $athleteClass
  * @property City          $city
  */
-class Athlete extends \yii\db\ActiveRecord
+class Athlete extends ActiveRecord implements IdentityInterface
 {
+	const STATUS_BLOCKED = 0;
+	const STATUS_ACTIVE = 1;
+	const STATUS_WAIT = 2;
+	const STATUS_DELETE = 3;
+	const TIMEOUT = 3600;
+	
+	public static $statusesTitle =
+		[
+			self::STATUS_BLOCKED => 'Заблокирован',
+			self::STATUS_ACTIVE  => 'Активен',
+			self::STATUS_WAIT    => 'Ожидает подтверждения',
+			self::STATUS_DELETE  => 'Удалён',
+		];
+	
+	public static function findIdentity($id)
+	{
+		return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+	}
+	
+	public static function findIdentityByAccessToken($token, $type = null)
+	{
+		throw new NotSupportedException('findIdentityByAccessToken is not implemented.');
+	}
+	
+	public function getId()
+	{
+		return $this->getPrimaryKey();
+	}
+	
+	public function getAuthKey()
+	{
+		return $this->authKey;
+	}
+	
+	public function validateAuthKey($authKey)
+	{
+		return $this->getAuthKey() === $authKey;
+	}
+	
+	public static function findByLogin($login)
+	{
+		return static::findOne(['login' => $login]);
+	}
+	
+	public function validatePassword($password)
+	{
+		return Yii::$app->security->validatePassword($password, $this->passwordHash);
+	}
+	
+	public function setPassword($password)
+	{
+		$this->passwordHash = Yii::$app->security->generatePasswordHash($password);
+	}
+	
+	public function generateAuthKey()
+	{
+		$this->authKey = Yii::$app->security->generateRandomString();
+	}
 	/**
 	 * @inheritdoc
 	 */

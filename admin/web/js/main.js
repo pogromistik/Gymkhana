@@ -100,3 +100,21 @@ $('.stageCalcResult').click(function (e) {
         });
     }
 });
+
+$('.createCabinet').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите создать кабинет этому спортсмену?")) {
+        var id = $(this).data('id');
+        $.get('/competitions/athlete/create-cabinet', {
+            athleteId: id
+        }).done(function (data) {
+            if (data == true) {
+                location.reload();
+            } else {
+                alert(data);
+            }
+        }).fail(function (error) {
+            alert(error.responseText);
+        });
+    }
+});
