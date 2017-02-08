@@ -141,7 +141,7 @@ footer .containing-wrapper {
 }
 
 #left-menu > li:hover > ul > li{
-    display: block;   
+    display: block;
 }
 
 #left-menu ul li:hover{
@@ -169,13 +169,13 @@ footer .containing-wrapper {
     height: 59px;
 }
 .logo{
-   z-index: 1000; 
+   z-index: 1000;
    margin-left: 20px;
    top: 1px;
 }
 .logo1{
    top: 0px;
-   z-index: 10000; 
+   z-index: 10000;
    display: none;
 }
 .logo img, .logo1 img, .logo2 img{

@@ -16,6 +16,20 @@
     .content {
         width: 80%;
     }
+
+    table.results {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 991px) {
+    table.results {
+        font-size: 10px;
+    }
+
+    .header {
+        background: #f4f4f4;
+    }
 }
 
 @media (max-width: 860px) {
@@ -25,5 +39,14 @@
 
     .content {
         width: 100%;
+    }
+}
+
+@media (max-width: 812px) {
+    .show-pk {
+        display: none;
+    }
+    .show-mobile {
+        display: block;
     }
 }

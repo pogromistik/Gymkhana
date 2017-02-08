@@ -31,6 +31,11 @@ class Championship extends \yii\db\ActiveRecord
 	const STATUS_PAST = 2;
 	const STATUS_PRESENT = 3;
 	
+	public static $statusesForActual = [
+		self::STATUS_UPCOMING,
+		self::STATUS_PRESENT
+	];
+	
 	const GROUPS_RUSSIA = 1;
 	const GROUPS_REGIONAL = 2;
 	

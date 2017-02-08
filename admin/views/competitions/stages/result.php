@@ -40,7 +40,7 @@ $place = 1;
 		?>
 		<tr>
 			<td rowspan="<?=$stage->countRace?>"><?= $place++ ?></td>
-			<td rowspan="<?=$stage->countRace?>"><?= $participant->internalClass->title ?></td>
+			<td rowspan="<?=$stage->countRace?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
 			<td rowspan="<?=$stage->countRace?>"><?= $participant->number ?></td>
 			<td rowspan="<?=$stage->countRace?>"><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
 			<td rowspan="<?=$stage->countRace?>"><?= $participant->motorcycle->getFullTitle() ?></td>
@@ -67,8 +67,13 @@ $place = 1;
 			?>
             <tr>
                 <td><?= $attempt ?>.</td>
-                <td><?= $next->timeForHuman ?></td>
-                <td><?= $next->fine ?></td>
+	            <?php if ($next) { ?>
+                    <td><?= $next->timeForHuman ?></td>
+                    <td><?= $next->fine ?></td>
+	            <?php } else { ?>
+                    <td></td>
+                    <td></td>
+	            <?php } ?>
             </tr>
             <?php
 		}
