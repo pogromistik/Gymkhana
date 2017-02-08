@@ -183,4 +183,24 @@ class AthleteController extends BaseController
 			return $result;
 		}
 	}
+	
+	public function actionCreateCabinet($athleteId)
+	{
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		
+		$password = 111111;
+		$athlete->login = $athlete->id + 6000;
+		$athlete->generateAuthKey();
+		$athlete->setPassword($password);
+		$athlete->hasAccount = 1;
+		$athlete->status = Athlete::STATUS_ACTIVE;
+		if (!$athlete->save()) {
+			return 'Возникла ошибка при сохранении данных';
+		}
+		
+		return true;
+	}
 }

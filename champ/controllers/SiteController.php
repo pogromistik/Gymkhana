@@ -1,6 +1,7 @@
 <?php
 namespace champ\controllers;
 
+use champ\models\LoginForm;
 use common\models\AssocNews;
 use common\models\DocumentSection;
 use Yii;
@@ -67,5 +68,28 @@ class SiteController extends BaseController
 		return $this->render('documents', [
 			'sections' => $sections
 		]);
+	}
+	
+	public function actionLogin()
+	{
+		if (!Yii::$app->user->isGuest) {
+			return $this->goHome();
+		}
+		
+		$model = new LoginForm();
+		if ($model->load(Yii::$app->request->post()) && $model->login()) {
+			return $this->redirect(['index']);
+		} else {
+			return $this->render('login', [
+				'model' => $model,
+			]);
+		}
+	}
+	
+	public function actionLogout()
+	{
+		Yii::$app->user->logout();
+		
+		return $this->goHome();
 	}
 }

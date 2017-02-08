@@ -23,7 +23,9 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 <div class="athlete-view">
 
     <p>
-		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+	    <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+	    <?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
+            ['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
     </p>
 	
 	<?= DetailView::widget([

@@ -38,6 +38,19 @@ use yii\helpers\Url;
                         <li>
                             <a href="/che/">Итем</a>
                         </li>
+                        <li><?php if (Yii::$app->user->isGuest) { ?>
+                                <a href="/site/login">Вход</a>
+							<?php } else { ?>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle"
+                               href="#"><?= \Yii::$app->user->identity->getFullName() ?> <b
+                                        class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/site/logout">Выход</a></li>
+                            </ul>
+                        </li>
+						<?php } ?>
+                        </li>
                     </ul>
                 </div>
             </nav>
