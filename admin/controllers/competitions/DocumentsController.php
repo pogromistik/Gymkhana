@@ -143,6 +143,8 @@ class DocumentsController extends BaseController
 	
 	public function actionChangeStatus($id)
 	{
+		$this->can('competitions');
+		
 		$model = $this->findModel($id);
 		if ($model->status) {
 			$model->status = 0;

@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\Motorcycle;
 use common\models\Stage;
@@ -11,14 +12,13 @@ use Yii;
 use common\models\Participant;
 use common\models\search\ParticipantSearch;
 use yii\helpers\Json;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * ParticipantsController implements the CRUD actions for Participant model.
  */
-class ParticipantsController extends Controller
+class ParticipantsController extends BaseController
 {
 	public function actions()
 	{
@@ -48,6 +48,8 @@ class ParticipantsController extends Controller
 	
 	public function actionIndex($stageId)
 	{
+		$this->can('competitions');
+		
 		$stage = Stage::findOne($stageId);
 		if (!$stage) {
 			throw new NotFoundHttpException('Этап не найден');
@@ -83,6 +85,8 @@ class ParticipantsController extends Controller
 	 */
 	protected function findModel($id)
 	{
+		$this->can('competitions');
+		
 		if (($model = Participant::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -92,6 +96,8 @@ class ParticipantsController extends Controller
 	
 	public function actionMotorcycleCategory()
 	{
+		$this->can('competitions');
+		
 		if (isset($_POST['depdrop_parents'])) {
 			$parent = $_POST['depdrop_parents'];
 			if ($parent != null) {
@@ -107,6 +113,8 @@ class ParticipantsController extends Controller
 	
 	public function getSubCatList($athleteId)
 	{
+		$this->can('competitions');
+		
 		$athlete = Athlete::findOne($athleteId);
 		$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => Motorcycle::STATUS_ACTIVE])->all();
 		$result = [];
@@ -119,6 +127,8 @@ class ParticipantsController extends Controller
 	
 	public function actionRaces($stageId)
 	{
+		$this->can('competitions');
+		
 		$stage = Stage::findOne($stageId);
 		
 		return $this->render('races', [
@@ -128,6 +138,8 @@ class ParticipantsController extends Controller
 	
 	public function actionAddTime()
 	{
+		$this->can('competitions');
+		
 		$params = \Yii::$app->request->getBodyParams();
 		if (isset($params['Time']['id'])) {
 			$time = Time::findOne($params['Time']['id']);

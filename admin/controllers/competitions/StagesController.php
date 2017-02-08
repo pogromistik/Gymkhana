@@ -2,18 +2,17 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use common\models\Participant;
 use Yii;
 use common\models\Stage;
 use common\models\search\StageSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * StagesController implements the CRUD actions for Stage model.
  */
-class StagesController extends Controller
+class StagesController extends BaseController
 {
 	/**
 	 * Lists all Stage models.
@@ -22,6 +21,8 @@ class StagesController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->can('competitions');
+		
 		$searchModel = new StageSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -40,6 +41,8 @@ class StagesController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$this->can('competitions');
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -47,6 +50,8 @@ class StagesController extends Controller
 	
 	public function actionCreate($championshipId, $errorCity = null, $success = null)
 	{
+		$this->can('competitions');
+		
 		$model = new Stage();
 		$model->championshipId = $championshipId;
 		
@@ -71,6 +76,8 @@ class StagesController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+		$this->can('competitions');
+		
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -93,6 +100,8 @@ class StagesController extends Controller
 	 */
 	protected function findModel($id)
 	{
+		$this->can('competitions');
+		
 		if (($model = Stage::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -102,6 +111,8 @@ class StagesController extends Controller
 	
 	public function actionResult($stageId)
 	{
+		$this->can('competitions');
+		
 		$stage = $this->findModel($stageId);
 		$participants = $stage->getParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 		
@@ -113,6 +124,8 @@ class StagesController extends Controller
 	
 	public function actionCalculationResult($id)
 	{
+		$this->can('competitions');
+		
 		$stage = Stage::findOne($id);
 		if (!$stage) {
 			return 'Этап не найден';
