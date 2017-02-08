@@ -153,7 +153,7 @@ class SiteController extends BaseController
 			case 'competitions':
 				break;
 			case 'sitemap':
-				$pages = Page::find()->where(['not', ['layoutId' => 'news']])->orWhere(['parentId' => 'null'])->all();
+				$pages = Page::find()->where(['not', ['layoutId' => 'news']])->all();
 				/** @var Page $mapPage */
 				foreach ($pages as $mapPage) {
 					switch ($mapPage->layoutId) {
