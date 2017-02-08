@@ -11,8 +11,6 @@ use yii\bootstrap\Html;
 
 ?>
 
-<h2><?= $this->context->pageTitle ?></h2>
-
 <div class="z-100">
     <div class="news">
         <h3>Новости</h3>

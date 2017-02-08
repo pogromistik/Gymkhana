@@ -39,6 +39,9 @@ AppAsset::register($this);
 					'links'    => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 				]) ?>
             </div>
+
+            <h2>АССОЦИАЦИЯ МОТО ДЖИМХАНЫ РОССИИ</h2>
+            
 			<?= $content ?>
         </div>
     </div>

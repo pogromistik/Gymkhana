@@ -45,6 +45,20 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			<?php foreach ($motorcycles as $motorcycleInfo) { ?>
                 <tr>
                     <td>
+		                <?= Editable::widget([
+			                'name'          => 'mark',
+			                'value'         => $motorcycleInfo->mark,
+			                'url'           => 'update-motorcycle',
+			                'type'          => 'text',
+			                'mode'          => 'inline',
+			                'clientOptions' => [
+				                'pk'        => $motorcycleInfo->id,
+				                'value'     => $motorcycleInfo->mark,
+				                'placement' => 'right',
+			                ]
+		                ]); ?>
+                    </td>
+                    <td>
 						<?= Editable::widget([
 							'name'          => 'model',
 							'value'         => $motorcycleInfo->model,
@@ -52,22 +66,8 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 							'type'          => 'text',
 							'mode'          => 'inline',
 							'clientOptions' => [
-								'pk'        => $motorcycleInfo->model,
+								'pk'        => $motorcycleInfo->id,
 								'value'     => $motorcycleInfo->model,
-								'placement' => 'right',
-							]
-						]); ?>
-                    </td>
-                    <td>
-						<?= Editable::widget([
-							'name'          => 'mark',
-							'value'         => $motorcycleInfo->mark,
-							'url'           => 'update-motorcycle',
-							'type'          => 'text',
-							'mode'          => 'inline',
-							'clientOptions' => [
-								'pk'        => $motorcycleInfo->mark,
-								'value'     => $motorcycleInfo->mark,
 								'placement' => 'right',
 							]
 						]); ?>

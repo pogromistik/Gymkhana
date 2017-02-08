@@ -31,12 +31,12 @@ use yii\helpers\Url;
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">Соревнования <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/che/">Расписание</a></li>
-                                <li><a href="/che/">Результаты</a></li>
+                                <li><a href="/competitions/schedule">Расписание</a></li>
+                                <li><a href="/competitions/results">Результаты</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="/che/">Итем</a>
+                            <a href="/competitions/athletes">Спортсмены</a>
                         </li>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login">Вход</a>
