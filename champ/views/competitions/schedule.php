@@ -33,7 +33,7 @@ use yii\bootstrap\Html;
 								<?php
 								$title = $stage->title . ', ' . $stage->city->title;
 								if ($stage->dateOfThe) {
-									$title .= $stage->dateOfTheHuman;
+									$title .= ' ' . $stage->dateOfTheHuman;
 								}
 								?>
 								<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
@@ -58,7 +58,7 @@ use yii\bootstrap\Html;
                                         <?php
                                         $title = $stage->title . ', ' . $stage->city->title;
                                         if ($stage->dateOfThe) {
-                                            $title .= $stage->dateOfTheHuman;
+                                            $title .= ' ' . $stage->dateOfTheHuman;
                                         }
                                         ?>
 										<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
