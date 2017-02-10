@@ -21,7 +21,7 @@ class m170130_070329_create_athletes_table extends Migration
 			'email'              => $this->string(),
 			'cityId'             => $this->integer()->notNull(),
 			'athleteClassId'     => $this->integer(),
-			'number'             => $this->integer()->unique(),
+			'number'             => $this->integer(),
 			'authKey'            => $this->string(32),
 			'passwordHash'       => $this->string(),
 			'passwordResetToken' => $this->string()->unique(),

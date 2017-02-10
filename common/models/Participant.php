@@ -76,7 +76,24 @@ class Participant extends \yii\db\ActiveRecord
 				'status',
 				'placeOfClass'
 			], 'integer'],
+			['number', 'validateNumber']
 		];
+	}
+	
+	public function validateNumber($attribute, $params)
+	{
+		if (!$this->hasErrors()) {
+			if (self::find()->where(['championshipId' => $this->championshipId])
+				->andWhere([
+					'or',
+					['not', ['athleteId' => $this->athleteId]],
+					['and', ['athleteId' => $this->athleteId], ['not', ['motorcycleId' => $this->motorcycleId]]]
+				])
+				->andWhere(['number' => $this->number])->andWhere(['status' => [Athlete::STATUS_ACTIVE, Athlete::STATUS_WAIT]])->one()
+			) {
+				$this->addError($attribute, 'В чемпионате уже есть участник с таким номером.');
+			}
+		}
 	}
 	
 	/**
