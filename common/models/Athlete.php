@@ -93,6 +93,7 @@ class Athlete extends ActiveRecord implements IdentityInterface
 	{
 		$this->authKey = Yii::$app->security->generateRandomString();
 	}
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -113,9 +114,26 @@ class Athlete extends ActiveRecord implements IdentityInterface
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
 			[['email'], 'unique'],
-			[['number'], 'unique'],
 			[['passwordResetToken'], 'unique'],
+			['number', 'validateNumber']
 		];
+	}
+	
+	public function validateNumber($attribute, $params)
+	{
+		if (!$this->hasErrors()) {
+			$regionId = $this->city->regionId;
+			$query = new Query();
+			$query->from([self::tableName(), City::tableName(), Region::tableName()]);
+			$query->where(['Regions."id"' => $regionId]);
+			$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
+			$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
+			$query->andWhere(['Athletes."number"' => $this->number]);
+			$query->andWhere(['not', ['Athletes."id"' => $this->id]]);
+			if ($query->one()) {
+				$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
+			}
+		}
 	}
 	
 	/**
@@ -177,6 +195,7 @@ class Athlete extends ActiveRecord implements IdentityInterface
 		$query->from([self::tableName(), Motorcycle::tableName()]);
 		$query->select('"Athletes".*');
 		$query->andWhere(new Expression('"Athletes"."id" = "Motorcycles"."athleteId"'));
+		
 		return $query->all();
 	}
 	

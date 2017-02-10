@@ -14,7 +14,7 @@ use Yii;
  * @property double  $left
  * @property integer $showInRussiaPage
  * @property string  $federalDistrict
- * @property string  $regionId
+ * @property integer $regionId
  *
  * @property Region  $region
  */

@@ -75,7 +75,7 @@ class RunController extends Controller
 					return false;
 				}
 			}
-			$city = City::findOne(["title" => (string)$data['title']]);
+			$city = City::findOne(["upper(title)" => mb_strtoupper($data['title'])]);
 			if (!$city) {
 				$city = new City();
 				$city->title = (string)$data['title'];
