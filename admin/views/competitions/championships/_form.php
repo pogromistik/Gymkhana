@@ -51,6 +51,22 @@ use kartik\widgets\Select2;
 			],
 		]) ?>
     <?php } ?>
+	
+    <b>Диапазон стартовых номеров участников</b>
+	<div class="row">
+        <div class="col-md-4 col-sm-6">
+			<?= $form->field($model, 'minNumber',
+				['inputTemplate' => '<div class="input-with-description"><div class="text">
+ минимальный номер
+</div>{input}</div>'])->textInput(['placeholder' => 'минимальный номер'])->label(false) ?>
+        </div>
+        <div class="col-md-4 col-sm-6">
+			<?= $form->field($model, 'maxNumber',
+				['inputTemplate' => '<div class="input-with-description"><div class="text">
+ максимальный номер
+</div>{input}</div>'])->textInput(['placeholder' => 'минимальный номер'])->label(false) ?>
+        </div>
+    </div>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

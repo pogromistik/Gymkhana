@@ -18,6 +18,8 @@ use Yii;
  * @property integer         $dateAdded
  * @property integer         $dateUpdated
  * @property integer         $regionId
+ * @property integer         $minNumber
+ * @property integer         $maxNumber
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -50,6 +52,19 @@ class Championship extends \yii\db\ActiveRecord
 		self::GROUPS_REGIONAL => 'Региональные чемпионаты'
 	];
 	
+	public function init()
+	{
+		parent::init();
+		if ($this->isNewRecord) {
+			if (!$this->minNumber) {
+				$this->minNumber = 1;
+			};
+			if (!$this->maxNumber) {
+				$this->maxNumber = 99;
+			}
+		}
+	}
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -65,12 +80,18 @@ class Championship extends \yii\db\ActiveRecord
 	{
 		return [
 			[['description'], 'string'],
-			[['yearId', 'groupId', 'dateAdded', 'dateUpdated'], 'required'],
-			[['yearId', 'status', 'groupId', 'regionGroupId', 'dateAdded', 'dateUpdated', 'regionId'], 'integer'],
+			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber'], 'required'],
+			[[
+				'yearId', 'status', 'groupId', 'regionGroupId',
+				'dateAdded', 'dateUpdated', 'regionId'
+			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
 			}],
 			[['title'], 'string', 'max' => 255],
+			[['minNumber', 'maxNumber'], 'integer', 'min' => 0],
+			['minNumber', 'default', 'value' => 1],
+			['maxNumber', 'default', 'value' => 99]
 		];
 	}
 	
@@ -89,7 +110,9 @@ class Championship extends \yii\db\ActiveRecord
 			'regionGroupId' => 'Региональный раздел',
 			'dateAdded'     => 'Дата создания',
 			'dateUpdated'   => 'Дата редактирования',
-			'regionId'      => 'Регион проведения чемпионата'
+			'regionId'      => 'Регион проведения чемпионата',
+			'minNumber'     => 'Минимальный номер участника',
+			'maxNumber'     => 'Максимальный номер участника'
 		];
 	}
 	
@@ -111,6 +134,12 @@ class Championship extends \yii\db\ActiveRecord
 					}
 					break;
 			}
+		}
+		
+		if ($this->minNumber > $this->maxNumber) {
+			$max = $this->minNumber;
+			$this->minNumber = $this->maxNumber;
+			$this->maxNumber = $max;
 		}
 		
 		return parent::beforeValidate();
