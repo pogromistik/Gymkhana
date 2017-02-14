@@ -4,6 +4,7 @@ namespace champ\controllers;
 use champ\models\LoginForm;
 use common\models\AssocNews;
 use common\models\DocumentSection;
+use common\models\Feedback;
 use Yii;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
@@ -91,5 +92,27 @@ class SiteController extends BaseController
 		Yii::$app->user->logout();
 		
 		return $this->goHome();
+	}
+	
+	public function actionAddFeedback()
+	{
+		/** @var Feedback $form */
+		$form = new Feedback();
+		$form->load(\Yii::$app->request->post());
+		$form->validate();
+		if (!$form->email && !$form->phone) {
+			return 'Укажите корректные контакты для связи!';
+		}
+		if (!$form->text) {
+			return 'Укажите текст сообщения';
+		}
+		if (!$form->username) {
+			return 'Укажите ваше имя';
+		}
+		if ($form->save()) {
+			return true;
+		} else {
+			return var_dump($form->errors);
+		}
 	}
 }

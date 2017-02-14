@@ -52,6 +52,8 @@ AppAsset::register($this);
 	<!-- /#page-wrapper -->
 </div>
 
+<?= $this->render('_modal') ?>
+
 <?php $this->endBody() ?>
 </body>
 </html>

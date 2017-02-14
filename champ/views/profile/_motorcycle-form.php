@@ -3,8 +3,10 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $motorcycle common\models\Motorcycle */
+/* @var $athlete common\models\Athlete */
 /* @var $form yii\widgets\ActiveForm */
+$motorcycle = new \common\models\Motorcycle();
+$motorcycle->athleteId = $athlete->id;
 ?>
 
 <div class="athlete-form">
@@ -13,10 +15,10 @@ use yii\widgets\ActiveForm;
 	<?= $form->field($motorcycle, 'athleteId')->hiddenInput()->label(false)->error(false) ?>
 	<div class="row">
 		<div class="col-md-5 col-sm-4">
-			<?= $form->field($motorcycle, 'model')->textInput(['placeholder' => 'марка, напр. kawasaki'])->label(false) ?>
+			<?= $form->field($motorcycle, 'mark')->textInput(['placeholder' => 'марка, напр. kawasaki'])->label(false) ?>
 		</div>
 		<div class="col-md-5 col-sm-4">
-			<?= $form->field($motorcycle, 'mark')->textInput(['placeholder' => 'модель, напр. ER6-F'])->label(false) ?>
+			<?= $form->field($motorcycle, 'model')->textInput(['placeholder' => 'модель, напр. ER6-F'])->label(false) ?>
 		</div>
 		<div class="col-md-2 col-sm-4">
 			<div class="form-group complete">

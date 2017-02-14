@@ -1,3 +1,10 @@
+function showBackDrop() {
+    $('<div class="modal-backdrop fade in"></div>').appendTo(document.body);
+}
+function hideBackDrop() {
+    $(".modal-backdrop").remove();
+}
+
 //выпадающее меню при наведении
 jQuery('ul.nav > li').hover(function () {
     var width=screen.width;
