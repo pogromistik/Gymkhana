@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 use yii\web\UploadedFile;
 
@@ -17,8 +18,10 @@ use yii\web\UploadedFile;
  * @property string  $fileName
  * @property string  $filePath
  */
-class OverallFile extends \yii\db\ActiveRecord
+class OverallFile extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	public $files;
 	
 	/**

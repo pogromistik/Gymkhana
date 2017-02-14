@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 
 /**
@@ -10,8 +11,10 @@ use Yii;
  * @property integer $id
  * @property string  $title
  */
-class RegionalGroup extends \yii\db\ActiveRecord
+class RegionalGroup extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	/**
 	 * @inheritdoc
 	 */

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 
 /**
@@ -18,8 +19,10 @@ use Yii;
  * @property Participant $participant
  * @property Stage       $stage
  */
-class Time extends \yii\db\ActiveRecord
+class Time extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	public $timeForHuman;
 	
 	/**

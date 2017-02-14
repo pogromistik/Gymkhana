@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 
 /**
@@ -17,8 +18,10 @@ use Yii;
  * @property integer $status
  * @property Athlete $athlete
  */
-class Motorcycle extends \yii\db\ActiveRecord
+class Motorcycle extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	const STATUS_ACTIVE = 1;
 	const STATUS_INACTIVE = 0;
 	public static $statusesTitle = [

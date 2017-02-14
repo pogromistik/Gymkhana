@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 
 /**
@@ -18,8 +19,10 @@ use Yii;
  *
  * @property Athlete $athlete
  */
-class Feedback extends \yii\db\ActiveRecord
+class Feedback extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	public $phoneOrMail;
 	
 	/**
