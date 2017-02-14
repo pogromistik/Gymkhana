@@ -2,6 +2,7 @@
 
 namespace common\models\search;
 
+use common\models\Athlete;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -19,7 +20,8 @@ class ParticipantSearch extends Participant
 	public function rules()
 	{
 		return [
-			[['id', 'championshipId', 'stageId', 'athleteId', 'motorcycleId', 'internalClassId', 'athleteClassId', 'bestTime', 'place', 'number', 'sort', 'dateAdded', 'status'], 'integer'],
+			[['id', 'championshipId', 'stageId', 'motorcycleId', 'internalClassId', 'athleteClassId', 'bestTime', 'place', 'number', 'sort', 'dateAdded', 'status'], 'integer'],
+			[['athleteId'], 'safe']
 		];
 	}
 	
@@ -62,7 +64,6 @@ class ParticipantSearch extends Participant
 			'id'              => $this->id,
 			'championshipId'  => $this->championshipId,
 			'stageId'         => $this->stageId,
-			'athleteId'       => $this->athleteId,
 			'motorcycleId'    => $this->motorcycleId,
 			'internalClassId' => $this->internalClassId,
 			'athleteClassId'  => $this->athleteClassId,
@@ -73,6 +74,15 @@ class ParticipantSearch extends Participant
 			'dateAdded'       => $this->dateAdded,
 			'status'          => $this->status,
 		]);
+		
+		if ($this->athleteId) {
+			$athleteIds = Athlete::find()->select('id')->where(['upper("firstName")' => mb_strtoupper($this->athleteId)])
+				->orWhere(['upper("lastName")' => mb_strtoupper($this->athleteId)])->asArray()->column();
+			if (!$athleteIds) {
+				$query->andFilterWhere(['athleteId' => 0]);
+			}
+			$query->andFilterWhere(['athleteId' => $athleteIds]);
+		}
 		
 		return $dataProvider;
 	}
