@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'clientOptions' => [
 							'pk'        => $item->id,
 							'placement' => 'right',
-							'select'   => [
+							'select'    => [
 								'width' => '124px'
 							],
 							'source'    => \yii\helpers\ArrayHelper::map(\common\models\InternalClass::getActiveClasses($item->championshipId), 'id', 'title'),
@@ -99,6 +99,25 @@ $this->params['breadcrumbs'][] = $this->title;
 					]);
 				}
 			],
+			[
+				'visible' => !($stage->status == \common\models\Stage::STATUS_PAST),
+				'format'  => 'raw',
+				'value'   => function (\common\models\Participant $item) {
+					if ($item->status == \common\models\Participant::STATUS_ACTIVE) {
+						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
+							'class'   => 'btn btn-danger changeParticipantStatus',
+							'title'   => 'Отменить заявку',
+							'data-id' => $item->id
+						]);
+					} else {
+						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
+							'class'   => 'btn btn-success changeParticipantStatus',
+							'data-id' => $item->id,
+							'title'   => 'Возобновить заявку'
+						]);
+					}
+				}
+			]
 		],
 	]); ?>
 </div>

@@ -26,6 +26,7 @@ use Yii;
  * @property Championship  $championship
  * @property City          $city
  * @property Participant[] $participants
+ * @property Participant[] $activeParticipants
  */
 class Stage extends \yii\db\ActiveRecord
 {
@@ -177,6 +178,12 @@ class Stage extends \yii\db\ActiveRecord
 	public function getParticipants()
 	{
 		return $this->hasMany(Participant::className(), ['stageId' => 'id'])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
+	}
+	
+	public function getActiveParticipants()
+	{
+		return $this->hasMany(Participant::className(), ['stageId' => 'id'])
+			->andOnCondition(['status' => Participant::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 	}
 	
 	public function placesCalculate()

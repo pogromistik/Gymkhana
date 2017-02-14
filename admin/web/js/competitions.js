@@ -178,3 +178,21 @@ $(document).on("submit", '.raceTimeForm', function (e) {
         }
     });
 });
+
+$('.changeParticipantStatus').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var id = elem.data('id');
+    $.get('/competitions/participants/change-status', {
+        id: id
+    }).done(function (data) {
+        if (data == true) {
+            location.reload(true);
+        } else {
+            alert(data);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});

@@ -25,7 +25,7 @@ $attempt = 0;
         <div class="col-sm-1"></div>
     </div>
     <hr>
-	<?php foreach ($stage->participants as $participant) {
+	<?php foreach ($stage->activeParticipants as $participant) {
 		$timeModel = $participant->getTimeForm($attempt);
 		?>
 		<?php $form = ActiveForm::begin([
