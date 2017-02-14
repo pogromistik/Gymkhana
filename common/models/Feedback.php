@@ -15,6 +15,8 @@ use Yii;
  * @property integer $dateAdded
  * @property integer $dateUpdated
  * @property integer $athleteId
+ *
+ * @property Athlete $athlete
  */
 class Feedback extends \yii\db\ActiveRecord
 {
@@ -50,11 +52,11 @@ class Feedback extends \yii\db\ActiveRecord
 		return [
 			'id'          => 'ID',
 			'username'    => 'Имя',
-			'phone'       => 'Phone',
+			'phone'       => 'Телефон',
 			'email'       => 'Email',
 			'text'        => 'Текст',
-			'dateAdded'   => 'Date Added',
-			'dateUpdated' => 'Date Updated',
+			'dateAdded'   => 'Дата добавления',
+			'dateUpdated' => 'Дата редактирования',
 			'athleteId'   => 'Спортсмен'
 		];
 	}
@@ -82,5 +84,10 @@ class Feedback extends \yii\db\ActiveRecord
 		$this->dateUpdated = time();
 		
 		return parent::beforeValidate();
+	}
+	
+	public function getAthlete()
+	{
+		return $this->hasOne(Athlete::className(), ['id' => 'athleteId']);
 	}
 }

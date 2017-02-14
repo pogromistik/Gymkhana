@@ -144,7 +144,7 @@ img {
     background: #56a025;
 }
 
-.navbar-default ul.navbar-right li, .navbar-default ul.navbar-right li a:hover {
+.navbar-default ul.navbar-right li.dropdown, .navbar-default ul.navbar-right li a:hover {
     background: #56a025;
     color: #fff;
 }
