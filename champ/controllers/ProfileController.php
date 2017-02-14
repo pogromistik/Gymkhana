@@ -3,6 +3,7 @@ namespace champ\controllers;
 
 use common\models\Athlete;
 use common\models\Motorcycle;
+use common\models\Participant;
 use yii\web\NotFoundHttpException;
 
 class ProfileController extends AccessController
@@ -44,5 +45,32 @@ class ProfileController extends AccessController
 		}
 		
 		return 'Возникла ошибка при изменении данных';
+	}
+	
+	public function actionAddRegistration()
+	{
+		$form = new Participant();
+		$form->load(\Yii::$app->request->post());
+		if (!$form->validate()) {
+			return var_dump($form->errors);
+		}
+		$old = Participant::findOne(['athleteId' => $form->athleteId, 'motorcycleId' => $form->motorcycleId,
+		                             'stageId' => $form->stageId]);
+		if ($old) {
+			if ($old->status != Participant::STATUS_ACTIVE) {
+				$old->status = Participant::STATUS_ACTIVE;
+				if ($old->save()) {
+					return true;
+				}
+				return var_dump($old->errors);
+			}
+			return 'Вы уже зарегистрированы на этот этап на этом мотоцикле.';
+		}
+		
+		if ($form->save()) {
+			return true;
+		} else {
+			return var_dump($form->errors);
+		}
 	}
 }

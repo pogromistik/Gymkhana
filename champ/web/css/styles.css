@@ -141,7 +141,7 @@ ul {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 10000;
+    z-index: 100000;
 }
 
 /*==== Шапка сайта ====*/
@@ -222,7 +222,7 @@ nav .navbar-toggle .icon-bar {
 .content {
     padding: 60px 20px 0 20px;
     position: relative;
-    z-index: 100;
+    z-index: 10000;
     width: 60%;
 }
 

@@ -35,7 +35,11 @@ $time = time();
 	
 	<?php if ($time >= $stage->startRegistration && $time <= $stage->endRegistration) { ?>
         <div class="pt-30">
-            <a href="#" class="btn btn-dark">Зарегистрироваться</a>
+			<?php if (\Yii::$app->user->isGuest) { ?>
+                <a href="#" class="btn btn-dark">Зарегистрироваться</a>
+			<?php } else { ?>
+                <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollForm">Зарегистрироваться</a>
+            <?php } ?>
         </div>
 	<?php } ?>
 	
@@ -169,7 +173,7 @@ $time = time();
                                 <td>
                                     №<?= $participant->number ?> <?= $athlete->getFullName() ?>
                                     <br>
-									<small>
+                                    <small>
 										<?= $athlete->city->title ?>
                                         <br>
 										<?= $participant->motorcycle->getFullTitle() ?>
@@ -187,10 +191,10 @@ $time = time();
 										<?php } ?>
                                         <br>
 									<?php } ?>
-                                    <?php if ($participant->bestTime) { ?>
-	                                    <span class="green"><?= $participant->humanBestTime ?></span>
+									<?php if ($participant->bestTime) { ?>
+                                        <span class="green"><?= $participant->humanBestTime ?></span>
                                         <span class="green fa fa-thumbs-o-up"></span>
-                                <?php } ?>
+									<?php } ?>
                                 </td>
                                 <td><?= $participant->percent ?>%</td>
                             </tr>
@@ -202,3 +206,5 @@ $time = time();
         </div>
 	<?php } ?>
 </div>
+
+<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
