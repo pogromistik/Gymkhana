@@ -36,6 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'athleteId',
 				'format'    => 'raw',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'athleteId', ['class' => 'form-control', 'placeholder' => 'Введите фамилию ИЛИ имя...']) . '
+</div>',
 				'value'     => function (\common\models\Participant $item) {
 					return $item->athlete->getFullName();
 				}
@@ -43,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'motorcycleId',
 				'format'    => 'raw',
+				'filter'    => false,
 				'value'     => function (\common\models\Participant $item) {
 					return $item->motorcycle->getFullTitle();
 				}
@@ -50,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'internalClassId',
 				'format'    => 'raw',
+				'filter'    => false,
 				'value'     => function (\common\models\Participant $item) {
 					return Editable::widget([
 						'name'          => 'internalClassId',
@@ -71,6 +77,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'number',
 				'format'    => 'raw',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'number', ['class' => 'form-control', 'placeholder' => 'Номер участника...']) . '
+</div>',
 				'value'     => function (\common\models\Participant $item) {
 					return Editable::widget([
 						'name'          => 'number',
@@ -89,6 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'sort',
 				'format'    => 'raw',
+				'filter'    => false,
 				'value'     => function (\common\models\Participant $item) {
 					return Editable::widget([
 						'name'          => 'sort',
@@ -107,6 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'visible' => !($stage->status == \common\models\Stage::STATUS_PAST),
 				'format'  => 'raw',
+				'filter'  => false,
 				'value'   => function (\common\models\Participant $item) {
 					if ($item->status == \common\models\Participant::STATUS_ACTIVE) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
