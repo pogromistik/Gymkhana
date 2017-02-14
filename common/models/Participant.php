@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 
 /**
@@ -29,8 +30,10 @@ use Yii;
  * @property Time[]        $times
  * @property Stage         $stage
  */
-class Participant extends \yii\db\ActiveRecord
+class Participant extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	public $humanBestTime;
 	
 	const STATUS_ACTIVE = 1;

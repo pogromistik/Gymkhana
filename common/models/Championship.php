@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use common\models\RegionalGroup;
 use Yii;
 
@@ -27,8 +28,10 @@ use Yii;
  * @property InternalClass[] $internalClasses
  * @property Region          $region
  */
-class Championship extends \yii\db\ActiveRecord
+class Championship extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	const STATUS_UPCOMING = 1;
 	const STATUS_PAST = 2;
 	const STATUS_PRESENT = 3;

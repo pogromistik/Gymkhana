@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -29,12 +30,23 @@ use yii\web\IdentityInterface;
  * @property integer       $updatedAt
  * @property integer       $hasAccount
  * @property integer       $lastActivityDate
+ *
  * @property Motorcycle[]  $motorcycles
  * @property AthletesClass $athleteClass
  * @property City          $city
  */
-class Athlete extends ActiveRecord implements IdentityInterface
+class Athlete extends BaseActiveRecord implements IdentityInterface
 {
+	protected static $enableLogging = true;
+	protected static $ignoredAttributes = [
+		'authKey',
+		'passwordHash',
+		'passwordResetToken',
+		'updatedAt',
+		'createdAt',
+		'lastActivityDate',
+	];
+	
 	const STATUS_BLOCKED = 0;
 	const STATUS_ACTIVE = 1;
 	const STATUS_WAIT = 2;
