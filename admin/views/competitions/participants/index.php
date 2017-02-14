@@ -10,6 +10,7 @@ use dosamigos\editable\Editable;
  * @var \yii\data\ActiveDataProvider            $dataProvider
  * @var \common\models\search\ParticipantSearch $searchModel
  * @var \yii\web\View                           $this
+ * @var string                                  $error
  */
 
 $this->title = 'Участники';
@@ -20,6 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('_form', [
 	'model' => $participant,
 ]) ?>
+
+<?php if ($error) { ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+<?php } ?>
 
 <div class="participant-index">
 	<?= GridView::widget([
