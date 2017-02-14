@@ -46,6 +46,7 @@ use yii\helpers\Url;
                                href="#"><?= \Yii::$app->user->identity->getFullName() ?> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
+                                <li><a href="/profile/index">Профиль</a></li>
                                 <li><a href="/site/logout">Выход</a></li>
                             </ul>
                         </li>

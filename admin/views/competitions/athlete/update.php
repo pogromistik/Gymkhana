@@ -83,10 +83,6 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 						if ($motorcycleInfo->status) {
 							echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
 								'class'   => 'btn btn-danger changeMotorcycleStatus',
-								'data'    => [
-									'confirm' => 'Уверены, что хотите заблокировать этот мотоцикл?',
-									'method'  => 'post',
-								],
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Удалить'
 							]);

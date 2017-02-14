@@ -115,7 +115,9 @@ class Athlete extends ActiveRecord implements IdentityInterface
 			[['login'], 'unique'],
 			[['email'], 'unique'],
 			[['passwordResetToken'], 'unique'],
-			['number', 'validateNumber']
+			['number', 'validateNumber'],
+			['number', 'integer', 'min' => 1],
+			['number', 'integer', 'max' => 9999]
 		];
 	}
 	

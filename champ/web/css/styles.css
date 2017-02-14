@@ -381,3 +381,13 @@ table.results small {
 .show-mobile {
     display: none;
 }
+
+.help-for-athlete {
+    background: #cfe4ff;
+    width: 100%;
+    padding: 2px 5px;
+}
+
+.modal-dialog {
+    top: 40px;
+}
