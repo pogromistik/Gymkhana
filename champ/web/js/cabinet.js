@@ -39,3 +39,27 @@ $(document).on("submit", '.newQuestion', function (e) {
         }
     });
 });
+
+$(document).on("submit", '.newRegistration', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    form.find('.form-text').text('Пожалуйста, подождите...');
+    form.find('.button').hide();
+    form.find('.alert').hide();
+
+    $.ajax({
+        url: "/profile/add-registration",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                form.find('.alert-success').text('Вы успешно зарегистрированы на этап.').show();
+            } else {
+                form.find('.alert-danger').text(result).show();
+            }
+            form.find('.form-text').hide();
+            form.find('.button').show();
+        }
+    });
+});

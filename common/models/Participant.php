@@ -196,4 +196,15 @@ class Participant extends BaseActiveRecord
 	{
 		return $this->hasOne(Stage::className(), ['id' => 'stageId']);
 	}
+	
+	public static function createForm($athleteId, $stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		$form = new self();
+		$form->athleteId = $athleteId;
+		$form->stageId = $stageId;
+		$form->championshipId = $stage->championship->id;
+		
+		return $form;
+	}
 }
