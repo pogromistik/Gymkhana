@@ -42,6 +42,11 @@ AppAsset::register($this);
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
+            <li>
+				<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
+                <a href="<?= Url::to(['/competitions/feedback/index']) ?>" data-method='post'><i
+                            class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
+            </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -60,7 +65,7 @@ AppAsset::register($this);
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
-	                <?php if (\Yii::$app->user->can('admin')) { ?>
+					<?php if (\Yii::$app->user->can('admin')) { ?>
                         <li>
                             <a href="<?= Url::to(['/main/index']) ?>"><i
                                         class="fa fa-table fa-fw"></i> Главная страница</a>
@@ -116,7 +121,7 @@ AppAsset::register($this);
                         </li>
                         <li>
                             <a href="<?= Url::to(['/russia/index']) ?>"><i
-                                        class="fa fa fa-globe fa-fw" ></i> Россия</a>
+                                        class="fa fa fa-globe fa-fw"></i> Россия</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-cog fa-fw"></i> Дополнительно<span
@@ -134,7 +139,7 @@ AppAsset::register($this);
                                 <li>
                                     <a href="<?= Url::to(['/additional/preloader']) ?>"> Картинки для предзагрузки</a>
                                 </li>
-				                <?php if (\Yii::$app->user->can('developer')) { ?>
+								<?php if (\Yii::$app->user->can('developer')) { ?>
                                     <li>
                                         <a href="<?= Url::to(['/additional/layouts']) ?>"> Шаблоны</a>
                                     </li>
@@ -144,14 +149,14 @@ AppAsset::register($this);
                                     <li>
                                         <a href="<?= Url::to(['/user/admin']) ?>"> Пользователи</a>
                                     </li>
-				                <?php } ?>
+								<?php } ?>
                                 <li>
                                     <a href="<?= Url::to(['/menu/index']) ?>"> Меню</a>
                                 </li>
                             </ul>
                         </li>
-	                <?php } ?>
-	                <?php if (\Yii::$app->user->can('competitions')) { ?>
+					<?php } ?>
+					<?php if (\Yii::$app->user->can('competitions')) { ?>
                         <li class="competitions">
                             <a href="#"><i class="fa fa-motorcycle fa-fw"></i> СОРЕВНОВАНИЯ<span
                                         class="fa arrow"></span></a>
@@ -173,7 +178,7 @@ AppAsset::register($this);
                                 </li>
                             </ul>
                         </li>
-	                <?php } ?>
+					<?php } ?>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

@@ -100,7 +100,7 @@ class SiteController extends BaseController
 		$form = new Feedback();
 		$form->load(\Yii::$app->request->post());
 		$form->validate();
-		if (!$form->email && !$form->phone) {
+		if (!$form->email && !$form->phone && !$form->athleteId) {
 			return 'Укажите корректные контакты для связи!';
 		}
 		if (!$form->text) {
