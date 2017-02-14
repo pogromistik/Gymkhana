@@ -158,4 +158,31 @@ class ParticipantsController extends BaseController
 		
 		return false;
 	}
+	
+	public function actionChangeStatus($id)
+	{
+		$this->can('competitions');
+		
+		$participant = Participant::findOne($id);
+		if (!$participant) {
+			return 'Заявка не найдена';
+		}
+		
+		if ($participant->status == Participant::STATUS_ACTIVE) {
+			$stage = $participant->stage;
+			if ($stage->status == Stage::STATUS_PRESENT || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+				$participant->status = Participant::STATUS_DISQUALIFICATION;
+			} else {
+				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
+			}
+		} else {
+			$participant->status = Participant::STATUS_ACTIVE;
+		}
+		
+		if ($participant->save()) {
+			return true;
+		}
+		
+		return 'Возникла ошибка при сохранении изменений';
+	}
 }
