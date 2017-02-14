@@ -55,6 +55,8 @@ class ParticipantsController extends BaseController
 			throw new NotFoundHttpException('Этап не найден');
 		}
 		
+		$error = null;
+		
 		$searchModel = new ParticipantSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['stageId' => $stageId]);
@@ -62,15 +64,27 @@ class ParticipantsController extends BaseController
 		$participant = new Participant();
 		$participant->stageId = $stage->id;
 		$participant->championshipId = $stage->championshipId;
-		if ($participant->load(Yii::$app->request->post()) && $participant->save()) {
-			return $this->redirect(['index', 'stageId' => $stageId]);
+		if ($participant->load(Yii::$app->request->post())) {
+			$old = Participant::findOne(['athleteId' => $participant->athleteId, 'motorcycleId' => $participant->motorcycleId,
+			'stageId' => $participant->stageId]);
+			if ($old) {
+				$error = 'Участник уже зарегистрирован на этот этап.';
+				if ($old->status != Participant::STATUS_ACTIVE) {
+					$error .= ' Сейчас его заявка отменена. Чтобы вернуть её, нажмите на значок <span class="fa fa-check btn-success"></span> 
+ в заявке участника';
+				}
+			}
+			if (!$error && $participant->save()) {
+				return $this->redirect(['index', 'stageId' => $stageId]);
+			}
 		}
 		
 		return $this->render('index', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 			'stage'        => $stage,
-			'participant'  => $participant
+			'participant'  => $participant,
+			'error'        => $error
 		]);
 	}
 	
