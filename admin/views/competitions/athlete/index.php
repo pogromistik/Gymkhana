@@ -27,6 +27,9 @@ $this->title = 'Спортсмены';
 					'attribute' => 'firstName',
 					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'firstName', 'firstName'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
 					'options'   => [
 						'placeholder' => 'Укажите имя...',
 					]
@@ -39,6 +42,9 @@ $this->title = 'Спортсмены';
 					'attribute' => 'lastName',
 					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'lastName', 'lastName'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
 					'options'   => [
 						'placeholder' => 'Укажите фамилию...',
 					]
@@ -53,6 +59,9 @@ $this->title = 'Спортсмены';
 					'attribute' => 'cityId',
 					'data'      => \yii\helpers\ArrayHelper::map(\common\models\City::find()->all(), 'id', 'title'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
 					'options'   => [
 						'placeholder' => 'Укажите город...',
 					]
@@ -68,6 +77,9 @@ $this->title = 'Спортсмены';
 					'attribute' => 'athleteClassId',
 					'data'      => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()->all(), 'id', 'title'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
 					'options'   => [
 						'placeholder' => 'Укажите класс...',
 					]

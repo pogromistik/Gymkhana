@@ -63,3 +63,21 @@ $(document).on("submit", '.newRegistration', function (e) {
         }
     });
 });
+
+$('.freeNumbersList').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    $.get('/competitions/get-free-numbers', {
+        stageId: id
+    }).done(function (data) {
+        if (data['success'] == true) {
+           $('.free-numbers .list').html(data['numbers']);
+           $('.free-numbers').show();
+        } else {
+            alert(data['error']);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});

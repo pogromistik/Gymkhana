@@ -5,6 +5,8 @@ namespace common\models;
 use common\components\BaseActiveRecord;
 use common\models\RegionalGroup;
 use Yii;
+use yii\db\Expression;
+use yii\db\Query;
 
 /**
  * This is the model class for table "championships".
@@ -179,5 +181,39 @@ class Championship extends BaseActiveRecord
 	public function getRegion()
 	{
 		return $this->hasOne(Region::className(), ['id' => 'regionId']);
+	}
+	
+	/**
+	 * @param Stage $stage
+	 *
+	 * @return array
+	 */
+	public static function getFreeNumbers($stage)
+	{
+		$championship = $stage->championship;
+		$numbers = [];
+		for ($i = $championship->minNumber; $i <= $championship->maxNumber; $i++) {
+			$numbers[] = $i;
+		}
+		
+		$busyNumbers = Participant::find()->select('number')->where(['stageId' => $stage->id])->asArray()->column();
+		if ($championship->regionId) {
+			$query = new Query();
+			$query->from([Athlete::tableName(), City::tableName(), Region::tableName()]);
+			$query->select('Athletes."number"');
+			$query->where(['Regions."id"' => $championship->regionId]);
+			$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
+			$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
+			$busyNumbersForAthletes = $query->column();
+			$busyNumbers = array_merge($busyNumbers, $busyNumbersForAthletes);
+		}
+		
+		foreach ($numbers as $i => $number) {
+			if (in_array($number, $busyNumbers)) {
+				unset($numbers[$i]);
+			}
+		}
+		
+		return $numbers;
 	}
 }

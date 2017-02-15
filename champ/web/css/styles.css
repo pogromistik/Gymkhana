@@ -391,3 +391,7 @@ table.results small {
 .modal-dialog {
     top: 40px;
 }
+
+.free-numbers {
+    display: none;
+}
