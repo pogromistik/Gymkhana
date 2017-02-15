@@ -43,13 +43,14 @@ $(document).on("submit", '.newQuestion', function (e) {
 $(document).on("submit", '.newRegistration', function (e) {
     e.preventDefault();
     var form = $(this);
+    var action = form.data('action');
 
     form.find('.form-text').text('Пожалуйста, подождите...');
     form.find('.button').hide();
     form.find('.alert').hide();
 
     $.ajax({
-        url: "/profile/add-registration",
+        url: "/competitions/" + action,
         type: "POST",
         data: form.serialize(),
         success: function (result) {
@@ -72,8 +73,8 @@ $('.freeNumbersList').click(function (e) {
         stageId: id
     }).done(function (data) {
         if (data['success'] == true) {
-           $('.free-numbers .list').html(data['numbers']);
-           $('.free-numbers').show();
+            $('.free-numbers .list').html(data['numbers']);
+            $('.free-numbers').show();
         } else {
             alert(data['error']);
         }

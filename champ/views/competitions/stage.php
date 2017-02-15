@@ -36,9 +36,9 @@ $time = time();
 	<?php if ($time >= $stage->startRegistration && $time <= $stage->endRegistration) { ?>
         <div class="pt-30">
 			<?php if (\Yii::$app->user->isGuest) { ?>
-                <a href="#" class="btn btn-dark">Зарегистрироваться</a>
-			<?php } else { ?>
                 <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollForm">Зарегистрироваться</a>
+			<?php } else { ?>
+                <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
 			<?php } ?>
         </div>
 	<?php } ?>
@@ -208,6 +208,7 @@ $time = time();
 </div>
 
 <?php if (\Yii::$app->user->isGuest) { ?>
+	<?= $this->render('_enrollForm', ['stage' => $stage]) ?>
 <?php } else { ?>
 	<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
 <?php } ?>

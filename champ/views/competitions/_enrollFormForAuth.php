@@ -13,10 +13,11 @@ $athlete = \common\models\Athlete::findOne(\Yii::$app->user->identity->id);
 $championship = $stage->championship;
 ?>
 
-<div class="modal fade" id="enrollForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="enrollAuthorizedForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-			<?php $form = ActiveForm::begin(['options' => ['class' => 'newRegistration']]) ?>
+			<?php $form = ActiveForm::begin(['options' => ['class' => 'newRegistration',
+			                                               'data-action' => 'add-authorized-registration']]) ?>
             <div class="modal-body">
                 <div class="alert alert-danger" style="display: none"></div>
                 <div class="alert alert-success" style="display: none"></div>

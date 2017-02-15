@@ -86,15 +86,9 @@ class Participant extends BaseActiveRecord
 	public function validateNumber($attribute, $params)
 	{
 		if (!$this->hasErrors()) {
-			if (self::find()->where(['championshipId' => $this->championshipId])
-				->andWhere([
-					'or',
-					['not', ['athleteId' => $this->athleteId]],
-					['and', ['athleteId' => $this->athleteId], ['not', ['motorcycleId' => $this->motorcycleId]]]
-				])
-				->andWhere(['number' => $this->number])->andWhere(['status' => [Athlete::STATUS_ACTIVE, Athlete::STATUS_WAIT]])->one()
-			) {
-				$this->addError($attribute, 'В чемпионате уже есть участник с таким номером.');
+			$freeNumbers = Championship::getFreeNumbers($this->stage, $this->athleteId);
+			if (!in_array($this->number, $freeNumbers)) {
+				$this->addError($attribute, 'Номер занят.');
 			}
 		}
 	}

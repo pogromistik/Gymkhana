@@ -184,11 +184,12 @@ class Championship extends BaseActiveRecord
 	}
 	
 	/**
-	 * @param Stage $stage
+	 * @param Stage    $stage
+	 * @param int|null $athleteId
 	 *
 	 * @return array
 	 */
-	public static function getFreeNumbers($stage)
+	public static function getFreeNumbers($stage, $athleteId = null)
 	{
 		$championship = $stage->championship;
 		$numbers = [];
@@ -204,9 +205,14 @@ class Championship extends BaseActiveRecord
 			$query->where(['Regions."id"' => $championship->regionId]);
 			$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
 			$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
+			if ($athleteId) {
+				$query->andWhere(['!=', 'Athletes."id"', $athleteId]);
+			}
 			$busyNumbersForAthletes = $query->column();
 			$busyNumbers = array_merge($busyNumbers, $busyNumbersForAthletes);
 		}
+		$tmpBusyNumbers = TmpParticipant::find()->select('number')->where(['stageId' => $stage->id])->asArray()->column();
+		$busyNumbers = array_merge($busyNumbers, $tmpBusyNumbers);
 		
 		foreach ($numbers as $i => $number) {
 			if (in_array($number, $busyNumbers)) {
