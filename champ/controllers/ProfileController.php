@@ -54,6 +54,16 @@ class ProfileController extends AccessController
 		if (!$form->validate()) {
 			return var_dump($form->errors);
 		}
+		
+		$stage = $form->stage;
+		if (time() < $stage->startRegistration) {
+			return 'Регистрация на этап начнётся ' . $stage->startRegistrationHuman;
+		}
+		
+		if (time() > $stage->endRegistration) {
+			return 'Регистрация на этап завершилась.';
+		}
+		
 		$old = Participant::findOne(['athleteId' => $form->athleteId, 'motorcycleId' => $form->motorcycleId,
 		                             'stageId' => $form->stageId]);
 		if ($old) {
