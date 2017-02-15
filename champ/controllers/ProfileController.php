@@ -5,6 +5,7 @@ use common\models\Athlete;
 use common\models\Championship;
 use common\models\Motorcycle;
 use common\models\Participant;
+use common\models\Stage;
 use yii\web\NotFoundHttpException;
 
 class ProfileController extends AccessController
@@ -110,5 +111,18 @@ class ProfileController extends AccessController
 		}
 		\Yii::$app->mutex->release('setNumber' . $stage->id);
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
+	}
+	
+	public function actionInfo()
+	{
+		$this->pageTitle = 'Информация';
+		
+		$time = time();
+		$newStages = Stage::find()->where(['<=', 'startRegistration', $time])
+			->andWhere(['>=', 'endRegistration', $time])->all();
+		
+		return $this->render('info', [
+			'newStages' => $newStages
+		]);
 	}
 }
