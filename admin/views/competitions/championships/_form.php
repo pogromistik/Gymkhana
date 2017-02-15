@@ -49,6 +49,9 @@ use kartik\widgets\Select2;
 			'options' => [
 				'placeholder' => 'Выберите регион...',
 			],
+			'pluginOptions' => [
+				'allowClear' => true
+			],
 		]) ?>
     <?php } ?>
 	

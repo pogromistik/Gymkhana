@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </thead>
 		<?php foreach ($model->stages as $stage) { ?>
             <tr>
-                <td><?= $stage->title ?></td>
+                <td><?= Html::a($stage->title, ['/competitions/stages/view', 'id' => $stage->id]) ?></td>
                 <td><?= $stage->dateOfTheHuman ?></td>
                 <td><?= $stage->startRegistrationHuman ?></td>
                 <td><?= $stage->endRegistrationHuman ?></td>

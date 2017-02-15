@@ -1,13 +1,19 @@
 <?php
 namespace champ\controllers;
 
+use common\models\Athlete;
 use common\models\Championship;
+use common\models\City;
+use common\models\Participant;
+use common\models\Region;
 use common\models\RegionalGroup;
 use common\models\Stage;
 use common\models\Year;
 use Yii;
 use yii\db\Expression;
+use yii\db\Query;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Site controller
@@ -94,7 +100,7 @@ class CompetitionsController extends BaseController
 							];
 						}
 						$results[$group][$item['regionGroupId']]['years'][$item['yearId']] = [
-							'year'          => $item['year'],
+							'year'   => $item['year'],
 							'stages' => Stage::find()->where(['championshipId' => $item['id']])
 								->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC])->all()
 						];
@@ -122,5 +128,40 @@ class CompetitionsController extends BaseController
 		return $this->render('stage', [
 			'stage' => $stage
 		]);
+	}
+	
+	public function actionGetFreeNumbers($stageId)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$result = [
+			'success' => false,
+			'error'   => false,
+			'numbers' => null
+		];
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			$result['error'] = 'Этап не найден';
+			
+			return $result;
+		}
+		$numbers = Championship::getFreeNumbers($stage);
+		
+		$result['success'] = true;
+		if (!$numbers) {
+			$result['numbers'] = 'Свободных номеров нет';
+		} else {
+			$result['numbers'] = '<div class="row">';
+			$count = ceil(count($numbers)/3);
+			foreach (array_chunk($numbers, $count) as $numbersChunk) {
+				$result['numbers'] .= '<div class="col-md-3">';
+				foreach ($numbersChunk as $number) {
+					$result['numbers'] .= $number . '<br>';
+				}
+				$result['numbers'] .= '</div>';
+			}
+			$result['numbers'] .= '</div>';
+		}
+		
+		return $result;
 	}
 }

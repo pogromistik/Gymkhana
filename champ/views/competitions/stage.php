@@ -39,7 +39,7 @@ $time = time();
                 <a href="#" class="btn btn-dark">Зарегистрироваться</a>
 			<?php } else { ?>
                 <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollForm">Зарегистрироваться</a>
-            <?php } ?>
+			<?php } ?>
         </div>
 	<?php } ?>
 	
@@ -207,4 +207,7 @@ $time = time();
 	<?php } ?>
 </div>
 
-<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
+<?php if (\Yii::$app->user->isGuest) { ?>
+<?php } else { ?>
+	<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
+<?php } ?>
