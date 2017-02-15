@@ -197,7 +197,11 @@ class Championship extends BaseActiveRecord
 			$numbers[] = $i;
 		}
 		
-		$busyNumbers = Participant::find()->select('number')->where(['stageId' => $stage->id])->asArray()->column();
+		$busyNumbers = Participant::find()->select('number')->where(['stageId' => $stage->id]);
+		if($athleteId) {
+			$busyNumbers = $busyNumbers->andWhere(['!=', 'athleteId', $athleteId]);
+		}
+		$busyNumbers = $busyNumbers->asArray()->column();
 		if ($championship->regionId) {
 			$query = new Query();
 			$query->from([Athlete::tableName(), City::tableName(), Region::tableName()]);
