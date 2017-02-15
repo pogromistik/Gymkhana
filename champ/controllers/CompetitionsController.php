@@ -8,6 +8,7 @@ use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
 use common\models\Stage;
+use common\models\TmpParticipant;
 use common\models\Year;
 use Yii;
 use yii\db\Expression;
@@ -163,5 +164,110 @@ class CompetitionsController extends BaseController
 		}
 		
 		return $result;
+	}
+	
+	public function actionAddAuthorizedRegistration()
+	{
+		if (\Yii::$app->user->isGuest) {
+			return 'Сначала войдите в личный кабинет';
+		}
+		
+		$form = new Participant();
+		$form->load(\Yii::$app->request->post());
+		if (!$form->validate()) {
+			return var_dump($form->errors);
+		}
+		
+		$stage = $form->stage;
+		if (time() < $stage->startRegistration) {
+			return 'Регистрация на этап начнётся ' . $stage->startRegistrationHuman;
+		}
+		
+		if (time() > $stage->endRegistration) {
+			return 'Регистрация на этап завершилась.';
+		}
+		
+		$old = Participant::findOne(['athleteId' => $form->athleteId, 'motorcycleId' => $form->motorcycleId,
+		                             'stageId'   => $form->stageId]);
+		if ($old) {
+			if ($old->status != Participant::STATUS_ACTIVE) {
+				$old->status = Participant::STATUS_ACTIVE;
+				if ($old->save()) {
+					return true;
+				}
+				
+				return var_dump($old->errors);
+			}
+			
+			return 'Вы уже зарегистрированы на этот этап на этом мотоцикле.';
+		}
+		
+		$championship = $stage->championship;
+		$athlete = Athlete::findOne($form->athleteId);
+		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {
+			if ($form->number) {
+				$freeNumbers = Championship::getFreeNumbers($stage);
+				if (!in_array($form->number, $freeNumbers)) {
+					return 'Номер занят. Выберите другой или оставьте поле пустым.';
+				}
+			} elseif ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+				$form->number = $athlete->number;
+			} else {
+				$freeNumbers = Championship::getFreeNumbers($stage);
+				if ($freeNumbers) {
+					//$form->number = $freeNumbers[0]; //присвоение случайного номера
+				}
+			}
+			if ($form->save()) {
+				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				return true;
+			} else {
+				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				return var_dump($form->errors);
+			}
+		}
+		\Yii::$app->mutex->release('setNumber' . $stage->id);
+		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
+	}
+	
+	public function actionAddUnauthorizedRegistration()
+	{
+		$form = new TmpParticipant();
+		$form->load(\Yii::$app->request->post());
+		if (!$form->validate()) {
+			return var_dump($form->errors);
+		}
+		
+		$stage = $form->stage;
+		if (time() < $stage->startRegistration) {
+			return 'Регистрация на этап начнётся ' . $stage->startRegistrationHuman;
+		}
+		
+		if (time() > $stage->endRegistration) {
+			return 'Регистрация на этап завершилась.';
+		}
+		
+		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {
+			if ($form->number) {
+				$freeNumbers = Championship::getFreeNumbers($stage);
+				if (!in_array($form->number, $freeNumbers)) {
+					return 'Номер занят. Выберите другой или оставьте поле пустым.';
+				}
+			} else {
+				$freeNumbers = Championship::getFreeNumbers($stage);
+				if ($freeNumbers) {
+					//$form->number = $freeNumbers[0]; //присвоение случайного номера
+				}
+			}
+			if ($form->save()) {
+				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				return true;
+			} else {
+				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				return var_dump($form->errors);
+			}
+		}
+		\Yii::$app->mutex->release('setNumber' . $stage->id);
+		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
 	}
 }
