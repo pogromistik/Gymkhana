@@ -175,7 +175,7 @@ class CompetitionsController extends BaseController
 		$form = new Participant();
 		$form->load(\Yii::$app->request->post());
 		if (!$form->validate()) {
-			return var_dump($form->errors);
+			return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
 		}
 		
 		$stage = $form->stage;
@@ -236,7 +236,7 @@ class CompetitionsController extends BaseController
 		$form = new TmpParticipant();
 		$form->load(\Yii::$app->request->post());
 		if (!$form->validate()) {
-			return var_dump($form->errors);
+			return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
 		}
 		
 		$stage = $form->stage;

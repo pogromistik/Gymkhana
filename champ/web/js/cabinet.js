@@ -55,6 +55,7 @@ $(document).on("submit", '.newRegistration', function (e) {
         data: form.serialize(),
         success: function (result) {
             if (result == true) {
+                form.trigger('reset');
                 form.find('.alert-success').text('Вы успешно зарегистрированы на этап.').show();
             } else {
                 form.find('.alert-danger').text(result).show();
