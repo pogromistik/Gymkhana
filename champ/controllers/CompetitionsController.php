@@ -206,7 +206,7 @@ class CompetitionsController extends BaseController
 		$athlete = Athlete::findOne($form->athleteId);
 		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {
 			if ($form->number) {
-				$freeNumbers = Championship::getFreeNumbers($stage);
+				$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
 				if (!in_array($form->number, $freeNumbers)) {
 					return 'Номер занят. Выберите другой или оставьте поле пустым.';
 				}
@@ -218,6 +218,7 @@ class CompetitionsController extends BaseController
 					//$form->number = $freeNumbers[0]; //присвоение случайного номера
 				}
 			}
+			\Yii::$app->mutex->release('setNumber' . $stage->id);
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
 				return true;

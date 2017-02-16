@@ -198,7 +198,7 @@ class Championship extends BaseActiveRecord
 		}
 		
 		$busyNumbers = Participant::find()->select('number')->where(['stageId' => $stage->id]);
-		if($athleteId) {
+		if ($athleteId) {
 			$busyNumbers = $busyNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
 		$busyNumbers = $busyNumbers->asArray()->column();
