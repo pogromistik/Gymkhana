@@ -43,9 +43,14 @@ AppAsset::register($this);
 
         <ul class="nav navbar-top-links navbar-right">
             <li>
+                <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
+                            class="fa fa-registered fa-fw"></i> Новые регистрации</a>
+            </li>
+            <li>
 				<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
-                <a href="<?= Url::to(['/competitions/feedback/index']) ?>" data-method='post'><i
+                <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
                             class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
+                
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
