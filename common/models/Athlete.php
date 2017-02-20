@@ -146,6 +146,30 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			$query->andWhere(['not', ['Athletes."id"' => $this->id]]);
 			if ($query->one()) {
 				$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
+			} else {
+				$query = new Query();
+				$query->from(['a' => Stage::tableName(), 'b' => Championship::tableName()]);
+				$query->select('a.id');
+				$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
+				$query->andWhere(['not', ['b.regionId' => null]]);
+				$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
+				$stageIds = $query->column();
+				if ($stageIds) {
+					/** @var Participant $busy */
+					$busy = Participant::find()->where(['stageId' => $stageIds])->andWhere(['not', ['athleteId' => $this->id]])
+						->andWhere(['number' => $this->number])->one();
+					if (!$busy) {
+						$busy = TmpParticipant::find()->where(['stageId' => $stageIds])
+							->andWhere(['number' => $this->number])->one();
+					}
+					if ($busy) {
+						$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
+						"' . $busy->stage->title . '" 
+						чемпионата "' . $busy->championship->title . '"');
+					} else {
+						
+					}
+				}
 			}
 		}
 	}
