@@ -222,7 +222,6 @@ nav .navbar-toggle .icon-bar {
 .content {
     padding: 60px 20px 0 20px;
     position: relative;
-    z-index: 10000;
     width: 60%;
 }
 

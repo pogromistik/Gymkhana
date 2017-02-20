@@ -19,7 +19,6 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
 	    'js/smoothscroll.min.js',
-	    'js/bootstrap.min.js',
 	    'js/main.js',
 	    'js/jquery-ui.js',
 	    'js/cabinet.js'
@@ -27,5 +26,6 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+	    BootstrapPluginAsset::class,
     ];
 }
