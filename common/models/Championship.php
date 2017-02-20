@@ -202,11 +202,14 @@ class Championship extends BaseActiveRecord
 			$busyNumbers = $busyNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
 		$busyNumbers = $busyNumbers->asArray()->column();
-		if ($championship->regionId) {
+		if ($championship->regionId && $stage->status != Stage::STATUS_PAST) {
 			$query = new Query();
 			$query->from([Athlete::tableName(), City::tableName(), Region::tableName()]);
 			$query->select('Athletes."number"');
 			$query->where(['Regions."id"' => $championship->regionId]);
+			if ($athleteId) {
+				$query->andWhere(['not', ['Athletes.id' => $athleteId]]);
+			}
 			$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
 			$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
 			if ($athleteId) {

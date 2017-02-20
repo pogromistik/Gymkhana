@@ -29,6 +29,7 @@ use Yii;
  * @property InternalClass $internalClass
  * @property Time[]        $times
  * @property Stage         $stage
+ * @property Championship  $championship
  */
 class Participant extends BaseActiveRecord
 {
@@ -85,7 +86,7 @@ class Participant extends BaseActiveRecord
 	
 	public function validateNumber($attribute, $params)
 	{
-		if (!$this->hasErrors()) {
+		if (!$this->hasErrors() && $this->number) {
 			$freeNumbers = Championship::getFreeNumbers($this->stage, $this->athleteId);
 			if (!in_array($this->number, $freeNumbers)) {
 				$this->addError($attribute, 'Номер занят.');
@@ -189,6 +190,11 @@ class Participant extends BaseActiveRecord
 	public function getStage()
 	{
 		return $this->hasOne(Stage::className(), ['id' => 'stageId']);
+	}
+	
+	public function getChampionship()
+	{
+		return $this->hasOne(Championship::className(), ['id' => 'championshipId']);
 	}
 	
 	public static function createForm($athleteId, $stageId)

@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr>
 
     <h3>Добавить спортсмена</h3>
-    <div class="alert alert-info">Рекомендуем сначала проверить, есть ли необходимый город в списке</div>
+    <div class="bs-callout bs-callout-info">Рекомендуем сначала проверить, есть ли необходимый город в списке</div>
 	<?= $this->render('_form', [
 		'model' => $model,
 	]) ?>
