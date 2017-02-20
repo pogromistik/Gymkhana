@@ -386,6 +386,7 @@ table.results small {
     background: #cfe4ff;
     width: 100%;
     padding: 2px 5px;
+    border-left: 4px solid #79bbff;
 }
 
 .modal-dialog {

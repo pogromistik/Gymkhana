@@ -29,10 +29,8 @@ class UserHelper
 	{
 		if ($user = UserHelper::getUser()) {
 			return $user->id;
-		} elseif ($allowSystem) {
+		} else {
 			return self::CONSOLE_LOG_USER_ID;
 		}
-		
-		throw new ErrorException;
 	}
 }

@@ -237,3 +237,21 @@ img {
 .results {
     border-top: 1px solid #dddddd;
 }
+
+.bs-callout {
+    margin: 20px 0;
+    padding: 20px;
+    border-left: 3px solid #eee;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout-info h4 {
+    color: #f0ad4e;
+}
+.bs-callout-info {
+    color: #2c6e88;
+    background-color: #d9e9f7;
+    border-color: #64a7ec;
+}
