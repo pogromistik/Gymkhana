@@ -20,6 +20,11 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	<?php if ($success) { ?>
         <div class="alert alert-success">Изменения успешно сохранены</div>
 	<?php } ?>
+	
+	<?php if (!$model->hasAccount) { ?>
+		<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
+			['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+	<?php } ?>
 
     <h3>Информация о спортсмене</h3>
 	<?= $this->render('_form', [
