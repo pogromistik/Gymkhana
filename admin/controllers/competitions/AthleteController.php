@@ -192,6 +192,12 @@ class AthleteController extends BaseController
 		if (!$athlete) {
 			return 'Спортсмен не найден';
 		}
+		if ($athlete->hasAccount) {
+			return 'Кабинет был создан ранее';
+		}
+		if (!$athlete->email) {
+			return 'Необходимо указать почту в профиле спортсмена';
+		}
 		
 		$password = 111111;
 		$athlete->login = $athlete->id + 6000;

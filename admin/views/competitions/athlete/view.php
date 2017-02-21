@@ -24,8 +24,10 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 
     <p>
 	    <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-	    <?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-            ['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+	    <?php if (!$model->hasAccount) { ?>
+		    <?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
+			    ['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+        <?php } ?>
     </p>
 	
 	<?= DetailView::widget([
