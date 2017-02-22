@@ -133,9 +133,13 @@ class Stage extends BaseActiveRecord
 		}
 		if ($this->startRegistrationHuman) {
 			$this->startRegistration = (new \DateTime($this->startRegistrationHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+		} else {
+			$this->startRegistration = null;
 		}
 		if ($this->endRegistrationHuman) {
 			$this->endRegistration = (new \DateTime($this->endRegistrationHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+		} else {
+			$this->endRegistration = null;
 		}
 		
 		return parent::beforeValidate();

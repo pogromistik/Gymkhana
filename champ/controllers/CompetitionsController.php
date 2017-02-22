@@ -152,7 +152,7 @@ class CompetitionsController extends BaseController
 			$result['numbers'] = 'Свободных номеров нет';
 		} else {
 			$result['numbers'] = '<div class="row">';
-			$count = ceil(count($numbers)/3);
+			$count = ceil(count($numbers) / 3);
 			foreach (array_chunk($numbers, $count) as $numbersChunk) {
 				$result['numbers'] .= '<div class="col-md-3">';
 				foreach ($numbersChunk as $number) {
@@ -179,11 +179,15 @@ class CompetitionsController extends BaseController
 		}
 		
 		$stage = $form->stage;
+		if (!$stage->startRegistration) {
+			return 'Регистрация на этап ещё не началась';
+		}
+		
 		if (time() < $stage->startRegistration) {
 			return 'Регистрация на этап начнётся ' . $stage->startRegistrationHuman;
 		}
 		
-		if (time() > $stage->endRegistration) {
+		if ($stage->endRegistration && time() > $stage->endRegistration) {
 			return 'Регистрация на этап завершилась.';
 		}
 		
@@ -221,13 +225,16 @@ class CompetitionsController extends BaseController
 			\Yii::$app->mutex->release('setNumber' . $stage->id);
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				
 				return true;
 			} else {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				
 				return var_dump($form->errors);
 			}
 		}
 		\Yii::$app->mutex->release('setNumber' . $stage->id);
+		
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
 	}
 	
@@ -240,11 +247,15 @@ class CompetitionsController extends BaseController
 		}
 		
 		$stage = $form->stage;
+		if (!$stage->startRegistration) {
+			return 'Регистрация на этап ещё не началась';
+		}
+		
 		if (time() < $stage->startRegistration) {
 			return 'Регистрация на этап начнётся ' . $stage->startRegistrationHuman;
 		}
 		
-		if (time() > $stage->endRegistration) {
+		if ($stage->endRegistration && time() > $stage->endRegistration) {
 			return 'Регистрация на этап завершилась.';
 		}
 		
@@ -262,13 +273,16 @@ class CompetitionsController extends BaseController
 			}
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				
 				return true;
 			} else {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				
 				return var_dump($form->errors);
 			}
 		}
 		\Yii::$app->mutex->release('setNumber' . $stage->id);
+		
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
 	}
 }
