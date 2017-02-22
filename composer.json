@@ -32,7 +32,9 @@
         "dektrium/yii2-rbac": "~0.3.0",
         "kartik-v/yii2-widgets": "*",
         "phpoffice/phpexcel": "~1.8.1",
-        "kartik-v/yii2-sortable-input": "*"
+        "kartik-v/yii2-sortable-input": "*",
+        "kartik-v/yii2-editable": "*",
+        "kartik-v/yii2-popover-x": "*"
     },
     "config": {
         "process-timeout": 1800
