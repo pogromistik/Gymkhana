@@ -11,6 +11,8 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Participant;
 use common\models\search\ParticipantSearch;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -86,6 +88,57 @@ class ParticipantsController extends BaseController
 			'participant'  => $participant,
 			'error'        => $error
 		]);
+	}
+	
+	public function actionSort($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$query = new Query();
+		$query->from(['a' => Participant::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
+		$query->where(['a.stageId' => $stageId]);
+		$query->select(['a."id", b."lastName", b."firstName", c."mark", c."model", a."number"']);
+		$query->andWhere(['a.status' => Participant::STATUS_ACTIVE]);
+		$query->andWhere(new Expression('"a"."athleteId" = "b"."id"'));
+		$query->andWhere(new Expression('"a"."motorcycleId" = "c"."id"'));
+		$query->orderBy(['a.sort' => SORT_ASC, 'a.id' => SORT_ASC]);
+		$participants = $query->all();
+		$participantsArray = [];
+		foreach ($participants as $participant) {
+			$content = $participant['lastName'] . ' ' . $participant['firstName'];
+			if (isset($participant['number'])) {
+				$content .= ', №' . $participant['number'];
+			}
+			$content .= ', ' . $participant['model'] . ' ' . $participant['mark'];
+			$participantsArray[$participant['id']] = ['content' => $content];
+		}
+		
+		return $this->render('sort', ['participantsArray' => $participantsArray, 'stage' => $stage]);
+	}
+	
+	public function actionChangeSort()
+	{
+		$sortList = \Yii::$app->request->getBodyParam('sort_list');
+		$sortItems = explode(',', $sortList);
+		$i = 1;
+		$values = '';
+		foreach ($sortItems as $item) {
+			$values .= '('.$item.','.$i++.')';
+		}
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($sortItems as $item) {
+			$participant = Participant::findOne($item);
+			$participant->sort = $i++;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+			}
+		}
+		$transaction->commit();
+		return var_dump($sortItems);
 	}
 	
 	/**

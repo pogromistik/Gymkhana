@@ -26,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
+<?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
+    ['class' => 'btn btn-default']) ?>
+
 <div class="participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
