@@ -169,4 +169,112 @@ class TmpParticipantController extends Controller
 		
 		return true;
 	}
+	
+	public function actionRegistration($tmpParticipantId, $athleteId, $motorcycleId)
+	{
+		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
+		if (!$tmpParticipant) {
+			return 'Запись не найдена';
+		}
+		
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		
+		$motorcycle = Motorcycle::findOne(['id' => $motorcycleId, 'athleteId' => $athleteId]);
+		if (!$motorcycle) {
+			return 'Мотоцикл не найден';
+		}
+		
+		$old = Participant::find()->where(['stageId' => $tmpParticipant->stageId])
+			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->all();
+		if ($old) {
+			return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+		}
+		
+		$transaction = \Yii::$app->db->beginTransaction();
+		
+		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
+		$tmpParticipant->athleteId = $athlete->id;
+		if (!$tmpParticipant->save()) {
+			$transaction->rollBack();
+			return var_dump($tmpParticipant->errors);
+		}
+		
+		$participant = new Participant();
+		$participant->athleteId = $athlete->id;
+		$participant->motorcycleId = $motorcycle->id;
+		if ($tmpParticipant->number) {
+			$participant->number = $tmpParticipant->number;
+		}
+		$participant->stageId = $tmpParticipant->stageId;
+		$participant->championshipId = $tmpParticipant->championshipId;
+		if (!$participant->save()) {
+			$transaction->rollBack();
+			return var_dump($participant->errors);
+		}
+		
+		$tmpParticipant->athleteId = $athlete->id;
+		if (!$tmpParticipant->save()) {
+			$transaction->rollBack();
+			return var_dump($tmpParticipant->errors);
+		}
+		
+		$transaction->commit();
+		return true;
+	}
+	
+	public function actionAddMotorcycleAndRegistration($tmpParticipantId, $athleteId)
+	{
+		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
+		if (!$tmpParticipant) {
+			return 'Запись не найдена';
+		}
+		
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		
+		$transaction = \Yii::$app->db->beginTransaction();
+		
+		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
+		$tmpParticipant->athleteId = $athlete->id;
+		if (!$tmpParticipant->save()) {
+			$transaction->rollBack();
+			return var_dump($tmpParticipant->errors);
+		}
+		
+		$motorcycle = new Motorcycle();
+		$motorcycle->athleteId = $athlete->id;
+		$motorcycle->mark = $tmpParticipant->motorcycleMark;
+		$motorcycle->model = $tmpParticipant->motorcycleModel;
+		if (!$motorcycle->save()) {
+			$transaction->rollBack();
+			return var_dump($motorcycle->errors);
+		}
+		
+		$participant = new Participant();
+		$participant->athleteId = $athlete->id;
+		$participant->motorcycleId = $motorcycle->id;
+		if ($tmpParticipant->number) {
+			$participant->number = $tmpParticipant->number;
+		}
+		$participant->stageId = $tmpParticipant->stageId;
+		$participant->championshipId = $tmpParticipant->championshipId;
+		if (!$participant->save()) {
+			$transaction->rollBack();
+			return var_dump($participant->errors);
+		}
+		
+		$tmpParticipant->athleteId = $athlete->id;
+		if (!$tmpParticipant->save()) {
+			$transaction->rollBack();
+			return var_dump($tmpParticipant->errors);
+		}
+		
+		$transaction->commit();
+		return true;
+	}
 }

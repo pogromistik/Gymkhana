@@ -233,7 +233,11 @@ $('.addAndRegistration').click(function (e) {
                         id: id
                     }).done(function (data) {
                         hideBackDrop();
-                        location.reload();
+                        if (data == true) {
+                            location.reload();
+                        } else {
+                            alert(data);
+                        }
                     }).fail(function (error) {
                         alert(error.responseText);
                     });
@@ -270,6 +274,93 @@ $('.cancelTmpParticipant').click(function (e) {
                     }).done(function (data) {
                         hideBackDrop();
                         location.reload();
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            },
+            cancel: {
+                label: 'Нет',
+                className: "btn-translate-handbook btn-primary",
+                callback: function () {
+                    return true;
+                }
+            }
+        }
+    });
+});
+
+$('.registrationAthlete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var tmpParticipantId = elem.data('tmp-id');
+    var athleteId = elem.data('athlete-id');
+    var motorcycleId = elem.data('motorcycle-id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Подтверждение регистрации',
+        message: 'Вы уверены? Выбранный спортсмен будет зарегистрирован на этот этап на указанном мотоцикле.',
+        className: 'warning',
+        buttons: {
+            confirm: {
+                label: 'Да',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/tmp-participant/registration', {
+                        tmpParticipantId: tmpParticipantId,
+                        athleteId: athleteId,
+                        motorcycleId: motorcycleId
+                    }).done(function (data) {
+                        hideBackDrop();
+                        if (data == true) {
+                            location.reload();
+                        } else {
+                            alert(data);
+                        }
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            },
+            cancel: {
+                label: 'Нет',
+                className: "btn-translate-handbook btn-primary",
+                callback: function () {
+                    return true;
+                }
+            }
+        }
+    });
+});
+
+$('.addMotorcycleAndRegistration').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var tmpParticipantId = elem.data('tmp-id');
+    var athleteId = elem.data('athlete-id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Подтверждение регистрации',
+        message: 'Выбранному спортсмену будет добавлен новый мотоцикл. На этом мотоцикле участник будет зарегистрирован ' +
+        'на этап. Вы уверены в этом действии?',
+        className: 'warning',
+        buttons: {
+            confirm: {
+                label: 'Да',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/tmp-participant/add-motorcycle-and-registration', {
+                        tmpParticipantId: tmpParticipantId,
+                        athleteId: athleteId
+                    }).done(function (data) {
+                        hideBackDrop();
+                        if (data == true) {
+                            location.reload();
+                        } else {
+                            alert(data);
+                        }
                     }).fail(function (error) {
                         alert(error.responseText);
                     });
