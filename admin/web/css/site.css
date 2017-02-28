@@ -255,3 +255,10 @@ img {
     background-color: #d9e9f7;
     border-color: #64a7ec;
 }
+
+.registrationAthlete, .addMotorcycleAndRegistration {
+    font-size: 12px;
+    padding: 2px 5px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
