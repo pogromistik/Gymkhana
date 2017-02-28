@@ -196,3 +196,92 @@ $('.changeParticipantStatus').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$('.findByFirstName').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var lastName = elem.data('last-name');
+    $.get('/competitions/tmp-participant/find-athletes', {
+        lastName: lastName
+    }).done(function (data) {
+        hideBackDrop();
+        $('.modalList').html(data);
+        $('#athletesList').modal('show')
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});
+
+$('.addAndRegistration').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Создание и регистрация спортсмена',
+        message: 'При подтверждении действия будет создан и зарегистрирован новый спортсмен. ' +
+        'Пожалуйста, нажмите "отмена", если в системе уже есть данные об этом спортсмене.',
+        className: 'info',
+        buttons: {
+            confirm: {
+                label: 'Добавить',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/tmp-participant/add-and-registration', {
+                        id: id
+                    }).done(function (data) {
+                        hideBackDrop();
+                        location.reload();
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            },
+            cancel: {
+                label: 'Отмена',
+                className: "btn-translate-handbook btn-primary",
+                callback: function () {
+                    return true;
+                }
+            }
+        }
+    });
+});
+
+$('.cancelTmpParticipant').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Отмена заявки',
+        message: 'Этим действием вы подтверждаете, что данный участник уже зарегистрирован на этот этап.',
+        className: 'warning',
+        buttons: {
+            confirm: {
+                label: 'Да',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/tmp-participant/cancel', {
+                        id: id
+                    }).done(function (data) {
+                        hideBackDrop();
+                        location.reload();
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            },
+            cancel: {
+                label: 'Нет',
+                className: "btn-translate-handbook btn-primary",
+                callback: function () {
+                    return true;
+                }
+            }
+        }
+    });
+});
