@@ -25,5 +25,6 @@ class AppAsset extends AssetBundle
 		'yii\bootstrap\BootstrapAsset',
 		BootstrapPluginAsset::class,
 		SBAdminAsset::class,
+		'admin\assets\BootboxAsset',
 	];
 }

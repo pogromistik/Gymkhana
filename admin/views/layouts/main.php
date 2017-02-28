@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 use yii\helpers\Url;
+use \admin\assets\BootboxAsset;
 
 AppAsset::register($this);
 ?>
@@ -43,8 +44,10 @@ AppAsset::register($this);
 
         <ul class="nav navbar-top-links navbar-right">
             <li>
+	            <?php $countNewReg = \common\models\TmpParticipant::find()
+                    ->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
                 <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
-                            class="fa fa-registered fa-fw"></i> Новые регистрации</a>
+                            class="fa fa-registered fa-fw"></i> Новые регистрации <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
             </li>
             <li>
 				<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>

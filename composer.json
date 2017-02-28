@@ -34,7 +34,8 @@
         "phpoffice/phpexcel": "~1.8.1",
         "kartik-v/yii2-sortable-input": "*",
         "kartik-v/yii2-editable": "*",
-        "kartik-v/yii2-popover-x": "*"
+        "kartik-v/yii2-popover-x": "*",
+        "bower-asset/bootbox": "~4.3.0"
     },
     "config": {
         "process-timeout": 1800

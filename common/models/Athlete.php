@@ -160,7 +160,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 						->andWhere(['number' => $this->number])->one();
 					if (!$busy) {
 						$busy = TmpParticipant::find()->where(['stageId' => $stageIds])
-							->andWhere(['number' => $this->number])->one();
+							->andWhere(['number' => $this->number])->andWhere(['status' => TmpParticipant::STATUS_NEW])
+							->one();
 					}
 					if ($busy) {
 						$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
