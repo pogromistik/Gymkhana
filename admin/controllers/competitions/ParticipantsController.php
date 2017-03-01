@@ -5,6 +5,7 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\AthletesClass;
+use common\models\ClassHistory;
 use common\models\Motorcycle;
 use common\models\Stage;
 use common\models\Time;
@@ -304,12 +305,114 @@ class ParticipantsController extends BaseController
 			return 'Участник не найден';
 		}
 		
+		$result = $this->approveClassForParticipant($participant);
+		if ($result !== true) {
+			return $result;
+		}
+		
+		return true;
+	}
+	
+	public function actionCancelClass($id)
+	{
+		$this->can('competitions');
+		
+		$participant = Participant::findOne($id);
+		if (!$participant) {
+			return 'Участник не найден';
+		}
+		
+		$participant->newAthleteClassId = null;
+		$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_CANCEL;
+		if (!$participant->save()) {
+			return var_dump($participant->errors);
+		}
+		
+		return true;
+	}
+	
+	public function actionApproveAllClasses($id)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($id);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		
+		/** @var Participant[] $participants */
+		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
+		foreach ($participants as $participant) {
+			$result = $this->approveClassForParticipant($participant);
+			if ($result !== true) {
+				return $result;
+			}
+		}
+		
+		return true;
+	}
+	
+	public function actionCancelAllClasses($id)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($id);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		
+		/** @var Participant[] $participants */
+		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
+		foreach ($participants as $participant) {
+			$participant->newAthleteClassId = null;
+			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_CANCEL;
+			if (!$participant->save()) {
+				return var_dump($participant->errors);
+			}
+		}
+		
+		return true;
+	}
+	
+	public function approveClassForParticipant(Participant $participant)
+	{
 		$athlete = $participant->athlete;
 		if ($athlete->athleteClass->percent < $participant->newAthleteClass->percent) {
 			return 'Вы пытаетесь понизить спортсмену класс с ' . $athlete->athleteClass->title . ' на '
 				. $participant->newAthleteClass->title . '. Понижение класса невозможно';
 		}
 		
-		$athlete->athleteClassId = $participant->newAthleteClassId;
+		if ($athlete->athleteClassId != $participant->newAthleteClassId) {
+			$transaction = \Yii::$app->db->beginTransaction();
+			
+			$event = $participant->championship->title . ', ' . $participant->stage->title;
+			$history = ClassHistory::create($athlete->id, $participant->motorcycleId,
+				$athlete->athleteClassId, $participant->newAthleteClassId, $event,
+				$participant->bestTime, $participant->stage->referenceTime);
+			if (!$history) {
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при изменении данных';
+			}
+			
+			$athlete->athleteClassId = $participant->newAthleteClassId;
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				
+				return 'Невозможно изменить класс спортсмену';
+			}
+			
+			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				
+				return 'Невозможно сохранить изменения для участника';
+			}
+			$transaction->commit();
+		}
+		
+		return true;
 	}
 }
