@@ -82,39 +82,3 @@ $('.removeOverallFile').click(function (e) {
         });
     }
 });
-
-$('.stageCalcResult').click(function (e) {
-    e.preventDefault();
-    if (confirm("Уверены, что хотите пересчитать результаты этого этапа?")) {
-        var id = $(this).data('id');
-        $.get('/competitions/stages/calculation-result', {
-            id: id
-        }).done(function (data) {
-            if (data == true) {
-                location.href = '/competitions/stages/result?stageId='+id;
-            } else {
-                alert(data);
-            }
-        }).fail(function (error) {
-            alert(error.responseText);
-        });
-    }
-});
-
-$('.createCabinet').click(function (e) {
-    e.preventDefault();
-    if (confirm("Уверены, что хотите создать кабинет этому спортсмену?")) {
-        var id = $(this).data('id');
-        $.get('/competitions/athlete/create-cabinet', {
-            athleteId: id
-        }).done(function (data) {
-            if (data == true) {
-                location.reload();
-            } else {
-                alert(data);
-            }
-        }).fail(function (error) {
-            alert(error.responseText);
-        });
-    }
-});
