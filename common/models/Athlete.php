@@ -215,7 +215,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function afterSave($insert, $changedAttributes)
 	{
-		if (array_key_exists('athleteClassId', $changedAttributes)) {
+		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']) {
 			$old = $changedAttributes['athleteClassId'];
 			$new = $this->athleteClassId;
 			$history = ClassHistory::find()->where(['athleteId' => $this->id])
