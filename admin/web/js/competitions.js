@@ -418,24 +418,3 @@ $('.getRequest').click(function (e) {
         console.log(error);
     });
 });
-
-$('.getRequest').click(function (e) {
-    e.preventDefault();
-    var elem = $(this);
-    var action = elem.data('action');
-    var id = elem.data('id');
-    $.get(action, {
-        id: id
-    }).done(function (data) {
-        hideBackDrop();
-        if (data == true) {
-            location.reload();
-        } else {
-            alert(data);
-            console.log(data);
-        }
-    }).fail(function (error) {
-        alert(error.responseText);
-        console.log(error);
-    });
-});

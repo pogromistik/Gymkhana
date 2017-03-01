@@ -13,6 +13,21 @@ $this->params['breadcrumbs'][] = 'Итоги';
 $place = 1;
 ?>
 
+<div class="text-right newClass">
+    <div class="pb-10">
+        <a class="btn btn-danger getRequest" href="#"
+           data-action="/competitions/participants/cancel-all-classes"
+           data-id="<?= $stage->id ?>" title="Отменить">
+            Отменить все новые классы
+        </a>
+        <a class="btn btn-success getRequest" href="#"
+           data-action="/competitions/participants/approve-all-classes"
+           data-id="<?= $stage->id ?>" title="Подтвердить">
+            Подтвердить все новые классы
+        </a>
+    </div>
+</div>
+
 <table class="table results">
     <thead>
     <tr>
@@ -61,17 +76,20 @@ $place = 1;
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
             <td rowspan="<?= $stage->countRace ?>" class="newClass">
 				<?php if ($participant->newAthleteClassId) { ?>
-					<?= $participant->newAthleteClass->title ?><br>
-                    <a class="btn btn-danger getRequest" href="#"
-                       data-action="/competitions/participants/approve-class"
-                       data-id="<?= $participant->id ?>" title="Отменить">
-                        <span class="fa fa-remove"></span>
-                    </a>
-                    <a class="btn btn-success getRequest" href="#"
-                       data-action="/competitions/participants/cancel-class"
-                       data-id="<?= $participant->id ?>" title="Подтвердить">
-                        <span class="fa fa-check"></span>
-                    </a>
+					<?= $participant->newAthleteClass->title ?>
+					<?php if ($participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK) { ?>
+                        <br>
+                        <a class="btn btn-danger getRequest" href="#"
+                           data-action="/competitions/participants/cancel-class"
+                           data-id="<?= $participant->id ?>" title="Отменить">
+                            <span class="fa fa-remove"></span>
+                        </a>
+                        <a class="btn btn-success getRequest" href="#"
+                           data-action="/competitions/participants/approve-class"
+                           data-id="<?= $participant->id ?>" title="Подтвердить">
+                            <span class="fa fa-check"></span>
+                        </a>
+					<?php } ?>
 				<?php } ?>
             </td>
         </tr>
