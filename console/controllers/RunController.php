@@ -75,7 +75,7 @@ class RunController extends Controller
 					return false;
 				}
 			}
-			$city = City::findOne(["upper(title)" => mb_strtoupper($data['title'])]);
+			$city = City::findOne(['upper("title")' => mb_strtoupper($data['title'])]);
 			if (!$city) {
 				$city = new City();
 				$city->title = (string)$data['title'];
@@ -377,18 +377,5 @@ class RunController extends Controller
 		echo $referenceTimeHuman . PHP_EOL;
 		
 		return true;
-	}
-	
-	public function actionCreateChangesLog()
-	{
-		\Yii::$app->db->createCommand('CREATE TABLE "ChangesLog" (
-        "id" serial NOT NULL PRIMARY KEY,
-        "userId" integer NOT NULL,
-        "modelClass" varchar(255) NOT NULL,
-        "modelId" varchar(255) NOT NULL,
-        "action" smallint NOT NULL,
-        "changes" json,
-        "comment" varchar(255)
-)')->execute();
 	}
 }
