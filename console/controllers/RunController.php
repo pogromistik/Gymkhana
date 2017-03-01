@@ -378,4 +378,17 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionCreateChangesLog()
+	{
+		\Yii::$app->db->createCommand('CREATE TABLE "ChangesLog" (
+        "id" serial NOT NULL PRIMARY KEY,
+        "userId" integer NOT NULL,
+        "modelClass" varchar(255) NOT NULL,
+        "modelId" varchar(255) NOT NULL,
+        "action" smallint NOT NULL,
+        "changes" json,
+        "comment" varchar(255)
+)')->execute();
+	}
 }
