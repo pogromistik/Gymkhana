@@ -9,9 +9,10 @@ use Yii;
  *
  * @property integer $id
  * @property integer $title
- * @property integer $percent
+ * @property double  $percent
  * @property integer $sort
  * @property string  $description
+ * @property double  $coefficient
  */
 class AthletesClass extends \yii\db\ActiveRecord
 {
@@ -29,8 +30,9 @@ class AthletesClass extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title', 'percent'], 'required'],
-			[['percent', 'sort'], 'integer'],
+			[['title', 'coefficient', 'percent'], 'required'],
+			[['sort'], 'integer'],
+			[['percent', 'coefficient'], 'number'],
 			[['description', 'title'], 'string'],
 		];
 	}
@@ -46,6 +48,7 @@ class AthletesClass extends \yii\db\ActiveRecord
 			'percent'     => 'Процент',
 			'sort'        => 'Сортировка',
 			'description' => 'Описание',
+			'coefficient' => 'Коеффициент'
 		];
 	}
 	

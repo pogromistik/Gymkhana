@@ -39,7 +39,7 @@ use yii\bootstrap\Html;
 												$title .= ' ' . $stage->dateOfTheHuman;
 											}
 											?>
-											<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
+											<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
 										<?php } ?>
                                     </div>
 								<?php } ?>
@@ -66,7 +66,7 @@ use yii\bootstrap\Html;
 														$title .= ' ' . $stage->dateOfTheHuman;
 													}
 													?>
-													<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
+													<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
 												<?php } ?>
                                             </div>
 										<?php } ?>

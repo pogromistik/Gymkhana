@@ -23,6 +23,9 @@ use Yii;
  * @property integer       $status
  * @property integer       $placeOfClass
  * @property integer       $percent
+ * @property integer       $newAthleteClassId
+ * @property integer       $newAthleteClassStatus
+ * @property integer       $placeOfAthleteClass
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -30,6 +33,8 @@ use Yii;
  * @property Time[]        $times
  * @property Stage         $stage
  * @property Championship  $championship
+ * @property AthletesClass $athleteClass
+ * @property AthletesClass $newAthleteClass
  */
 class Participant extends BaseActiveRecord
 {
@@ -41,6 +46,10 @@ class Participant extends BaseActiveRecord
 	const STATUS_DISQUALIFICATION = 2;
 	const STATUS_CANCEL_ATHLETE = 3;
 	const STATUS_CANCEL_ADMINISTRATION = 4;
+	
+	const NEW_CLASS_STATUS_NEED_CHECK = 1;
+	const NEW_CLASS_STATUS_APPROVE = 2;
+	const NEW_CLASS_STATUS_CANCEL = 3;
 	
 	public static $statusesTitle = [
 		self::STATUS_ACTIVE                => 'Заявка активна',
@@ -78,7 +87,10 @@ class Participant extends BaseActiveRecord
 				'sort',
 				'dateAdded',
 				'status',
-				'placeOfClass'
+				'placeOfClass',
+				'newAthleteClassId',
+				'newAthleteClassStatus',
+				'placeOfAthleteClass'
 			], 'integer'],
 			['number', 'validateNumber']
 		];
@@ -100,21 +112,23 @@ class Participant extends BaseActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id'              => 'ID',
-			'championshipId'  => 'Чемпионат',
-			'stageId'         => 'Этап',
-			'athleteId'       => 'Спортсмен',
-			'motorcycleId'    => 'Мотоцикл',
-			'internalClassId' => 'Класс награждения',
-			'athleteClassId'  => 'Класс спортсмена',
-			'bestTime'        => 'Лучшее время',
-			'place'           => 'Место в соревнованиях',
-			'placeOfClass'    => 'Место в классе',
-			'number'          => 'Номер спортсмена',
-			'sort'            => 'Сортировка',
-			'dateAdded'       => 'Дата добавления',
-			'status'          => 'Статус',
-			'percent'         => 'Рейтинг'
+			'id'                  => 'ID',
+			'championshipId'      => 'Чемпионат',
+			'stageId'             => 'Этап',
+			'athleteId'           => 'Спортсмен',
+			'motorcycleId'        => 'Мотоцикл',
+			'internalClassId'     => 'Класс награждения',
+			'athleteClassId'      => 'Класс спортсмена',
+			'bestTime'            => 'Лучшее время',
+			'place'               => 'Место в соревнованиях',
+			'placeOfClass'        => 'Место в классе награждения',
+			'placeOfAthleteClass' => 'Место в классе спортсмена',
+			'number'              => 'Номер спортсмена',
+			'sort'                => 'Сортировка',
+			'dateAdded'           => 'Дата добавления',
+			'status'              => 'Статус',
+			'percent'             => 'Рейтинг',
+			'newAthleteClassId'   => 'Класс по итогам проведенного этапа'
 		];
 	}
 	
@@ -206,5 +220,15 @@ class Participant extends BaseActiveRecord
 		$form->championshipId = $stage->championship->id;
 		
 		return $form;
+	}
+	
+	public function getAthleteClass()
+	{
+		return $this->hasOne(AthletesClass::className(), ['id' => 'athleteClassId']);
+	}
+	
+	public function getNewAthleteClass()
+	{
+		return $this->hasOne(AthletesClass::className(), ['id' => 'newAthleteClassId']);
 	}
 }

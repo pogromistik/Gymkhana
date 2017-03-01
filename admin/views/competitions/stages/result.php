@@ -14,70 +14,88 @@ $place = 1;
 ?>
 
 <table class="table results">
-	<thead>
-	<tr>
-		<th>Место</th>
-		<th>Класс</th>
-		<th>№</th>
-		<th>Участник</th>
-		<th>Мотоцикл</th>
-		<th>Попытка</th>
-		<th>Время</th>
-		<th>Штраф</th>
-		<th>Лучшее время</th>
+    <thead>
+    <tr>
+        <th>Место</th>
+        <th>Класс</th>
+        <th>Класс</th>
+        <th>№</th>
+        <th>Участник</th>
+        <th>Мотоцикл</th>
+        <th>Попытка</th>
+        <th>Время</th>
+        <th>Штраф</th>
+        <th>Лучшее время</th>
         <th>Место в классе</th>
         <th>Рейтинг</th>
-	</tr>
-	</thead>
-	<tbody>
+        <th>Новый класс</th>
+    </tr>
+    </thead>
+    <tbody>
 	<?php foreach ($participants as $participant) {
 		$athlete = $participant->athlete;
 		$times = $participant->times;
 		$first = null;
 		if ($times) {
 			$first = reset($times);
-        }
+		}
 		?>
-		<tr>
-			<td rowspan="<?=$stage->countRace?>"><?= $place++ ?></td>
-			<td rowspan="<?=$stage->countRace?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
-			<td rowspan="<?=$stage->countRace?>"><?= $participant->number ?></td>
-			<td rowspan="<?=$stage->countRace?>"><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
-			<td rowspan="<?=$stage->countRace?>"><?= $participant->motorcycle->getFullTitle() ?></td>
-            <?php if ($first) { ?>
+        <tr>
+            <td rowspan="<?= $stage->countRace ?>"><?= $place++ ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
+			<?php if ($first) { ?>
                 <td>1.</td>
                 <td><?= $first->timeForHuman ?></td>
                 <td><?= $first->fine ?></td>
-            <?php } else { ?>
+			<?php } else { ?>
                 <td>1.</td>
                 <td></td>
                 <td></td>
-            <?php } ?>
-			<td rowspan="<?=$stage->countRace?>"><?= $participant->humanBestTime ?></td>
-            <td rowspan="<?=$stage->countRace?>"><?= $participant->placeOfClass ?></td>
-            <td rowspan="<?=$stage->countRace?>"><?= $participant->percent ?>%</td>
-		</tr>
+			<?php } ?>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfClass ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
+            <td rowspan="<?= $stage->countRace ?>" class="newClass">
+				<?php if ($participant->newAthleteClassId) { ?>
+					<?= $participant->newAthleteClass->title ?><br>
+                    <a class="btn btn-danger getRequest" href="#"
+                       data-action="/competitions/participants/approve-class"
+                       data-id="<?= $participant->id ?>" title="Отменить">
+                        <span class="fa fa-remove"></span>
+                    </a>
+                    <a class="btn btn-success getRequest" href="#"
+                       data-action="/competitions/participants/cancel-class"
+                       data-id="<?= $participant->id ?>" title="Подтвердить">
+                        <span class="fa fa-check"></span>
+                    </a>
+				<?php } ?>
+            </td>
+        </tr>
 		<?php
 		$attempt = 1;
 		while ($attempt++ < $stage->countRace) {
 			$next = null;
-		    if ($times) {
-			    $next = next($times);
-		    }
+			if ($times) {
+				$next = next($times);
+			}
 			?>
             <tr>
                 <td><?= $attempt ?>.</td>
-	            <?php if ($next) { ?>
+				<?php if ($next) { ?>
                     <td><?= $next->timeForHuman ?></td>
                     <td><?= $next->fine ?></td>
-	            <?php } else { ?>
+				<?php } else { ?>
                     <td></td>
                     <td></td>
-	            <?php } ?>
+				<?php } ?>
             </tr>
-            <?php
+			<?php
 		}
 		?>
 	<?php } ?>
-	</tbody>
+    </tbody>
 </table>

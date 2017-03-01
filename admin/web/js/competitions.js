@@ -6,7 +6,7 @@ $(document).on("submit", '#newAthlete', function (e) {
 
 function newAthleteConfirm() {
     var form = $('#newAthlete');
-    newAthlete(form.serialize()+'&confirm=1');
+    newAthlete(form.serialize() + '&confirm=1');
 }
 
 function newAthlete(data) {
@@ -17,7 +17,7 @@ function newAthlete(data) {
         data: data,
         success: function (result) {
             if (result['success'] == true) {
-                location.href = '/competitions/athlete/update?id='+result['data'];
+                location.href = '/competitions/athlete/update?id=' + result['data'];
             } else {
                 hideBackDrop();
                 $('.complete').html(result['data']);
@@ -85,19 +85,19 @@ $(document).on("submit", '#newCityForm', function (e) {
             if (result['success'] == true) {
                 switch (actionType) {
                     case 'withId':
-                        location.href = action+'&success=1';
+                        location.href = action + '&success=1';
                         break;
                     case 'withoutId':
-                        location.href = action+'?success=1';
+                        location.href = action + '?success=1';
                         break;
                 }
             } else if (result['hasCity'] == true) {
                 switch (actionType) {
                     case 'withId':
-                        location.href = action+'&errorCity=1';
+                        location.href = action + '&errorCity=1';
                         break;
                     case 'withoutId':
-                        location.href = action+'?errorCity=1';
+                        location.href = action + '?errorCity=1';
                         break;
                 }
             } else {
@@ -374,5 +374,68 @@ $('.addMotorcycleAndRegistration').click(function (e) {
                 }
             }
         }
+    });
+});
+
+$('.setParticipantsClasses').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var stageId = elem.data('id');
+    $.get('/competitions/participants/set-classes', {
+        stageId: stageId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            alert('Классы успешно установлены');
+            location.reload();
+        } else {
+            alert(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+        console.log(error);
+    });
+});
+
+$('.getRequest').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var action = elem.data('action');
+    var id = elem.data('id');
+    $.get(action, {
+        id: id
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            alert(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+        console.log(error);
+    });
+});
+
+$('.getRequest').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var action = elem.data('action');
+    var id = elem.data('id');
+    $.get(action, {
+        id: id
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            alert(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+        console.log(error);
     });
 });
