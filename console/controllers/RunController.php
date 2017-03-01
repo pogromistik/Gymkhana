@@ -358,6 +358,11 @@ class RunController extends Controller
 		$transaction->commit();
 	}
 	
+	public function actionCleanIncrement($tableName, $pk)
+	{
+		$this->db->createCommand('SELECT setval(\'"' . $tableName . '_' . $pk . '_seq"\'::regclass, MAX("' . $pk . '")) FROM "' . $tableName . '"')->execute();
+	}
+	
 	public function actionTest()
 	{
 		$time = '01:58.69';
