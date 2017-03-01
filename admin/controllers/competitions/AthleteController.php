@@ -131,7 +131,7 @@ class AthleteController extends BaseController
 			return $this->redirect('create');
 		}
 		$cityTitle = trim($cityTitle);
-		$city = City::findOne(['upper(title)' => mb_strtoupper($cityTitle)]);
+		$city = City::findOne(['upper(title)' => mb_strtoupper($cityTitle, 'UTF-8')]);
 		if ($city) {
 			return $this->redirect(['create', 'errorCity' => true]);
 		}

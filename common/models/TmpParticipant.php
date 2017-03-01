@@ -140,8 +140,8 @@ class TmpParticipant extends BaseActiveRecord
 		/** @var Athlete[] $athletes */
 		$athletes = Athlete::find()->where([
 			'or',
-			['upper("firstName")' => mb_strtoupper($this->firstName), 'upper("lastName")' => mb_strtoupper($this->lastName)],
-			['upper("firstName")' => mb_strtoupper($this->lastName), 'upper("lastName")' => mb_strtoupper($this->firstName)]
+			['upper("firstName")' => mb_strtoupper($this->firstName, 'UTF-8'), 'upper("lastName")' => mb_strtoupper($this->lastName, 'UTF-8')],
+			['upper("firstName")' => mb_strtoupper($this->lastName, 'UTF-8'), 'upper("lastName")' => mb_strtoupper($this->firstName, 'UTF-8')]
 		])->all();
 		if (!$athletes) {
 			return null;

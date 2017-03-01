@@ -76,8 +76,8 @@ class ParticipantSearch extends Participant
 		]);
 		
 		if ($this->athleteId) {
-			$athleteIds = Athlete::find()->select('id')->where(['upper("firstName")' => mb_strtoupper($this->athleteId)])
-				->orWhere(['upper("lastName")' => mb_strtoupper($this->athleteId)])->asArray()->column();
+			$athleteIds = Athlete::find()->select('id')->where(['upper("firstName")' => mb_strtoupper($this->athleteId, 'UTF-8')])
+				->orWhere(['upper("lastName")' => mb_strtoupper($this->athleteId, 'UTF-8')])->asArray()->column();
 			if (!$athleteIds) {
 				$query->andFilterWhere(['athleteId' => 0]);
 			}

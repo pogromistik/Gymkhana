@@ -27,7 +27,7 @@ class HelpController extends BaseController
 			return $result;
 		}
 		$cityTitle = trim($cityTitle);
-		$city = City::findOne(['upper(title)' => mb_strtoupper($cityTitle)]);
+		$city = City::findOne(['upper(title)' => mb_strtoupper($cityTitle, 'UTF-8')]);
 		if ($city) {
 			$result['hasCity'] = true;
 			return $result;

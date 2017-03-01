@@ -181,6 +181,6 @@ class HelpModel extends Model
 	
 	public static function mb_ucfirst($name)
 	{
-		return mb_strtoupper(mb_substr($name, 0, 1)) . mb_substr($name, 1);
+		return mb_strtoupper(mb_substr($name, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($name, 1, null, 'UTF-8');
 	}
 }
