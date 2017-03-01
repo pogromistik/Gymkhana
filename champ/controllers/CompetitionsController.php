@@ -81,7 +81,9 @@ class CompetitionsController extends BaseController
 							'stages' => $championship->stages
 						];
 					}
-					krsort($results[$group]);
+					if (isset($results[$group])) {
+						krsort($results[$group]);
+					}
 					break;
 				case Championship::GROUPS_REGIONAL:
 					$query = Championship::find();
@@ -106,8 +108,10 @@ class CompetitionsController extends BaseController
 								->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC])->all()
 						];
 						
-						krsort($results[$group][$item['regionGroupId']]['years']);
-						ksort($results[$group]);
+						if (isset($results[$group])) {
+							krsort($results[$group][$item['regionGroupId']]['years']);
+							ksort($results[$group]);
+						}
 					}
 					break;
 			}
