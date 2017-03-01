@@ -80,7 +80,7 @@ class TmpParticipantController extends Controller
 	
 	public function actionFindAthletes($lastName)
 	{
-		$lastName = mb_strtoupper($lastName);
+		$lastName = mb_strtoupper($lastName, 'UTF-8');
 		$athletes = Athlete::find()->where(['upper("lastName")' => $lastName])->orWhere(['upper("lastName")' => $lastName])->all();
 		return $this->renderAjax('_athletes', ['athletes' => $athletes, 'lastName' => $lastName]);
 	}
@@ -100,7 +100,7 @@ class TmpParticipantController extends Controller
 				return 'Город не найден';
 			}
 		} else {
-			$city = City::findOne(['upper("title")' => mb_strtoupper($tmpParticipant->city)]);
+			$city = City::findOne(['upper("title")' => mb_strtoupper($tmpParticipant->city, 'UTF-8')]);
 			if (!$city) {
 				$transaction->rollBack();
 				return 'Город отсутствует в системе';
