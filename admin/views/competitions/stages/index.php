@@ -60,6 +60,7 @@ $this->title = 'Этапы';
 					]);
 				}
 			],
+            'referenceTime'
 		],
 	]); ?>
 </div>

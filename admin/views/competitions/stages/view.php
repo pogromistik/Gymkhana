@@ -17,6 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
 		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Установить классы участникам', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
+			[
+				'class'   => 'btn btn-default setParticipantsClasses',
+				'data-id' => $model->id
+			]) ?>
 		<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
 		<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
 		<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
@@ -65,6 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'class',
 				'value'     => $model->class ? $model->classModel->title : null
 			],
+            'referenceTimeHuman'
 		],
 	]) ?>
 

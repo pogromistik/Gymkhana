@@ -2,17 +2,30 @@
 use yii\bootstrap\ActiveForm;
 use kartik\widgets\TimePicker;
 use yii\widgets\MaskedInput;
+use yii\bootstrap\Html;
 
 /**
  * @var \yii\web\View              $this
  * @var \common\models\Stage       $stage
  * @var \common\models\Participant $participant
+ * @var string                     $error
  */
 
 $this->title = $stage->championship->title . ', ' . $stage->title;
 
 $attempt = 0;
 ?>
+
+<?php if ($error) { ?>
+    <div class="alert alert-danger">
+        Не установлены классы спортсменов
+	    <?= Html::a('Установить', ['/competitions/stages/calculation-result', 'stageId' => $stage->id],
+		    [
+			    'class'   => 'btn btn-default setParticipantsClasses',
+			    'data-id' => $stage->id
+		    ]) ?>
+    </div>
+<?php } ?>
 
 <?php while ($attempt++ < $stage->countRace) { ?>
     <h3>Заезд №<?= $attempt ?></h3>

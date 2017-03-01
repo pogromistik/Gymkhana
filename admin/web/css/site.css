@@ -262,3 +262,8 @@ img {
     font-weight: bold;
     margin-bottom: 2px;
 }
+
+.newClass .btn {
+    font-size: 12px;
+    padding: 3px 6px;
+}

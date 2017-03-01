@@ -357,4 +357,25 @@ class RunController extends Controller
 		}
 		$transaction->commit();
 	}
+	
+	public function actionTest()
+	{
+		$time = '01:58.69';
+		list($min, $secs) = explode(':', $time);
+		$time = ($min * 60000) + $secs*1000;
+		echo $time . PHP_EOL;
+		$referenceTime = floor($time/1.175);
+		echo $referenceTime . PHP_EOL;
+		
+		$min = str_pad(floor($referenceTime / 60000), 2, '0', STR_PAD_LEFT);
+		echo 'min: ' . $min . PHP_EOL;
+		$sec = str_pad(floor(($referenceTime - $min*60000)/1000), 2, '0', STR_PAD_LEFT);
+		echo 'sec: ' . $sec . PHP_EOL;
+		$mls = str_pad(round(($referenceTime-$min*60000-$sec*1000)/10, 0, PHP_ROUND_HALF_DOWN), 2, '0', STR_PAD_LEFT);
+		echo 'mls: ' . $mls . PHP_EOL;
+		$referenceTimeHuman = $min.':'.$sec.'.'.$mls;
+		echo $referenceTimeHuman . PHP_EOL;
+		
+		return true;
+	}
 }

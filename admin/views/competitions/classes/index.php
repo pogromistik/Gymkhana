@@ -57,6 +57,24 @@ $this->title = 'Классы спортсменов';
 				}
 			],
 			[
+				'attribute' => 'coefficient',
+				'format'    => 'raw',
+				'value'     => function (\common\models\AthletesClass $class) {
+					return Editable::widget([
+						'name'          => 'coefficient',
+						'value'         => $class->coefficient,
+						'url'           => 'update',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $class->id,
+							'value'     => $class->coefficient,
+							'placement' => 'right',
+						]
+					]);
+				}
+			],
+			[
 				'attribute' => 'sort',
 				'format'    => 'raw',
 				'value'     => function (\common\models\AthletesClass $class) {

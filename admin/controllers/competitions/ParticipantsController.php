@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\Motorcycle;
 use common\models\Stage;
 use common\models\Time;
@@ -11,6 +12,7 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Participant;
 use common\models\search\ParticipantSearch;
+use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\Json;
@@ -68,7 +70,7 @@ class ParticipantsController extends BaseController
 		$participant->championshipId = $stage->championshipId;
 		if ($participant->load(Yii::$app->request->post())) {
 			$old = Participant::findOne(['athleteId' => $participant->athleteId, 'motorcycleId' => $participant->motorcycleId,
-			'stageId' => $participant->stageId]);
+			                             'stageId'   => $participant->stageId]);
 			if ($old) {
 				$error = 'Участник уже зарегистрирован на этот этап.';
 				if ($old->status != Participant::STATUS_ACTIVE) {
@@ -127,7 +129,7 @@ class ParticipantsController extends BaseController
 		$i = 1;
 		$values = '';
 		foreach ($sortItems as $item) {
-			$values .= '('.$item.','.$i++.')';
+			$values .= '(' . $item . ',' . $i++ . ')';
 		}
 		$transaction = \Yii::$app->db->beginTransaction();
 		foreach ($sortItems as $item) {
@@ -138,6 +140,7 @@ class ParticipantsController extends BaseController
 			}
 		}
 		$transaction->commit();
+		
 		return var_dump($sortItems);
 	}
 	
@@ -197,9 +200,15 @@ class ParticipantsController extends BaseController
 		$this->can('competitions');
 		
 		$stage = Stage::findOne($stageId);
+		$error = false;
+		
+		if (Participant::find()->where(['stageId' => $stage->id])->andWhere(['athleteClassId' => null])->one()) {
+			$error = 'Не установлены классы спортсменов';
+		}
 		
 		return $this->render('races', [
-			'stage' => $stage
+			'stage' => $stage,
+			'error' => $error
 		]);
 	}
 	
@@ -251,5 +260,56 @@ class ParticipantsController extends BaseController
 		}
 		
 		return 'Возникла ошибка при сохранении изменений';
+	}
+	
+	public function actionSetClasses($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		
+		$participants = Participant::findAll(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE]);
+		foreach ($participants as $participant) {
+			$athlete = $participant->athlete;
+			if (!$athlete->athleteClassId) {
+				return 'Необходимо сначала установить класс для спортсмена ' . $athlete->getFullName();
+			}
+			$participant->athleteClassId = $athlete->athleteClassId;
+			if (!$participant->save()) {
+				return 'Не удалось установить класс участнику ' . $athlete->getFullName();
+			}
+		}
+		
+		$classIds = Participant::find()->select('athleteClassId')
+			->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])->distinct()->asArray()->column();
+		$percent = AthletesClass::find()->select('id')->where(['id' => $classIds])->min('"percent"');
+		$class = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
+		$stage->class = $class->id;
+		if (!$stage->save()) {
+			return 'Не удалось установить класс соревнований';
+		}
+		
+		return true;
+	}
+	
+	public function actionApproveClass($id)
+	{
+		$this->can('competitions');
+		
+		$participant = Participant::findOne($id);
+		if (!$participant) {
+			return 'Участник не найден';
+		}
+		
+		$athlete = $participant->athlete;
+		if ($athlete->athleteClass->percent < $participant->newAthleteClass->percent) {
+			return 'Вы пытаетесь понизить спортсмену класс с ' . $athlete->athleteClass->title . ' на '
+				. $participant->newAthleteClass->title . '. Понижение класса невозможно';
+		}
+		
+		$athlete->athleteClassId = $participant->newAthleteClassId;
 	}
 }
