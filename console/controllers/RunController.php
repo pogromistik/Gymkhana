@@ -360,7 +360,7 @@ class RunController extends Controller
 	
 	public function actionCleanIncrement($tableName, $pk)
 	{
-		$this->db->createCommand('SELECT setval(\'"' . $tableName . '_' . $pk . '_seq"\'::regclass, MAX("' . $pk . '")) FROM "' . $tableName . '"')->execute();
+		\Yii::$app->db->createCommand('SELECT setval(\'"' . $tableName . '_' . $pk . '_seq"\'::regclass, MAX("' . $pk . '")) FROM "' . $tableName . '"')->execute();
 	}
 	
 	public function actionTest()
