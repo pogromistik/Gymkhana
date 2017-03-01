@@ -16,7 +16,7 @@ use yii\bootstrap\Html;
 					<?= $title ?>
                 </div>
                 <div class="info">
-					<?php if (!$results[$group]) { ?>
+					<?php if (!isset($results[$group])) { ?>
                         В данном разделе пока нет соревнований.
 					<?php } else { ?>
 						<?php switch ($group) {
