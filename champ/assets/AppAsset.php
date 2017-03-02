@@ -19,7 +19,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
 	    'js/smoothscroll.min.js',
-	    'js/main.js',
+	    'js/site.js',
 	    'js/jquery-ui.js',
 	    'js/cabinet.js'
     ];
