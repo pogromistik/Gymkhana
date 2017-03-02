@@ -390,7 +390,7 @@ class ParticipantsController extends BaseController
 			$event = $participant->championship->title . ', ' . $participant->stage->title;
 			$history = ClassHistory::create($athlete->id, $participant->motorcycleId,
 				$athlete->athleteClassId, $participant->newAthleteClassId, $event,
-				$participant->bestTime, $participant->stage->referenceTime);
+				$participant->bestTime, $participant->stage->referenceTime, $participant->percent);
 			if (!$history) {
 				$transaction->rollBack();
 				

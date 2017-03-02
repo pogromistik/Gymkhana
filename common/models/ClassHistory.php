@@ -17,6 +17,7 @@ use Yii;
  * @property integer       $time
  * @property integer       $bestTime
  * @property integer       $date
+ * @property float         $percent
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -44,6 +45,7 @@ class ClassHistory extends BaseActiveRecord
 			[['athleteId', 'oldClassId', 'newClassId', 'event', 'date'], 'required'],
 			[['athleteId', 'motorcycleId', 'oldClassId', 'newClassId', 'time', 'bestTime', 'date'], 'integer'],
 			[['event'], 'string'],
+			[['percent'], 'number']
 		];
 	}
 	
@@ -61,6 +63,7 @@ class ClassHistory extends BaseActiveRecord
 			'event'        => 'Событие',
 			'time'         => 'Время',
 			'bestTime'     => 'Лучшее время',
+			'percent'      => 'Процент от эталонного времени',
 			'date'         => 'Дата',
 		];
 	}
@@ -75,7 +78,7 @@ class ClassHistory extends BaseActiveRecord
 	}
 	
 	public static function create($athleteId, $motorcycleId = null, $oldClassId, $newClassId, $event,
-	                              $time = null, $bestTime = null)
+	                              $time = null, $bestTime = null, $percent = null)
 	{
 		$item = new self();
 		$item->athleteId = $athleteId;
@@ -88,6 +91,9 @@ class ClassHistory extends BaseActiveRecord
 		}
 		if ($bestTime) {
 			$item->bestTime = $bestTime;
+		}
+		if ($percent) {
+			$item->percent = $percent;
 		}
 		if ($item->save()) {
 			return true;
