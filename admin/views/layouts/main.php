@@ -184,6 +184,9 @@ AppAsset::register($this);
                                 <li>
                                     <a href="<?= Url::to(['/competitions/championships/index']) ?>"> Чемпионаты</a>
                                 </li>
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
+                                </li>
                             </ul>
                         </li>
 					<?php } ?>
