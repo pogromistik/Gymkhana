@@ -4,6 +4,7 @@ use yii\bootstrap\Html;
 /**
  * @var \yii\web\View $this
  * @var array         $results
+ * @var array         $figuresArray
  */
 ?>
 
@@ -104,9 +105,45 @@ use yii\bootstrap\Html;
 								break;
 								?>
 							<?php }
-					}?>
+					} ?>
                 </div>
             </div>
         </div>
 	<?php } ?>
+
+    <div class="item">
+        <div class="toggle">
+            <div class="background"></div>
+            <div class="title">
+                Базовые фигуры
+            </div>
+            <div class="info">
+				<?php if (!$figuresArray) { ?>
+                    В данном разделе пока нет фигур.
+				<?php } else { ?>
+					<?php foreach ($figuresArray as $figureData) {
+						/** @var \common\models\Figure $figure */
+						$figure = $figureData['figure'];
+						/** @var \common\models\Year[] $years */
+						$years = $figureData['years'];
+						?>
+
+                        <div class="title-with-bg">
+							<?= $figure->title ?>
+                        </div>
+						<?php
+						if (!$years) { ?>
+                            Для фигуры пока нет ни одного результата.
+						<?php } else { ?>
+							<?php foreach ($years as $year) { ?>
+                                <div class="pl-10">
+	                                <?= Html::a($year->year, ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
+                                </div>
+							<?php } ?>
+						<?php } ?>
+					<?php }
+				} ?>
+            </div>
+        </div>
+    </div>
 </div>
