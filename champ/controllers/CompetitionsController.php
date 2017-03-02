@@ -4,6 +4,7 @@ namespace champ\controllers;
 use common\models\Athlete;
 use common\models\Championship;
 use common\models\City;
+use common\models\Figure;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
@@ -117,7 +118,19 @@ class CompetitionsController extends BaseController
 			}
 		}
 		
-		return $this->render('results', ['results' => $results]);
+		/** @var Figure[] $figures */
+		$figures = Figure::find()->orderBy(['title' => SORT_ASC])->all();
+		$figuresArray = [];
+		foreach ($figures as $figure) {
+			$yearIds = $figure->getResults()->select('yearId')->asArray()->column();
+			$years = Year::find()->where(['id' => $yearIds])->orderBy(['year' => SORT_DESC])->all();
+			$figuresArray[] = [
+				'figure' => $figure,
+				'years'  => $years
+			];
+		}
+		
+		return $this->render('results', ['results' => $results, 'figuresArray' => $figuresArray]);
 	}
 	
 	public function actionStage($id)
@@ -132,6 +145,38 @@ class CompetitionsController extends BaseController
 		
 		return $this->render('stage', [
 			'stage' => $stage
+		]);
+	}
+	
+	public function actionFigure($id, $year = null)
+	{
+		$figure = Figure::findOne($id);
+		if (!$figure) {
+			throw new NotFoundHttpException('Фигура не найдена');
+		}
+		
+		$results = $figure->getResults();
+		
+		$yearModel = null;
+		if ($year) {
+			$yearModel = Year::findOne(['year' => $year]);
+			if (!$yearModel) {
+				throw new NotFoundHttpException('Год не найден');
+			}
+			$results = $results->andWhere(['yearId' => $yearModel->id]);
+		}
+		$this->pageTitle = $figure->title;
+		$this->description = '';
+		$this->keywords = '';
+		
+		$results = $results
+			->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])
+			->all();
+		
+		return $this->render('figure', [
+			'figure'  => $figure,
+			'results' => $results,
+			'year'    => $yearModel
 		]);
 	}
 	
