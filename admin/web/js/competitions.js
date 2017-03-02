@@ -427,7 +427,7 @@ $('.stageCalcResult').click(function (e) {
             id: id
         }).done(function (data) {
             if (data == true) {
-                location.href = '/competitions/stages/result?stageId='+id;
+                location.href = '/competitions/stages/result?stageId=' + id;
             } else {
                 alert(data);
             }
@@ -453,4 +453,30 @@ $('.createCabinet').click(function (e) {
             alert(error.responseText);
         });
     }
+});
+
+$(document).on("submit", '#figureTimeForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    var figureId = form.data('id');
+    var date = form.data('date');
+    $.ajax({
+        url: '/competitions/figures/add-time',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.href = '/competitions/figures/add-results?figureId=' + figureId +
+                    '&date=' + date + '&success=true';
+            } else {
+                hideBackDrop();
+                alert(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
 });
