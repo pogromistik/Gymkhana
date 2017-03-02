@@ -26,7 +26,8 @@ class m170302_051925_create_FigureTimes_table extends Migration
 			'time'                  => $this->integer()->notNull(),
 			'fine'                  => $this->integer()->notNull()->defaultValue(0),
 			'dateAdded'             => $this->integer()->notNull(),
-			'dateUpdated'           => $this->integer()->notNull()
+			'dateUpdated'           => $this->integer()->notNull(),
+			'resultTime'            => $this->integer()->notNull()
 		]);
 	}
 	

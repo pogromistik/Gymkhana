@@ -7,15 +7,17 @@ use Yii;
 /**
  * This is the model class for table "Figures".
  *
- * @property integer $id
- * @property string  $title
- * @property string  $description
- * @property string  $file
- * @property string  $picture
- * @property integer $bestTime
- * @property string  $bestAthlete
- * @property integer $bestTimeInRussia
- * @property string  $bestAthleteInRussia
+ * @property integer      $id
+ * @property string       $title
+ * @property string       $description
+ * @property string       $file
+ * @property string       $picture
+ * @property integer      $bestTime
+ * @property string       $bestAthlete
+ * @property integer      $bestTimeInRussia
+ * @property string       $bestAthleteInRussia
+ *
+ * @property FigureTime[] $results
  */
 class Figure extends \yii\db\ActiveRecord
 {
@@ -83,16 +85,21 @@ class Figure extends \yii\db\ActiveRecord
 		parent::afterFind();
 		if ($this->bestTime) {
 			$min = str_pad(floor($this->bestTime / 60000), 2, '0', STR_PAD_LEFT);
-			$sec = str_pad(floor(($this->bestTime - $min*60000)/1000), 2, '0', STR_PAD_LEFT);
-			$mls = str_pad(($this->bestTime-$min*60000-$sec*1000)/10, 2, '0', STR_PAD_LEFT);
-			$this->bestTimeForHuman = $min.':'.$sec.'.'.$mls;
+			$sec = str_pad(floor(($this->bestTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(($this->bestTime - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
+			$this->bestTimeForHuman = $min . ':' . $sec . '.' . $mls;
 		}
 		
 		if ($this->bestTimeInRussia) {
 			$min = str_pad(floor($this->bestTimeInRussia / 60000), 2, '0', STR_PAD_LEFT);
-			$sec = str_pad(floor(($this->bestTimeInRussia - $min*60000)/1000), 2, '0', STR_PAD_LEFT);
-			$mls = str_pad(($this->bestTimeInRussia-$min*60000-$sec*1000)/10, 2, '0', STR_PAD_LEFT);
-			$this->bestTimeInRussiaForHuman = $min.':'.$sec.'.'.$mls;
+			$sec = str_pad(floor(($this->bestTimeInRussia - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(($this->bestTimeInRussia - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
+			$this->bestTimeInRussiaForHuman = $min . ':' . $sec . '.' . $mls;
 		}
+	}
+	
+	public function getResults()
+	{
+		return $this->hasMany(FigureTime::className(), ['figureId' => 'id']);
 	}
 }
