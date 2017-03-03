@@ -83,3 +83,25 @@ $('.freeNumbersList').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$(document).on("submit", '#compareWith', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    $('.alert').hide();
+    showBackDrop();
+
+    $.ajax({
+        url: "/profile/check-compare-with",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.href = '/profile/compare-with?'+form.serialize();
+            } else {
+                $('.alert-danger').text(result).show();
+                hideBackDrop();
+            }
+        }
+    });
+});

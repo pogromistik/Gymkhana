@@ -242,12 +242,15 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		return $this->hasOne(City::className(), ['id' => 'cityId']);
 	}
 	
-	public static function getActiveAthletes()
+	public static function getActiveAthletes($withoutId = null)
 	{
 		$query = Athlete::find();
 		$query->from([self::tableName(), Motorcycle::tableName()]);
 		$query->select('"Athletes".*');
 		$query->andWhere(new Expression('"Athletes"."id" = "Motorcycles"."athleteId"'));
+		if ($withoutId) {
+			$query->andWhere(['not', ['"Athletes"."id"' => $withoutId]]);
+		}
 		
 		return $query->all();
 	}

@@ -47,6 +47,7 @@ use yii\helpers\Url;
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
                                 <li><a href="/profile/index">Профиль</a></li>
+                                <li><a href="/profile/compare-with">Статистика</a></li>
                                 <li><a href="/site/logout">Выход</a></li>
                             </ul>
                         </li>
