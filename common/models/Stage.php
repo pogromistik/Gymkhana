@@ -229,28 +229,30 @@ class Stage extends BaseActiveRecord
 			$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
 			
 			//Рассчёт класса
-			$participant->newAthleteClassId = null;
-			$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
-			
-			/** @var AthletesClass $newClass */
-			$newClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
-				->orderBy(['percent' => SORT_ASC])->one();
-			if ($stageClass && $newClass) {
-				$percent = $stageClass->percent + $newClass->percent - 100;
-				/** @var AthletesClass $resultClass */
-				$resultClass = AthletesClass::find()->where(['>=', 'percent', $percent])
+			if ($participant->athleteClassId) {
+				$participant->newAthleteClassId = null;
+				$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
+				
+				/** @var AthletesClass $newClass */
+				$newClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
 					->orderBy(['percent' => SORT_ASC])->one();
-				if ($resultClass && $resultClass->id != $participant->id) {
-					if ($stageClass->percent > $resultClass->percent) {
-						if ($stageClass->id != $participant->athleteClassId) {
-							$participant->newAthleteClassId = $stageClass->id;
+				if ($stageClass && $newClass) {
+					$percent = $stageClass->percent + $newClass->percent - 100;
+					/** @var AthletesClass $resultClass */
+					$resultClass = AthletesClass::find()->where(['>=', 'percent', $percent])
+						->orderBy(['percent' => SORT_ASC])->one();
+					if ($resultClass && $resultClass->id != $participant->id) {
+						if ($stageClass->percent > $resultClass->percent) {
+							if ($stageClass->id != $participant->athleteClassId) {
+								$participant->newAthleteClassId = $stageClass->id;
+								$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+							}
+						} elseif (!$participant->athleteClassId ||
+							$participant->athleteClass->percent > $resultClass->percent
+						) {
+							$participant->newAthleteClassId = $resultClass->id;
 							$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
 						}
-					} elseif (!$participant->athleteClassId ||
-						$participant->athleteClass->percent > $resultClass->percent
-					) {
-						$participant->newAthleteClassId = $resultClass->id;
-						$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
 					}
 				}
 			}
