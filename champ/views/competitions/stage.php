@@ -64,7 +64,7 @@ $time = time();
                     </thead>
                     <tbody>
 					<?php
-					$participants = $stage->participants;
+					$participants = $stage->activeParticipants;
 					$place = 1;
 					if ($participants) {
 						foreach ($participants as $participant) {
@@ -161,7 +161,7 @@ $time = time();
                     </thead>
                     <tbody>
 					<?php
-					$participants = $stage->participants;
+					$participants = $stage->activeParticipants;
 					$place = 1;
 					if ($participants) {
 						foreach ($participants as $participant) {

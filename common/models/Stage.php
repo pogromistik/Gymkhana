@@ -208,7 +208,7 @@ class Stage extends BaseActiveRecord
 	{
 		Participant::updateAll(['place' => null, 'placeOfClass' => null], ['stageId' => $this->id]);
 		/** @var Participant[] $participants */
-		$participants = Participant::find()->where(['stageId' => $this->id])->orderBy(['bestTime' => SORT_ASC])->all();
+		$participants = $this->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 		$place = 1;
 		$transaction = \Yii::$app->db->beginTransaction();
 		/** @var Participant $first */
@@ -222,9 +222,9 @@ class Stage extends BaseActiveRecord
 		}
 		foreach ($participants as $participant) {
 			$participant->place = $place++;
-			$participant->placeOfClass = Participant::find()->where(['stageId' => $this->id])
+			$participant->placeOfClass = $this->getActiveParticipants()
 					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
-			$participant->placeOfAthleteClass = Participant::find()->where(['stageId' => $this->id])
+			$participant->placeOfAthleteClass = $this->getActiveParticipants()
 					->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfClass"') + 1;
 			$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
 			
