@@ -116,6 +116,19 @@ class FiguresController extends BaseController
 		}
 	}
 	
+	public function actionUpdateTime($id)
+	{
+		$figureTime = FigureTime::findOne($id);
+		if (!$figureTime) {
+			throw new NotFoundHttpException('Запись не найдена');
+		}
+		if ($figureTime->load(\Yii::$app->request->post()) && $figureTime->save()) {
+			return $this->redirect(['update', 'id' => $figureTime->figureId]);
+		}
+		
+		return $this->render('update-time', ['figureTime' => $figureTime]);
+	}
+	
 	/**
 	 * Finds the Figure model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
