@@ -34,11 +34,11 @@ class City extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title'], 'required'],
+			[['title', 'regionId'], 'required'],
 			[['showInRussiaPage', 'regionId'], 'integer'],
 			[['top', 'left'], 'number'],
 			[['title', 'link', 'federalDistrict'], 'string'],
-			[['showInRussiaPage'], 'default', 'value' => 1],
+			[['showInRussiaPage'], 'default', 'value' => 0],
 			['title', 'unique'],
 		];
 	}
@@ -64,6 +64,15 @@ class City extends \yii\db\ActiveRecord
 	{
 		$this->showInRussiaPage = 1;
 		parent::init();
+	}
+	
+	public function afterSave($insert, $changedAttributes)
+	{
+		if (isset($changedAttributes['regionId'])) {
+			Athlete::updateAll(['regionId' => $this->regionId], ['cityId' => $this->id]);
+			Stage::updateAll(['regionId' => $this->regionId], ['cityId' => $this->id]);
+		}
+		parent::afterSave($insert, $changedAttributes);
 	}
 	
 	public function beforeValidate()
