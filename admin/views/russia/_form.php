@@ -20,14 +20,6 @@ use kartik\widgets\Select2;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'title')->textInput() ?>
-
-    <?= $form->field($model, 'link')->textInput() ?>
-	
-	<?= $form->field($model, 'left')->textInput() ?>
-    
-    <?= $form->field($model, 'top')->textInput() ?>
-	
-	<?= $form->field($model, 'showInRussiaPage')->checkbox() ?>
 	
 	<?= $form->field($model, 'regionId')->widget(Select2::classname(), [
 		'name'    => 'kv-type-01',
@@ -36,6 +28,14 @@ use kartik\widgets\Select2;
 			'placeholder' => 'Выберите регион...',
 		],
 	]) ?>
+
+    <?= $form->field($model, 'link')->textInput() ?>
+	
+	<?= $form->field($model, 'left')->textInput() ?>
+    
+    <?= $form->field($model, 'top')->textInput() ?>
+	
+	<?= $form->field($model, 'showInRussiaPage')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
