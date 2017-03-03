@@ -74,6 +74,7 @@ $(document).on("submit", '#newRegionalGroup', function (e) {
 $(document).on("submit", '#newCityForm', function (e) {
     e.preventDefault();
     showBackDrop();
+    $('.alert-danger').hide();
     var form = $(this);
     var action = form.data('action');
     var actionType = form.data('action-type');
@@ -100,6 +101,54 @@ $(document).on("submit", '#newCityForm', function (e) {
                         location.href = action + '?errorCity=1';
                         break;
                 }
+            } else if (result['error']) {
+                hideBackDrop();
+                $('.alert-danger').text(result['error']).show();
+            } else {
+                hideBackDrop();
+                alert('Возникла ошибка при сохранении данных');
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
+
+$(document).on("submit", '#newRegionForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    $('.alert-danger').hide();
+    var form = $(this);
+    var action = form.data('action');
+    var actionType = form.data('action-type');
+    $.ajax({
+        url: "/competitions/help/add-region",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['success'] == true) {
+                switch (actionType) {
+                    case 'withId':
+                        location.href = action + '&success=1';
+                        break;
+                    case 'withoutId':
+                        location.href = action + '?success=1';
+                        break;
+                }
+            } else if (result['hasRegion'] == true) {
+                switch (actionType) {
+                    case 'withId':
+                        location.href = action + '&errorCity=2';
+                        break;
+                    case 'withoutId':
+                        location.href = action + '?errorCity=2';
+                        break;
+                }
+            } else if (result['error']) {
+                hideBackDrop();
+                $('.alert-danger').text(result['error']).show();
             } else {
                 hideBackDrop();
                 alert('Возникла ошибка при сохранении данных');
