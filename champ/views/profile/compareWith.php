@@ -142,9 +142,11 @@ use yii\helpers\ArrayHelper;
                             <td>
 								<?= $meResult->humanBestTime ?>
 								<?php if ($meClass) { ?><span class="fa fa-thumbs-o-up green"></span> <?php } ?>
+                                (<span class="small"><?= $meResult->motorcycle->getFullTitle() ?></span>)
                             </td>
                             <td><?= $hisResult->humanBestTime ?>
 								<?php if ($hisClass) { ?><span class="fa fa-thumbs-o-up green"></span> <?php } ?>
+                                (<span class="small"><?= $hisResult->motorcycle->getFullTitle() ?></span>)
                             </td>
                         </tr>
 					<?php } else {
@@ -161,11 +163,13 @@ use yii\helpers\ArrayHelper;
                             <td>
 								<?php foreach ($meResult as $resultInfo) { ?>
 									<?= $resultInfo->humanBestTime ?>
+                                    (<span class="small"><?= $resultInfo->motorcycle->getFullTitle() ?></span>)
 								<?php } ?>
                             </td>
                             <td>
 								<?php foreach ($hisResult as $resultInfo) { ?>
 									<?= $resultInfo->humanBestTime ?>
+                                    (<span class="small"><?= $resultInfo->motorcycle->getFullTitle() ?></span>)
 								<?php } ?>
                             </td>
                         </tr>
