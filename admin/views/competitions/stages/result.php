@@ -11,22 +11,26 @@ $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' 
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = 'Итоги';
 $place = 1;
+$newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
-<div class="text-right newClass">
-    <div class="pb-10">
-        <a class="btn btn-danger getRequest" href="#"
-           data-action="/competitions/participants/cancel-all-classes"
-           data-id="<?= $stage->id ?>" title="Отменить">
-            Отменить все новые классы
-        </a>
-        <a class="btn btn-success getRequest" href="#"
-           data-action="/competitions/participants/approve-all-classes"
-           data-id="<?= $stage->id ?>" title="Подтвердить">
-            Подтвердить все новые классы
-        </a>
+<?php if ($newClasses) { ?>
+    <div class="text-right newClass">
+        <div class="pb-10">
+            <a class="btn btn-danger getRequest" href="#"
+               data-action="/competitions/participants/cancel-all-classes"
+               data-id="<?= $stage->id ?>" title="Отменить">
+                Отменить все новые классы
+            </a>
+            <a class="btn btn-success getRequest" href="#"
+               data-action="/competitions/participants/approve-all-classes"
+               data-id="<?= $stage->id ?>" title="Подтвердить">
+                Подтвердить все новые классы
+            </a>
+        </div>
     </div>
-</div>
+<?php } ?>
 
 <table class="table results">
     <thead>

@@ -16,6 +16,8 @@ use kartik\widgets\Select2;
 $this->title = 'Редактирование фигуры: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Фигуры', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->title;
+$newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => null]])
+	->andWhere(['newAthleteClassStatus' => \common\models\FigureTime::NEW_CLASS_STATUS_NEED_CHECK])->all()
 ?>
 <div class="figure-update">
 	
@@ -69,47 +71,49 @@ $this->params['breadcrumbs'][] = $model->title;
     </div>
 	<?= Html::endForm() ?>
 	<?php Modal::end() ?>
-
-
-    <div class="text-right newClass">
-        <div class="pb-10">
-            <a class="btn btn-danger getRequest" href="#"
-               data-action="/competitions/figures/cancel-all-classes"
-               data-id="<?= $model->id ?>" title="Отменить">
-                Отменить все новые классы
-            </a>
-            <a class="btn btn-success getRequest" href="#"
-               data-action="/competitions/figures/approve-all-classes"
-               data-id="<?= $model->id ?>" title="Подтвердить">
-                Подтвердить все новые классы
-            </a>
+	
+	
+	<?php if ($newClasses) { ?>
+        <div class="text-right newClass">
+            <div class="pb-10">
+                <a class="btn btn-danger getRequest" href="#"
+                   data-action="/competitions/figures/cancel-all-classes"
+                   data-id="<?= $model->id ?>" title="Отменить">
+                    Отменить все новые классы
+                </a>
+                <a class="btn btn-success getRequest" href="#"
+                   data-action="/competitions/figures/approve-all-classes"
+                   data-id="<?= $model->id ?>" title="Подтвердить">
+                    Подтвердить все новые классы
+                </a>
+            </div>
         </div>
-    </div>
+	<?php } ?>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
-            [
-	            'attribute' => 'yearId',
-	            'format'    => 'raw',
-	            'filter'    => Select2::widget([
-		            'model'         => $searchModel,
-		            'attribute'     => 'yearId',
-		            'data'          => \yii\helpers\ArrayHelper::map(\common\models\Year::find()->all(), 'id', 'year'),
-		            'theme'         => Select2::THEME_BOOTSTRAP,
-		            'pluginOptions' => [
-			            'allowClear' => true
-		            ],
-		            'options'       => [
-			            'placeholder' => 'Выберите год...',
-		            ]
-	            ]),
-	            'value'     => function (\common\models\FigureTime $item) {
-		            return $item->year->year;
-	            }
-            ],
+			[
+				'attribute' => 'yearId',
+				'format'    => 'raw',
+				'filter'    => Select2::widget([
+					'model'         => $searchModel,
+					'attribute'     => 'yearId',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Year::find()->all(), 'id', 'year'),
+					'theme'         => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
+					'options'       => [
+						'placeholder' => 'Выберите год...',
+					]
+				]),
+				'value'     => function (\common\models\FigureTime $item) {
+					return $item->year->year;
+				}
+			],
 			'attribute' => 'dateForHuman',
 			[
 				'attribute' => 'athleteId',
@@ -181,6 +185,13 @@ $this->params['breadcrumbs'][] = $model->title;
 					return $html;
 				}
 			],
+            [
+	            'format'    => 'raw',
+	            'value'     => function (\common\models\FigureTime $item) {
+		            return Html::a('<span class = "fa fa-edit"></span>', ['update-time', 'id' => $item->id],
+                        ['class' => 'btn btn-primary']);
+	            }
+            ]
 		],
 	]); ?>
 </div>
