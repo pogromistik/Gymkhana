@@ -395,3 +395,21 @@ table.results small {
 .free-numbers {
     display: none;
 }
+
+.compareWith .select2 {
+    max-width: 250px;
+    display: inline-block;
+}
+
+.compareWith .form-control {
+    max-width: 150px;
+    display: inline-block;
+}
+
+.figure-title {
+    background: #dedede;
+}
+
+.compare-results .small{
+    font-size: 10px;
+}
