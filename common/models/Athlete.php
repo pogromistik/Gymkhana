@@ -30,6 +30,7 @@ use yii\web\IdentityInterface;
  * @property integer       $updatedAt
  * @property integer       $hasAccount
  * @property integer       $lastActivityDate
+ * @property integer       $regionId
  *
  * @property Motorcycle[]  $motorcycles
  * @property AthletesClass $athleteClass
@@ -120,8 +121,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function rules()
 	{
 		return [
-			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt'], 'required'],
-			[['login', 'cityId', 'athleteClassId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
+			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId'], 'required'],
+			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
 			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
@@ -209,6 +210,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		$this->updatedAt = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
+		$this->regionId = $this->city->regionId;
 		
 		return parent::beforeValidate();
 	}

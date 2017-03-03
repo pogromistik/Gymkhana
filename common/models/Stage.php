@@ -23,6 +23,7 @@ use Yii;
  * @property integer       $countRace
  * @property integer       $class
  * @property integer       $referenceTime
+ * @property integer       $regionId
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -77,7 +78,7 @@ class Stage extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['championshipId', 'title', 'cityId', 'dateAdded', 'dateUpdated'], 'required'],
+			[['championshipId', 'title', 'cityId', 'dateAdded', 'dateUpdated', 'regionId'], 'required'],
 			[[
 				'championshipId',
 				'cityId',
@@ -89,7 +90,8 @@ class Stage extends BaseActiveRecord
 				'status',
 				'class',
 				'countRace',
-				'referenceTime'
+				'referenceTime',
+				'regionId'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman'], 'string', 'max' => 255],
 			['description', 'string'],
@@ -146,6 +148,7 @@ class Stage extends BaseActiveRecord
 		} else {
 			$this->endRegistration = null;
 		}
+		$this->regionId = $this->city->regionId;
 		
 		return parent::beforeValidate();
 	}
@@ -164,9 +167,9 @@ class Stage extends BaseActiveRecord
 		}
 		if ($this->referenceTime) {
 			$min = str_pad(floor($this->referenceTime / 60000), 2, '0', STR_PAD_LEFT);
-			$sec = str_pad(floor(($this->referenceTime - $min*60000)/1000), 2, '0', STR_PAD_LEFT);
-			$mls = str_pad(floor(($this->referenceTime-$min*60000-$sec*1000)/10), 2, '0', STR_PAD_LEFT);
-			$this->referenceTimeHuman = $min.':'.$sec.'.'.$mls;
+			$sec = str_pad(floor(($this->referenceTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(floor(($this->referenceTime - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
+			$this->referenceTimeHuman = $min . ':' . $sec . '.' . $mls;
 		}
 	}
 	

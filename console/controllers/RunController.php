@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\models\Athlete;
 use common\models\City;
 use common\models\AboutBlock;
 use common\models\AboutSlider;
@@ -23,6 +24,7 @@ use common\models\NewsSlider;
 use common\models\Page;
 use common\models\Region;
 use common\models\Regular;
+use common\models\Stage;
 use common\models\Track;
 use common\models\Year;
 use yii\console\Controller;
@@ -380,6 +382,29 @@ class RunController extends Controller
 		echo 'mls: ' . $mls . PHP_EOL;
 		$referenceTimeHuman = $min.':'.$sec.'.'.$mls;
 		echo $referenceTimeHuman . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionAddRegions()
+	{
+		$athletes = Athlete::find()->all();
+		foreach ($athletes as $item) {
+			$item->regionId = $item->city->regionId;
+			$item->save();
+		}
+		$stages = Stage::find()->all();
+		foreach ($stages as $item) {
+			$item->regionId = $item->city->regionId;
+			$item->save();
+		}
+		
+		return true;
+	}
+	
+	public function actionCleanCities()
+	{
+		City::updateAll(['showInRussiaPage' => 0], ['top' => null]);
 		
 		return true;
 	}
