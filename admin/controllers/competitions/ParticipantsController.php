@@ -284,13 +284,15 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		$classIds = Participant::find()->select('athleteClassId')
-			->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])->distinct()->asArray()->column();
-		$percent = AthletesClass::find()->select('id')->where(['id' => $classIds])->min('"percent"');
-		$class = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
-		$stage->class = $class->id;
-		if (!$stage->save()) {
-			return 'Не удалось установить класс соревнований';
+		if ($participants) {
+			$classIds = Participant::find()->select('athleteClassId')
+				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])->distinct()->asArray()->column();
+			$percent = AthletesClass::find()->select('id')->where(['id' => $classIds])->min('"percent"');
+			$class = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
+			$stage->class = $class->id;
+			if (!$stage->save()) {
+				return 'Не удалось установить класс соревнований';
+			}
 		}
 		
 		return true;
