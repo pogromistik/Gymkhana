@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			[
 				'format' => 'raw',
 				'value'  => function (\common\models\OverallFile $item) {
-					return Html::a('<span class="fa fa-remove"></span>', ['delete-file', 'id' => $item->id], [
+					return Html::a('<span class="fa fa-remove"></span>', ['remove-file', 'id' => $item->id], [
 						'class'   => 'btn btn-danger removeOverallFile',
 						'data-id' => $item->id
 					]);
