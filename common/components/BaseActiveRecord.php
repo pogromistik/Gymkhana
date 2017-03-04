@@ -52,8 +52,7 @@ abstract class BaseActiveRecord extends ActiveRecord
 	
 	public function addLog($action, array $changes = [], $comment = '', $userId = null)
 	{
-		$user = UserHelper::getUser();
-		$userId = $userId ?: ($user ? $user->id : null);
+		$userId = UserHelper::getUserId();
 		if ($userId) {
 			$changeLog = new ChangesLog();
 			$changeLog->modelClass = static::class;
