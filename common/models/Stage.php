@@ -236,7 +236,7 @@ class Stage extends BaseActiveRecord
 				$participant->newAthleteClassId = null;
 				$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
 				
-				/** @var AthletesClass $newClass */
+				/** @var AthletesClass $resultClass */
 				$resultClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
 					->orderBy(['percent' => SORT_ASC])->one();
 				if ($resultClass && $resultClass->id != $participant->id) {
