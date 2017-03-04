@@ -19,22 +19,7 @@ $this->title = 'Спортсмены';
 		'filterModel'  => $searchModel,
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
-			
-			[
-				'attribute' => 'firstName',
-				'filter'    => Select2::widget([
-					'model'     => $searchModel,
-					'attribute' => 'firstName',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'firstName', 'firstName'),
-					'theme'     => Select2::THEME_BOOTSTRAP,
-					'pluginOptions' => [
-						'allowClear' => true
-					],
-					'options'   => [
-						'placeholder' => 'Укажите имя...',
-					]
-				])
-			],
+            
 			[
 				'attribute' => 'lastName',
 				'filter'    => Select2::widget([
@@ -47,6 +32,21 @@ $this->title = 'Спортсмены';
 					],
 					'options'   => [
 						'placeholder' => 'Укажите фамилию...',
+					]
+				])
+			],
+			[
+				'attribute' => 'firstName',
+				'filter'    => Select2::widget([
+					'model'     => $searchModel,
+					'attribute' => 'firstName',
+					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'firstName', 'firstName'),
+					'theme'     => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
+					'options'   => [
+						'placeholder' => 'Укажите имя...',
 					]
 				])
 			],
