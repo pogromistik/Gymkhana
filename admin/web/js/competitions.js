@@ -4,6 +4,24 @@ $(document).on("submit", '#newAthlete', function (e) {
     newAthlete(form.serialize());
 });
 
+$('.removeOverallFile').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите удалить этот файл?")) {
+        var id = $(this).data('id');
+        $.get('/competitions/documents/remove-file', {
+            id: id
+        }).done(function (data) {
+            if (data == true) {
+                location.reload(true);
+            } else {
+                alert(data);
+            }
+        }).fail(function (error) {
+            alert(error.responseText);
+        });
+    }
+});
+
 function newAthleteConfirm() {
     var form = $('#newAthlete');
     newAthlete(form.serialize() + '&confirm=1');
