@@ -48,7 +48,7 @@ class AthletesClass extends \yii\db\ActiveRecord
 			'percent'     => 'Процент',
 			'sort'        => 'Сортировка',
 			'description' => 'Описание',
-			'coefficient' => 'Коеффициент'
+			'coefficient' => 'Коэффициент'
 		];
 	}
 	
