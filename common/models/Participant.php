@@ -136,6 +136,7 @@ class Participant extends BaseActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
+			$this->athleteClassId = $this->athlete->athleteClassId;
 		}
 		
 		return parent::beforeValidate();
