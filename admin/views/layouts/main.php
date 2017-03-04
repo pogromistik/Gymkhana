@@ -170,6 +170,9 @@ AppAsset::register($this);
                                         class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
+                                    <a href="<?= Url::to(['/competitions/help/years']) ?>"> Года</a>
+                                </li>
+                                <li>
                                     <a href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
                                 </li>
                                 <li>

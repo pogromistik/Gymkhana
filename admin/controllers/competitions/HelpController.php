@@ -5,6 +5,9 @@ namespace admin\controllers\competitions;
 use common\models\City;
 use admin\controllers\BaseController;
 use common\models\Region;
+use common\models\search\YearSearch;
+use common\models\Year;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
@@ -100,5 +103,41 @@ class HelpController extends BaseController
 		
 		$result['error'] = true;
 		return $result;
+	}
+	
+	public function actionYears()
+	{
+		$this->can('competitions');
+		
+		$searchModel = new YearSearch();
+		$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+		
+		return $this->render('years', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionYearView($yearId = null, $success = false)
+	{
+		$this->can('competitions');
+		
+		if ($yearId) {
+			$year = Year::findOne($yearId);
+			if (!$year) {
+				throw new NotFoundHttpException();
+			}
+		} else {
+			$year = new Year();
+		}
+		
+		if ($year->load(\Yii::$app->request->post()) && $year->save()) {
+			return $this->redirect(['year-view', 'yearId' => $year->id, 'success' => true]);
+		}
+		
+		return $this->render('year-view', [
+			'year'    => $year,
+			'success' => $success
+		]);
 	}
 }
