@@ -267,3 +267,7 @@ img {
     font-size: 12px;
     padding: 3px 6px;
 }
+
+.grid-view td {
+    white-space: normal;
+}
