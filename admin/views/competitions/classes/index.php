@@ -110,6 +110,30 @@ $this->title = 'Классы спортсменов';
 					]);
 				}
 			],
-        ],
-    ]); ?>
+			[
+				'format' => 'raw',
+				'value'  => function (\common\models\AthletesClass $class) {
+					if ($class->status == \common\models\AthletesClass::STATUS_ACTIVE) {
+						return Html::a('<span class="fa fa-remove"></span>', ['change-status',
+							'id' => $class->id, 'status' => \common\models\AthletesClass::STATUS_INACTIVE], [
+							'class'       => 'btn btn-danger change-status',
+							'title'       => 'Заблокировать класс',
+							'data-id'     => $class->id,
+							'data-action' => '/competitions/classes/change-status',
+							'data-status' => \common\models\AthletesClass::STATUS_INACTIVE
+						]);
+					} else {
+						return Html::a('<span class="fa fa-remove"></span>', ['change-status',
+							'id' => $class->id, 'status' => \common\models\AthletesClass::STATUS_ACTIVE], [
+							'class'       => 'btn btn-success change-status',
+							'title'       => 'Разблокировать класс',
+							'data-id'     => $class->id,
+							'data-action' => '/competitions/classes/change-status',
+							'data-status' => \common\models\AthletesClass::STATUS_ACTIVE
+						]);
+					}
+				}
+			]
+		],
+	]); ?>
 </div>

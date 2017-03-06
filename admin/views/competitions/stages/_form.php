@@ -72,7 +72,7 @@ use kartik\widgets\DateTimePicker;
         не будет соответствовать действительности. Если этап ещё не начался - оставьте это поле пустым.
 </div>{input}</div>'])
 		->dropDownList(\yii\helpers\ArrayHelper::map(
-			\common\models\AthletesClass::find()->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
+			\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
 		), ['prompt' => 'Укажите класс']) ?>
 	
 	<?= $form->field($model, 'status')->dropDownList(\common\models\Stage::$statusesTitle) ?>

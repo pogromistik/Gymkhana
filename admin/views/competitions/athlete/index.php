@@ -75,7 +75,7 @@ $this->title = 'Спортсмены';
 				'filter'    => Select2::widget([
 					'model'     => $searchModel,
 					'attribute' => 'athleteClassId',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()->all(), 'id', 'title'),
+					'data'      => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->all(), 'id', 'title'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true

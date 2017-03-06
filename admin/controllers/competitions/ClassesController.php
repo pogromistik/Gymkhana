@@ -116,4 +116,21 @@ class ClassesController extends BaseController
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
 	}
+	
+	public function actionChangeStatus($id, $status)
+	{
+		$this->can('competitions');
+		
+		$class = AthletesClass::findOne($id);
+		if (!$class) {
+			return 'Класс не найден';
+		}
+		
+		$class->status = $status;
+		if (!$class->save()) {
+			return 'Возникла ошибка при сохранении изменений';
+		}
+		
+		return true;
+	}
 }

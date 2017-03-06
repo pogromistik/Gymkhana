@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					} else {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
 							'class' => 'btn btn-success',
-							'title' => 'Разблакировать раздел'
+							'title' => 'Разблокировать раздел'
 						]);
                     }
 				}
