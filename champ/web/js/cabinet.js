@@ -96,10 +96,11 @@ $(document).on("submit", '#compareWith', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            if (result == true) {
-                location.href = '/profile/compare-with?'+form.serialize();
+            if (result['error']) {
+                $('.alert-danger').text(result['error']).show();
+                hideBackDrop();
             } else {
-                $('.alert-danger').text(result).show();
+                $('.result').html(result['data']);
                 hideBackDrop();
             }
         }
