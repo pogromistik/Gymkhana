@@ -50,3 +50,9 @@
         display: block;
     }
 }
+
+@media (max-width: 748px) {
+    .list {
+        width: 100%;
+    }
+}

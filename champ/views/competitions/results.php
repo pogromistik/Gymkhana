@@ -127,20 +127,27 @@ use yii\bootstrap\Html;
 						/** @var \common\models\Year[] $years */
 						$years = $figureData['years'];
 						?>
-
-                        <div class="title-with-bg">
-							<?= $figure->title ?>
-                        </div>
-						<?php
-						if (!$years) { ?>
-                            Для фигуры пока нет ни одного результата.
-						<?php } else { ?>
-							<?php foreach ($years as $year) { ?>
-                                <div class="pl-10">
-	                                <?= Html::a($year->year, ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
+                        <div class="item">
+                            <div class="toggle">
+                                <div class="background"></div>
+                                <div class="title">
+									<?= $figure->title ?>
                                 </div>
-							<?php } ?>
-						<?php } ?>
+                                <div class="info">
+									<?php
+									if (!$years) { ?>
+                                        Для фигуры пока нет ни одного результата.
+									<?php } else { ?>
+										<?php foreach ($years as $year) { ?>
+                                            <div class="pl-10">
+												<?= Html::a($year->year, ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
+                                            </div>
+										<?php } ?>
+									<?php } ?>
+                                </div>
+                            </div>
+                        </div>
+					
 					<?php }
 				} ?>
             </div>
