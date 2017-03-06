@@ -21,12 +21,13 @@ $time = time();
 	<?php if ($figure->description) { ?>
         <p><?= $figure->description ?></p>
 	<?php } ?>
-    <b>Мировой рекорд:</b><br>
+    <b>Мировой рекорд:</b>
 	<?php if ($figure->bestAthlete) { ?>
 		<?= $figure->bestAthlete ?>
 	<?php } ?>
 	<?= $figure->bestTimeForHuman ?>
 	<?php if ($figure->bestAthleteInRussia || $figure->bestTimeInRussia) { ?>
+        <br>
         <b>Рекорд в России:</b>
 		<?php if ($figure->bestAthleteInRussia) { ?>
 			<?= $figure->bestAthleteInRussia ?>
