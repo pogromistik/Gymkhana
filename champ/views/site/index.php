@@ -17,6 +17,9 @@ use yii\bootstrap\Html;
 		<?php foreach ($news as $item) { ?>
             <div class="item">
                 <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
+                <?php if ($item->title) { ?>
+                    <div class="title"><?= $item->title ?></div>
+                <?php } ?>
                 <div class="preview_text">
 					<?= $item->previewText ?>
                 </div>

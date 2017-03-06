@@ -211,7 +211,7 @@ nav .navbar-toggle .icon-bar {
 }
 
 .nav > li > a {
-    padding: 10px 5px;
+    padding: 15px 5px;
     margin: 0 8px;
 }
 
@@ -225,8 +225,12 @@ nav .navbar-toggle .icon-bar {
     width: 60%;
 }
 
+.list {
+    width: 738px;
+}
+
 .list .item {
-    padding: 5px 10px;
+    padding: 5px 0;
 }
 
 .list .item .toggle {
@@ -262,6 +266,10 @@ nav .navbar-toggle .icon-bar {
     padding-left: 10px;
 }
 
+.list .info .pl-10, .list .info li {
+    line-height: 25px;
+}
+
 .title-with-bg {
     background: #4b4e53;
     color: #fff;
@@ -275,7 +283,6 @@ h2 {
 
 .news h3 {
     margin: 30px 0 20px;
-    font-size: 20px;
 }
 
 .news .item {

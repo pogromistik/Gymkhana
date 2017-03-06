@@ -19,17 +19,17 @@ jQuery('ul.nav > li').hover(function () {
 $('.list .item .toggle .title').click(function () {
     var elem = $(this);
     if (elem.hasClass('active')) {
-        elem.parent().find('.background').hide("slide", { direction: "left" }, 500);
+        elem.parent().find('.background').first().hide("slide", { direction: "left" }, 500);
         elem.removeClass('active');
         setTimeout(function () {
             elem.css({'color': '#4b4e53'})
         }, 500);
     } else {
-        elem.parent().find('.background').show("slide", { direction: "left" }, 300);
+        elem.parent().find('.background').first().show("slide", { direction: "left" }, 300);
         elem.addClass('active');
         elem.css({'color': '#fff'});
     }
-    elem.parent().find('.info').slideToggle();
+    elem.parent().find('.info').first().slideToggle();
 });
 
 //активный пункт меню
@@ -62,3 +62,19 @@ $(function () {
         }
     });
 });
+
+//активный пункт меню
+(function() {
+    var current = '/' + window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2];
+    $( ".nav a" ).each(function() {
+        var elem = $(this);
+        if (elem.attr('href') == current) {
+            var ul = elem.closest('ul');
+            if (ul.hasClass('dropdown-menu')) {
+                ul.parent().find('.dropdown-toggle').addClass('active');
+            } else {
+                elem.addClass('active');
+            }
+        }
+    });
+})();
