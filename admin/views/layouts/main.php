@@ -165,7 +165,7 @@ AppAsset::register($this);
                         </li>
 					<?php } ?>
 					<?php if (\Yii::$app->user->can('competitions')) { ?>
-                        <li class="competitions">
+                        <li class="competitions active">
                             <a href="#"><i class="fa fa-motorcycle fa-fw"></i> СОРЕВНОВАНИЯ<span
                                         class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
