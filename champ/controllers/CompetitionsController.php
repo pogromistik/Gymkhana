@@ -64,7 +64,7 @@ class CompetitionsController extends BaseController
 		return $this->render('schedule', ['championships' => $championships]);
 	}
 	
-	public function actionResults()
+	public function actionResults($active = null)
 	{
 		$this->pageTitle = 'Расписание соревнований';
 		$this->description = 'Расписание соревнований';
@@ -130,7 +130,11 @@ class CompetitionsController extends BaseController
 			];
 		}
 		
-		return $this->render('results', ['results' => $results, 'figuresArray' => $figuresArray]);
+		return $this->render('results', [
+			'results'      => $results,
+			'figuresArray' => $figuresArray,
+			'active'       => $active
+		]);
 	}
 	
 	public function actionStage($id)

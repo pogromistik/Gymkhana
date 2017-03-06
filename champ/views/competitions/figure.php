@@ -128,3 +128,5 @@ $time = time();
         </div>
 	<?php } ?>
 </div>
+
+<a href="<?= \yii\helpers\Url::to(['/competitions/results', 'active' => 'figures'])?>">Вернуться к фигурам</a>
