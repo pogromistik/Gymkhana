@@ -136,6 +136,7 @@ class FigureTime extends BaseActiveRecord
 			$this->newAthleteClassStatus = null;
 			/** @var AthletesClass $newClass */
 			$newClass = AthletesClass::find()->where(['>=', 'percent', $this->percent])
+				->andWhere(['status' => AthletesClass::STATUS_ACTIVE])
 				->orderBy(['percent' => SORT_ASC])->one();
 			if ($newClass && $newClass->id != $this->athleteClassId) {
 				if ($this->athleteClassId) {

@@ -13,9 +13,12 @@ use Yii;
  * @property integer $sort
  * @property string  $description
  * @property double  $coefficient
+ * @property integer $status
  */
 class AthletesClass extends \yii\db\ActiveRecord
 {
+	const STATUS_INACTIVE = 0;
+	const STATUS_ACTIVE = 1;
 	/**
 	 * @inheritdoc
 	 */
@@ -30,10 +33,11 @@ class AthletesClass extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title', 'coefficient', 'percent'], 'required'],
-			[['sort'], 'integer'],
+			[['title', 'coefficient', 'percent', 'status'], 'required'],
+			[['sort', 'status'], 'integer'],
 			[['percent', 'coefficient'], 'number'],
 			[['description', 'title'], 'string'],
+			['status', 'default', 'value' => 1]
 		];
 	}
 	

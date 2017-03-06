@@ -28,7 +28,7 @@ use kartik\widgets\Select2;
 	<?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 	
 	<?= $form->field($model, 'athleteClassId')->dropDownList(\yii\helpers\ArrayHelper::map(
-		\common\models\AthletesClass::find()->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
+		\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
 	), ['prompt' => 'Укажите класс спортсмена']) ?>
 	
 	<?= $form->field($model, 'number')->textInput() ?>
