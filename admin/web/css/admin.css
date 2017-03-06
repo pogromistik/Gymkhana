@@ -271,3 +271,11 @@ img {
 .grid-view td {
     white-space: normal;
 }
+
+.color-green {
+    color: #56a025;
+}
+
+.color-red {
+    color: #b8081f;
+}

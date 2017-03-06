@@ -547,3 +547,20 @@ $(document).on("submit", '#figureTimeForm', function (e) {
         }
     });
 });
+
+//количество слов
+$(document).ready(function () {
+    $("#smallText").keyup(function () {
+        var box = $(this).val();
+        var count = 255 - box.length;
+
+        if (count >= 0) {
+            $('#length').html('осталось символов: ' + count);
+        } else {
+            $('#length').removeClass('color-green');
+            $('#length').addClass('color-red');
+            $('#length').html('количество символов превышено на ' + count + 'шт.');
+        }
+        return false;
+    });
+});
