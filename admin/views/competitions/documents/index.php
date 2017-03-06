@@ -20,7 +20,13 @@ $this->params['breadcrumbs'][] = $this->title;
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
-			'title:ntext',
+			[
+				'attribute' => 'title',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
+</div>',
+			],
 			
 			[
 				'format' => 'raw',
