@@ -9,6 +9,7 @@ use common\models\AboutSlider;
 use common\models\Album;
 use common\models\Contacts;
 use common\models\DopPage;
+use common\models\FigureTime;
 use common\models\Files;
 use common\models\GroupMenu;
 use common\models\HelpProject;
@@ -407,5 +408,20 @@ class RunController extends Controller
 		City::updateAll(['showInRussiaPage' => 0], ['top' => null]);
 		
 		return true;
+	}
+	
+	public function actionAddRegionToFigureResults()
+	{
+		/** @var FigureTime[] $items */
+		$items = FigureTime::find()->all();
+		
+		foreach ($items as $item) {
+			$item->regionId = $item->athlete->regionId;
+			if (!$item->save()) {
+				return var_dump($item->errors);
+			}
+		}
+		
+		return 'Update ' . count($items) . ' items';
 	}
 }
