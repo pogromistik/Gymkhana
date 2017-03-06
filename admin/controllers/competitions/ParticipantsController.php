@@ -190,7 +190,7 @@ class ParticipantsController extends BaseController
 		$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => Motorcycle::STATUS_ACTIVE])->all();
 		$result = [];
 		foreach ($motorcycles as $motorcycle) {
-			$result[] = ['id' => $motorcycle->id, 'name' => $motorcycle->model . ' ' . $motorcycle->mark];
+			$result[] = ['id' => $motorcycle->id, 'name' => $motorcycle->mark . ' ' . $motorcycle->model];
 		}
 		
 		return $result;
