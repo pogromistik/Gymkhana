@@ -14,11 +14,11 @@ class UserHelper
 	 */
 	public static function getUser()
 	{
-		if(\Yii::$app->user->isGuest)
+		if(!isset(\Yii::$app->user))
 		{
 			return null;
 		}
-		if(!isset(\Yii::$app->user))
+		if(\Yii::$app->user->isGuest)
 		{
 			return null;
 		}
