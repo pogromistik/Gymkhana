@@ -29,9 +29,12 @@ use kartik\widgets\DatePicker;
 
     <?= $form->field($model, 'title')->textInput(['placeholder' => 'заголовок новости, не обязателен']) ?>
 
-    <?= $form->field($model, 'previewText')->textarea(['rows' => 3, 'placeholder' => 'краткий текст, обязательное поле']) ?>
+    <?= $form->field($model, 'previewText',
+	    ['inputTemplate' => '<div class="input-with-description">{input}</div><div class="text-right color-green" id="length">осталось символов: 255</div>'])->textarea(['rows' => 3,
+                                                       'placeholder' => 'краткий текст, обязательное поле',
+                                                       'id' => 'smallText']) ?>
 
-	<?= $form->field($model, 'fullText')->widget(CKEditor::className(), [
+    <?= $form->field($model, 'fullText')->widget(CKEditor::className(), [
 		'preset'  => 'advent'
 	]) ?>
 
