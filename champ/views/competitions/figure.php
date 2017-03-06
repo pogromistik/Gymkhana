@@ -65,7 +65,9 @@ $time = time();
                             <td><?= $item->fine ?></td>
                             <td><?= $item->resultTimeForHuman ?></td>
                             <td><?= $item->percent ?>%</td>
-                            <td><?= $item->newAthleteClassId ? $item->newAthleteClass->title : null ?></td>
+                            <td><?= ($item->newAthleteClassId &&
+									$item->newAthleteClassStatus == \common\models\FigureTime::NEW_CLASS_STATUS_APPROVE)
+									? $item->newAthleteClass->title : null ?></td>
                         </tr>
 					<?php }
 					?>
