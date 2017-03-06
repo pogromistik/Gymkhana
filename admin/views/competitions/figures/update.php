@@ -30,7 +30,7 @@ $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => nul
 	<?= Collapse::widget([
 		'items' => [
 			[
-				'label'   => 'Описание фигуры',
+				'label'   => 'Редактировать фигуру',
 				'content' => $this->render('_form', ['model' => $model])
 			],
 		]
