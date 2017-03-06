@@ -5,6 +5,7 @@ use common\models\Athlete;
 use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
+use common\models\FigureTime;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
@@ -176,6 +177,43 @@ class CompetitionsController extends BaseController
 		$results = $results
 			->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])
 			->all();
+		
+		return $this->render('figure', [
+			'figure'  => $figure,
+			'results' => $results,
+			'year'    => $yearModel
+		]);
+	}
+	
+	public function actionFigureBest($id)
+	{
+		$figure = Figure::findOne($id);
+		if (!$figure) {
+			throw new NotFoundHttpException('Фигура не найдена');
+		}
+		
+		$results = $figure->getResults();
+		
+		$yearModel = null;
+		
+		$this->pageTitle = $figure->title . ': рекорды';
+		$this->description = '';
+		$this->keywords = '';
+		
+		$results = FigureTime::find();
+		$results->from(new Expression('(SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc) n
+       from "FigureTimes") A'));
+		$results->select('*');
+		$results->where(new Expression('n=1'));
+		$results->orderBy(['a."resultTime"' => SORT_ASC]);
+		$results = $results->all();
+		
+		
+		/*$results = $results
+			->select('athleteId')
+			->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])
+			->distinct('athleteId')
+			->all();*/
 		
 		return $this->render('figure', [
 			'figure'  => $figure,
