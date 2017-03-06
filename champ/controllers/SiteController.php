@@ -35,7 +35,7 @@ class SiteController extends BaseController
 			'defaultPageSize' => 10,
 			'totalCount'      => $news->count(),
 		]);
-		$news = $news->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
+		$news = $news->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC, 'dateAdded' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
 		
 		return $this->render('index', [
 			'news'       => $news,
