@@ -372,7 +372,12 @@ span.red {
     font-size: 10px;
 }
 
-span.green {
+span.green, td.green {
+    color: #00aa00;
+}
+
+.best {
+    font-weight: bold;
     color: #00aa00;
 }
 
@@ -404,7 +409,7 @@ table.results small {
 }
 
 .compareWith .select2 {
-    max-width: 250px;
+    max-width: 350px;
     display: inline-block;
 }
 
@@ -419,4 +424,11 @@ table.results small {
 
 .compare-results .small{
     font-size: 10px;
+}
+
+.w-2 td {
+    width: 50%;
+}
+.w-3 td{
+    width: 33%;
 }

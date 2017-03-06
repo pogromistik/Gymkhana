@@ -11,7 +11,7 @@ use kartik\sortinput\SortableInput;
 
 $this->title = 'Порядок выступления участников';
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/stages/view', 'id' => $stage->id]];
-$this->params['breadcrumbs'][] = ['label' => 'Участники', 'url' => ['/competitions/participants/index', 'id' => $stage->id]];
+$this->params['breadcrumbs'][] = ['label' => 'Участники', 'url' => ['/competitions/participants/index', 'stageId' => $stage->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
