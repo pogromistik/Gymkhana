@@ -136,7 +136,7 @@ class Stage extends BaseActiveRecord
 		$this->dateUpdated = time();
 		
 		if ($this->dateOfTheHuman) {
-			$this->dateOfThe = (new \DateTime($this->dateOfTheHuman, new \DateTimeZone('GMT')))->getTimestamp();
+			$this->dateOfThe = (new \DateTime($this->dateOfTheHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
 		}
 		if ($this->startRegistrationHuman) {
 			$this->startRegistration = (new \DateTime($this->startRegistrationHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();

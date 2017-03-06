@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use dosamigos\ckeditor\CKEditor;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
@@ -11,7 +11,6 @@ use kartik\widgets\DatePicker;
 ?>
 
 <div class="assoc-news-form">
-    
     <div class="alert alert-info">
         <ul>
             <li>Для создания новости необходимо заполнить поле "Короткий текст". Этот текст будет отображаться на главной странице.</li>
@@ -38,7 +37,8 @@ use kartik\widgets\DatePicker;
 
     <?= $form->field($model, 'link')->textInput(['placeholder' => 'сторонняя ссылка, не обязательна']) ?>
 	
-	<?= $form->field($model, 'datePublishHuman')->widget(DatePicker::classname(), [
+	<?= $form->field($model, 'datePublishHuman',
+	['inputTemplate' => '<div class="input-with-description"><div class="text">Время публикации 00:00 по GMT +5 (Челябинск)</div>{input}</div>'])->widget(DatePicker::classname(), [
 		'options'       => ['placeholder' => 'Введите дату публикации'],
 		'removeButton'  => false,
 		'language'      => 'ru',

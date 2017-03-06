@@ -76,7 +76,7 @@ class AssocNews extends \yii\db\ActiveRecord
 		$this->dateUpdated = time();
 		
 		if ($this->datePublishHuman) {
-			$this->datePublish = (new \DateTime($this->datePublishHuman, new \DateTimeZone('GMT')))->getTimestamp();
+			$this->datePublish = (new \DateTime($this->datePublishHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
 		}
 		
 		return parent::beforeValidate();
