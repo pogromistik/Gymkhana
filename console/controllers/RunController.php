@@ -409,19 +409,4 @@ class RunController extends Controller
 		
 		return true;
 	}
-	
-	public function actionAddRegionToFigureResults()
-	{
-		/** @var FigureTime[] $items */
-		$items = FigureTime::find()->all();
-		
-		foreach ($items as $item) {
-			$item->regionId = $item->athlete->regionId;
-			if (!$item->save()) {
-				return var_dump($item->errors);
-			}
-		}
-		
-		return 'Update ' . count($items) . ' items';
-	}
 }

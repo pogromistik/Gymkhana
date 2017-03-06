@@ -140,9 +140,12 @@ use yii\bootstrap\Html;
 										if (!$years) { ?>
                                             Для фигуры пока нет ни одного результата.
 										<?php } else { ?>
+                                            <div class="pl-10">
+	                                            <?= Html::a('Лучшие результаты за всё время', ['/competitions/figure-best', 'id' => $figure->id]) ?>
+                                            </div>
 											<?php foreach ($years as $year) { ?>
                                                 <div class="pl-10">
-													<?= Html::a($year->year, ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
+													<?= Html::a($year->year . ' год', ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
                                                 </div>
 											<?php } ?>
 										<?php } ?>
