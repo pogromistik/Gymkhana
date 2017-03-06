@@ -64,3 +64,7 @@ $('.removeFile').click(function () {
         });
     }
 });
+
+$(document).ready(function () {
+    //$('li.competitions').addClass('active');
+});

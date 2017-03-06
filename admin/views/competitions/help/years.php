@@ -13,25 +13,30 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="years-index">
 
-	<p>
+    <p>
 		<?= Html::a('Добавить год', ['/competitions/help/year-view'], ['class' => 'btn btn-success']) ?>
-	</p>
+    </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
-
+			
 			[
 				'attribute' => 'year',
 				'format'    => 'raw',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'year', ['class' => 'form-control', 'placeholder' => 'Поиск по году...']) . '
+</div>',
 				'value'     => function (Year $year) {
-					return Html::a($year->year, ['/competitions/help/year-view', 'yearId' => $year->id] );
+					return Html::a($year->year, ['/competitions/help/year-view', 'yearId' => $year->id]);
 				}
 			],
 			[
 				'attribute' => 'status',
 				'format'    => 'raw',
+				'filter'    => false,
 				'value'     => function (Year $year) {
 					return Year::$statusesTitle[$year->status];
 				}
