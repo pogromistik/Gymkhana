@@ -26,12 +26,14 @@ use yii\bootstrap\Html;
 				<?php if ($item->link || $item->fullText) {
 					if ($item->link) {
 						$link = $item->link;
+						$target = '_blank';
 					} else {
 						$link = Url::to(['/site/news', 'id' => $item->id]);
+						$target = '_self';
 					}
 					?>
                     <div class="text-left">
-						<?= Html::a('Читать далее ...', $link) ?>
+						<?= Html::a('Читать далее ...', $link, ['target' => $target]) ?>
                     </div>
 				<?php } ?>
             </div>
