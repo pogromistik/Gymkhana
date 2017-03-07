@@ -35,6 +35,10 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			[
 				'attribute' => 'title',
 				'format'    => 'raw',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
+</div>',
 				'value'     => function (\common\models\OverallFile $item) {
 					return Editable::widget([
 						'name'          => 'title',
@@ -54,6 +58,11 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			[
 				'attribute' => 'fileName',
 				'format'    => 'raw',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'fileName', ['class' => 'form-control',
+                                                         'placeholder' => 'Поиск по имени файла...']) . '
+</div>',
 				'value'     => function (\common\models\OverallFile $item) {
 					return Editable::widget([
 						'name'          => 'fileName',
