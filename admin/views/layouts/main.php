@@ -173,22 +173,27 @@ AppAsset::register($this);
                                     <a href="<?= Url::to(['/competitions/help/years']) ?>"> Года</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
+                                    <a data-addr="/competitions/news"
+                                            href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
+                                    <a data-addr = "/competitions/documents"
+                                            href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы спортсменов</a>
+                                    <a data-addr="/competitions/classes"
+                                            href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы спортсменов</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
+                                    <a data-addr="/competitions/athlete"
+                                            href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/championships/index']) ?>"> Чемпионаты</a>
+                                    <a data-addr="/competitions/championships"
+                                            href="<?= Url::to(['/competitions/championships/index']) ?>"> Чемпионаты</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
+                                    <a data-addr="/competitions/figures" href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                 </li>
                             </ul>
                         </li>
