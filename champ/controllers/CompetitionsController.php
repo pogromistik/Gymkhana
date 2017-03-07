@@ -153,14 +153,12 @@ class CompetitionsController extends BaseController
 		]);
 	}
 	
-	public function actionFigure($id, $year = null)
+	public function actionFigure($id, $year = null, $showAll = false)
 	{
 		$figure = Figure::findOne($id);
 		if (!$figure) {
 			throw new NotFoundHttpException('Фигура не найдена');
 		}
-		
-		$results = $figure->getResults();
 		
 		$yearModel = null;
 		if ($year) {
@@ -168,58 +166,114 @@ class CompetitionsController extends BaseController
 			if (!$yearModel) {
 				throw new NotFoundHttpException('Год не найден');
 			}
-			$results = $results->andWhere(['yearId' => $yearModel->id]);
 		}
+		
+		if ($yearModel) {
+			$results = $figure->getResults();
+			$results = $results->andWhere(['yearId' => $yearModel->id]);
+			$results = $results
+				->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC]);
+			if (!$showAll) {
+				$results = $results->limit(30);
+			}
+			$results = $results->all();
+		} else {
+			$results = FigureTime::find();
+			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc) n
+       from "FigureTimes") A'));
+			$results->select('*');
+			$results->where(new Expression('n=1'));
+			$results->andWhere(new Expression('"Athletes"."id"="athleteId"'));
+			$results->orderBy(['a."resultTime"' => SORT_ASC]);
+			if (!$showAll) {
+				$results = $results->limit(30);
+			}
+			$results = $results->all();
+		}
+		
 		$this->pageTitle = $figure->title;
 		$this->description = '';
 		$this->keywords = '';
 		
-		$results = $results
-			->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])
-			->all();
-		
 		return $this->render('figure', [
 			'figure'  => $figure,
 			'results' => $results,
-			'year'    => $yearModel
+			'year'    => $yearModel,
+			'showAll' => $showAll
 		]);
 	}
 	
-	public function actionFigureBest($id)
+	public function actionFigureResultsWithFilters()
 	{
-		$figure = Figure::findOne($id);
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$response = [
+			'error' => false,
+			'data'  => null
+		];
+		$figureId = \Yii::$app->request->post('figureId');
+		if (!$figureId) {
+			$response['error'] = 'Фигура не найдена';
+			
+			return $response;
+		}
+		$figure = Figure::findOne($figureId);
 		if (!$figure) {
-			throw new NotFoundHttpException('Фигура не найдена');
+			$response['error'] = 'Фигура не найдена';
+			
+			return $response;
+		}
+		$regionIds = \Yii::$app->request->post('regionIds');
+		$classIds = \Yii::$app->request->post('classIds');
+		$yearId = \Yii::$app->request->post('yearId');
+		$showAll = \Yii::$app->request->post('showAll');
+		$year = null;
+		if ($yearId) {
+			$year = Year::findOne($yearId);
+			if (!$year) {
+				$response['error'] = 'Год не найден';
+				
+				return $response;
+			}
+		}
+		$results = FigureTime::find();
+		$subQuery = new Query();
+		if ($year) {
+			$results->from(['Athletes', 'FigureTimes']);
+			$results->select('*');
+			$results->andWhere(new Expression('"Athletes"."id"="FigureTimes"."athleteId"'));
+			if ($regionIds) {
+				$results->andWhere(['"Athletes"."regionId"' => $regionIds]);
+			}
+			if ($classIds) {
+				$results->andWhere(['"FigureTimes"."athleteClassId"' => $classIds]);
+			}
+			$results->orderBy(['"FigureTimes"."resultTime"' => SORT_ASC]);
+		} else {
+			$subQuery->select('*, rank() over (partition by "athleteId" order by "resultTime" asc) n');
+			$subQuery->from(FigureTime::tableName());
+			if ($classIds) {
+				$subQuery->where(['athleteClassId' => $classIds]);
+			}
+			$results->from(['Athletes',
+				'(' . $subQuery->createCommand()->rawSql . ') A']);
+			
+			$results->select('*');
+			$results->where(new Expression('n=1'));
+			$results->andWhere(new Expression('"Athletes"."id"="athleteId"'));
+			if ($regionIds) {
+				$results->andWhere(['"Athletes"."regionId"' => $regionIds]);
+			}
+			$results->orderBy(['a."resultTime"' => SORT_ASC]);
 		}
 		
-		$results = $figure->getResults();
-		
-		$yearModel = null;
-		
-		$this->pageTitle = $figure->title . ': рекорды';
-		$this->description = '';
-		$this->keywords = '';
-		
-		$results = FigureTime::find();
-		$results->from(new Expression('(SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc) n
-       from "FigureTimes") A'));
-		$results->select('*');
-		$results->where(new Expression('n=1'));
-		$results->orderBy(['a."resultTime"' => SORT_ASC]);
+		if (!$showAll) {
+			$results = $results->limit(30);
+		}
 		$results = $results->all();
 		
+		$response['data'] = $this->renderAjax('_figure-result', ['results' => $results]);
 		
-		/*$results = $results
-			->select('athleteId')
-			->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])
-			->distinct('athleteId')
-			->all();*/
-		
-		return $this->render('figure', [
-			'figure'  => $figure,
-			'results' => $results,
-			'year'    => $yearModel
-		]);
+		return $response;
 	}
 	
 	public function actionGetFreeNumbers($stageId)
