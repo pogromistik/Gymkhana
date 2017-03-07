@@ -101,7 +101,7 @@ $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => nul
 				'filter'    => Select2::widget([
 					'model'         => $searchModel,
 					'attribute'     => 'yearId',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Year::find()->all(), 'id', 'year'),
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year'),
 					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
