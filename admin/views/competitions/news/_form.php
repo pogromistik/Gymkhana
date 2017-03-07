@@ -64,7 +64,9 @@ if ($model->previewText) {
 		]
 	]) ?>
 	
+    <?php if (\Yii::$app->user->can('admin')) { ?>
 	<?= $form->field($model, 'secure')->checkbox() ?>
+    <?php } ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
