@@ -319,9 +319,6 @@ class CompetitionsController extends BaseController
 		
 		$form = new Participant();
 		$form->load(\Yii::$app->request->post());
-		if (!$form->validate()) {
-			return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
-		}
 		
 		$stage = $form->stage;
 		if (!$stage->startRegistration) {
@@ -338,8 +335,22 @@ class CompetitionsController extends BaseController
 		
 		$old = Participant::findOne(['athleteId' => $form->athleteId, 'motorcycleId' => $form->motorcycleId,
 		                             'stageId'   => $form->stageId]);
+		$championship = $stage->championship;
+		$athlete = Athlete::findOne($form->athleteId);
 		if ($old) {
 			if ($old->status != Participant::STATUS_ACTIVE) {
+				if ($old->number != $form->number) {
+					if ($form->number) {
+						$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
+						if (!in_array($form->number, $freeNumbers)) {
+							return 'Номер занят. Выберите другой или оставьте поле пустым.';
+						}
+						$old->number = $form->number;
+					}
+					elseif ($athlete->number && $championship->regionId && $athlete->regionId == $championship->regionId) {
+						$old->number = $athlete->number;
+					}
+				}
 				$old->status = Participant::STATUS_ACTIVE;
 				if ($old->save()) {
 					return true;
@@ -351,8 +362,6 @@ class CompetitionsController extends BaseController
 			return 'Вы уже зарегистрированы на этот этап на этом мотоцикле.';
 		}
 		
-		$championship = $stage->championship;
-		$athlete = Athlete::findOne($form->athleteId);
 		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {
 			if ($form->number) {
 				$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
@@ -387,9 +396,6 @@ class CompetitionsController extends BaseController
 	{
 		$form = new TmpParticipant();
 		$form->load(\Yii::$app->request->post());
-		if (!$form->validate()) {
-			return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
-		}
 		
 		$stage = $form->stage;
 		if (!$stage->startRegistration) {
@@ -415,6 +421,9 @@ class CompetitionsController extends BaseController
 				if ($freeNumbers) {
 					//$form->number = $freeNumbers[0]; //присвоение случайного номера
 				}
+			}
+			if (!$form->validate()) {
+				return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
 			}
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
