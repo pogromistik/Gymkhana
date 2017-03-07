@@ -170,7 +170,7 @@ class Championship extends BaseActiveRecord
 	
 	public function getStages()
 	{
-		return $this->hasMany(Stage::className(), ['championshipId' => 'id'])->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC]);
+		return $this->hasMany(Stage::className(), ['championshipId' => 'id'])->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC]);
 	}
 	
 	public function getInternalClasses()
