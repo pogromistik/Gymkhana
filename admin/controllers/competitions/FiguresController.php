@@ -340,8 +340,11 @@ class FiguresController extends BaseController
 			return 'Запись уже была обработана';
 		}
 		if ($athlete->athleteClass->percent < $item->newAthleteClass->percent) {
-			return 'Вы пытаетесь понизить спортсмену класс с ' . $athlete->athleteClass->title . ' на '
+			return 'Вы пытаетесь понизить спортсмену '.$item->athlete->getFullName().' класс с ' . $athlete->athleteClass->title . ' на '
 				. $item->newAthleteClass->title . '. Понижение класса невозможно';
+		}
+		if ($athlete->athleteClass->percent == $item->newAthleteClass->percent) {
+			return 'Спортсмену '.$item->athlete->getFullName().' итак уже присвоен класс C3';
 		}
 		
 		if ($athlete->athleteClassId != $item->newAthleteClassId) {
