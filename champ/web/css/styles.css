@@ -281,6 +281,10 @@ h2 {
     text-transform: uppercase;
 }
 
+.news {
+    width: 738px;
+}
+
 .news h3 {
     margin: 30px 0 20px;
 }
