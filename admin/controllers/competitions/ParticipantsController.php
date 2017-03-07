@@ -338,6 +338,10 @@ class ParticipantsController extends BaseController
 			return 'Участник не найден';
 		}
 		
+		if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
+		
 		$participant->newAthleteClassId = null;
 		$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_CANCEL;
 		if (!$participant->save()) {
@@ -382,6 +386,9 @@ class ParticipantsController extends BaseController
 		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
 			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 		foreach ($participants as $participant) {
+			if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {
+				return 'Запись уже была обработана';
+			}
 			$participant->newAthleteClassId = null;
 			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_CANCEL;
 			if (!$participant->save()) {
@@ -394,6 +401,10 @@ class ParticipantsController extends BaseController
 	
 	public function approveClassForParticipant(Participant $participant)
 	{
+		if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
+		
 		$athlete = $participant->athlete;
 		if ($athlete->athleteClass->percent < $participant->newAthleteClass->percent) {
 			return 'Вы пытаетесь понизить спортсмену класс с ' . $athlete->athleteClass->title . ' на '

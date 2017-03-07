@@ -21,7 +21,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
             <a class="btn btn-danger getRequest" href="#"
                data-action="/competitions/participants/cancel-all-classes"
                data-id="<?= $stage->id ?>" title="Отменить">
-                Отменить все новые классы
+                Отменить все новые неподтверждённые классы
             </a>
             <a class="btn btn-success getRequest" href="#"
                data-action="/competitions/participants/approve-all-classes"
