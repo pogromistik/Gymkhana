@@ -432,3 +432,6 @@ table.results small {
 .w-3 td{
     width: 33%;
 }
+tbody > tr > td {
+    padding: 4px;
+}
