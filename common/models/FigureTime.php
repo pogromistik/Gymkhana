@@ -23,6 +23,8 @@ use Yii;
  * @property integer       $dateAdded
  * @property integer       $dateUpdated
  * @property integer       $resultTime
+ * @property integer       $recordType
+ * @property integer       $recordStatus
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -43,6 +45,17 @@ class FigureTime extends BaseActiveRecord
 	public $resultTimeForHuman;
 	public $dateForHuman;
 	
+	const RECORD_IN_RUSSIA = 1;
+	const RECORD_IN_WORLD = 2;
+	public static $recordsTitle = [
+		self::RECORD_IN_RUSSIA => 'Новый Российский рекорд',
+		self::RECORD_IN_WORLD  => 'Новый мировой рекорд'
+	];
+	
+	const NEW_RECORD_NEED_CHECK = 1;
+	const NEW_RECORD_APPROVE = 2;
+	const NEW_RECORD_CANCEL = 3;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -61,7 +74,7 @@ class FigureTime extends BaseActiveRecord
 				'percent', 'timeForHuman', 'dateAdded', 'dateUpdated', 'resultTime'], 'required'],
 			[['figureId', 'athleteId', 'motorcycleId', 'yearId', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'date', 'time', 'fine', 'dateAdded',
-				'dateUpdated', 'resultTime'], 'integer'],
+				'dateUpdated', 'resultTime', 'recordType', 'recordStatus'], 'integer'],
 			[['dateForHuman', 'timeForHuman'], 'string'],
 			[['percent'], 'number'],
 			[['fine'], 'default', 'value' => 0]
@@ -149,6 +162,15 @@ class FigureTime extends BaseActiveRecord
 					$this->newAthleteClassId = $newClass->id;
 					$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_NEED_CHECK;
 				}
+			}
+			
+			$figure = $this->figure;
+			if (!$figure->bestTime || $this->resultTime < $figure->bestTime) {
+				$this->recordType = self::RECORD_IN_WORLD;
+				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
+			} elseif (!$figure->bestTimeInRussia || $this->resultTime < $figure->bestTimeInRussia) {
+				$this->recordType = self::RECORD_IN_RUSSIA;
+				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
 			}
 		}
 		

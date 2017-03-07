@@ -486,6 +486,30 @@ $('.getRequest').click(function (e) {
     });
 });
 
+$('.getRequestWithConfirm').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var text = elem.data('text');
+    if (confirm(text)) {
+        var action = elem.data('action');
+        var id = elem.data('id');
+        $.get(action, {
+            id: id
+        }).done(function (data) {
+            hideBackDrop();
+            if (data == true) {
+                location.reload();
+            } else {
+                alert(data);
+                console.log(data);
+            }
+        }).fail(function (error) {
+            alert(error.responseText);
+            console.log(error);
+        });
+    }
+});
+
 $('.stageCalcResult').click(function (e) {
     e.preventDefault();
     if (confirm("Уверены, что хотите пересчитать результаты этого этапа?")) {

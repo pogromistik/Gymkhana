@@ -80,8 +80,8 @@ class FiguresController extends BaseController
 		}
 		
 		return $this->render('update', [
-			'model'   => $model,
-			'success' => $success,
+			'model'        => $model,
+			'success'      => $success,
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
@@ -164,6 +164,107 @@ class FiguresController extends BaseController
 		return true;
 	}
 	
+	public function actionApproveRecord($id)
+	{
+		$this->can('competitions');
+		
+		$item = FigureTime::findOne($id);
+		if (!$item) {
+			return 'Запись не найдена';
+		}
+		
+		$figure = $item->figure;
+		if (!$item->recordType || $item->recordStatus != FigureTime::NEW_RECORD_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
+		
+		switch ($item->recordType) {
+			case FigureTime::RECORD_IN_RUSSIA:
+				if ($figure->bestTimeInRussia && $figure->bestTimeInRussia <= $item->resultTime) {
+					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
+				}
+				$figure->bestTimeInRussia = $item->resultTime;
+				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				break;
+			case FigureTime::RECORD_IN_WORLD:
+				if ($figure->bestTime && $figure->bestTime <= $item->resultTime) {
+					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
+				}
+				$figure->bestTime = $item->resultTime;
+				$figure->bestTimeInRussia = $item->resultTime;
+				$figure->bestAthlete = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				
+				break;
+		}
+		
+		$transaction = \Yii::$app->db->beginTransaction();
+		if (!$figure->save()) {
+			$transaction->rollBack();
+			
+			return 'Возникла ошибка при сохранении нового рекорда для фигуры';
+		}
+		
+		$item->recordStatus = FigureTime::NEW_RECORD_APPROVE;
+		if (!$item->save()) {
+			$transaction->rollBack();
+			
+			return 'Возникла ошибка при подтверждении рекорда';
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionCancelRecord($id)
+	{
+		$this->can('competitions');
+		
+		$item = FigureTime::findOne($id);
+		if (!$item) {
+			return 'Запись не найдена';
+		}
+		
+		if (!$item->recordType || $item->recordStatus != FigureTime::NEW_RECORD_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
+		
+		$item->recordStatus = FigureTime::NEW_RECORD_CANCEL;
+		$item->recordType = null;
+		if (!$item->save()) {
+			return 'Возникла ошибка при сохранении данных';
+		}
+		
+		return true;
+	}
+	
+	public function actionCancelAllRecords($id)
+	{
+		$this->can('competitions');
+		
+		$figure = Figure::findOne($id);
+		if (!$figure) {
+			return 'Фигура не найдена';
+		}
+		
+		$items = $figure->getResults()->andWhere(['not', ['recordType' => null]])
+			->andWhere(['recordStatus' => FigureTime::NEW_RECORD_NEED_CHECK])->all();
+		
+		foreach ($items as $item) {
+			if (!$item->recordType || $item->recordStatus != FigureTime::NEW_RECORD_NEED_CHECK) {
+				return 'Запись уже была обработана';
+			}
+			
+			$item->recordStatus = FigureTime::NEW_RECORD_CANCEL;
+			$item->recordType = null;
+			if (!$item->save()) {
+				return 'Возникла ошибка при сохранении данных';
+			}
+		}
+		
+		return true;
+	}
+	
 	public function actionCancelClass($id)
 	{
 		$this->can('competitions');
@@ -171,6 +272,9 @@ class FiguresController extends BaseController
 		$item = FigureTime::findOne($id);
 		if (!$item) {
 			return 'Запись не найдена';
+		}
+		if ($item->newAthleteClassStatus != FigureTime::NEW_CLASS_STATUS_NEED_CHECK) {
+			return 'Запись уже была обработана';
 		}
 		
 		$item->newAthleteClassId = null;
@@ -191,7 +295,10 @@ class FiguresController extends BaseController
 			return 'Фигура не найдена';
 		}
 		
-		$items = $figure->results;
+		$items = $figure->getResults()
+			->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['newAthleteClassStatus' => FigureTime::NEW_CLASS_STATUS_NEED_CHECK])
+			->all();
 		foreach ($items as $item) {
 			$result = $this->approveClass($item);
 			if ($result !== true) {
@@ -211,7 +318,10 @@ class FiguresController extends BaseController
 			return 'Фигура не найдена';
 		}
 		
-		$items = $figure->results;
+		$items = $figure->getResults()
+			->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['newAthleteClassStatus' => FigureTime::NEW_CLASS_STATUS_NEED_CHECK])
+			->all();
 		foreach ($items as $item) {
 			$item->newAthleteClassId = null;
 			$item->newAthleteClassStatus = FigureTime::NEW_CLASS_STATUS_CANCEL;
@@ -226,6 +336,9 @@ class FiguresController extends BaseController
 	public function approveClass(FigureTime $item)
 	{
 		$athlete = $item->athlete;
+		if ($item->newAthleteClassStatus != FigureTime::NEW_CLASS_STATUS_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
 		if ($athlete->athleteClass->percent < $item->newAthleteClass->percent) {
 			return 'Вы пытаетесь понизить спортсмену класс с ' . $athlete->athleteClass->title . ' на '
 				. $item->newAthleteClass->title . '. Понижение класса невозможно';

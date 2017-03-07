@@ -17,7 +17,9 @@ $this->title = 'Редактирование фигуры: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Фигуры', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->title;
 $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => null]])
-	->andWhere(['newAthleteClassStatus' => \common\models\FigureTime::NEW_CLASS_STATUS_NEED_CHECK])->all()
+	->andWhere(['newAthleteClassStatus' => \common\models\FigureTime::NEW_CLASS_STATUS_NEED_CHECK])->all();
+$newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
+	->andWhere(['recordStatus' => \common\models\FigureTime::NEW_RECORD_NEED_CHECK])->all();
 ?>
 <div class="figure-update">
 	
@@ -79,7 +81,7 @@ $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => nul
                 <a class="btn btn-danger getRequest" href="#"
                    data-action="/competitions/figures/cancel-all-classes"
                    data-id="<?= $model->id ?>" title="Отменить">
-                    Отменить все новые классы
+                    Отменить все новые неподтверждённые классы
                 </a>
                 <a class="btn btn-success getRequest" href="#"
                    data-action="/competitions/figures/approve-all-classes"
@@ -89,11 +91,24 @@ $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => nul
             </div>
         </div>
 	<?php } ?>
+	
+	<?php if ($newRecords) { ?>
+        <div class="text-right newClass">
+            <div class="pb-10">
+                <a class="btn btn-danger getRequestWithConfirm" href="#"
+                   data-action="/competitions/figures/cancel-all-records"
+                   data-text="Уверены, что хотите отменить все новые неподтверждённые рекорды?"
+                   data-id="<?= $model->id ?>" title="Отменить">
+                    Отменить все новые рекорды
+                </a>
+            </div>
+        </div>
+	<?php } ?>
+    
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
-		'columns'      => [
-			['class' => 'yii\grid\SerialColumn'],
+		'columns'      => [['class' => 'yii\grid\SerialColumn'],
 			
 			[
 				'attribute' => 'yearId',
@@ -165,9 +180,11 @@ $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => nul
 				'value'     => function (\common\models\FigureTime $item) {
 					$html = '';
 					if ($item->newAthleteClassId) {
-						$html = $item->newAthleteClass->title;
+						$html = '<div class="text-center">';
+						$html .= $item->newAthleteClass->title;
+						$html .= '</div>';
 						if ($item->newAthleteClassStatus == \common\models\FigureTime::NEW_CLASS_STATUS_NEED_CHECK) {
-							$html .= '<div class="newClass">';
+							$html .= '<div class="newClass text-center">';
 							$html .= '<a class="btn btn-danger getRequest" href="#"
                            data-action="/competitions/figures/cancel-class"
                            data-id="' . $item->id . '" title="Отменить">
@@ -185,13 +202,44 @@ $newClasses = $model->getResults()->andWhere(['not', ['newAthleteClassId' => nul
 					return $html;
 				}
 			],
-            [
-	            'format'    => 'raw',
-	            'value'     => function (\common\models\FigureTime $item) {
-		            return Html::a('<span class = "fa fa-edit"></span>', ['update-time', 'id' => $item->id],
-                        ['class' => 'btn btn-primary']);
-	            }
-            ]
+			['format' => 'raw',
+			 'value'  => function (\common\models\FigureTime $item) {
+				 $html = '';
+				 if ($item->recordType) {
+					 $html = '<div class="small text-center">';
+					 $html .= \common\models\FigureTime::$recordsTitle[$item->recordType];
+					 $html .= '</div>';
+					 if ($item->recordStatus == \common\models\FigureTime::NEW_RECORD_NEED_CHECK) {
+						 if ($item->recordStatus == \common\models\FigureTime::NEW_RECORD_NEED_CHECK) {
+							 $html .= '<div class="newClass text-center">';
+							 $html .= '<a class="btn btn-danger getRequestWithConfirm" href="#"
+                           data-action="/competitions/figures/cancel-record"
+                           data-text="Уверены, что хотите отменить этот рекорд?"
+                           data-id="' . $item->id . '" title="Отменить">
+                            <span class="fa fa-remove"></span>
+                        </a>';
+							 $html .= '<a class="btn btn-success getRequestWithConfirm" href="#"
+							 data-text="Уверены, что хотите установить новый рекорд для фигуры?"
+                           data-action = "/competitions/figures/approve-record"
+                           data-id = "' . $item->id . '" title = "Подтвердить" >
+                            <span class="fa fa-check" ></span >
+                        </a > ';
+							 $html .= '</div>';
+						 }
+					 }
+					
+				 }
+				
+				 return $html;
+			 }
+			],
+			[
+				'format' => 'raw',
+				'value'  => function (\common\models\FigureTime $item) {
+					return Html::a('<span class = "fa fa-edit"></span>', ['update-time', 'id' => $item->id],
+						['class' => 'btn btn-primary']);
+				}
+			]
 		],
 	]); ?>
 </div>
