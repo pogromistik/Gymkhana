@@ -16,10 +16,14 @@ use yii\bootstrap\Html;
         <h3>Новости</h3>
 		<?php foreach ($news as $item) { ?>
             <div class="item">
-                <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
-                <?php if ($item->title) { ?>
-                    <div class="title"><?= $item->title ?></div>
-                <?php } ?>
+				<?php if ($item->title) { ?>
+                    <div class="title-with-bg">
+                        <?= $item->title ?>
+                    </div>
+                    <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
+				<?php } else { ?>
+                    <div class="title-with-bg date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
+				<?php } ?>
                 <div class="preview_text">
 					<?= $item->previewText ?>
                 </div>
