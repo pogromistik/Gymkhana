@@ -1,11 +1,13 @@
 <?php
 use common\models\Figure;
+use kartik\select2\Select2;
 
 /**
  * @var \yii\web\View               $this
  * @var Figure                      $figure
  * @var \common\models\FigureTime[] $results
  * @var \common\models\Year | null  $year
+ * @var bool                        $showAll
  */
 $time = time();
 ?>
@@ -17,116 +19,93 @@ $time = time();
 	<?php } ?>
 </div>
 
-<div class="pl-10">
-	<?php if ($figure->description) { ?>
-        <p><?= $figure->description ?></p>
-	<?php } ?>
-    <b>Мировой рекорд:</b>
-	<?php if ($figure->bestAthlete) { ?>
-		<?= $figure->bestAthlete ?>
-	<?php } ?>
-	<?= $figure->bestTimeForHuman ?>
-	<?php if ($figure->bestAthleteInRussia || $figure->bestTimeInRussia) { ?>
-        <br>
-        <b>Рекорд в России:</b>
-		<?php if ($figure->bestAthleteInRussia) { ?>
-			<?= $figure->bestAthleteInRussia ?>
+<div class="pt-20">
+    <div class="description pb-20">
+		<?php if ($figure->description) { ?>
+            <p><?= $figure->description ?></p>
 		<?php } ?>
-		<?php if ($figure->bestTimeInRussia) { ?>
-			<?= $figure->bestTimeInRussiaForHuman ?>
-		<?php } ?>
-	<?php } ?>
-	
-	<?php if ($results) { ?>
-        <div class="results pt-20">
-            <div class="show-pk">
-                <table class="table results">
-                    <thead>
-                    <tr>
-                        <th><p>Класс</p></th>
-                        <th><p>Участник</p></th>
-                        <th><p>Мотоцикл</p></th>
-                        <th><p>Время</p></th>
-                        <th><p>Штраф</p></th>
-                        <th><p>Итоговое время</p></th>
-                        <th><p>Рейтинг</p></th>
-                        <th><p>Переход в класс</p></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-					<?php
-					foreach ($results as $item) {
-						$athlete = $item->athlete;
-						?>
-                        <tr>
-                            <td><?= $item->athleteClassId ? $item->athleteClass->title : null ?></td>
-                            <td><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
-                            <td><?= $item->motorcycle->getFullTitle() ?></td>
-                            <td><?= $item->timeForHuman ?></td>
-                            <td><?= $item->fine ?></td>
-                            <td><?= $item->resultTimeForHuman ?></td>
-                            <td><?= $item->percent ?>%</td>
-                            <td><?= ($item->newAthleteClassId &&
-									$item->newAthleteClassStatus == \common\models\FigureTime::NEW_CLASS_STATUS_APPROVE)
-									? $item->newAthleteClass->title : null ?></td>
-                        </tr>
-					<?php }
-					?>
-                    </tbody>
-                </table>
-            </div>
+        <div class="records">
+            <b>Мировой рекорд:</b>
+			<?php if ($figure->bestAthlete) { ?>
+				<?= $figure->bestAthlete ?>
+			<?php } ?>
+			<?= $figure->bestTimeForHuman ?>
+			<?php if ($figure->bestAthleteInRussia || $figure->bestTimeInRussia) { ?>
+                <br>
+                <b>Рекорд в России:</b>
+				<?php if ($figure->bestAthleteInRussia) { ?>
+					<?= $figure->bestAthleteInRussia ?>
+				<?php } ?>
+				<?php if ($figure->bestTimeInRussia) { ?>
+					<?= $figure->bestTimeInRussiaForHuman ?>
+				<?php } ?>
+			<?php } ?>
+        </div>
+    </div>
 
-            <div class="show-mobile">
-                <table class="table results">
-                    <thead>
-                    <tr>
-                        <th>Участник</th>
-                        <th>Время</th>
-                        <th>Рейтинг</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-					<?php
-					if ($results) {
-						foreach ($results as $item) {
-							$athlete = $item->athlete;
-							?>
-                            <tr>
-                                <td>
-									<?= $athlete->getFullName() ?>
-                                    <br>
-                                    <small>
-										<?= $athlete->city->title ?>
-                                        <br>
-										<?= $item->motorcycle->getFullTitle() ?>
-										<?php if ($item->athleteClassId) { ?>
-                                            <br>
-											<?= $item->athleteClass->title ?>
-										<?php } ?>
-                                    </small>
-                                </td>
-                                <td>
-									<?= $item->timeForHuman ?>
-									<?php if ($item->fine) { ?>
-                                        <span class="red"> +<?= $item->fine ?></span>
-									<?php } ?>
-                                    <br>
-                                    <span class="green"><?= $item->resultTimeForHuman ?></span>
-                                </td>
-                                <td>
-									<?= $item->percent ?>%
-									<?php if ($item->newAthleteClassId) { ?>
-										<?= $item->newAthleteClass->title ?>
-									<?php } ?>
-                                </td>
-                            </tr>
-						<?php }
-					} ?>
-                    </tbody>
-                </table>
+    <div class="filters">
+		<?= \yii\bootstrap\Html::beginForm('', 'post', ['id' => 'figureFilterForm']) ?>
+		<?= \yii\bootstrap\Html::hiddenInput('figureId', $figure->id) ?>
+		<?= \yii\bootstrap\Html::hiddenInput('yearId', $year ? $year->id : null) ?>
+		<?= \yii\bootstrap\Html::hiddenInput('showAll', $showAll, ['id' => 'showAll']) ?>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+				<?= Select2::widget([
+					'name'          => 'regionIds',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Region::find()
+						->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
+					'maintainOrder' => true,
+					'options'       => ['placeholder' => 'Выберите регион...', 'multiple' => true],
+					'pluginOptions' => [
+						'tags'               => true,
+						'maximumInputLength' => 10
+					],
+					'pluginEvents'  => [
+						'change' => 'function(e){
+				figureFilters();
+			}',
+					]
+				]);
+				?>
+            </div>
+            <div class="col-md-6 col-sm-12">
+				<?= Select2::widget([
+					'name'          => 'classIds',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
+						->where(['status' => \common\models\AthletesClass::STATUS_ACTIVE])
+						->orderBy(['percent' => SORT_ASC])->all(), 'id', 'title'),
+					'maintainOrder' => true,
+					'options'       => ['placeholder' => 'Выберите класс...', 'multiple' => true],
+					'pluginOptions' => [
+						'tags'               => true,
+						'maximumInputLength' => 10
+					],
+					'pluginEvents'  => [
+						'change' => 'function(e){
+				figureFilters();
+			}',
+					]
+				]);
+				?>
             </div>
         </div>
-	<?php } ?>
+		<?php \yii\bootstrap\Html::endForm() ?>
+    </div>
+
+    <div class="alert alert-danger" style="display: none"></div>
+    
+    <div class="results pt-20">
+        <div class="small text-right">
+	        <?php $count = count($results); ?>
+         <?php if ($count > 30) { ?>
+            Показаны 30 лучших результатов. <a href="#" class="showAll">Показать все</a>
+         <?php } else { ?>
+             Количество результатов: <?= $count ?>
+            <?php } ?>
+        </div>
+    
+		<?= $this->render('_figure-result', ['results' => $results]) ?>
+    </div>
 </div>
 
-<a href="<?= \yii\helpers\Url::to(['/competitions/results', 'active' => 'figures'])?>">Вернуться к фигурам</a>
+<a href="<?= \yii\helpers\Url::to(['/competitions/results', 'active' => 'figures']) ?>">Вернуться к фигурам</a>

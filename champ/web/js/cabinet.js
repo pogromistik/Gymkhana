@@ -106,3 +106,31 @@ $(document).on("submit", '#compareWith', function (e) {
         }
     });
 });
+
+function figureFilters() {
+    var form = $('#figureFilterForm');
+    var id = form.data('id');
+
+    $('.alert-danger').hide();
+
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/figure-results-with-filters',
+        type: 'POST',
+        data: form.serialize(),
+        success: function (result) {
+            if (result['error']) {
+                $('.alert-danger').text(result['error']).show();
+            } else {
+                $('.results').html(result['data']);
+            }
+            hideBackDrop();
+        }
+    });
+}
+
+$('.showAll').click(function (e) {
+    e.preventDefault();
+    $('#showAll').val(true);
+    figureFilters();
+});
