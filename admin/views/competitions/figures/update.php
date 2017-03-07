@@ -33,7 +33,8 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 		'items' => [
 			[
 				'label'   => 'Редактировать фигуру',
-				'content' => $this->render('_form', ['model' => $model])
+				'content' => $this->render('_form', ['model' => $model]),
+                'options' => ['class' => 'panel panel-green']
 			],
 		]
 	]);
@@ -44,7 +45,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 		'header'       => '<h2>Выберите дату заездов</h2>',
 		'toggleButton' => [
 			'label' => 'Добавить результаты',
-			'class' => 'btn btn-success'
+			'class' => 'btn btn-primary'
 		]
 	]) ?>
 	<?= \yii\bootstrap\Html::beginForm(['add-results'], 'get') ?>

@@ -279,3 +279,7 @@ img {
 .color-red {
     color: #b8081f;
 }
+
+.collapse .panel-green a {
+    color: #fff;
+}
