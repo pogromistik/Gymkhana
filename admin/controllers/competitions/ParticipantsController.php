@@ -271,6 +271,21 @@ class ParticipantsController extends BaseController
 		if (!$stage) {
 			return 'Этап не найден';
 		}
+		if ($stage->status == Stage::STATUS_PAST) {
+			return 'Этап завершен, смена первоначальных классов невозможна';
+		} elseif ($stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			return 'Ведётся подсчёт результатов, поэтому смена первоначальных классов в автоматическом режиме невозможна';
+		} else {
+			$participantsWithModifiedClass = Participant::find()->where(
+				['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])
+				->andWhere(['not', ['newAthleteClassId' => null]])
+				->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_APPROVE])
+				->one();
+			if ($participantsWithModifiedClass) {
+				return 'По результатам этапа некоторые спортсмены перешли в другие классы, поэтому смена первоначальных классов в автоматическом режиме невозможна';
+			}
+		}
+		
 		
 		$participants = Participant::findAll(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE]);
 		foreach ($participants as $participant) {
@@ -292,7 +307,8 @@ class ParticipantsController extends BaseController
 				$percent = AthletesClass::find()->select('id')->where(['id' => $classIds])->min('"percent"');
 				$presumablyClass = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
 				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])
-					->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3) {
+						->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3
+				) {
 					$class = $presumablyClass;
 					break;
 				}
@@ -301,7 +317,7 @@ class ParticipantsController extends BaseController
 			}
 			if (!$class) {
 				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
-				->orderBy(['percent' => SORT_DESC])->one();
+					->orderBy(['percent' => SORT_DESC])->one();
 			}
 			$stage->class = $class->id;
 			if (!$stage->save()) {
