@@ -52,7 +52,7 @@ class Stage extends BaseActiveRecord
 		self::STATUS_START_REGISTRATION => 'Открыта регистрация на этап',
 		self::STATUS_END_REGISTRATION   => 'Завершена регистрация на этап',
 		self::STATUS_PRESENT            => 'Текущий этап',
-		self::STATUS_CALCULATE_RESULTS  => 'Подсчёт результатов',
+		self::STATUS_CALCULATE_RESULTS  => 'Подведение итогов',
 		self::STATUS_PAST               => 'Прошедший этап',
 	];
 	
@@ -218,6 +218,9 @@ class Stage extends BaseActiveRecord
 		$first = reset($participants);
 		$referenceTime = floor($first->bestTime / $first->athleteClass->coefficient);
 		$this->referenceTime = $referenceTime;
+		if ($this->status != self::STATUS_CALCULATE_RESULTS && $this->status != Stage::STATUS_PAST) {
+			$this->status = self::STATUS_CALCULATE_RESULTS;
+		}
 		if (!$this->save(false)) {
 			$transaction->rollBack();
 			

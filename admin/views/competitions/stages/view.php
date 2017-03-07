@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
 		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
-		<?= Html::a('Установить классы участникам', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
+		<?= Html::a('Установить классы участникам', ['/competitions/participants/set-classes', 'stageId' => $model->id],
 			[
 				'class'   => 'btn btn-default setParticipantsClasses',
 				'data-id' => $model->id
