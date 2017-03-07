@@ -226,7 +226,7 @@ nav .navbar-toggle .icon-bar {
 }
 
 .list {
-    width: 738px;
+    max-width: 738px;
 }
 
 .list .item {
@@ -282,7 +282,7 @@ h2 {
 }
 
 .news {
-    width: 738px;
+    max-width: 738px;
 }
 
 .news h3 {
