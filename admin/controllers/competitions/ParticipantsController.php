@@ -423,8 +423,11 @@ class ParticipantsController extends BaseController
 		
 		$athlete = $participant->athlete;
 		if ($athlete->athleteClass->percent < $participant->newAthleteClass->percent) {
-			return 'Вы пытаетесь понизить спортсмену класс с ' . $athlete->athleteClass->title . ' на '
+			return 'Вы пытаетесь понизить спортсмену ' . $athlete->getFullName() . ' класс с ' . $athlete->athleteClass->title . ' на '
 				. $participant->newAthleteClass->title . '. Понижение класса невозможно';
+		}
+		if ($athlete->athleteClass->percent == $participant->newAthleteClass->percent) {
+			return 'Спортсмену ' . $athlete->getFullName() . ' итак уже присвоен класс C3';
 		}
 		
 		if ($athlete->athleteClassId != $participant->newAthleteClassId) {
