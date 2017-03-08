@@ -137,6 +137,22 @@ class Participant extends BaseActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 			$this->athleteClassId = $this->athlete->athleteClassId;
+			/** @var Participant $participationInPreviousStages */
+			$participationInPreviousStages = Participant::find()
+				->where(['championshipId' => $this->championshipId])->andWhere(['not', ['stageId' => $this->stageId]])
+				->andWhere(['athleteId' => $this->athleteId])->andWhere(['motorcycleId' => $this->motorcycleId])
+				->andWhere(['not', ['number' => null]])
+				->one();
+			if (!$participationInPreviousStages) {
+				$participationInPreviousStages = Participant::find()
+					->where(['championshipId' => $this->championshipId])->andWhere(['not', ['stageId' => $this->stageId]])
+					->andWhere(['athleteId' => $this->athleteId])
+					->andWhere(['not', ['number' => null]])
+					->one();
+			}
+			if ($participationInPreviousStages) {
+				$this->number = $participationInPreviousStages->number;
+			}
 		}
 		
 		return parent::beforeValidate();
