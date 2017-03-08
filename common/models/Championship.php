@@ -221,6 +221,14 @@ class Championship extends BaseActiveRecord
 		$tmpBusyNumbers = TmpParticipant::find()->select('number')->where(['stageId' => $stage->id])
 			->andWhere(['status' => TmpParticipant::STATUS_NEW])->asArray()->column();
 		$busyNumbers = array_merge($busyNumbers, $tmpBusyNumbers);
+		$oldParticipantsNumbers = Participant::find()->select('number')
+			->where(['not', ['stageId' => $stage->id]])
+			->andWhere(['championshipId' => $stage->championshipId]);
+		if ($athleteId) {
+			$oldParticipantsNumbers = $oldParticipantsNumbers->andWhere(['!=', 'athleteId', $athleteId]);
+		}
+		$oldParticipantsNumbers = $oldParticipantsNumbers->asArray()->column();
+		$busyNumbers = array_merge($busyNumbers, $oldParticipantsNumbers);
 		
 		foreach ($numbers as $i => $number) {
 			if (in_array($number, $busyNumbers)) {
