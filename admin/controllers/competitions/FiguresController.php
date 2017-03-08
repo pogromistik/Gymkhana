@@ -5,6 +5,7 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\ClassHistory;
 use common\models\FigureTime;
+use common\models\Notice;
 use common\models\search\FigureTimeSearch;
 use Yii;
 use common\models\Figure;
@@ -178,16 +179,25 @@ class FiguresController extends BaseController
 			return 'Запись уже была обработана';
 		}
 		
+		$transaction = \Yii::$app->db->beginTransaction();
+		
 		switch ($item->recordType) {
 			case FigureTime::RECORD_IN_RUSSIA:
 				if ($figure->bestTimeInRussia && $figure->bestTimeInRussia <= $item->resultTime) {
+					$transaction->rollBack();
 					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
 				}
 				$figure->bestTimeInRussia = $item->resultTime;
 				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				
+				$text = 'Поздравляем! Вы установили новый Российский рекорд для фигуры ' .
+					$figure->title . '! Это восхитительно :)';
+				$link = \Yii::$app->urlManager->createUrl(['/competitions/figure', 'id' => $figure->id]);
+				Notice::add($item->athleteId, $text, $link);
 				break;
 			case FigureTime::RECORD_IN_WORLD:
 				if ($figure->bestTime && $figure->bestTime <= $item->resultTime) {
+					$transaction->rollBack();
 					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
 				}
 				$figure->bestTime = $item->resultTime;
@@ -195,10 +205,13 @@ class FiguresController extends BaseController
 				$figure->bestAthlete = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				
+				$text = 'Поздравляем! Вы установили новый мировой рекорд для фигуры ' .
+					$figure->title . '!! Это восхитительно! Вы - восхитительны!!';
+				$link = \Yii::$app->urlManager->createUrl(['/competitions/figure', 'id' => $figure->id]);
+				Notice::add($item->athleteId, $text, $link);
 				break;
 		}
 		
-		$transaction = \Yii::$app->db->beginTransaction();
 		if (!$figure->save()) {
 			$transaction->rollBack();
 			
