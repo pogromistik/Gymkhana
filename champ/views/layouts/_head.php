@@ -17,6 +17,36 @@ use yii\helpers\Url;
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
+                    <?php if (!\Yii::$app->user->isGuest) { ?>
+                    <div class="navbar-mobile-items">
+                        <a href="#" class="notices"><span class="fa fa-bell green"></span>
+                            <span id="newNotices"></span></a>
+                        <div class="modal-notices">
+                            <div class="text-right" id="closeNotices">x</div>
+                            <div class="text">
+                            </div>
+                            <div class="show-all text-center pt-10">
+				                <?= \yii\bootstrap\Html::a('Показать все уведомления', ['/notices/all']) ?>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="navbar-left navbar-mobile-items lk">
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle"
+                               href="#"><span class="fa fa-user"></span></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/profile/index">Профиль</a></li>
+                                <li><a href="/profile/compare-with">Статистика</a></li>
+                                <li><a href="/site/logout">Выход</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <?php } else { ?>
+                        <div class="navbar-mobile-items">
+                            <a href="/site/login" class="notices"><span class="fa fa-user"></span>
+                                <span id="newNotices"></span></a>
+                        </div>
+                    <?php } ?>
                 </div>
                 <!-- Collection of nav links, forms, and other content for toggling -->
                 <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -41,7 +71,7 @@ use yii\helpers\Url;
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login">Вход</a>
 							<?php } else { ?>
-                        <li class="dropdown">
+                        <li class="dropdown pk-menu-items">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::$app->user->identity->getFullName() ?> <b
                                         class="caret"></b></a>
@@ -51,7 +81,7 @@ use yii\helpers\Url;
                                 <li><a href="/site/logout">Выход</a></li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="pk-menu-items">
                             <a href="#" class="notices"><span class="fa fa-bell green"></span>
                             <span id="newNotices"></span></a>
                             <div class="modal-notices">
