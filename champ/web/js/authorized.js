@@ -38,8 +38,14 @@ $('.notices').click(function () {
             $('.modal-notices').removeClass('show');
         });
     } else {
-        $('.modal-notices').slideToggle(200, function () {
-            $('.modal-notices').addClass('show');
+        $.get('/notices/find-new-notices').done(function (data) {
+            $('.modal-notices .text').html(data);
+            $('.modal-notices').slideToggle(200, function () {
+                $('.modal-notices').addClass('show');
+            });
+            $('#newNotices').html('');
+        }).fail(function (error) {
+            alert(error.responseText);
         });
     }
 });

@@ -56,7 +56,11 @@ use yii\helpers\Url;
                             <span id="newNotices"></span></a>
                             <div class="modal-notices">
                                 <div class="text-right" id="closeNotices">x</div>
-                                Новых уведомлений нет
+                                <div class="text">
+                                </div>
+                                <div class="show-all text-center pt-10">
+                                    <?= \yii\bootstrap\Html::a('Показать все уведомления', ['/notices/all']) ?>
+                                </div>
                             </div>
                         </li>
 						<?php } ?>
