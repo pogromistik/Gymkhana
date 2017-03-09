@@ -51,6 +51,18 @@ use yii\helpers\Url;
                                 <li><a href="/site/logout">Выход</a></li>
                             </ul>
                         </li>
+                        <li>
+                            <a href="#" class="notices"><span class="fa fa-bell green"></span>
+                            <span id="newNotices"></span></a>
+                            <div class="modal-notices">
+                                <div class="text-right" id="closeNotices">x</div>
+                                <div class="text">
+                                </div>
+                                <div class="show-all text-center pt-10">
+                                    <?= \yii\bootstrap\Html::a('Показать все уведомления', ['/notices/all']) ?>
+                                </div>
+                            </div>
+                        </li>
 						<?php } ?>
                         </li>
                     </ul>

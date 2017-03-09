@@ -7,8 +7,12 @@ use champ\assets\AppAsset;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
+use champ\assets\AuthorizedAsset;
 
 AppAsset::register($this);
+if (!\Yii::$app->user->isGuest) {
+	AuthorizedAsset::register($this);
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
