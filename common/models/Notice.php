@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\UserHelper;
 use Yii;
 
 /**
@@ -13,6 +14,7 @@ use Yii;
  * @property string  $link
  * @property integer $status
  * @property integer $dateAdded
+ * @property integer $senderId
  */
 class Notice extends \yii\db\ActiveRecord
 {
@@ -38,9 +40,10 @@ class Notice extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['athleteId', 'text', 'dateAdded'], 'required'],
-			[['athleteId', 'status', 'dateAdded'], 'integer'],
+			[['athleteId', 'text', 'dateAdded', 'senderId'], 'required'],
+			[['athleteId', 'status', 'dateAdded', 'senderId'], 'integer'],
 			[['link', 'text'], 'string', 'max' => 255],
+			['senderId', 'default', 'value' => UserHelper::CONSOLE_LOG_USER_ID]
 		];
 	}
 	
@@ -56,6 +59,7 @@ class Notice extends \yii\db\ActiveRecord
 			'link'      => 'Ссылка',
 			'status'    => 'Статус',
 			'dateAdded' => 'Дата',
+			'senderId'  => 'Отправитель'
 		];
 	}
 	
@@ -63,6 +67,7 @@ class Notice extends \yii\db\ActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
+			$this->senderId = UserHelper::getUserId();
 		}
 		
 		return parent::beforeValidate();

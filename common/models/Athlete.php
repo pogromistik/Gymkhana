@@ -226,6 +226,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				ClassHistory::create($this->athleteClassId, null, $old, $new, 'Установлено админом');
 			}
 		}
+		if (isset($changedAttributes['hasAccount']) && $this->hasAccount == 1) {
+			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей, подробнее - по ссылке');
+		}
 		parent::afterSave($insert, $changedAttributes);
 	}
 	

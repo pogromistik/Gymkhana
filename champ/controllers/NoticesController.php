@@ -28,6 +28,20 @@ class NoticesController extends AccessController
 		]);
 	}
 	
+	public function actionFindNewNotices()
+	{
+		/** @var $notices $notices */
+		$notices = Notice::find()->where(['athleteId' => \Yii::$app->user->id,
+		'status' => Notice::STATUS_NEW])->orderBy(['dateAdded' => SORT_DESC])->all();
+		if (!$notices) {
+			return '<div class="text-center">Новых уведомлений нет</div>';
+		}
+		Notice::updateAll(['status' => Notice::STATUS_DONE],
+			['athleteId' => \Yii::$app->user->id, 'status' => Notice::STATUS_NEW]);
+		
+		return $this->renderAjax('new-notices', ['notices' => $notices]);
+	}
+	
 	public function actionChangeStatus($id)
 	{
 		$model = self::findModel($id);

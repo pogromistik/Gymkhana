@@ -459,6 +459,11 @@ tbody > tr > td {
     right: 0;
     padding: 10px 20px;
     display: none;
+    border-top: 2px solid #4b4e53;
+}
+
+.modal-notices a{
+    text-transform: none;
 }
 
 #closeNotices {
