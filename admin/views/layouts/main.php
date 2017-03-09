@@ -195,6 +195,9 @@ AppAsset::register($this);
                                 <li>
                                     <a data-addr="/competitions/figures" href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                 </li>
+                                <li>
+                                    <a data-addr="/competitions/notice" href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить уведомление</a>
+                                </li>
                             </ul>
                         </li>
 					<?php } ?>
