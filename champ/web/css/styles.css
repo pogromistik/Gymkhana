@@ -498,3 +498,15 @@ tbody > tr > td {
 .lk li a.dropdown-toggle {
     color: #4b4e53;
 }
+
+.footer {
+    padding: 4px 0;
+    width: 100%;
+    background: #4b4e53;
+    font-size: 12px;
+    position: fixed;
+    bottom: 0;
+}
+.footer a {
+    color: #f4f4f4;
+}

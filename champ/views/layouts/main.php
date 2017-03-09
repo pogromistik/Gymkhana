@@ -52,6 +52,8 @@ if (!\Yii::$app->user->isGuest) {
     <!-- /#page-wrapper -->
 </div>
 
+<?= $this->render('_footer') ?>
+
 <?= $this->render('_modal') ?>
 
 <?php $this->endBody() ?>
