@@ -299,4 +299,21 @@ class ProfileController extends AccessController
 			'athlete'       => $athlete,
 		]);
 	}
+	
+	public function actionDeletePhoto()
+	{
+		$athlete = Athlete::findOne(\Yii::$app->user->id);
+		if ($athlete->photo) {
+			$filePath = \Yii::getAlias('@files') . $athlete->photo;
+			if (file_exists($filePath)) {
+				unlink($filePath);
+			}
+			$athlete->photo = null;
+			if (!$athlete->save()) {
+				return 'Возникла ошибка при сохранении изменений';
+			}
+		}
+		
+		return true;
+	}
 }

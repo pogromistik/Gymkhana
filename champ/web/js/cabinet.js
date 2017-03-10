@@ -134,3 +134,19 @@ $('.showAll').click(function (e) {
     $('#showAll').val(true);
     figureFilters();
 });
+
+$('.deletePhoto').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    $.get('/profile/delete-photo').done(function (data) {
+        if (data == true) {
+            location.reload();
+        } else {
+            hideBackDrop();
+            alert(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        alert(error.responseText);
+    });
+});
