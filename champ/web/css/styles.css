@@ -12,12 +12,18 @@
     font-style: normal;
 }
 
+html {
+    min-height: 100%;
+    position: relative;
+}
 html,
 body {
-    height: 100%;
     font-family: 'Exo', sans-serif;
     background: #f4f4f4;
     color: #4b4e53;
+}
+body {
+    margin-bottom: 50px;
 }
 
 a:link {
@@ -504,8 +510,9 @@ tbody > tr > td {
     width: 100%;
     background: #4b4e53;
     font-size: 12px;
-    position: fixed;
+    position: absolute;
     bottom: 0;
+    margin-top: 70px;
 }
 .footer a {
     color: #f4f4f4;
