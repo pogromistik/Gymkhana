@@ -65,7 +65,5 @@ $(function () {
 
 
 $(document).ready(function () {
-    if ($(document).outerHeight(true) > $('body').height()) {
-        $('footer').css({'position': 'static'});
-    }
+
 });
