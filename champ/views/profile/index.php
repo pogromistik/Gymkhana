@@ -20,6 +20,9 @@ use yii\bootstrap\Html;
             <div class="row">
                 <div class="col-md-2 col-sm-4 img-in-profile">
 					<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
+                    <br>
+                    <a href="#" class="btn btn-default btn-block deletePhoto">удалить</a>
+                    <br>
                 </div>
                 <div class="col-md-10 col-sm-8">
 					<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>

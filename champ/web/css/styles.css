@@ -522,3 +522,7 @@ tbody > tr > td {
     max-width: 100%;
     max-height: 500px;
 }
+
+a.deletePhoto {
+    text-decoration: none;
+}
