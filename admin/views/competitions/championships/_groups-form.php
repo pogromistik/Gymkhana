@@ -33,7 +33,7 @@ $group = new RegionalGroup();
 $i = 1;
 ?>
 <table class="table">
-	<?php foreach (RegionalGroup::find()->all() as $regionalGroup) { ?>
+	<?php foreach (RegionalGroup::find()->orderBy(['title' => SORT_ASC])->all() as $regionalGroup) { ?>
         <tr>
             <td><?= $i++ ?></td>
             <td><?= Editable::widget([

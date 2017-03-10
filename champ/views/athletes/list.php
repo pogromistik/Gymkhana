@@ -68,7 +68,7 @@ use yii\helpers\ArrayHelper;
 				'filter'    => Select2::widget([
 					'model'         => $searchModel,
 					'attribute'     => 'regionId',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+					'data'          => \common\models\Region::getAll(true),
 					'maintainOrder' => true,
 					'options'       => ['placeholder' => 'Выберите регион...', 'multiple' => true],
 					'pluginOptions' => [
@@ -84,7 +84,8 @@ use yii\helpers\ArrayHelper;
 				'filter'    => Select2::widget([
 					'model'         => $searchModel,
 					'attribute'     => 'athleteClassId',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->all(), 'id', 'title'),
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
+                        ->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['percent' => SORT_ASC, 'id' => SORT_ASC])->all(), 'id', 'title'),
 					'maintainOrder' => true,
 					'options'       => ['placeholder' => 'Выберите класс...', 'multiple' => true],
 					'pluginOptions' => [

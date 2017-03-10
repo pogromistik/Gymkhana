@@ -25,7 +25,7 @@ $this->title = 'Спортсмены';
 				'filter'    => Select2::widget([
 					'model'     => $searchModel,
 					'attribute' => 'lastName',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'lastName', 'lastName'),
+					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['lastName' => SORT_ASC])->all(), 'lastName', 'lastName'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
@@ -40,7 +40,7 @@ $this->title = 'Спортсмены';
 				'filter'    => Select2::widget([
 					'model'     => $searchModel,
 					'attribute' => 'firstName',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'firstName', 'firstName'),
+					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['firstName' => SORT_ASC])->all(), 'firstName', 'firstName'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
@@ -57,7 +57,7 @@ $this->title = 'Спортсмены';
 				'filter'    => Select2::widget([
 					'model'     => $searchModel,
 					'attribute' => 'cityId',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\City::find()->all(), 'id', 'title'),
+					'data'      => \common\models\City::getAll(true),
 					'theme'     => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
@@ -75,7 +75,8 @@ $this->title = 'Спортсмены';
 				'filter'    => Select2::widget([
 					'model'     => $searchModel,
 					'attribute' => 'athleteClassId',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->all(), 'id', 'title'),
+					'data'      => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
+                        ->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['id' => SORT_ASC])->all(), 'id', 'title'),
 					'theme'     => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true

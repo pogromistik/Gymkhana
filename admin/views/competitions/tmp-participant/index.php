@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'filter'    => Select2::widget([
 					'model'         => $searchModel,
 					'attribute'     => 'championshipId',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Championship::find()->all(), 'id', 'title'),
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Championship::find()->orderBy(['dateAdded' => SORT_DESC])->all(), 'id', 'title'),
 					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true

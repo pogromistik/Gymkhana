@@ -32,7 +32,7 @@ use kartik\widgets\Select2;
  Если в списке нет необходимого раздела - создайте его в форме ниже.
 </div>{input}</div>'])->widget(Select2::classname(), [
 			'name'    => 'kv-type-01',
-			'data'    => \yii\helpers\ArrayHelper::map(\common\models\RegionalGroup::find()->all(), 'id', 'title'),
+			'data'    => \yii\helpers\ArrayHelper::map(\common\models\RegionalGroup::find()->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
 			'options' => [
 				'placeholder' => 'Выберите раздел. Добавить новый раздел можно ниже',
 			],
@@ -45,7 +45,7 @@ use kartik\widgets\Select2;
 Если все этапы чемпионата будут проходить в одном регионе - укажите его.
 </div>{input}</div>'])->widget(Select2::classname(), [
 			'name'          => 'kv-type-01',
-			'data'          => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+			'data'          => \common\models\Region::getAll(true),
 			'options'       => [
 				'placeholder' => 'Выберите регион...',
 			],

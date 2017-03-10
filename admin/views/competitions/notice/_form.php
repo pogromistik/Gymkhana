@@ -23,7 +23,7 @@ $length = 255;
             </div>
 			<?= Select2::widget([
 				'name'          => 'regionIds',
-				'data'          => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+				'data'          => \common\models\Region::getAll(true),
 				'options'       => [
 					'placeholder' => 'Выберите регионы...',
 					'multiple' => true

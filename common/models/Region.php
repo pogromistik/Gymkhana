@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "Regions".
@@ -39,5 +40,14 @@ class Region extends \yii\db\ActiveRecord
 			'id'    => 'ID',
 			'title' => 'Название',
 		];
+	}
+	
+	public static function getAll($asArrayHelper = false)
+	{
+		$result = self::find()->orderBy(['title' => SORT_ASC]);
+		if ($asArrayHelper) {
+			return ArrayHelper::map($result->all(), 'id', 'title');
+		}
+		return $result->all();
 	}
 }
