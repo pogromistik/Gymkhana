@@ -130,7 +130,8 @@ class Participant extends BaseActiveRecord
 			'dateAdded'           => 'Дата добавления',
 			'status'              => 'Статус',
 			'percent'             => 'Рейтинг',
-			'newAthleteClassId'   => 'Класс по итогам проведенного этапа'
+			'newAthleteClassId'   => 'Класс по итогам проведенного этапа',
+			'points'              => 'Баллы за этап'
 		];
 	}
 	

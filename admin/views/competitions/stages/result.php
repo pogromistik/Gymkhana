@@ -48,6 +48,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
         <th>Место в классе</th>
         <th>Рейтинг</th>
         <th>Новый класс</th>
+        <th>Баллы за этап</th>
     </tr>
     </thead>
     <tbody>
@@ -96,6 +97,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 					<?php } ?>
 				<?php } ?>
             </td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->points ?></td>
         </tr>
 		<?php
 		$attempt = 1;
