@@ -19,8 +19,8 @@ class AthleteSearch extends Athlete
 	public function rules()
 	{
 		return [
-			[['id', 'login', 'cityId', 'athleteClassId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
-			[['firstName', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken'], 'safe'],
+			[['id', 'login', 'cityId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
+			[['firstName', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken', 'regionId', 'athleteClassId'], 'safe'],
 		];
 	}
 	
@@ -70,8 +70,8 @@ class AthleteSearch extends Athlete
 			'updatedAt'        => $this->updatedAt,
 			'hasAccount'       => $this->hasAccount,
 			'lastActivityDate' => $this->lastActivityDate,
+			'regionId'         => $this->regionId
 		]);
-		
 		$query->andFilterWhere(['like', 'firstName', $this->firstName])
 			->andFilterWhere(['like', 'lastName', $this->lastName])
 			->andFilterWhere(['like', 'phone', $this->phone])
