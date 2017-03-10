@@ -28,7 +28,7 @@ if (!isset($url)) {
 <div class="form-group">
 	<?= Select2::widget([
 		'name'    => 'regionId',
-		'data'    => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+		'data'    => \common\models\Region::getAll(true),
 		'options' => [
 			'placeholder' => 'Выберите регион...',
 		],

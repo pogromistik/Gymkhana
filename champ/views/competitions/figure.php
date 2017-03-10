@@ -52,8 +52,7 @@ $time = time();
             <div class="col-md-6 col-sm-12">
 				<?= Select2::widget([
 					'name'          => 'regionIds',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Region::find()
-						->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
+					'data'          => \common\models\Region::getAll(true),
 					'maintainOrder' => true,
 					'options'       => ['placeholder' => 'Выберите регион...', 'multiple' => true],
 					'pluginOptions' => [

@@ -137,7 +137,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				'filter'    => Select2::widget([
 					'model'         => $searchModel,
 					'attribute'     => 'athleteId',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->all(), 'id', 'lastName'),
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['lastName' => SORT_ASC])->all(), 'id', 'lastName'),
 					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true

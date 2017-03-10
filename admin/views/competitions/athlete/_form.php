@@ -13,7 +13,7 @@ use kartik\widgets\Select2;
 	<?php $form = ActiveForm::begin(['options' => ['id' => $model->isNewRecord ? 'newAthlete' : 'updateAthlete']]); ?>
 	<?= $form->field($model, 'cityId')->widget(Select2::classname(), [
 		'name'    => 'kv-type-01',
-		'data'    => \yii\helpers\ArrayHelper::map(\common\models\City::find()->all(), 'id', 'title'),
+		'data'    => \common\models\City::getAll(true),
 		'options' => [
 			'placeholder' => 'Выберите город...',
 		],

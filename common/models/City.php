@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "russia".
@@ -83,5 +84,14 @@ class City extends \yii\db\ActiveRecord
 	public function getRegion()
 	{
 		return $this->hasOne(Region::className(), ['id' => 'regionId']);
+	}
+	
+	public static function getAll($asArrayHelper = false)
+	{
+		$result = self::find()->orderBy(['title' => SORT_ASC]);
+		if ($asArrayHelper) {
+			return ArrayHelper::map($result->all(), 'id', 'title');
+		}
+		return $result->all();
 	}
 }

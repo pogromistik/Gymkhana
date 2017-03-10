@@ -243,7 +243,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function getMotorcycles()
 	{
-		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id']);
+		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 	}
 	
 	public function getAthleteClass()

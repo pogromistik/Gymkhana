@@ -23,7 +23,7 @@ use kartik\widgets\Select2;
 	
 	<?= $form->field($model, 'regionId')->widget(Select2::classname(), [
 		'name'    => 'kv-type-01',
-		'data'    => \yii\helpers\ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'title'),
+		'data'    => \common\models\Region::getAll(true),
 		'options' => [
 			'placeholder' => 'Выберите регион...',
 		],
