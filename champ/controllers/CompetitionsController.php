@@ -184,7 +184,7 @@ class CompetitionsController extends BaseController
 		} else {
 			$results = FigureTime::find();
 			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc) n
-       from "FigureTimes") A'));
+       from "FigureTimes" where "figureId" = '.$id.') A'));
 			$results->select('*');
 			$results->where(new Expression('n=1'));
 			$results->andWhere(new Expression('"Athletes"."id"="athleteId"'));
@@ -245,6 +245,7 @@ class CompetitionsController extends BaseController
 			$results->from(['Athletes', 'FigureTimes']);
 			$results->select('*');
 			$results->andWhere(new Expression('"Athletes"."id"="FigureTimes"."athleteId"'));
+			$results->andWhere(['"FigureTimes"."figureId"' => $figureId]);
 			if ($regionIds) {
 				$results->andWhere(['"Athletes"."regionId"' => $regionIds]);
 			}
@@ -258,6 +259,7 @@ class CompetitionsController extends BaseController
 			if ($classIds) {
 				$subQuery->where(['athleteClassId' => $classIds]);
 			}
+			$subQuery->andWhere(['figureId' => $figureId]);
 			$results->from(['Athletes',
 				'(' . $subQuery->createCommand()->rawSql . ') A']);
 			

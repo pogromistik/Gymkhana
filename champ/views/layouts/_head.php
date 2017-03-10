@@ -66,7 +66,7 @@ use yii\helpers\Url;
                             </ul>
                         </li>
                         <li>
-                            <a href="/competitions/athletes">Спортсмены</a>
+                            <a href="/athletes/list">Спортсмены</a>
                         </li>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login">Вход</a>

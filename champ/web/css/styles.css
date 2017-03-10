@@ -231,7 +231,7 @@ nav .navbar-toggle .icon-bar {
     width: 60%;
 }
 
-.list {
+.list, .athlete {
     max-width: 738px;
 }
 

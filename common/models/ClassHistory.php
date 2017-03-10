@@ -27,6 +27,7 @@ use Yii;
 class ClassHistory extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
+	public $dateForHuman;
 	
 	/**
 	 * @inheritdoc
@@ -77,6 +78,13 @@ class ClassHistory extends BaseActiveRecord
 		return parent::beforeValidate();
 	}
 	
+	public function afterFind()
+	{
+		if ($this->date) {
+			$this->dateForHuman = date('d.m.Y', $this->date);
+		}
+	}
+	
 	public static function create($athleteId, $motorcycleId = null, $oldClassId, $newClassId, $event,
 	                              $time = null, $bestTime = null, $percent = null)
 	{
@@ -104,21 +112,21 @@ class ClassHistory extends BaseActiveRecord
 	
 	public function getAthlete()
 	{
-		return $this->hasOne(Athlete::tableName(), ['id' => 'athleteId']);
+		return $this->hasOne(Athlete::className(), ['id' => 'athleteId']);
 	}
 	
 	public function getMotorcycle()
 	{
-		return $this->hasOne(Motorcycle::tableName(), ['id' => 'motorcycleId']);
+		return $this->hasOne(Motorcycle::className(), ['id' => 'motorcycleId']);
 	}
 	
 	public function getOldClass()
 	{
-		return $this->hasOne(AthletesClass::tableName(), ['id' => 'oldClassId']);
+		return $this->hasOne(AthletesClass::className(), ['id' => 'oldClassId']);
 	}
 	
 	public function getNewClass()
 	{
-		return $this->hasOne(AthletesClass::tableName(), ['id' => 'newClassId']);
+		return $this->hasOne(AthletesClass::className(), ['id' => 'newClassId']);
 	}
 }

@@ -35,6 +35,7 @@ use yii\web\IdentityInterface;
  * @property Motorcycle[]  $motorcycles
  * @property AthletesClass $athleteClass
  * @property City          $city
+ * @property Region        $region
  */
 class Athlete extends BaseActiveRecord implements IdentityInterface
 {
@@ -199,6 +200,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			'updatedAt'          => 'Обновлен',
 			'hasAccount'         => 'Аккаунт создан?',
 			'lastActivityDate'   => 'Дата последней активности',
+			'regionId'           => 'Регион'
 		];
 	}
 	
@@ -224,7 +226,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				->andWhere(['oldClassId' => $old, 'newClassId' => $new])
 				->orderBy(['date' => SORT_DESC])->one();
 			if (!$history) {
-				ClassHistory::create($this->athleteClassId, null, $old, $new, 'Установлено админом');
+				ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
 			}
 			$oldClass = AthletesClass::findOne($old);
 			$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $this->athleteClass->title . '. ';
@@ -254,6 +256,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		return $this->hasOne(City::className(), ['id' => 'cityId']);
 	}
 	
+	public function getRegion()
+	{
+		return $this->hasOne(Region::className(), ['id' => 'regionId']);
+	}
+	
 	public static function getActiveAthletes($withoutId = null)
 	{
 		$query = Athlete::find();
@@ -263,6 +270,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if ($withoutId) {
 			$query->andWhere(['not', ['"Athletes"."id"' => $withoutId]]);
 		}
+		$query->orderBy(['lastName' => SORT_ASC]);
 		
 		return $query->all();
 	}
