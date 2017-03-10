@@ -1,34 +1,75 @@
 <?php
 use yii\bootstrap\Html;
-use kartik\widgets\Select2;
-use yii\helpers\ArrayHelper;
 
 /**
- *
+ * @var \yii\web\View $this
+ * @var array                         $figuresResult
+ * @var \common\models\FigureTime     $result
+ * @var \common\models\Figure         $figure
+ * @var \common\models\ClassHistory[] $history
+ * @var \common\models\Athlete $athlete
  */
 ?>
 
-<div class="compareWith">
-	<div class="pb-10">
-		<?= Html::beginForm(['/stats/compare-with'], 'get', ['id' => 'compareWith']) ?>
-        сравнить свои результаты с <?= Select2::widget([
-			'name'          => 'athleteId',
-			'data'          => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(\Yii::$app->user->id), 'id', function (\common\models\Athlete $item) {
-				return $item->lastName . ' ' . $item->firstName;
-			}),
-			'options'       => [
-				'placeholder' => 'Выберите спортсмена...',
-			],
-			'pluginOptions' => [
-				'allowClear' => true
-			],
-		]) ?> за <?= Html::dropDownList('year', null, ArrayHelper::map(
-			\common\models\Year::findAll(['status' => \common\models\Year::STATUS_ACTIVE]), 'year', 'year'),
-			['class' => 'form-control', 'prompt' => 'всё время']
-		) ?>
-		<?= Html::submitButton('сравнить', ['class' => 'btn btn-dark']) ?>
-		<?= Html::endForm() ?>
-    </div>
+<?= $this->render('compareWith') ?>
 
-    <div class="alert alert-danger" style="display: none"></div>
+<div class="figures pt-10">
+	<h4>
+		Результаты базовых фигур<br>
+		<small>представлены только лучшие результаты</small>
+	</h4>
+	<?php if (!$figuresResult) { ?>
+		Информация отсутствует
+	<?php } else { ?>
+		<table class="table table-bordered">
+			<?php foreach ($figuresResult as $data) { ?>
+				<tr>
+					<?php
+					$figure = $data['figure'];
+					$result = $data['result'];
+					?>
+					<td><?= $result->dateForHuman ?></td>
+					<td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
+					<td>
+						<?= $result->resultTimeForHuman ?>
+						<?php if ($result->fine) { ?>
+							<small> (<?= $result->timeForHuman ?> +<?= $result->fine ?>)</small>
+						<?php } ?>
+						<?php if ($result->recordType && $result->recordStatus == \common\models\FigureTime::NEW_RECORD_APPROVE) { ?>
+							<?= \yii\bootstrap\Html::img('/img/crown.png', [
+								'title' => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!',
+								'alt'   => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!'
+							]) ?>
+						<?php } ?>
+					</td>
+					<td><?= $result->percent ?>%</td>
+				</tr>
+			<?php } ?>
+		</table>
+	<?php } ?>
 </div>
+
+<?php if ($history) { ?>
+	<div class="history pt-10">
+		<h4>
+			История переходов между классами<br>
+			<small>показано не более 30 последних записей</small>
+		</h4>
+		<table class="table">
+			<tr>
+				<th>Дата</th>
+				<th>Старый класс</th>
+				<th>Новый класс</th>
+				<th>Событие</th>
+			</tr>
+			<?php foreach ($history as $item) { ?>
+				<tr>
+					<td><?= $item->dateForHuman ?></td>
+					<td><?= $item->oldClass->title ?></td>
+					<td><?= $item->newClass->title ?></td>
+					<td><?= $item->event ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+<?php } ?>

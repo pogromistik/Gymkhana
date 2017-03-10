@@ -3,6 +3,7 @@ namespace champ\controllers;
 
 use common\models\Athlete;
 use common\models\Championship;
+use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
@@ -214,7 +215,7 @@ class ProfileController extends AccessController
 			$meResult = Participant::find()->where(['stageId' => $stage->id])
 				->andWhere(['athleteId' => $me->id, 'status' => Participant::STATUS_ACTIVE])
 				->andWhere(['not', ['bestTime' => null]])->all();
-
+			
 			$bestTime = null;
 			$bestParticipantId = null;
 			foreach ($meResult as $item) {
@@ -265,11 +266,37 @@ class ProfileController extends AccessController
 		return $result;
 	}
 	
-	public function actionCompareWith()
+	public function actionStats()
 	{
-		$this->pageTitle = 'Сравнение результатов';
+		$this->pageTitle = 'Статистика';
 		
+		$athlete = Athlete::findOne(\Yii::$app->user->id);
+		/** @var Figure[] $figures */
+		$figures = Figure::find()->orderBy(['title' => SORT_ASC])->all();
+		$figuresResult = [];
+		foreach ($figures as $figure) {
+			$result = FigureTime::find()->where(['figureId' => $figure->id, 'athleteId' => $athlete->id])
+				->orderBy(['resultTime' => SORT_ASC])->one();
+			if ($result) {
+				$figuresResult[] = [
+					'figure' => $figure,
+					'result' => $result
+				];
+			}
+		}
 		
-		return $this->render('compareWith');
+		$history = ClassHistory::find()->where(['athleteId' => $athlete->id])->orderBy(['date' => SORT_ASC]);
+		$count = $history->count();
+		if ($count > 15) {
+			$offset = $count - 15;
+			$history = $history->offset($offset);
+		}
+		$history = $history->all();
+		
+		return $this->render('stats', [
+			'figuresResult' => $figuresResult,
+			'history'       => $history,
+			'athlete'       => $athlete,
+		]);
 	}
 }
