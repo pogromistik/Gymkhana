@@ -80,7 +80,9 @@ class CompetitionsController extends BaseController
 					foreach ($championships as $championship) {
 						$results[$group][$championship->yearId] = [
 							'year'   => $championship->year->year,
-							'stages' => $championship->stages
+							'stages' => $championship->stages,
+							'status' => $championship->status,
+							'id'     => $championship->id
 						];
 					}
 					if (isset($results[$group])) {
@@ -107,7 +109,9 @@ class CompetitionsController extends BaseController
 						$results[$group][$item['regionGroupId']]['years'][$item['yearId']] = [
 							'year'   => $item['year'],
 							'stages' => Stage::find()->where(['championshipId' => $item['id']])
-								->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC])->all()
+								->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC])->all(),
+							'status' => $item['status'],
+							'id'     => $item['id']
 						];
 						
 						if (isset($results[$group])) {
@@ -346,8 +350,7 @@ class CompetitionsController extends BaseController
 							return 'Номер занят. Выберите другой или оставьте поле пустым.';
 						}
 						$old->number = $form->number;
-					}
-					elseif ($athlete->number && $championship->regionId && $athlete->regionId == $championship->regionId) {
+					} elseif ($athlete->number && $championship->regionId && $athlete->regionId == $championship->regionId) {
 						$old->number = $athlete->number;
 					}
 				}
@@ -438,5 +441,87 @@ class CompetitionsController extends BaseController
 		\Yii::$app->mutex->release('setNumber' . $stage->id);
 		
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
+	}
+	
+	public function actionChampionshipResult($championshipId, $showAll = null)
+	{
+		$this->pageTitle = 'Итоги чемпионата';
+		
+		$championship = Championship::findOne($championshipId);
+		if (!$championship) {
+			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		$stages = $championship->stages;
+		$results = [];
+		foreach ($stages as $stage) {
+			/** @var Participant[] $participants */
+			$participants = Participant::find()->where(['stageId' => $stage->id])->andWhere(['status' => Participant::STATUS_ACTIVE])
+				->orderBy(['points' => SORT_DESC, 'sort' => SORT_ASC])->all();
+			foreach ($participants as $participant) {
+				if (!isset($results[$participant->athleteId])) {
+					$results[$participant->athleteId] = [
+						'athlete'        => $participant->athlete,
+						'points'         => 0,
+						'stages'         => [],
+						'countStages'    => 0,
+						'cityId'         => null,
+						'severalRegions' => false
+					];
+				}
+				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
+					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
+					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['countStages'] += 1;
+					if (!$results[$participant->athleteId]['cityId']) {
+						$results[$participant->athleteId]['cityId'] = $stage->cityId;
+					} else {
+						if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
+							$results[$participant->athleteId]['severalRegions'] = true;
+						}
+					}
+				}
+			}
+		}
+		
+		if (!$showAll) {
+			foreach ($results as $i => $result) {
+				if ($result['countStages'] < $championship->amountForAthlete) {
+					unset($results[$i]);
+					continue;
+				}
+				if ($championship->requiredOtherRegions && !$result['severalRegions']) {
+					unset($results[$i]);
+					continue;
+				}
+				if (count($result['stages']) != $championship->estimatedAmount) {
+					$allPoints = $result['stages'];
+					arsort($allPoints);
+					$count = 0;
+					$result['points'] = 0;
+					foreach ($allPoints as $stagePoint) {
+						if ($count < $championship->estimatedAmount) {
+							$result['points'] += $stagePoint;
+							$count++;
+						} else {
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		uasort($results, "self::cmpByRackPlaces");
+		
+		return $this->render('championship-results', [
+			'championship' => $championship,
+			'results'      => $results,
+			'stages'       => $stages,
+			'showAll'      => $showAll
+		]);
+	}
+	
+	private function cmpByRackPlaces($a, $b)
+	{
+		return ($a['points'] > $b['points']) ? -1 : 1;
 	}
 }

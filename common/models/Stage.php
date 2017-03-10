@@ -230,16 +230,18 @@ class Stage extends BaseActiveRecord
 		$points = ArrayHelper::map(Point::find()->all(), 'id', 'point');
 		foreach ($participants as $participant) {
 			$participant->place = $place++;
-			if (isset($points[$participant->place]) && $participant->percent != 0) {
-				$participant->points = $points[$participant->place];
-			} else {
-				$participant->points = 0;
-			}
 			$participant->placeOfClass = $this->getActiveParticipants()
 					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
 			$participant->placeOfAthleteClass = $this->getActiveParticipants()
 					->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfClass"') + 1;
 			$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+			
+			//баллы
+			if (isset($points[$participant->place]) && $participant->percent != 0) {
+				$participant->points = $points[$participant->place];
+			} else {
+				$participant->points = 0;
+			}
 			
 			//Рассчёт класса
 			if ($participant->athleteClassId) {

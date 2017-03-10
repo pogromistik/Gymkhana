@@ -24,7 +24,7 @@ use yii\db\Query;
  * @property integer         $minNumber
  * @property integer         $maxNumber
  * @property integer         $amountForAthlete
- * @property integer         $amountInOtherRegions
+ * @property integer         $requiredOtherRegions
  * @property integer         $estimatedAmount
  *
  * @property Year            $year
@@ -73,8 +73,8 @@ class Championship extends BaseActiveRecord
 			if (!$this->amountForAthlete) {
 				$this->amountForAthlete = 1;
 			}
-			if (!$this->amountInOtherRegions) {
-				$this->amountInOtherRegions = 0;
+			if (!$this->requiredOtherRegions) {
+				$this->requiredOtherRegions = 0;
 			}
 			if (!$this->estimatedAmount) {
 				$this->estimatedAmount = 1;
@@ -98,11 +98,11 @@ class Championship extends BaseActiveRecord
 		return [
 			[['description'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber',
-				'amountForAthlete', 'amountInOtherRegions', 'estimatedAmount'], 'required'],
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'], 'required'],
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
 				'dateAdded', 'dateUpdated', 'regionId',
-				'amountForAthlete', 'amountInOtherRegions', 'estimatedAmount'
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
@@ -112,7 +112,7 @@ class Championship extends BaseActiveRecord
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
 			['maxNumber', 'default', 'value' => 99],
-			[['amountInOtherRegions'], 'default', 'value' => 0]
+			[['requiredOtherRegions'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -135,7 +135,7 @@ class Championship extends BaseActiveRecord
 			'minNumber'            => 'Минимальный номер участника',
 			'maxNumber'            => 'Максимальный номер участника',
 			'amountForAthlete'     => 'Обязательное количество этапов для спортсмена',
-			'amountInOtherRegions' => 'Необходимое количество этапов в других регионах',
+			'requiredOtherRegions' => 'Необходимо хоть раз выступить в другом городе',
 			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог'
 		];
 	}

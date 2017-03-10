@@ -19,6 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			'class' => 'btn btn-success',
 			'title' => 'Просмотр'
 		]); ?>
+		<?=  Html::a('Результаты', ['/competitions/championships/results', 'championshipId' => $model->id], [
+			'class' => 'btn btn-default'
+		]); ?>
     </p>
 	
 	<?= DetailView::widget([

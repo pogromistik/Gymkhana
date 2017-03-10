@@ -24,9 +24,12 @@ $this->params['breadcrumbs'][] = 'Редактирование';
     <?php } ?>
     
     <div class="pb-20"><?=  Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $model->id], [
-	    'class' => 'btn btn-success',
-	    'title' => 'Просмотр'
-        ]); ?></div>
+		    'class' => 'btn btn-success'
+	    ]); ?>
+	    <?=  Html::a('Результаты', ['/competitions/championships/results', 'championshipId' => $model->id], [
+		    'class' => 'btn btn-default'
+	    ]); ?>
+    </div>
     
     <div class="row">
         <div class="col-md-6 col-sm-12">
