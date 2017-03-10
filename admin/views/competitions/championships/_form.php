@@ -70,6 +70,10 @@ use kartik\widgets\Select2;
 </div>{input}</div>'])->textInput(['placeholder' => 'минимальный номер'])->label(false) ?>
         </div>
     </div>
+	
+	<?= $form->field($model, 'amountForAthlete')->textInput(['placeholder' => 'обязательное поле']) ?>
+	<?= $form->field($model, 'amountInOtherRegions')->textInput(['placeholder' => 'обязательное поле']) ?>
+	<?= $form->field($model, 'estimatedAmount')->textInput(['placeholder' => 'обязательное поле']) ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

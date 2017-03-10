@@ -173,6 +173,9 @@ AppAsset::register($this);
                                     <a href="<?= Url::to(['/competitions/help/years']) ?>"> Года</a>
                                 </li>
                                 <li>
+                                    <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для чемпионатов</a>
+                                </li>
+                                <li>
                                     <a data-addr="/competitions/news"
                                             href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
                                 </li>

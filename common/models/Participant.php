@@ -26,6 +26,7 @@ use Yii;
  * @property integer       $newAthleteClassId
  * @property integer       $newAthleteClassStatus
  * @property integer       $placeOfAthleteClass
+ * @property integer       $points
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -90,7 +91,8 @@ class Participant extends BaseActiveRecord
 				'placeOfClass',
 				'newAthleteClassId',
 				'newAthleteClassStatus',
-				'placeOfAthleteClass'
+				'placeOfAthleteClass',
+				'points'
 			], 'integer'],
 			['number', 'validateNumber']
 		];

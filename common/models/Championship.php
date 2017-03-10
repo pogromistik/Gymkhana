@@ -23,6 +23,9 @@ use yii\db\Query;
  * @property integer         $regionId
  * @property integer         $minNumber
  * @property integer         $maxNumber
+ * @property integer         $amountForAthlete
+ * @property integer         $amountInOtherRegions
+ * @property integer         $estimatedAmount
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -67,6 +70,15 @@ class Championship extends BaseActiveRecord
 			if (!$this->maxNumber) {
 				$this->maxNumber = 99;
 			}
+			if (!$this->amountForAthlete) {
+				$this->amountForAthlete = 1;
+			}
+			if (!$this->amountInOtherRegions) {
+				$this->amountInOtherRegions = 0;
+			}
+			if (!$this->estimatedAmount) {
+				$this->estimatedAmount = 1;
+			}
 		}
 	}
 	
@@ -85,18 +97,22 @@ class Championship extends BaseActiveRecord
 	{
 		return [
 			[['description'], 'string'],
-			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber'], 'required'],
+			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber',
+				'amountForAthlete', 'amountInOtherRegions', 'estimatedAmount'], 'required'],
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
-				'dateAdded', 'dateUpdated', 'regionId'
+				'dateAdded', 'dateUpdated', 'regionId',
+				'amountForAthlete', 'amountInOtherRegions', 'estimatedAmount'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
 			}],
 			[['title'], 'string', 'max' => 255],
 			[['minNumber', 'maxNumber'], 'integer', 'min' => 0],
-			['minNumber', 'default', 'value' => 1],
-			['maxNumber', 'default', 'value' => 99]
+			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
+			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
+			['maxNumber', 'default', 'value' => 99],
+			[['amountInOtherRegions'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -106,18 +122,21 @@ class Championship extends BaseActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id'            => 'ID',
-			'title'         => 'Название',
-			'description'   => 'Описание',
-			'yearId'        => 'Год проведения',
-			'status'        => 'Статус',
-			'groupId'       => 'Раздел',
-			'regionGroupId' => 'Региональный раздел',
-			'dateAdded'     => 'Дата создания',
-			'dateUpdated'   => 'Дата редактирования',
-			'regionId'      => 'Регион проведения чемпионата',
-			'minNumber'     => 'Минимальный номер участника',
-			'maxNumber'     => 'Максимальный номер участника'
+			'id'                   => 'ID',
+			'title'                => 'Название',
+			'description'          => 'Описание',
+			'yearId'               => 'Год проведения',
+			'status'               => 'Статус',
+			'groupId'              => 'Раздел',
+			'regionGroupId'        => 'Региональный раздел',
+			'dateAdded'            => 'Дата создания',
+			'dateUpdated'          => 'Дата редактирования',
+			'regionId'             => 'Регион проведения чемпионата',
+			'minNumber'            => 'Минимальный номер участника',
+			'maxNumber'            => 'Максимальный номер участника',
+			'amountForAthlete'     => 'Обязательное количество этапов для спортсмена',
+			'amountInOtherRegions' => 'Необходимое количество этапов в других регионах',
+			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог'
 		];
 	}
 	
