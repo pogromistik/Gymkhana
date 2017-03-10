@@ -34,6 +34,14 @@ use yii\bootstrap\Html;
                                             Для чемпионата пока не создано ни одного этапа.
 										<?php } else { ?>
                                             <div class="pl-10">
+                                                <?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
+                                                <?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+                                                    <br>
+                                                <?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
+	                                                <?= Html::a('Предварительные итоги чемпионата',
+                                                        ['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+                                                    <br>
+                                                <?php } ?>
 												<?php foreach ($stages as $stage) { ?>
 													<?php
 													$title = $stage->title . ', ' . $stage->city->title;
@@ -62,6 +70,14 @@ use yii\bootstrap\Html;
                                                     Для чемпионата пока не создано ни одного этапа.
 												<?php } else { ?>
                                                     <div class="pl-10">
+	                                                    <?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
+		                                                    <?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+                                                            <br>
+	                                                    <?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
+		                                                    <?= Html::a('Предварительные итоги чемпионата',
+                                                                ['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+                                                            <br>
+	                                                    <?php } ?>
 														<?php foreach ($stages as $stage) { ?>
 															<?php
 															$title = $stage->title . ', ' . $stage->city->title;
