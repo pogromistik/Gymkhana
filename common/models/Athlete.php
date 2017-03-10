@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\web\IdentityInterface;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "athletes".
@@ -31,6 +32,7 @@ use yii\web\IdentityInterface;
  * @property integer       $hasAccount
  * @property integer       $lastActivityDate
  * @property integer       $regionId
+ * @property integer       $photo
  *
  * @property Motorcycle[]  $motorcycles
  * @property AthletesClass $athleteClass
@@ -47,7 +49,10 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		'updatedAt',
 		'createdAt',
 		'lastActivityDate',
+		'photo'
 	];
+	
+	public $photoFile;
 	
 	const STATUS_BLOCKED = 0;
 	const STATUS_ACTIVE = 1;
@@ -124,14 +129,16 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		return [
 			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId'], 'required'],
 			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
-			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken'], 'string', 'max' => 255],
+			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
 			[['email'], 'unique'],
 			[['passwordResetToken'], 'unique'],
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
-			['number', 'integer', 'max' => 9999]
+			['number', 'integer', 'max' => 9999],
+			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 102400,
+			                      'tooBig'     => 'Размер файла не должен превышать 100KB']
 		];
 	}
 	
@@ -200,7 +207,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			'updatedAt'          => 'Обновлен',
 			'hasAccount'         => 'Аккаунт создан?',
 			'lastActivityDate'   => 'Дата последней активности',
-			'regionId'           => 'Регион'
+			'regionId'           => 'Регион',
+			'photo'              => 'Фотография',
+			'photoFile'          => 'Фотография'
 		];
 	}
 	
@@ -215,6 +224,30 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		$this->regionId = $this->city->regionId;
 		
 		return parent::beforeValidate();
+	}
+	
+	public function beforeSave($insert)
+	{
+		$file = UploadedFile::getInstance($this, 'photoFile');
+		if ($file && $file->size <= 102400) {
+			if ($this->photo) {
+				$filePath = Yii::getAlias('@files') . $this->photo;
+				if (file_exists($filePath)) {
+					unlink($filePath);
+				}
+			}
+			$dir = \Yii::getAlias('@files') . '/' . 'athletes';
+			if (!file_exists($dir)) {
+				mkdir($dir);
+			}
+			$title = uniqid() . '.' . $file->extension;
+			$folder = $dir . '/' . $title;
+			if ($file->saveAs($folder)) {
+				$this->photo = '/athletes/' . $title;
+			}
+		}
+		
+		return parent::beforeSave($insert);
 	}
 	
 	public function afterSave($insert, $changedAttributes)
