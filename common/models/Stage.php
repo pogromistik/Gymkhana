@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\components\BaseActiveRecord;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "stages".
@@ -226,8 +227,14 @@ class Stage extends BaseActiveRecord
 			
 			return 'Невозможно установить эталонное время для этапа';
 		}
+		$points = ArrayHelper::map(Point::find()->all(), 'id', 'point');
 		foreach ($participants as $participant) {
 			$participant->place = $place++;
+			if (isset($points[$participant->place]) && $participant->percent != 0) {
+				$participant->points = $points[$participant->place];
+			} else {
+				$participant->points = 0;
+			}
 			$participant->placeOfClass = $this->getActiveParticipants()
 					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
 			$participant->placeOfAthleteClass = $this->getActiveParticipants()
