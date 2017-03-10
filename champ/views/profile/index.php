@@ -14,7 +14,20 @@ use yii\bootstrap\Html;
 <?php } ?>
 
     <div class="athlete-form">
-		<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete']]); ?>
+		<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
+		
+		<?php if ($athlete->photo) { ?>
+            <div class="row">
+                <div class="col-md-2 col-sm-4 img-in-profile">
+					<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
+                </div>
+                <div class="col-md-10 col-sm-8">
+					<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+                </div>
+            </div>
+		<?php } else { ?>
+			<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+		<?php } ?>
 
         <div class="help-for-athlete">
             <small>Информация, обязательная для заполнения:</small>
@@ -73,10 +86,13 @@ use yii\bootstrap\Html;
     <h3>Мотоциклы</h3>
     <div class="help-for-athlete">
         <small>
-            Вы можете добавить ещё один мотоцикл или удалить (заблокировать) старый (при необходимости его можно будет вернуть). При
-            удалении мотоцикла все результаты, показынные на нём, сохраняются, но возможность зарегистрироваться на нём на этап
+            Вы можете добавить ещё один мотоцикл или удалить (заблокировать) старый (при необходимости его можно будет
+            вернуть). При
+            удалении мотоцикла все результаты, показынные на нём, сохраняются, но возможность зарегистрироваться на нём
+            на этап
             исчезает.<br>
-            При необходимости внести изменения в созданный мотоцикл (напр. при опечатке или если перепутаны местами марка и модель),
+            При необходимости внести изменения в созданный мотоцикл (напр. при опечатке или если перепутаны местами
+            марка и модель),
             пожалуйста,
             <a href="#" data-toggle="modal" data-target="#feedbackForm">свяжитесь с администрацией:</a>
             <b><a href="#" class="btn btn-dark" data-toggle="modal" data-target="#feedbackForm">написать</a></b>

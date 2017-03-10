@@ -517,3 +517,8 @@ tbody > tr > td {
 .footer a {
     color: #f4f4f4;
 }
+
+.img-in-profile img{
+    max-width: 100%;
+    max-height: 500px;
+}
