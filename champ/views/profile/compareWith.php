@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
 				'pluginOptions' => [
 					'tags' => true,
 					'tokenSeparators' => [',', ' '],
-					'maximumInputLength' => 2
+					'maximumInputLength' => 10
 				],
 			]) ?>
 			<?= Html::submitButton('сравнить', ['class' => 'btn btn-dark']) ?>

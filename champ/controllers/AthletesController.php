@@ -48,9 +48,9 @@ class AthletesController extends BaseController
 		
 		$history = ClassHistory::find()->where(['athleteId' => $athlete->id])->orderBy(['date' => SORT_ASC]);
 		$count = $history->count();
-		if ($count > 15) {
-			//$offset = $count-15;
-			//$history = $history->offset($offset);
+		if ($count > 30) {
+			$offset = $count-30;
+			$history = $history->offset($offset);
 		}
 		$history = $history->all();
 		
@@ -59,7 +59,7 @@ class AthletesController extends BaseController
 		return $this->render('view', [
 			'athlete'       => $athlete,
 			'figuresResult' => $figuresResult,
-			'history'       => $history
+			'history'       => $history,
 		]);
 	}
 }

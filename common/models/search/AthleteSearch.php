@@ -48,6 +48,7 @@ class AthleteSearch extends Athlete
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => ['defaultOrder' => ['lastName' => SORT_ASC, 'cityId' => SORT_ASC, 'firstName' => SORT_ASC]]
 		]);
 		
 		$this->load($params);
