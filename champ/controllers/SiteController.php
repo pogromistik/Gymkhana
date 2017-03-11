@@ -103,6 +103,9 @@ class SiteController extends BaseController
 		if (!$form->email && !$form->phone && !$form->athleteId) {
 			return 'Укажите корректные контакты для связи!';
 		}
+		if ($form->phoneOrMail && !$form->phone && !$form->email) {
+			return 'Указаны некорректные контакты для связи';
+		}
 		if (!$form->text) {
 			return 'Укажите текст сообщения';
 		}
