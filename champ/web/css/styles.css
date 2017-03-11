@@ -16,12 +16,14 @@ html {
     min-height: 100%;
     position: relative;
 }
+
 html,
 body {
     font-family: 'Exo', sans-serif;
     background: #f4f4f4;
     color: #4b4e53;
 }
+
 body {
     margin-bottom: 50px;
 }
@@ -34,7 +36,7 @@ a:hover {
     text-decoration: none;
 }
 
-.content a, h1, h2, h3, h4 , .full-content a{
+.content a, h1, h2, h3, h4, .full-content a {
     color: #4b4e53;
 }
 
@@ -479,7 +481,7 @@ tbody > tr > td {
     overflow: auto;
 }
 
-.modal-notices a{
+.modal-notices a {
     text-transform: none;
 }
 
@@ -498,13 +500,13 @@ tbody > tr > td {
     display: none;
 }
 
-.lk{
+.lk {
     list-style: none;
 }
 
-.lk .dropdown-menu{
-    right: 0!important;
-    left: auto!important;
+.lk .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
 }
 
 .lk li a.dropdown-toggle {
@@ -520,11 +522,12 @@ tbody > tr > td {
     bottom: 0;
     margin-top: 70px;
 }
+
 .footer a {
     color: #f4f4f4;
 }
 
-.img-in-profile img{
+.img-in-profile img {
     max-width: 100%;
     max-height: 500px;
 }
@@ -537,34 +540,42 @@ a.deletePhoto {
     position: relative;
     padding: 10px;
 }
-.athletes .item .card{
+
+.athletes .item .card {
     border: 1px solid #000;
     width: 100%;
     box-shadow: 0px 0px 4px 0px #a7a7a7;
 }
+
 .athletes .item a {
     text-decoration: none;
 }
+
 .athletes .item a:hover {
     color: #0a0a0a;
 }
+
 .athletes .item a:hover .card {
     box-shadow: 0px 0px 8px 0px #747474;
 }
+
 .athletes .item .card .number {
     font-size: 24px;
     position: absolute;
     bottom: 0;
     left: 0;
 }
+
 .athletes .item .card h4, .athletes .item .card h5 {
     text-transform: uppercase;
     margin-bottom: 0;
 }
+
 .athletes .item .card h4 {
     font-size: 16px;
     font-weight: bold;
 }
+
 .athletes .img {
     display: inline-block;
     vertical-align: top;
@@ -572,18 +583,31 @@ a.deletePhoto {
     height: 164px;
     padding-right: 10px;
 }
+
 .athletes .info {
     display: inline-block;
     vertical-align: top;
     position: relative;
     height: 164px;
 }
+
 .athletes .img img {
     max-width: 119px;
     max-height: 100%;
 }
+
 .athletes .item .card .athleteClass {
     text-align: center;
     background: #4b4e53;
     color: #fff;
+}
+
+.inline-block {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.athlete .img img {
+    max-width: 230px;
+    max-height: 500px;
 }
