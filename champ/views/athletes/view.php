@@ -93,7 +93,7 @@ use yii\bootstrap\Html;
 				<?php foreach ($history as $item) { ?>
                     <tr>
                         <td><?= $item->dateForHuman ?></td>
-                        <td><?= $item->oldClass->title ?></td>
+                        <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
                         <td><?= $item->newClass->title ?></td>
                         <td><?= $item->event ?></td>
                     </tr>
