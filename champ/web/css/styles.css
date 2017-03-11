@@ -284,6 +284,11 @@ nav .navbar-toggle .icon-bar {
     line-height: 25px;
 }
 
+.documents .list .info li {
+    line-height: 25px;
+    list-style: none;
+}
+
 .title-with-bg {
     background: #4b4e53;
     color: #fff;
