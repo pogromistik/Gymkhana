@@ -31,6 +31,7 @@ $(document).on("submit", '.newQuestion', function (e) {
         success: function (result) {
             if (result == true) {
                 form.find('.alert-success').text('Ваш запрос успешно отправлен.').show();
+                form.trigger('reset');
             } else {
                 form.find('.alert-danger').text(result).show();
             }
