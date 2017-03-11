@@ -34,15 +34,15 @@ a:hover {
     text-decoration: none;
 }
 
-.content a, h1, h2, h3, h4 {
+.content a, h1, h2, h3, h4 , .full-content a{
     color: #4b4e53;
 }
 
-.content a {
+.content a, .full-content a {
     text-decoration: underline;
 }
 
-.content a:hover {
+.content a:hover, .full-content a:hover {
     color: #56a025;
 }
 
@@ -231,6 +231,12 @@ nav .navbar-toggle .icon-bar {
     width: 60%;
 }
 
+.full-content {
+    padding: 60px 20px 0 20px;
+    position: relative;
+    width: 100%;
+}
+
 .list, .athlete {
     max-width: 738px;
 }
@@ -336,7 +342,7 @@ h2 {
     border-top: 2px solid #4b4e53
 }
 
-.content .btn-dark, .content .btn-dark a {
+.content .btn-dark, .content .btn-dark a, .full-content .btn-dark, .full-content .btn-dark a {
     background: #4b4e53;
     color: #f4f4f4;
     text-decoration: none;
@@ -525,4 +531,55 @@ tbody > tr > td {
 
 a.deletePhoto {
     text-decoration: none;
+}
+
+.athletes .item {
+    position: relative;
+    padding: 10px;
+}
+.athletes .item .card{
+    border: 1px solid #000;
+    width: 100%;
+    box-shadow: 0px 0px 4px 0px #a7a7a7;
+}
+.athletes .item a {
+    text-decoration: none;
+}
+.athletes .item a:hover {
+    color: #0a0a0a;
+}
+.athletes .item a:hover .card {
+    box-shadow: 0px 0px 8px 0px #747474;
+}
+.athletes .item .card .number {
+    font-size: 24px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+.athletes .item .card h4, .athletes .item .card h5 {
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+.athletes .img {
+    display: inline-block;
+    vertical-align: top;
+    width: 120px;
+    height: 164px;
+    padding-right: 10px;
+}
+.athletes .info {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    height: 164px;
+}
+.athletes .img img {
+    max-width: 119px;
+    max-height: 100%;
+}
+.athletes .item .card .athleteClass {
+    text-align: center;
+    background: #4b4e53;
+    color: #fff;
 }

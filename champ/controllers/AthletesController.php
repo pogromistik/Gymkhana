@@ -14,14 +14,18 @@ class AthletesController extends BaseController
 	public function actionList()
 	{
 		$this->pageTitle = 'Спортсмены';
+		$this->layout = 'full-content';
 		
 		$searchModel = new AthleteSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->orderBy(['athleteClassId' => SORT_ASC, 'cityId' => SORT_ASC, 'lastName' => SORT_ASC]);
 		
+		$athletes = Athlete::find()->orderBy(['athleteClassId' => SORT_ASC, 'cityId' => SORT_ASC, 'lastName' => SORT_ASC])->all();
+		
 		return $this->render('list', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
+			'athletes'     => $athletes
 		]);
 	}
 	
@@ -49,7 +53,7 @@ class AthletesController extends BaseController
 		$history = ClassHistory::find()->where(['athleteId' => $athlete->id])->orderBy(['date' => SORT_ASC]);
 		$count = $history->count();
 		if ($count > 30) {
-			$offset = $count-30;
+			$offset = $count - 30;
 			$history = $history->offset($offset);
 		}
 		$history = $history->all();
