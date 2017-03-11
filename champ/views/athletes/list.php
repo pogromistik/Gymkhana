@@ -13,49 +13,112 @@ use yii\helpers\ArrayHelper;
  */
 ?>
 
+<?php
+$listView = new \yii\widgets\ListView([
+	'dataProvider' => $dataProvider,
+	'layout'       => "{items}\n{pager}",
+	'options'      => [
+		'tag' => 'tbody'
+	],
+	'pager'        => [
+		'firstPageLabel' => '<<',
+		'lastPageLabel'  => '>>',
+		'prevPageLabel'  => '<',
+		'nextPageLabel'  => '>',
+	],
+	'itemView'     => 'athleteRow'
+]);
+?>
+
+<?php $form = \yii\bootstrap\ActiveForm::begin([
+	'id'                     => 'search',
+	'method'                 => 'get',
+	'enableClientValidation' => false
+]); ?>
+<div class="row table">
+
+    <div class="col-md-3 sol-sm-6">
+        <?=
+		Select2::widget([
+			'model'         => $searchModel,
+			'attribute'     => 'regionId',
+			'data'          => \common\models\Region::getAll(true),
+			'maintainOrder' => true,
+			'options'       => [
+				'placeholder' => 'Выберите регион...',
+				'multiple'    => true,
+				'onchange'    => 'this.form.submit()'
+			],
+			'pluginOptions' => [
+				'tags' => true
+			],
+		])
+		?></div>
+    <div class="col-md-3 sol-sm-6">
+        <?=
+		Select2::widget([
+			'model'         => $searchModel,
+			'attribute'     => 'cityId',
+			'data'          => \common\models\City::getAll(true),
+			'maintainOrder' => true,
+			'options'       => [
+				'placeholder' => 'Выберите город...',
+				'multiple'    => true,
+				'onchange'    => 'this.form.submit()'
+			],
+			'pluginOptions' => [
+				'tags' => true
+			],
+		])
+		?></div>
+    <div class="col-md-3 sol-sm-6">
+		<?=
+		Select2::widget([
+			'model'         => $searchModel,
+			'attribute'     => 'athleteClassId',
+			'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
+				->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['percent' => SORT_ASC, 'id' => SORT_ASC])->all(), 'id', 'title'),
+			'maintainOrder' => true,
+			'options'       => [
+				'placeholder' => 'Выберите класс...',
+				'multiple'    => true,
+				'onchange'    => 'this.form.submit()'
+			],
+			'pluginOptions' => [
+				'tags' => true
+			],
+		])
+		?>
+    </div>
+    <div class="col-md-3 sol-sm-6">
+		<?=
+		Select2::widget([
+			'model'         => $searchModel,
+			'attribute'     => 'id',
+			'data'          => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(), 'id', function (\common\models\Athlete $item) {
+				return $item->lastName . ' ' . $item->firstName;
+			}),
+			'theme'         => Select2::THEME_BOOTSTRAP,
+			'pluginOptions' => [
+				'allowClear' => true
+			],
+			'options'       => [
+				'placeholder' => 'Введите имя...',
+				'onchange'    => 'this.form.submit()'
+			]
+		])
+		?>
+    </div>
+</div>
+<button type="submit" style="visibility: hidden;" title="Сохранить"></button>
+<?php $form->end() ?>
+
 <div class="athletes">
     <div class="row">
-		<?php foreach ($athletes as $athlete) { ?>
-            <div class="col-md-3 col-sm-6 col-xs-12 item">
-                <a href="/athletes/view?id=<?=$athlete->id?>">
-                <div class="card">
-                    <div class="img">
-						<?php if ($athlete->photo) { ?>
-							<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
-						<?php } else {
-							$img = rand(0, 4);
-							?>
-							<?= Html::img('/img/avatar.jpg') ?>
-						<?php } ?>
-                    </div>
-                    <div class="info">
-                        <h4><?= $athlete->getFullName() ?></h4>
-						<?= $athlete->city->title ?>
-                        <h5>мотоциклы:</h5>
-						<?php $motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all();
-						if (count($motorcycles) == 1) {
-							$motorcycle = reset($motorcycles);
-							
-							$html = $motorcycle->getFullTitle();
-						} else {
-							$html = '<ul>';
-							foreach ($motorcycles as $motorcycle) {
-								$html .= '<li>' . $motorcycle->getFullTitle() . '</li>';
-							}
-							$html .= '</ul>';
-						}
-						?>
-						<?= $html ?>
-                        <div class="number">
-		                    <?= $athlete->number ? '№' . $athlete->number : '' ?>
-                        </div>
-                    </div>
-                    <div class="athleteClass">
-		                <?= $athlete->athleteClass ? $athlete->athleteClass->title : '' ?>
-                    </div>
-                </div>
-                </a>
-            </div>
-		<?php } ?>
+		<?php
+		foreach ($dataProvider->models as $index => $model) {
+			echo $listView->renderItem($model, $model->id, $index);
+		}
+		?>
     </div>
 </div>
