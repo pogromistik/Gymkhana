@@ -588,3 +588,24 @@ $(document).ready(function () {
         return false;
     });
 });
+
+$('.deletePhoto').click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var model = $(this).data('model');
+    showBackDrop();
+    $.get('/competitions/help/delete-photo', {
+        id: id,
+        modelId: model
+    }).done(function (data) {
+        if (data == true) {
+            location.reload();
+        } else {
+            hideBackDrop();
+            alert(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        alert(error.responseText);
+    });
+});

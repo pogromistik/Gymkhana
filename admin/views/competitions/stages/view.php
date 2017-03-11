@@ -70,7 +70,17 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'class',
 				'value'     => $model->class ? $model->classModel->title : null
 			],
-            'referenceTimeHuman'
+			[
+				'attribute' => 'trackPhoto',
+				'format'    => 'raw',
+				'value'     => Html::img(\Yii::getAlias('@filesView') . '/' . $model->trackPhoto)
+			],
+			[
+				'attribute' => 'trackPhotoStatus',
+				'label'     => 'Статус публикации фото',
+				'value'     => $model->trackPhotoStatus ? 'опубликовано' : 'не опубликовано'
+			],
+			'referenceTimeHuman'
 		],
 	]) ?>
 
