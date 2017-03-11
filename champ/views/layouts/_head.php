@@ -20,9 +20,9 @@ use yii\helpers\Url;
                     <?php if (!\Yii::$app->user->isGuest) { ?>
                     <div class="navbar-mobile-items">
                         <a href="#" class="notices"><span class="fa fa-bell green"></span>
-                            <span id="newNotices"></span></a>
+                            <span id="newNoticesMobile"></span></a>
                         <div class="modal-notices">
-                            <div class="text-right" id="closeNotices">x</div>
+                            <div class="text-right closeNotices">x</div>
                             <div class="text">
                             </div>
                             <div class="show-all text-center pt-10">
@@ -85,7 +85,7 @@ use yii\helpers\Url;
                             <a href="#" class="notices"><span class="fa fa-bell green"></span>
                             <span id="newNotices"></span></a>
                             <div class="modal-notices">
-                                <div class="text-right" id="closeNotices">x</div>
+                                <div class="text-right closeNotices">x</div>
                                 <div class="text">
                                 </div>
                                 <div class="show-all text-center pt-10">

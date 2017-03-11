@@ -9,6 +9,7 @@ function checkNotifications() {
         success: function (result) {
             if (result > 0) {
                 $('#newNotices').html('<sup>(' + result + ')</sup>');
+                $('#newNoticesMobile').html('<sup>(' + result + ')</sup>');
             }
             setTimeout(function () {
                 checkNotifications();
@@ -26,7 +27,7 @@ $(document).ready(function () {
     checkNotifications();
 });
 
-$('#closeNotices').click(function () {
+$('.closeNotices').click(function () {
     $('.modal-notices').slideToggle('200', function () {
         $('.modal-notices').removeClass('show');
     });
@@ -44,6 +45,7 @@ $('.notices').click(function () {
                 $('.modal-notices').addClass('show');
             });
             $('#newNotices').html('');
+            $('#newNoticesMobile').html('');
         }).fail(function (error) {
             alert(error.responseText);
         });
