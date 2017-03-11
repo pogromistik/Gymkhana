@@ -105,8 +105,8 @@ use yii\bootstrap\Html;
             <b><a href="#" class="btn btn-dark" data-toggle="modal" data-target="#feedbackForm">написать</a></b>
         </small>
     </div>
-<?php if ($motorcycles = $athlete->motorcycles) { ?>
 	<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
+<?php if ($motorcycles = $athlete->motorcycles) { ?>
     <table class="table">
         <thead>
         <tr>
