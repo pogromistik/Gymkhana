@@ -79,3 +79,7 @@ var equalizer = function (equalizer) {
 $(document).ready(function () {
     equalizer($('.athletes .item .card'));
 });
+
+$('.toggle .title').click(function () {
+    $(this).parent().find('.toggle-content').slideToggle();
+});

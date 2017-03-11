@@ -1,6 +1,7 @@
 <?php
 use common\models\Figure;
 use kartik\select2\Select2;
+use yii\bootstrap\Collapse;
 
 /**
  * @var \yii\web\View               $this
@@ -41,11 +42,16 @@ $time = time();
 				<?php } ?>
 			<?php } ?>
         </div>
-	    <?php if ($figure->picture) { ?>
+		<?php if ($figure->picture) { ?>
             <div class="track-photo">
-			    <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
+                <div class="toggle">
+                    <div class="title">Посмотреть схему</div>
+                    <div class="toggle-content">
+		                <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
+                    </div>
+                </div>
             </div>
-	    <?php } ?>
+		<?php } ?>
     </div>
 
     <div class="filters">
@@ -97,17 +103,17 @@ $time = time();
     </div>
 
     <div class="alert alert-danger" style="display: none"></div>
-    
+
     <div class="results pt-20">
         <div class="small text-right">
-	        <?php $count = count($results); ?>
-         <?php if ($count > 30) { ?>
-            Показаны 30 лучших результатов. <a href="#" class="showAll">Показать все</a>
-         <?php } else { ?>
-             Количество результатов: <?= $count ?>
-            <?php } ?>
+			<?php $count = count($results); ?>
+			<?php if ($count > 30) { ?>
+                Показаны 30 лучших результатов. <a href="#" class="showAll">Показать все</a>
+			<?php } else { ?>
+                Количество результатов: <?= $count ?>
+			<?php } ?>
         </div>
-    
+		
 		<?= $this->render('_figure-result', ['results' => $results]) ?>
     </div>
 </div>
