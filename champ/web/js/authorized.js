@@ -51,3 +51,26 @@ $('.notices').click(function () {
         });
     }
 });
+
+$('.getRequest').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var action = elem.data('action');
+    var id = elem.data('id');
+    $.get(action, {
+        id: id
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            hideBackDrop();
+            alert(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        alert(error.responseText);
+        console.log(error);
+    });
+});

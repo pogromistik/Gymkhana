@@ -13,6 +13,7 @@ use common\models\Year;
 use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -65,8 +66,17 @@ class ProfileController extends AccessController
 		$newStages = Stage::find()->where(['<=', 'startRegistration', $time])
 			->andWhere(['>=', 'endRegistration', $time])->all();
 		
+		$participants = null;
+		if ($newStages) {
+			$stageIds = ArrayHelper::getColumn($newStages, 'id');
+			$participants = Participant::find()->where(['stageId' => $stageIds])
+				->andWhere(['athleteId' => \Yii::$app->user->id])
+				->orderBy(['status' => SORT_ASC, 'dateAdded' => SORT_ASC])->all();
+		}
+		
 		return $this->render('info', [
-			'newStages' => $newStages
+			'newStages'    => $newStages,
+			'participants' => $participants
 		]);
 	}
 	
@@ -312,6 +322,39 @@ class ProfileController extends AccessController
 			if (!$athlete->save()) {
 				return 'Возникла ошибка при сохранении изменений';
 			}
+		}
+		
+		return true;
+	}
+	
+	public function actionChangeParticipantStatus($id)
+	{
+		
+		$participant = Participant::findOne($id);
+		if (!$id || $participant->athleteId != \Yii::$app->user->id) {
+			return 'Заявка не найдена';
+		}
+		
+		if ($participant->bestTime) {
+			return 'Вы участвуете в этапе. Изменение данных невозможно';
+		}
+		
+		if (in_array($participant->stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
+			return 'Этап начался, изменение данных невозможно';
+		}
+		
+		if ($participant->status == Participant::STATUS_DISQUALIFICATION) {
+			return 'Вы были дисквалифицированы. Изменение данных невозможно';
+		}
+		
+		if ($participant->status == Participant::STATUS_ACTIVE) {
+			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
+		} else {
+			$participant->status = Participant::STATUS_ACTIVE;
+		}
+		
+		if (!$participant->save()) {
+			return 'Возникла ошибка при сохранении данных';
 		}
 		
 		return true;
