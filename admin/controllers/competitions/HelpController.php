@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use common\models\City;
 use admin\controllers\BaseController;
+use common\models\Figure;
 use common\models\HelpModel;
 use common\models\Region;
 use common\models\search\YearSearch;
@@ -154,6 +155,9 @@ class HelpController extends BaseController
 				$model = Stage::findOne($id);
 				$varName = 'trackPhoto';
 				break;
+			case self::PHOTO_FIGURE:
+				$model = Figure::findOne($id);
+				$varName = 'picture';
 		}
 		if (!$model) {
 			return 'Возникла ошибка при удалении фотографии';

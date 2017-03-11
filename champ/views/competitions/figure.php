@@ -41,6 +41,11 @@ $time = time();
 				<?php } ?>
 			<?php } ?>
         </div>
+	    <?php if ($figure->picture) { ?>
+            <div class="track-photo">
+			    <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
+            </div>
+	    <?php } ?>
     </div>
 
     <div class="filters">
