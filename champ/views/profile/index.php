@@ -15,7 +15,11 @@ use yii\bootstrap\Html;
 
     <div class="athlete-form">
 		<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
-		
+
+        <div class="help-for-athlete">
+            <small>Размер загружаемого изображения не должен превышать 100КБ. Допустимые форматы: png, jpg.
+            Необходимый размер фотографии: 220x300 pixels</small>
+        </div>
 		<?php if ($athlete->photo) { ?>
             <div class="row">
                 <div class="col-md-2 col-sm-4 img-in-profile">
@@ -25,11 +29,11 @@ use yii\bootstrap\Html;
                     <br>
                 </div>
                 <div class="col-md-10 col-sm-8">
-					<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+					<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
                 </div>
             </div>
 		<?php } else { ?>
-			<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+			<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 		<?php } ?>
 
         <div class="help-for-athlete">

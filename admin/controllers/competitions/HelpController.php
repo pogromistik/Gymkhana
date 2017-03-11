@@ -4,8 +4,10 @@ namespace admin\controllers\competitions;
 
 use common\models\City;
 use admin\controllers\BaseController;
+use common\models\HelpModel;
 use common\models\Region;
 use common\models\search\YearSearch;
+use common\models\Stage;
 use common\models\Year;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -15,6 +17,9 @@ use yii\web\Response;
  */
 class HelpController extends BaseController
 {
+	const PHOTO_STAGE = 1;
+	const PHOTO_FIGURE = 2;
+	
 	public function actionAddCity()
 	{
 		$this->can('competitions');
@@ -139,5 +144,28 @@ class HelpController extends BaseController
 			'year'    => $year,
 			'success' => $success
 		]);
+	}
+	
+	public function actionDeletePhoto($id, $modelId)
+	{
+		$model = null;
+		switch ($modelId) {
+			case self::PHOTO_STAGE:
+				$model = Stage::findOne($id);
+				$varName = 'trackPhoto';
+				break;
+		}
+		if (!$model) {
+			return 'Возникла ошибка при удалении фотографии';
+		}
+		if ($model->$varName) {
+			HelpModel::deleteFile($model->$varName);
+			$model->$varName = null;
+			if (!$model->save()) {
+				return 'Возникла ошибка при сохранении изменений';
+			}
+		}
+		
+		return true;
 	}
 }

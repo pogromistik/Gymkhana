@@ -66,6 +66,29 @@ use kartik\widgets\DateTimePicker;
 			]
 		]) ?>
 	
+	<?php if ($model->trackPhoto) { ?>
+        <div class="row">
+            <div class="col-md-2 col-sm-4 img-in-profile">
+				<?= Html::img(\Yii::getAlias('@filesView') . '/' . $model->trackPhoto) ?>
+                <br>
+                <a href="#" class="btn btn-default btn-block deletePhoto" data-id="<?= $model->id ?>"
+                   data-model="<?= \admin\controllers\competitions\HelpController::PHOTO_STAGE ?>">удалить</a>
+                <br>
+            </div>
+            <div class="col-md-10 col-sm-8">
+				<?= $form->field($model, 'photoFile', ['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Допустимые форматы: png, jpg. Максимальный размер: 2МБ.
+</div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+				<?= $form->field($model, 'trackPhotoStatus')->checkbox() ?>
+            </div>
+        </div>
+	<?php } else { ?>
+		<?= $form->field($model, 'photoFile', ['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Допустимые форматы: png, jpg. Максимальный размер: 2МБ.
+</div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+		<?= $form->field($model, 'trackPhotoStatus')->checkbox() ?>
+	<?php } ?>
+	
 	<?= $form->field($model, 'class',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">
  Это поле заполняется автоматически после завершения регистрации. Меняйте его только в том случае, если рассчитанный класс

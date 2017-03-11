@@ -5,6 +5,7 @@ namespace common\models;
 use common\components\BaseActiveRecord;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "stages".
@@ -25,6 +26,8 @@ use yii\helpers\ArrayHelper;
  * @property integer       $class
  * @property integer       $referenceTime
  * @property integer       $regionId
+ * @property string        $trackPhoto
+ * @property integer       $trackPhotoStatus
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -35,6 +38,8 @@ use yii\helpers\ArrayHelper;
 class Stage extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
+	
+	public $photoFile;
 	
 	public $dateOfTheHuman;
 	public $startRegistrationHuman;
@@ -47,6 +52,9 @@ class Stage extends BaseActiveRecord
 	const STATUS_END_REGISTRATION = 4;
 	const STATUS_CALCULATE_RESULTS = 5;
 	const STATUS_PRESENT = 6;
+	
+	const PHOTO_NOT_PUBLISH = 0;
+	const PHOTO_PUBLISH = 1;
 	
 	public static $statusesTitle = [
 		self::STATUS_UPCOMING           => 'Предстоящий этап',
@@ -92,12 +100,15 @@ class Stage extends BaseActiveRecord
 				'class',
 				'countRace',
 				'referenceTime',
-				'regionId'
+				'regionId',
+				'trackPhotoStatus'
 			], 'integer'],
-			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman'], 'string', 'max' => 255],
+			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			['description', 'string'],
 			[['countRace'], 'integer', 'max' => 5],
-			[['countRace'], 'integer', 'min' => 1]
+			[['countRace'], 'integer', 'min' => 1],
+			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
+			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
 		];
 	}
 	
@@ -125,7 +136,10 @@ class Stage extends BaseActiveRecord
 			'class'                  => 'Класс соревнования',
 			'countRace'              => 'Количество заездов',
 			'referenceTime'          => 'Эталонное время',
-			'referenceTimeHuman'     => 'Эталонное время'
+			'referenceTimeHuman'     => 'Эталонное время',
+			'trackPhoto'             => 'Фото трассы',
+			'photoFile'              => 'Фото трассы',
+			'trackPhotoStatus'       => 'Опубликовать трассу'
 		];
 	}
 	
@@ -152,6 +166,30 @@ class Stage extends BaseActiveRecord
 		$this->regionId = $this->city->regionId;
 		
 		return parent::beforeValidate();
+	}
+	
+	public function beforeSave($insert)
+	{
+		$file = UploadedFile::getInstance($this, 'photoFile');
+		if ($file && $file->size <= 2097152) {
+			if ($this->trackPhoto) {
+				HelpModel::deleteFile($this->trackPhoto);
+			}
+			$dir = \Yii::getAlias('@files') . '/' . 'stages-tracks';
+			if (!file_exists($dir)) {
+				mkdir($dir);
+			}
+			$title = uniqid() . '.' . $file->extension;
+			$folder = $dir . '/' . $title;
+			if ($file->saveAs($folder)) {
+				$this->trackPhoto = 'stages-tracks/' . $title;
+				if (!$this->trackPhotoStatus) {
+					$this->trackPhotoStatus = self::PHOTO_NOT_PUBLISH;
+				}
+			}
+		}
+		
+		return parent::beforeSave($insert);
 	}
 	
 	public function afterFind()
