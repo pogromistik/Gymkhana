@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "Figures".
@@ -24,6 +25,8 @@ class Figure extends \yii\db\ActiveRecord
 	public $bestTimeForHuman;
 	public $bestTimeInRussiaForHuman;
 	
+	public $photoFile;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -42,6 +45,8 @@ class Figure extends \yii\db\ActiveRecord
 			[['description', 'bestAthlete', 'bestAthleteInRussia', 'bestTimeForHuman', 'bestTimeInRussiaForHuman'], 'string'],
 			[['bestTime', 'bestTimeInRussia'], 'integer'],
 			[['title', 'file', 'picture'], 'string', 'max' => 255],
+			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
+			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
 		];
 	}
 	
@@ -55,7 +60,8 @@ class Figure extends \yii\db\ActiveRecord
 			'title'                    => 'Название',
 			'description'              => 'Описание',
 			'file'                     => 'Файл',
-			'picture'                  => 'Изображение',
+			'picture'                  => 'Фото трассы',
+			'photoFile'                => 'Фото трассы',
 			'bestTime'                 => 'Эталонное время',
 			'bestTimeForHuman'         => 'Эталонное время',
 			'bestAthlete'              => 'Мировой рекордсмен',
@@ -78,6 +84,27 @@ class Figure extends \yii\db\ActiveRecord
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function beforeSave($insert)
+	{
+		$file = UploadedFile::getInstance($this, 'photoFile');
+		if ($file && $file->size <= 2097152) {
+			if ($this->picture) {
+				HelpModel::deleteFile($this->picture);
+			}
+			$dir = \Yii::getAlias('@files') . '/' . 'figures';
+			if (!file_exists($dir)) {
+				mkdir($dir);
+			}
+			$title = uniqid() . '.' . $file->extension;
+			$folder = $dir . '/' . $title;
+			if ($file->saveAs($folder)) {
+				$this->picture = 'figures/' . $title;
+			}
+		}
+		
+		return parent::beforeSave($insert);
 	}
 	
 	public function afterFind()

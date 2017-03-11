@@ -1,8 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use kartik\widgets\DatePicker;
+use yii\bootstrap\ActiveForm;
 use dosamigos\ckeditor\CKEditor;
 use yii\widgets\MaskedInput;
 
@@ -41,6 +40,27 @@ use yii\widgets\MaskedInput;
     ]) ?>
 
     <?= $form->field($model, 'bestAthleteInRussia')->textarea(['rows' => 3]) ?>
+	
+	<?php if ($model->picture) { ?>
+        <div class="row">
+            <div class="col-md-2 col-sm-4 img-in-profile">
+				<?= Html::img(\Yii::getAlias('@filesView') . '/' . $model->picture) ?>
+                <br>
+                <a href="#" class="btn btn-warning btn-block deletePhoto" data-id="<?= $model->id ?>"
+                   data-model="<?= \admin\controllers\competitions\HelpController::PHOTO_FIGURE ?>">удалить</a>
+                <br>
+            </div>
+            <div class="col-md-10 col-sm-8">
+				<?= $form->field($model, 'photoFile', ['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Допустимые форматы: png, jpg. Максимальный размер: 2МБ.
+</div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+            </div>
+        </div>
+	<?php } else { ?>
+		<?= $form->field($model, 'photoFile', ['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Допустимые форматы: png, jpg. Максимальный размер: 2МБ.
+</div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+	<?php } ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
