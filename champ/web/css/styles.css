@@ -284,6 +284,10 @@ nav .navbar-toggle .icon-bar {
     line-height: 25px;
 }
 
+.documents .list .info ul {
+    padding: 0;
+}
+
 .documents .list .info li {
     line-height: 25px;
     list-style: none;
