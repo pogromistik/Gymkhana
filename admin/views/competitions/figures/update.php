@@ -158,7 +158,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				'filter'    => false,
 				'format'    => 'raw',
 				'value'     => function (\common\models\FigureTime $item) {
-					return $item->athleteClass->title;
+					return $item->athleteClassId ? $item->athleteClass->title : '';
 				}
 			],
 			'timeForHuman',
