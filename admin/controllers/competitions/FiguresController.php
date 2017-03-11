@@ -356,11 +356,11 @@ class FiguresController extends BaseController
 			return 'Вы пытаетесь понизить спортсмену ' . $item->athlete->getFullName() . ' класс с ' . $athlete->athleteClass->title . ' на '
 				. $item->newAthleteClass->title . '. Понижение класса невозможно';
 		}
-		if ($athlete->athleteClass->percent == $item->newAthleteClass->percent) {
+		if ($athlete->athleteClassId && $athlete->athleteClass->percent == $item->newAthleteClass->percent) {
 			return 'Спортсмену ' . $item->athlete->getFullName() . ' итак уже присвоен класс C3';
 		}
 		
-		if ($athlete->athleteClassId && $athlete->athleteClassId != $item->newAthleteClassId) {
+		if ($athlete->athleteClassId != $item->newAthleteClassId) {
 			$transaction = \Yii::$app->db->beginTransaction();
 			
 			$event = $item->figure->title;
