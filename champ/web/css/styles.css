@@ -627,3 +627,16 @@ a.deletePhoto {
     max-width: 230px;
     max-height: 500px;
 }
+
+.toggle-content {
+    display: none;
+}
+
+.toggle .title {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.toggle .title:hover {
+    color: #56a025;
+}

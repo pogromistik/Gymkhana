@@ -35,7 +35,12 @@ $time = time();
     
     <?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
         <div class="track-photo">
-	        <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
+            <div class="toggle">
+                <div class="title">Посмотреть схему</div>
+                <div class="toggle-content">
+	                <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
+                </div>
+            </div>
         </div>
     <?php } ?>
 	
