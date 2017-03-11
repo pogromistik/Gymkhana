@@ -35,6 +35,7 @@ use yii\web\UploadedFile;
  * @property integer       $photo
  *
  * @property Motorcycle[]  $motorcycles
+ * @property Motorcycle[]  $activeMotorcycles
  * @property AthletesClass $athleteClass
  * @property City          $city
  * @property Region        $region
@@ -277,6 +278,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function getMotorcycles()
 	{
 		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
+	}
+	
+	public function getActiveMotorcycles()
+	{
+		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->andOnCondition(['status' => self::STATUS_ACTIVE])->orderBy(['dateAdded' => SORT_DESC]);
 	}
 	
 	public function getAthleteClass()

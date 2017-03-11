@@ -74,3 +74,27 @@ $('.getRequest').click(function (e) {
         console.log(error);
     });
 });
+
+$(document).on("submit", '#sendFigureResult', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    $('.alert').hide();
+    showBackDrop();
+
+    $.ajax({
+        url: "/figures/send",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                $('.alert-success').text('Результат отправлен. После обработки запроса Вам придёт соответствующее уведомление. В случае подтверждения результата, он появится на сайте.').show();
+                form.trigger('reset');
+                hideBackDrop();
+            } else {
+                $('.alert-danger').text(result).show();
+                hideBackDrop();
+            }
+        }
+    });
+});
