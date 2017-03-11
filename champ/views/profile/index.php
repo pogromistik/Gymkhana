@@ -83,7 +83,7 @@ use yii\bootstrap\Html;
 		<?= $form->field($athlete, 'number')->textInput() ?>
 
         <div class="form-group complete">
-			<?= Html::submitButton('Сохранить', ['class' => 'btn btn-dark']) ?>
+			<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
         </div>
 		
 		<?php ActiveForm::end(); ?>
@@ -101,8 +101,7 @@ use yii\bootstrap\Html;
             При необходимости внести изменения в созданный мотоцикл (напр. при опечатке или если перепутаны местами
             марка и модель),
             пожалуйста,
-            <a href="#" data-toggle="modal" data-target="#feedbackForm">свяжитесь с администрацией:</a>
-            <b><a href="#" class="btn btn-dark" data-toggle="modal" data-target="#feedbackForm">написать</a></b>
+            <a href="#" data-toggle="modal" data-target="#feedbackForm">свяжитесь с администрацией</a>.
         </small>
     </div>
 	<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
