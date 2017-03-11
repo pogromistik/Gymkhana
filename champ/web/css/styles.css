@@ -351,6 +351,13 @@ h2 {
     border-radius: 0px;
 }
 
+.content .btn-light, .content .btn-light a, .full-content .btn-light, .full-content .btn-light a {
+    background: #abb2bd;
+    color: #f4f4f4;
+    text-decoration: none;
+    border-radius: 0px;
+}
+
 table.results td, table.results th {
     vertical-align: middle !important;
     border-collapse: collapse;

@@ -344,6 +344,9 @@ class CompetitionsController extends BaseController
 		$championship = $stage->championship;
 		$athlete = Athlete::findOne($form->athleteId);
 		if ($old) {
+			if ($old->status == Participant::STATUS_DISQUALIFICATION) {
+				return 'Вы были дисквалифицированы. Повторная регистрация невозможна';
+			}
 			if ($old->status != Participant::STATUS_ACTIVE) {
 				if ($old->number != $form->number) {
 					if ($form->number) {
