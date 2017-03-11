@@ -20,12 +20,9 @@ class AthletesController extends BaseController
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->orderBy(['athleteClassId' => SORT_ASC, 'cityId' => SORT_ASC, 'lastName' => SORT_ASC]);
 		
-		$athletes = Athlete::find()->orderBy(['athleteClassId' => SORT_ASC, 'cityId' => SORT_ASC, 'lastName' => SORT_ASC])->all();
-		
 		return $this->render('list', [
 			'searchModel'  => $searchModel,
-			'dataProvider' => $dataProvider,
-			'athletes'     => $athletes
+			'dataProvider' => $dataProvider
 		]);
 	}
 	

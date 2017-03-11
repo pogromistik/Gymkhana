@@ -19,8 +19,8 @@ class AthleteSearch extends Athlete
 	public function rules()
 	{
 		return [
-			[['id', 'login', 'cityId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
-			[['firstName', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken', 'regionId', 'athleteClassId'], 'safe'],
+			[['id', 'login', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
+			[['firstName', 'cityId', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken', 'regionId', 'athleteClassId'], 'safe'],
 		];
 	}
 	
@@ -58,7 +58,6 @@ class AthleteSearch extends Athlete
 			// $query->where('0=1');
 			return $dataProvider;
 		}
-		
 		// grid filtering conditions
 		$query->andFilterWhere([
 			'id'               => $this->id,

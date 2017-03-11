@@ -1,3 +1,9 @@
+@media (min-width: 1512px) {
+    .col-bg-3 {
+        width: 25%;
+    }
+}
+
 @media (max-width: 1350px) {
     .content {
         width: 70%;
@@ -69,6 +75,12 @@
 @media (max-width: 788px) {
     .nav a {
         font-size: 10px;
+    }
+    .athletes {
+        font-size: 12px;
+    }
+    .athletes h4 {
+        font-size: 14px;
     }
 }
 

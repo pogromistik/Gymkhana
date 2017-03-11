@@ -7,7 +7,7 @@ use yii\bootstrap\Html;
 $athlete = $model;
 ?>
 
-<div class="col-md-3 col-sm-6 col-xs-12 item">
+<div class="col-xs-12 col-sm-6 col-lg-4 col-bg-3 item">
 	<a href="/athletes/view?id=<?=$athlete->id?>">
 		<div class="card">
 			<div class="img">
