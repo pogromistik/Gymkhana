@@ -63,7 +63,19 @@ $(function () {
     });
 })();
 
+var equalizer = function (equalizer) {
+    var maxHeight = 0;
+
+    equalizer.each(function () {
+        console.log($(this).height());
+        if ($(this).height() > maxHeight) {
+            maxHeight = $(this).height()
+        }
+    });
+
+    equalizer.height(maxHeight);
+};
 
 $(document).ready(function () {
-
+    equalizer($('.athletes .item .card'));
 });
