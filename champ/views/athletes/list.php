@@ -6,7 +6,6 @@ use kartik\widgets\Select2;
 use yii\helpers\ArrayHelper;
 
 /**
- * @var \common\models\Athlete[]            $athletes
  * @var \yii\web\View                       $this
  * @var \common\models\search\AthleteSearch $searchModel
  * @var \yii\data\ActiveDataProvider        $dataProvider
@@ -98,7 +97,6 @@ $listView = new \yii\widgets\ListView([
 			'data'          => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(), 'id', function (\common\models\Athlete $item) {
 				return $item->lastName . ' ' . $item->firstName;
 			}),
-			'theme'         => Select2::THEME_BOOTSTRAP,
 			'pluginOptions' => [
 				'allowClear' => true
 			],
@@ -121,4 +119,5 @@ $listView = new \yii\widgets\ListView([
 		}
 		?>
     </div>
+	<?= $listView->renderPager() ?>
 </div>

@@ -561,6 +561,10 @@ a.deletePhoto {
     text-transform: uppercase;
     margin-bottom: 0;
 }
+.athletes .item .card h4 {
+    font-size: 16px;
+    font-weight: bold;
+}
 .athletes .img {
     display: inline-block;
     vertical-align: top;
