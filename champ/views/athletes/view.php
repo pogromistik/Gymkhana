@@ -12,24 +12,33 @@ use yii\bootstrap\Html;
 
 
 <div class="athlete">
-    <h3><?= $athlete->getFullName() ?><?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></h3>
-    <div class="info">
-        <div class="item">
-            <b>Город: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
-        </div>
-		<?php if ($athlete->athleteClassId) { ?>
-            <div class="item">
-                <b>Класс: </b><?= $athlete->athleteClass->title ?>
+	<?php if ($athlete->photo) { ?>
+        <div class="inline-block">
+            <div class="img">
+				<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
             </div>
-		<?php } ?>
-    </div>
-    <div class="motorcycles pt-10">
-        <h4>Мотоциклы:</h4>
-		<?php /** @var \common\models\Motorcycle[] $motorcycles */
-		$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all();
-		foreach ($motorcycles as $motorcycle) { ?>
-            <div class="item"><?= $motorcycle->getFullTitle() ?></div>
-		<?php } ?>
+        </div>
+	<?php } ?>
+    <div class="inline-block">
+        <h3><?= $athlete->getFullName() ?><?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></h3>
+        <div class="info">
+            <div class="item">
+                <b>Город: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
+            </div>
+			<?php if ($athlete->athleteClassId) { ?>
+                <div class="item">
+                    <b>Класс: </b><?= $athlete->athleteClass->title ?>
+                </div>
+			<?php } ?>
+        </div>
+        <div class="motorcycles pt-10">
+            <h4>Мотоциклы:</h4>
+			<?php /** @var \common\models\Motorcycle[] $motorcycles */
+			$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all();
+			foreach ($motorcycles as $motorcycle) { ?>
+                <div class="item"><?= $motorcycle->getFullTitle() ?></div>
+			<?php } ?>
+        </div>
     </div>
 
     <div class="figures pt-10">
