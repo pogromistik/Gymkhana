@@ -32,6 +32,12 @@ $time = time();
             <p>Регистрация на этап завершена</p>
 		<?php } ?>
 	<?php } ?>
+    
+    <?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
+        <div class="track-photo">
+	        <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
+        </div>
+    <?php } ?>
 	
 	<?php if ($time >= $stage->startRegistration && (!$stage->endRegistration || $time <= $stage->endRegistration)) { ?>
         <div class="pt-30">
