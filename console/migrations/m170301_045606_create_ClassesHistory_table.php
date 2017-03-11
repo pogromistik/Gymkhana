@@ -16,7 +16,7 @@ class m170301_045606_create_ClassesHistory_table extends Migration
 			'id'           => $this->primaryKey(),
 			'athleteId'    => $this->integer()->notNull(),
 			'motorcycleId' => $this->integer(),
-			'oldClassId'   => $this->integer()->notNull(),
+			'oldClassId'   => $this->integer(),
 			'newClassId'   => $this->integer()->notNull(),
 			'event'        => $this->text()->notNull(),
 			'time'         => $this->integer(),

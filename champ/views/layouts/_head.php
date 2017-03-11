@@ -38,6 +38,7 @@ use yii\helpers\Url;
                                 <li><a href="/profile/index">Профиль</a></li>
                                 <li><a href="/profile/compare-with">Статистика</a></li>
                                 <li><a href="/profile/info">Заявки на участие</a></li>
+                                <li><a href="/competitions/send-result">Отправить результат</a></li>
                                 <li><a href="/site/logout">Выход</a></li>
                             </ul>
                         </li>
@@ -80,6 +81,7 @@ use yii\helpers\Url;
                                 <li><a href="/profile/index">Профиль</a></li>
                                 <li><a href="/profile/stats">Статистика</a></li>
                                 <li><a href="/profile/info">Заявки на участие</a></li>
+                                <li><a href="/competitions/send-result">Отправить результат</a></li>
                                 <li><a href="/site/logout">Выход</a></li>
                             </ul>
                         </li>

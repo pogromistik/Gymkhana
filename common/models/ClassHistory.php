@@ -43,7 +43,7 @@ class ClassHistory extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['athleteId', 'oldClassId', 'newClassId', 'event', 'date'], 'required'],
+			[['athleteId', 'newClassId', 'event', 'date'], 'required'],
 			[['athleteId', 'motorcycleId', 'oldClassId', 'newClassId', 'time', 'bestTime', 'date'], 'integer'],
 			[['event'], 'string'],
 			[['percent'], 'number']
@@ -85,7 +85,7 @@ class ClassHistory extends BaseActiveRecord
 		}
 	}
 	
-	public static function create($athleteId, $motorcycleId = null, $oldClassId, $newClassId, $event,
+	public static function create($athleteId, $motorcycleId = null, $oldClassId = null, $newClassId, $event,
 	                              $time = null, $bestTime = null, $percent = null)
 	{
 		$item = new self();
