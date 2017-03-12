@@ -411,12 +411,12 @@ span.red {
 }
 
 span.green, td.green {
-    color: #00aa00;
+    color: #56a025;
 }
 
 .best {
     font-weight: bold;
-    color: #00aa00;
+    color: #56a025;
 }
 
 table.results small {
@@ -561,6 +561,7 @@ a.deletePhoto {
     border: 1px solid #000;
     width: 100%;
     box-shadow: 0px 0px 4px 0px #a7a7a7;
+    position: relative;
 }
 
 .athletes .item a {
@@ -605,6 +606,7 @@ a.deletePhoto {
     vertical-align: top;
     position: relative;
     height: 159px;
+    z-index: 10;
 }
 
 .athletes .img img {
@@ -639,4 +641,14 @@ a.deletePhoto {
 
 .toggle .title:hover {
     color: #56a025;
+}
+
+.triangle {
+    border: 50px solid transparent;	border-right: 50px solid #56a025; border-bottom: 50px solid #56a025; width:0;height:0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 24px;
+    color: #f4f4f4;
+    z-index: 1;
 }
