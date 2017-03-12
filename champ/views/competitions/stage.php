@@ -44,7 +44,8 @@ $time = time();
         </div>
     <?php } ?>
 	
-	<?php if ($time >= $stage->startRegistration && (!$stage->endRegistration || $time <= $stage->endRegistration)) { ?>
+	<?php if ($stage->startRegistration && $time >= $stage->startRegistration
+        && (!$stage->endRegistration || $time <= $stage->endRegistration)) { ?>
         <div class="pt-30">
 			<?php if (\Yii::$app->user->isGuest) { ?>
                 <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollForm">Зарегистрироваться</a>
