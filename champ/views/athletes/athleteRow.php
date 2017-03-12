@@ -41,9 +41,7 @@ $athlete = $model;
 					<?= $athlete->number ? '№' . $athlete->number : '' ?>
 				</div>
 			</div>
-			<div class="athleteClass">
-				<?= $athlete->athleteClass ? $athlete->athleteClass->title : '' ?>
-			</div>
+            <div class="triangle"><?= $athlete->athleteClass ? $athlete->athleteClass->title : '' ?></div>
 		</div>
 	</a>
 </div>
