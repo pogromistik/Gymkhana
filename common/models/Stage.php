@@ -248,7 +248,7 @@ class Stage extends BaseActiveRecord
 	
 	public function placesCalculate()
 	{
-		Participant::updateAll(['place' => null, 'placeOfClass' => null], ['stageId' => $this->id]);
+		Participant::updateAll(['place' => null, 'placeOfClass' => null, 'placeOfAthleteClass' => null], ['stageId' => $this->id]);
 		/** @var Participant[] $participants */
 		$participants = $this->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 		$place = 1;
@@ -271,7 +271,7 @@ class Stage extends BaseActiveRecord
 			$participant->placeOfClass = $this->getActiveParticipants()
 					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
 			$participant->placeOfAthleteClass = $this->getActiveParticipants()
-					->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfClass"') + 1;
+					->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfAthleteClass"') + 1;
 			$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
 			
 			//баллы
