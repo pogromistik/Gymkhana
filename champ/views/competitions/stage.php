@@ -76,7 +76,7 @@ $time = time();
                     </thead>
                     <tbody>
 					<?php
-					$participants = $stage->activeParticipants;
+					$participants = $stage->getActiveParticipants()->orderBy(['percent' => SORT_ASC])->all();
 					$place = 1;
 					if ($participants) {
 						foreach ($participants as $participant) {
