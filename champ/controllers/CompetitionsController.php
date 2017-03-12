@@ -109,7 +109,7 @@ class CompetitionsController extends BaseController
 						$results[$group][$item['regionGroupId']]['years'][$item['yearId']] = [
 							'year'   => $item['year'],
 							'stages' => Stage::find()->where(['championshipId' => $item['id']])
-								->orderBy(['dateOfThe' => SORT_DESC, 'dateAdded' => SORT_ASC])->all(),
+								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
 							'status' => $item['status'],
 							'id'     => $item['id']
 						];
