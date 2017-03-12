@@ -18,7 +18,7 @@ use yii\bootstrap\Html;
 
         <div class="help-for-athlete">
             <small>Размер загружаемого изображения не должен превышать 100КБ. Допустимые форматы: png, jpg.
-            Необходимые пропорции: 3x4 pixels</small>
+            Необходимые пропорции: 3x4 (300x400 pixels)</small>
         </div>
 		<?php if ($athlete->photo) { ?>
             <div class="row">
