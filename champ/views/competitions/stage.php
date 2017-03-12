@@ -70,6 +70,7 @@ $time = time();
                         <th><p>Штраф</p></th>
                         <th><p>Лучшее время</p></th>
                         <th><p>Место в классе</p></th>
+                        <th><p>Класс</p></th>
                         <th><p>Рейтинг</p></th>
                     </tr>
                     </thead>
@@ -89,7 +90,7 @@ $time = time();
                             <tr>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $place++ ?></td>
                                 <td rowspan="<?= $stage->countRace ?>">
-									<?= $participant->internalClass ? $participant->internalClass->title : null ?>
+									<?= $participant->athleteClassId ? $participant->athleteClass->title : null ?>
                                 </td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $athlete->getFullName() ?>
@@ -106,6 +107,9 @@ $time = time();
 								<?php } ?>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfClass ?></td>
+                                <td rowspan="<?= $stage->countRace ?>">
+		                            <?= $participant->internalClassId ? $participant->internalClass->title : null ?>
+                                </td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
                             </tr>
 							<?php
