@@ -596,7 +596,7 @@ a.deletePhoto {
     display: inline-block;
     vertical-align: top;
     width: 120px;
-    height: 164px;
+    height: 159px;
     padding-right: 10px;
 }
 
@@ -604,7 +604,7 @@ a.deletePhoto {
     display: inline-block;
     vertical-align: top;
     position: relative;
-    height: 164px;
+    height: 159px;
 }
 
 .athletes .img img {
@@ -624,7 +624,7 @@ a.deletePhoto {
 }
 
 .athlete .img img {
-    max-width: 230px;
+    max-width: 300px;
     max-height: 500px;
 }
 
