@@ -76,7 +76,9 @@ $time = time();
                     </thead>
                     <tbody>
 					<?php
-					$participants = $stage->getActiveParticipants()->orderBy(['percent' => SORT_ASC])->all();
+                    /** @var \common\models\Participant[] $participants */
+					$participants = $stage->getParticipants()->andWhere(['status' => \common\models\Participant::STATUS_ACTIVE])
+                        ->orderBy(['percent' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
 					$place = 1;
 					if ($participants) {
 						foreach ($participants as $participant) {
@@ -88,7 +90,7 @@ $time = time();
 							}
 							?>
                             <tr>
-                                <td rowspan="<?= $stage->countRace ?>"><?= $place++ ?></td>
+                                <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
                                 <td rowspan="<?= $stage->countRace ?>">
 									<?= $participant->athleteClassId ? $participant->athleteClass->title : null ?>
                                 </td>
@@ -144,6 +146,7 @@ $time = time();
                             <td>1.</td>
                             <td></td>
                             <td></td>
+                            <td rowspan="<?= $stage->countRace ?>"></td>
                             <td rowspan="<?= $stage->countRace ?>"></td>
                             <td rowspan="<?= $stage->countRace ?>"></td>
                             <td rowspan="<?= $stage->countRace ?>"></td>
