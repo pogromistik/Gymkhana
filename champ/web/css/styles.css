@@ -601,6 +601,7 @@ a.deletePhoto {
     width: 120px;
     height: 159px;
     padding-right: 10px;
+    overflow: hidden;
 }
 
 .athletes .info {
@@ -613,7 +614,6 @@ a.deletePhoto {
 
 .athletes .img img {
     max-width: 120px;
-    max-height: 100%;
 }
 
 .athletes .item .card .athleteClass {
