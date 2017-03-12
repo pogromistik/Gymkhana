@@ -5,6 +5,7 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\AthletesClass;
+use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Motorcycle;
 use common\models\Stage;
@@ -77,6 +78,17 @@ class ParticipantsController extends BaseController
 				if ($old->status != Participant::STATUS_ACTIVE) {
 					$error .= ' Сейчас его заявка отменена. Чтобы вернуть её, нажмите на значок <span class="fa fa-check btn-success"></span> 
  в заявке участника';
+				}
+			} else {
+				$athlete = $participant->athlete;
+				$championship = $participant->championship;
+				if ($participant->number) {
+					$freeNumbers = Championship::getFreeNumbers($stage, $participant->athleteId);
+					if (!in_array($participant->number, $freeNumbers)) {
+						$error .= 'Номер занят. Выберите другой или оставьте поле пустым.';
+					}
+				} elseif ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+					$participant->number = $athlete->number;
 				}
 			}
 			if (!$error && $participant->save()) {
