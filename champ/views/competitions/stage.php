@@ -78,7 +78,7 @@ $time = time();
 					<?php
                     /** @var \common\models\Participant[] $participants */
 					$participants = $stage->getParticipants()->andWhere(['status' => \common\models\Participant::STATUS_ACTIVE])
-                        ->orderBy(['percent' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+                        ->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
 					$place = 1;
 					if ($participants) {
 						foreach ($participants as $participant) {
