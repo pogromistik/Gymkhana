@@ -6,7 +6,7 @@ use yii\bootstrap\Html;
  * @var array         $championships
  */
 ?>
-
+<?php $time = time(); ?>
 <div class="list">
 	<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
         <div class="item">
@@ -23,9 +23,11 @@ use yii\bootstrap\Html;
 							case \common\models\Championship::GROUPS_RUSSIA:
 								/** @var \common\models\Championship $championship */
 								$championship = reset($championships[$group]);
-								$stages = $championship->stages;
+								/** @var \common\models\Stage[] $stages */
+								$stages = $championship->getStages()
+									->andWhere(['not', ['status' => \common\models\Stage::STATUS_PAST]])->all();
 								if (!$stages) { ?>
-                                    В данный момент не создано ни одного этапа для чемпионата.
+                                    В данный момент нет актуальных регистраций на этап.
 									<?php
 								} else {
 									foreach ($stages as $stage) {
@@ -48,9 +50,11 @@ use yii\bootstrap\Html;
 										<?= $championship->title ?>
                                     </div>
 									<?php
-									$stages = $championship->stages;
+									/** @var \common\models\Stage[] $stages */
+									$stages = $championship->getStages()
+										->andWhere(['not', ['status' => \common\models\Stage::STATUS_PAST]])->all();
 									if (!$stages) { ?>
-                                        В данный момент не создано ни одного этапа для чемпионата.
+                                        В данный момент нет актуальных регистраций.
 										<?php
 									} else {
 										foreach ($stages as $stage) {
