@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'trackPhoto',
 				'format'    => 'raw',
-				'value'     => Html::img(\Yii::getAlias('@filesView') . '/' . $model->trackPhoto)
+				'value'     => $model->trackPhoto ? Html::img(\Yii::getAlias('@filesView') . '/' . $model->trackPhoto) : null
 			],
 			[
 				'attribute' => 'trackPhotoStatus',
