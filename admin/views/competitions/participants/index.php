@@ -55,6 +55,14 @@ $this->params['breadcrumbs'][] = $this->title;
 					return $item->motorcycle->getFullTitle();
 				}
 			],
+            [
+                'attribute' => 'athleteClassId',
+                'format'    => 'raw',
+                'filter'    => false,
+                'value'     => function (\common\models\Participant $item) {
+	                return $item->athleteClassId ? $item->athleteClass->title : '';
+                }
+            ],
 			[
 				'attribute' => 'internalClassId',
 				'format'    => 'raw',
