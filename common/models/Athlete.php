@@ -218,6 +218,13 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		if ($this->isNewRecord) {
 			$this->createdAt = time();
+			if (!$this->athleteClassId) {
+				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
+					->orderBy(['percent' => SORT_DESC])->one();
+				if ($class) {
+					$this->athleteClassId = $class->id;
+				}
+			}
 		}
 		$this->updatedAt = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
