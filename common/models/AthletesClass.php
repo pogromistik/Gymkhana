@@ -66,4 +66,13 @@ class AthletesClass extends \yii\db\ActiveRecord
 		
 		return parent::beforeValidate();
 	}
+	
+	/**
+	 * @return null|AthletesClass
+	 */
+	public static function getStartClass()
+	{
+		return self::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
+			->orderBy(['percent' => SORT_DESC])->one();
+	}
 }
