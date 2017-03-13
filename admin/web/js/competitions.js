@@ -234,6 +234,8 @@ $(document).on("submit", '.raceTimeForm', function (e) {
         success: function (result) {
             if (result == true) {
                 form.find('.row').addClass('result-line');
+                var next = form.next();
+                next.find('input[name="Time[timeForHuman]"]').focus();
                 hideBackDrop();
             } else {
                 hideBackDrop();
