@@ -47,6 +47,7 @@ class ExportController extends BaseController
 		$sheet->setTitle('Результаты');
 		
 		$sheet->getCell("A1")->setValue('Место в абсолюте')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("A1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getCell("B1")->setValue('Класс спортсмена')->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("B1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getCell("C1")->setValue('Место в классе спортсмена')->getStyle()->getAlignment()->setWrapText(true);
@@ -74,8 +75,9 @@ class ExportController extends BaseController
 			$sheet->getCell("E" . $rowIndex)->setValue($athlete->getFullName());
 			$sheet->getCell("F" . $rowIndex)->setValue($participant->motorcycle->getFullTitle());
 			$i = 0;
-			while($i++ < 6) {
+			while($i < 6) {
 				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex+1)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+				$i++;
 			}
 			$row = $rowIndex;
 			$times = $participant->times;
