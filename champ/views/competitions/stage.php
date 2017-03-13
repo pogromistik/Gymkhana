@@ -57,6 +57,12 @@ $time = time();
 	
 	<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
         <div class="results pt-20">
+	        <div class="pb-10">
+		        <?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+			        '/export/stage',
+			        'stageId'  => $stage->id
+		        ]), ['class' => 'btn btn-light']) ?>
+            </div>
             <div class="show-pk">
                 <table class="table results">
                     <thead>
