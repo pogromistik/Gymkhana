@@ -132,6 +132,9 @@ class StagesController extends BaseController
 		if (!$stage) {
 			return 'Этап не найден';
 		}
+		if (!$stage->class) {
+			return 'Не установлен класс соревнований';
+		}
 		
 		return $stage->placesCalculate();
 	}
