@@ -287,10 +287,33 @@ class ProfileController extends AccessController
 		foreach ($figures as $figure) {
 			$result = FigureTime::find()->where(['figureId' => $figure->id, 'athleteId' => $athlete->id])
 				->orderBy(['resultTime' => SORT_ASC])->one();
+			$bestResults = FigureTime::find();
+			$bestResults->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n
+       from "FigureTimes" where "figureId" = ' . $figure->id . ') A'));
+			$bestResults->select('*');
+			$bestResults->where(new Expression('n=1'));
+			$bestResults->andWhere(new Expression('"Athletes"."id"="athleteId"'));
+			$bestResults->orderBy(['a."resultTime"' => SORT_ASC]);
+			$bestResults = $bestResults->all();
+			$place = 0;
+			$i = 0;
+			$percent = 0;
+			foreach ($bestResults as $bestResult) {
+				$i++;
+				if ($bestResult->athleteId == $athlete->id) {
+					$place = $i;
+					break;
+				}
+			}
+			if ($place > 0) {
+				$countParticipants = count($bestResults);
+				$percent = ($countParticipants - $place) / $countParticipants * 100;
+			}
 			if ($result) {
 				$figuresResult[] = [
-					'figure' => $figure,
-					'result' => $result
+					'figure'  => $figure,
+					'result'  => $result,
+					'percent' => $percent
 				];
 			}
 		}
