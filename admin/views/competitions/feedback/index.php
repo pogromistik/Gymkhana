@@ -8,7 +8,6 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Обратная связь';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="feedback-index">
 	<?= GridView::widget([

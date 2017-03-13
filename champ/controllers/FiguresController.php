@@ -50,4 +50,35 @@ class FiguresController extends AccessController
 		
 		return 'Возникла ошибка при отправке данных';
 	}
+	
+	public function actionRequests($status = null)
+	{
+		$searchModel = new TmpFigureResultSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
+		$this->pageTitle = 'Заявки на добавление результатов базовых фигур';
+		if ($status) {
+			switch ($status) {
+				case TmpFigureResult::STATUS_NEW:
+					$this->pageTitle = 'Новые заявки на добавление результатов базовых фигур';
+					$dataProvider->query->andWhere(['isNew' => 1]);
+					break;
+				case TmpFigureResult::STATUS_CANCEL:
+					$this->pageTitle = 'Отменённые заявки на добавление результатов базовых фигур';
+					$dataProvider->query->andWhere(['isNew' => 0])->andWhere(['not', ['cancelReason' => null]]);
+					break;
+				case TmpFigureResult::STATUS_APPROVE:
+					$this->pageTitle = 'Подтверждённые заявки на добавление результатов базовых фигур';
+					$dataProvider->query->andWhere(['isNew' => 0])->andWhere(['not', ['figureResultId' => null]]);
+					break;
+			}
+		}
+		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
+		$this->layout = 'full-content';
+		
+		return $this->render('requests', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
 }

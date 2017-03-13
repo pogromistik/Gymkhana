@@ -44,6 +44,12 @@ AppAsset::register($this);
 
         <ul class="nav navbar-top-links navbar-right">
             <li>
+		        <?php $countNewFigure = \common\models\TmpFigureResult::find()
+			        ->where(['isNew' => 1])->count() ?>
+                <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
+                            class="fa fa-bullhorn fa-fw"></i> Новые результаты фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
+            </li>
+            <li>
 	            <?php $countNewReg = \common\models\TmpParticipant::find()
                     ->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
                 <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i

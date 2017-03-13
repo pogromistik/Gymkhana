@@ -477,11 +477,39 @@ $('.getRequest').click(function (e) {
         if (data == true) {
             location.reload();
         } else {
-            alert(data);
+            bootbox.dialog({
+                locale: 'ru',
+                title: 'Ошибка!',
+                message: data,
+                className: 'danger',
+                buttons: {
+                    confirm: {
+                        label: 'ОК',
+                        className: "btn-primary",
+                        callback: function () {
+                            return true;
+                        }
+                    }
+                }
+            });
             console.log(data);
         }
     }).fail(function (error) {
-        alert(error.responseText);
+        bootbox.dialog({
+            locale: 'ru',
+            title: 'Ошибка!',
+            message: error.responseText,
+            className: 'danger',
+            buttons: {
+                confirm: {
+                    label: 'ОК',
+                    className: "btn-primary",
+                    callback: function () {
+                        return true;
+                    }
+                }
+            }
+        });
         console.log(error);
     });
 });
@@ -500,14 +528,71 @@ $('.getRequestWithConfirm').click(function (e) {
             if (data == true) {
                 location.reload();
             } else {
-                alert(data);
+                bootbox.dialog({
+                    locale: 'ru',
+                    title: 'Ошибка!',
+                    message: data,
+                    className: 'danger',
+                    buttons: {
+                        confirm: {
+                            label: 'ОК',
+                            className: "btn-primary",
+                            callback: function () {
+                                return true;
+                            }
+                        }
+                    }
+                });
                 console.log(data);
             }
         }).fail(function (error) {
-            alert(error.responseText);
+            bootbox.dialog({
+                locale: 'ru',
+                title: 'Ошибка!',
+                message: error.responseText,
+                className: 'danger',
+                buttons: {
+                    confirm: {
+                        label: 'ОК',
+                        className: "btn-primary",
+                        callback: function () {
+                            return true;
+                        }
+                    }
+                }
+            });
             console.log(error);
         });
     }
+});
+
+$('.cancelFigureResult').click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    $('.alert').hide();
+    $('#id').val(id);
+    $('#cancelFigureResult').modal('show')
+});
+
+$(document).on("submit", '#cancelFigureResultForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var id = form.data('id');
+    $.ajax({
+        url: '/competitions/tmp-figures/cancel-result',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                $('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            $('.alert-danger').text(result).show();
+        }
+    });
 });
 
 $('.stageCalcResult').click(function (e) {

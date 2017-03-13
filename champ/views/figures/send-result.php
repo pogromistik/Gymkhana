@@ -15,6 +15,8 @@ use yii\widgets\MaskedInput;
 ?>
 <div class="tmp-figure-result-index">
 	
+    <h4><?= Html::a('посмотреть историю', ['/figures/requests']) ?></h4>
+    
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'sendFigureResult']]); ?>
 	
 	<?= $form->field($model, 'athleteId')->hiddenInput()->error(false)->label(false) ?>

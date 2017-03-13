@@ -8,17 +8,23 @@ use Yii;
 /**
  * This is the model class for table "TmpFiguresResults".
  *
- * @property integer $id
- * @property integer $athleteId
- * @property integer $motorcycleId
- * @property integer $figureId
- * @property integer $date
- * @property integer $time
- * @property integer $fine
- * @property string  $videoLink
- * @property integer $isNew
- * @property integer $dateAdded
- * @property integer $dateUpdated
+ * @property integer    $id
+ * @property integer    $athleteId
+ * @property integer    $motorcycleId
+ * @property integer    $figureId
+ * @property integer    $date
+ * @property integer    $time
+ * @property integer    $fine
+ * @property string     $videoLink
+ * @property integer    $isNew
+ * @property integer    $dateAdded
+ * @property integer    $dateUpdated
+ * @property integer    $figureResultId
+ * @property string     $cancelReason
+ *
+ * @property Athlete    $athlete
+ * @property Figure     $figure
+ * @property Motorcycle $motorcycle
  */
 class TmpFigureResult extends BaseActiveRecord
 {
@@ -26,6 +32,15 @@ class TmpFigureResult extends BaseActiveRecord
 	
 	public $timeForHuman;
 	public $dateForHuman;
+	
+	const STATUS_NEW = 1;
+	const STATUS_APPROVE = 2;
+	const STATUS_CANCEL = 3;
+	public static $statusesTitle = [
+		self::STATUS_NEW     => 'Новые заявки',
+		self::STATUS_APPROVE => 'Подтверждённые заявки',
+		self::STATUS_CANCEL  => 'Отклоненные заявки'
+	];
 	
 	/**
 	 * @inheritdoc
@@ -42,8 +57,8 @@ class TmpFigureResult extends BaseActiveRecord
 	{
 		return [
 			[['athleteId', 'motorcycleId', 'figureId', 'date', 'time', 'videoLink', 'dateAdded', 'dateUpdated'], 'required'],
-			[['athleteId', 'motorcycleId', 'figureId', 'date', 'time', 'fine', 'isNew', 'dateAdded', 'dateUpdated'], 'integer'],
-			[['videoLink'], 'string', 'max' => 255],
+			[['athleteId', 'motorcycleId', 'figureId', 'date', 'time', 'fine', 'isNew', 'dateAdded', 'dateUpdated', 'figureResultId'], 'integer'],
+			[['videoLink', 'cancelReason'], 'string', 'max' => 255],
 			[['dateForHuman', 'timeForHuman'], 'string'],
 			['fine', 'default', 'value' => 0]
 		];
@@ -68,6 +83,7 @@ class TmpFigureResult extends BaseActiveRecord
 			'isNew'        => 'Is New',
 			'dateAdded'    => 'Дата добавления',
 			'dateUpdated'  => 'Дата редактирования',
+			'cancelReason' => 'Причина отказа'
 		];
 	}
 	
@@ -103,5 +119,20 @@ class TmpFigureResult extends BaseActiveRecord
 		if ($this->date) {
 			$this->dateForHuman = date('d.m.Y', $this->date);
 		}
+	}
+	
+	public function getAthlete()
+	{
+		return $this->hasOne(Athlete::className(), ['id' => 'athleteId']);
+	}
+	
+	public function getFigure()
+	{
+		return $this->hasOne(Figure::className(), ['id' => 'figureId']);
+	}
+	
+	public function getMotorcycle()
+	{
+		return $this->hasOne(Motorcycle::className(), ['id' => 'motorcycleId']);
 	}
 }
