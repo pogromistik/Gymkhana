@@ -42,7 +42,12 @@ use yii\bootstrap\Html;
 							]) ?>
 						<?php } ?>
 					</td>
-					<td><?= $result->percent ?>%</td>
+					<td>
+                        <?= $result->percent ?>%
+                        <?php if ($data['percent'] >= 30) { ?>
+                            <span class="green small">лучше, чем <?= $data['percent'] ?>% участников</span>
+                        <?php } ?>
+                    </td>
 				</tr>
 			<?php } ?>
 		</table>

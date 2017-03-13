@@ -109,8 +109,7 @@ use yii\bootstrap\Html;
     <table class="table">
         <thead>
         <tr>
-            <th>Марка</th>
-            <th>Модель</th>
+            <th>Марка и модель</th>
             <th>Статус</th>
             <th>Добавлен</th>
             <th></th>
@@ -119,8 +118,7 @@ use yii\bootstrap\Html;
         <tbody>
 		<?php foreach ($motorcycles as $motorcycleInfo) { ?>
             <tr>
-                <td><?= $motorcycleInfo->mark ?></td>
-                <td><?= $motorcycleInfo->model ?></td>
+                <td><?= $motorcycleInfo->mark ?> <?= $motorcycleInfo->model ?></td>
                 <td>
 					<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
                 </td>

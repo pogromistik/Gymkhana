@@ -9,6 +9,7 @@
         <table class="table results">
             <thead>
             <tr>
+                <th><p>#</p></th>
                 <th><p>Дата</p></th>
                 <th><p>Класс</p></th>
                 <th><p>Участник</p></th>
@@ -22,10 +23,12 @@
             </thead>
             <tbody>
 			<?php
+			$place = 1;
 			foreach ($results as $item) {
 				$athlete = $item->athlete;
 				?>
                 <tr>
+                    <td><?= $place++ ?></td>
                     <td><?= $item->dateForHuman ?></td>
                     <td><?= $item->athleteClassId ? $item->athleteClass->title : null ?></td>
                     <td><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>

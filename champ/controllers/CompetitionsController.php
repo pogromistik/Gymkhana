@@ -183,7 +183,7 @@ class CompetitionsController extends BaseController
 			$results = $results->all();
 		} else {
 			$results = FigureTime::find();
-			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc) n
+			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n
        from "FigureTimes" where "figureId" = '.$id.') A'));
 			$results->select('*');
 			$results->where(new Expression('n=1'));
@@ -254,7 +254,7 @@ class CompetitionsController extends BaseController
 			}
 			$results->orderBy(['"FigureTimes"."resultTime"' => SORT_ASC]);
 		} else {
-			$subQuery->select('*, rank() over (partition by "athleteId" order by "resultTime" asc) n');
+			$subQuery->select('*, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n');
 			$subQuery->from(FigureTime::tableName());
 			if ($classIds) {
 				$subQuery->where(['athleteClassId' => $classIds]);
