@@ -32,20 +32,21 @@ $time = time();
             <p>Регистрация на этап завершена</p>
 		<?php } ?>
 	<?php } ?>
-    
-    <?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
+	
+	<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
         <div class="track-photo">
             <div class="toggle">
                 <div class="title">Посмотреть схему</div>
                 <div class="toggle-content">
-	                <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
+					<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
                 </div>
             </div>
         </div>
-    <?php } ?>
+	<?php } ?>
 	
 	<?php if ($stage->startRegistration && $time >= $stage->startRegistration
-        && (!$stage->endRegistration || $time <= $stage->endRegistration)) { ?>
+		&& (!$stage->endRegistration || $time <= $stage->endRegistration)
+	) { ?>
         <div class="pt-30">
 			<?php if (\Yii::$app->user->isGuest) { ?>
                 <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollForm">Зарегистрироваться</a>
@@ -57,11 +58,12 @@ $time = time();
 	
 	<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
         <div class="results pt-20">
-	        <div class="pb-10">
-		        <?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
-			        '/export/stage',
-			        'stageId'  => $stage->id
-		        ]), ['class' => 'btn btn-light']) ?>
+            <div class="pb-10">
+				<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+					'/export/export',
+					'modelId' => $stage->id,
+					'type'    => \champ\controllers\ExportController::TYPE_STAGE
+				]), ['class' => 'btn btn-light']) ?>
             </div>
             <div class="show-pk">
                 <table class="table results">
@@ -83,9 +85,9 @@ $time = time();
                     </thead>
                     <tbody>
 					<?php
-                    /** @var \common\models\Participant[] $participants */
+					/** @var \common\models\Participant[] $participants */
 					$participants = $stage->getParticipants()->andWhere(['status' => \common\models\Participant::STATUS_ACTIVE])
-                        ->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+						->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
 					$place = 1;
 					if ($participants) {
 						foreach ($participants as $participant) {
@@ -117,7 +119,7 @@ $time = time();
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfClass ?></td>
                                 <td rowspan="<?= $stage->countRace ?>">
-		                            <?= $participant->internalClassId ? $participant->internalClass->title : null ?>
+									<?= $participant->internalClassId ? $participant->internalClass->title : null ?>
                                 </td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
                             </tr>

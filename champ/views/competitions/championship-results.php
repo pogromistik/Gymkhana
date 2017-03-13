@@ -41,6 +41,14 @@ $this->title = 'Результаты: ' . $championship->title;
     </table>
 </div>
 
+<div class="pb-10">
+	<?= \yii\bootstrap\Html::a('Скачать результаты в xls', \yii\helpers\Url::to([
+		'/export/export',
+		'modelId' => $championship->id,
+		'type'    => \champ\controllers\ExportController::TYPE_CHAMPIONSHIP,
+		'showAll'  => $showAll
+	]), ['class' => 'btn btn-light']) ?>
+</div>
 <?php if ($showAll) { ?>
     В таблице приведены все спортсмены, выступившие хотя бы на одном из этапов, независимо от того, есть ли у них необходимое количество этапов.
     <br>
@@ -83,7 +91,7 @@ $this->title = 'Результаты: ' . $championship->title;
 		?>
         <tr>
             <td><?= $place ?></td>
-            <td><?= $athlete->athleteClass->title ?></td>
+            <td><?= $athlete->athleteClassId ? $athlete->athleteClass->title : null ?></td>
             <td>
 				<?= $athlete->getFullName() ?>
                 <br>
