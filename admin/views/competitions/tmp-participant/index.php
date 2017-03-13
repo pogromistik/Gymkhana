@@ -11,7 +11,6 @@ use common\models\TmpParticipant;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Заявки на участие, требующие одобрения';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="tmp-participant-index">
