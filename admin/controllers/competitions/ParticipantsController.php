@@ -235,8 +235,10 @@ class ParticipantsController extends BaseController
 		} else {
 			$time = new Time();
 		}
-		$time->load(\Yii::$app->request->post());
 		if ($time->load(\Yii::$app->request->post())) {
+			if (!$time->timeForHuman) {
+				return $time->participant->athlete->getFullName() . ': необходимо указать время';
+			}
 			trim($time->timeForHuman, '_');
 			if ($time->save()) {
 				return true;

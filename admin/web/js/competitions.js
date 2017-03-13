@@ -251,6 +251,45 @@ $('.saveAllStageResult').click(function (e) {
     e.preventDefault();
     var elem = $(this);
     var attempt = elem.data('attempt');
+    showBackDrop();
+    var form = $('.form-'+attempt+':first');
+    AddAllResults(form);
+});
+
+function AddAllResults(form) {
+    $.ajax({
+        url: '/competitions/participants/add-time',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            var next = form.next();
+            if (result == true) {
+                form.find('.row').addClass('result-line');
+                if (next.attr('id')) {
+                    AddAllResults(next);
+                } else {
+                    hideBackDrop();
+                }
+            } else {
+                alert(result);
+                if (next.attr('id')) {
+                    AddAllResults(next);
+                } else {
+                    hideBackDrop();
+                }
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+}
+/*
+$('.saveAllStageResult').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var attempt = elem.data('attempt');
     var count = elem.data('count');
     showBackDrop();
     var i = 1;
@@ -283,7 +322,7 @@ function AddAllResults(form, i, count) {
         }
     });
 }
-
+*/
 $('.changeParticipantStatus').click(function (e) {
     e.preventDefault();
     showBackDrop();
