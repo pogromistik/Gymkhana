@@ -283,3 +283,9 @@ img {
 .collapse .panel-green a {
     color: #fff;
 }
+
+.result-line {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #56a025;
+}
