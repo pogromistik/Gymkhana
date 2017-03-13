@@ -19,11 +19,11 @@ $attempt = 0;
 <?php if ($error) { ?>
     <div class="alert alert-danger">
         Не установлены классы спортсменов
-	    <?= Html::a('Установить', ['/competitions/stages/calculation-result', 'stageId' => $stage->id],
-		    [
-			    'class'   => 'btn btn-default setParticipantsClasses',
-			    'data-id' => $stage->id
-		    ]) ?>
+		<?= Html::a('Установить', ['/competitions/stages/calculation-result', 'stageId' => $stage->id],
+			[
+				'class'   => 'btn btn-default setParticipantsClasses',
+				'data-id' => $stage->id
+			]) ?>
     </div>
 <?php } ?>
 
@@ -38,13 +38,15 @@ $attempt = 0;
         <div class="col-sm-1"></div>
     </div>
     <hr>
-	<?php foreach ($stage->activeParticipants as $participant) {
+	<?php
+	$participants = $stage->activeParticipants;
+	foreach ($participants as $participant) {
 		$timeModel = $participant->getTimeForm($attempt);
 		?>
 		<?php $form = ActiveForm::begin([
 			'id'      => 'raceTimeForm' . $participant->id,
 			'options' => [
-				'class' => 'raceTimeForm',
+				'class' => 'raceTimeForm form-' . $attempt,
 			]
 		
 		]); ?>
@@ -74,4 +76,10 @@ $attempt = 0;
 		<?php $form->end(); ?>
 		<?php
 	} ?>
+    <div class="row">
+        <div class="col-sm-1 col-sm-offset-10">
+            <a href="#" data-attempt="<?= $attempt ?>" data-count="<?= count($participants) ?>"
+               class="saveAllStageResult btn btn-primary">Сохранить всё</a>
+        </div>
+    </div>
 <?php } ?>

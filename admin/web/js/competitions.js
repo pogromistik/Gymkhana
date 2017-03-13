@@ -233,7 +233,8 @@ $(document).on("submit", '.raceTimeForm', function (e) {
         data: form.serialize(),
         success: function (result) {
             if (result == true) {
-                location.reload();
+                form.find('.row').addClass('result-line');
+                hideBackDrop();
             } else {
                 hideBackDrop();
                 alert(result);
@@ -245,6 +246,43 @@ $(document).on("submit", '.raceTimeForm', function (e) {
         }
     });
 });
+
+$('.saveAllStageResult').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var attempt = elem.data('attempt');
+    var count = elem.data('count');
+    showBackDrop();
+    var i = 1;
+    $(".form-"+attempt).each(function() {
+        var form = $(this);
+        AddAllResults(form, i, count);
+        i++;
+    });
+});
+
+function AddAllResults(form, i, count) {
+    $.ajax({
+        url: '/competitions/participants/add-time',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                form.find('.row').addClass('result-line');
+                if (i == count) {
+                    hideBackDrop();
+                }
+            } else {
+                hideBackDrop();
+                alert(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+}
 
 $('.changeParticipantStatus').click(function (e) {
     e.preventDefault();
