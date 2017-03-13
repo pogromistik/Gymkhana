@@ -257,4 +257,74 @@ class Championship extends BaseActiveRecord
 		
 		return $numbers;
 	}
+	
+	public function getResults($showAll = false)
+	{
+		$stages = $this->stages;
+		$results = [];
+		foreach ($stages as $stage) {
+			/** @var Participant[] $participants */
+			$participants = Participant::find()->where(['stageId' => $stage->id])->andWhere(['status' => Participant::STATUS_ACTIVE])
+				->orderBy(['points' => SORT_DESC, 'sort' => SORT_ASC])->all();
+			foreach ($participants as $participant) {
+				if (!isset($results[$participant->athleteId])) {
+					$results[$participant->athleteId] = [
+						'athlete'        => $participant->athlete,
+						'points'         => 0,
+						'stages'         => [],
+						'countStages'    => 0,
+						'cityId'         => null,
+						'severalRegions' => false
+					];
+				}
+				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
+					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
+					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['countStages'] += 1;
+					if (!$results[$participant->athleteId]['cityId']) {
+						$results[$participant->athleteId]['cityId'] = $stage->cityId;
+					} else {
+						if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
+							$results[$participant->athleteId]['severalRegions'] = true;
+						}
+					}
+				}
+			}
+		}
+		
+		if (!$showAll) {
+			foreach ($results as $i => $result) {
+				if ($result['countStages'] < $this->amountForAthlete) {
+					unset($results[$i]);
+					continue;
+				}
+				if ($this->requiredOtherRegions && !$result['severalRegions']) {
+					unset($results[$i]);
+					continue;
+				}
+				if (count($result['stages']) != $this->estimatedAmount) {
+					$allPoints = $result['stages'];
+					arsort($allPoints);
+					$count = 0;
+					$result['points'] = 0;
+					foreach ($allPoints as $stagePoint) {
+						if ($count < $this->estimatedAmount) {
+							$result['points'] += $stagePoint;
+							$count++;
+						} else {
+							break;
+						}
+					}
+				}
+			}
+		}
+		uasort($results, "self::cmpByRackPlaces");
+		
+		return $results;
+	}
+	
+	private function cmpByRackPlaces($a, $b)
+	{
+		return ($a['points'] > $b['points']) ? -1 : 1;
+	}
 }

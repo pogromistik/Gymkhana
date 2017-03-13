@@ -9,6 +9,7 @@
         <table class="table results">
             <thead>
             <tr>
+                <th><p>Дата</p></th>
                 <th><p>Класс</p></th>
                 <th><p>Участник</p></th>
                 <th><p>Мотоцикл</p></th>
@@ -25,6 +26,7 @@
 				$athlete = $item->athlete;
 				?>
                 <tr>
+                    <td><?= $item->dateForHuman ?></td>
                     <td><?= $item->athleteClassId ? $item->athleteClass->title : null ?></td>
                     <td><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
                     <td><?= $item->motorcycle->getFullTitle() ?></td>

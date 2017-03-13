@@ -1,9 +1,12 @@
 <?php
 namespace champ\controllers;
 
+use common\models\Athlete;
+use common\models\Championship;
+use common\models\Figure;
+use common\models\FigureTime;
 use common\models\Participant;
 use common\models\Stage;
-use yii\base\Exception;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -11,20 +14,57 @@ use yii\web\NotFoundHttpException;
  */
 class ExportController extends BaseController
 {
-	public function actionStage($stageId)
+	const TYPE_STAGE = 1;
+	const TYPE_CHAMPIONSHIP = 2;
+	const TYPE_FIGURE = 3;
+	
+	public function actionExport($modelId, $type, $yearId = null, $showAll = false)
 	{
-		$stage = Stage::findOne($stageId);
-		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
+		$name = '';
+		$xlsFile = null;
+		switch ($type) {
+			case self::TYPE_STAGE:
+				$stage = Stage::findOne($modelId);
+				if (!$stage) {
+					throw new NotFoundHttpException('Этап не найден');
+				}
+				$participants = $stage->getParticipants()->andWhere(['status' => Participant::STATUS_ACTIVE])
+					->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				$name = $stage->title . '-результаты';
+				$xlsFile = self::getStageResult($participants);
+				break;
+			case self::TYPE_CHAMPIONSHIP:
+				$championship = Championship::findOne($modelId);
+				if (!$championship) {
+					throw new NotFoundHttpException('Чемпионат не найден');
+				}
+				$stages = $championship->stages;
+				$results = $results = $championship->getResults($showAll);
+				$name = $championship->title . '-результаты';
+				if ($showAll) {
+					$name = $championship->title . '-все участники-результаты';
+				}
+				$xlsFile = self::getChampionshipResult($results, $stages);
+				break;
+			case self::TYPE_FIGURE:
+				$figure = Figure::findOne($modelId);
+				if (!$figure) {
+					throw new NotFoundHttpException('Фигура не найдена');
+				}
+				$results = $figure->getResults();
+				if ($yearId) {
+					$results = $results->andWhere(['yearId' => $yearId]);
+				}
+				$results = $results
+					->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])->all();
+				$name = $figure->title . '-результаты';
+				$xlsFile = self::getFigureResult($results);
+				break;
 		}
 		
-		/** @var \common\models\Participant[] $participants */
-		$participants = $stage->getParticipants()->andWhere(['status' => Participant::STATUS_ACTIVE])
-			->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
-		
-		$name = $stage->title . '-результаты.xlsx';
-		$xlsFile = self::getStageResult($participants);
+		$name .= '.xlsx';
 		\Yii::$app->response->sendFile($xlsFile, $name);
+		
 		unlink($xlsFile);
 		
 		return true;
@@ -75,8 +115,8 @@ class ExportController extends BaseController
 			$sheet->getCell("E" . $rowIndex)->setValue($athlete->getFullName());
 			$sheet->getCell("F" . $rowIndex)->setValue($participant->motorcycle->getFullTitle());
 			$i = 0;
-			while($i < 6) {
-				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex+1)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+			while ($i < 6) {
+				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex + 1)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 				$i++;
 			}
 			$row = $rowIndex;
@@ -97,8 +137,8 @@ class ExportController extends BaseController
 			$sheet->getCell("M" . $rowIndex)->setValue($participant->percent . '%');
 			$sheet->getStyleByColumnAndRow(0, $rowIndex, 12, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 			$i = 8;
-			while($i++ < 12) {
-				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex+1)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+			while ($i++ < 12) {
+				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex + 1)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 			}
 			if ($times) {
 				$rowIndex += count($times);
@@ -148,6 +188,179 @@ class ExportController extends BaseController
 		$sheet->getColumnDimension('C')
 			->setWidth(15);
 		$sheet->getColumnDimension('L')
+			->setWidth(20);
+		
+		$writer = \PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
+		$writer->save($path);
+		
+		return $path;
+	}
+	
+	/**
+	 * @param FigureTime[] $results
+	 *
+	 * @return string
+	 */
+	private function getFigureResult($results)
+	{
+		$path = tempnam("/tmp", "acc-");
+		$obj = new \PHPExcel();
+		foreach ($obj->getAllSheets() as $i => $sheet) {
+			$obj->removeSheetByIndex($i);
+		}
+		
+		$sheet = $obj->createSheet();
+		$sheet->setTitle('Результаты');
+		
+		$sheet->getCell("A1")->setValue('Дата')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->setValue('Класс спортсмена')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("C1")->setValue('Город')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("D1")->setValue('Участник')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("E1")->setValue('Мотоцикл')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("F1")->setValue('Время')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("G1")->setValue('Штраф')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("H1")->setValue('Итоговое время')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("I1")->setValue('Рейтинг')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getStyle('A1:I1')->getFont()->setBold(true);
+		$sheet->getStyleByColumnAndRow(0, 1, 8, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$rowIndex = 2;
+		foreach ($results as $result) {
+			$athlete = $result->athlete;
+			$sheet->getCell("A" . $rowIndex)->setValue($result->dateForHuman);
+			$sheet->getCell("B" . $rowIndex)->setValue($result->athleteClass ? $result->athleteClass->title : '');
+			$sheet->getCell("C" . $rowIndex)->setValue($athlete->city->title);
+			$sheet->getCell("D" . $rowIndex)->setValue($athlete->getFullName());
+			$sheet->getCell("E" . $rowIndex)->setValue($result->motorcycle->getFullTitle());
+			$sheet->getCell("F" . $rowIndex)->setValue($result->timeForHuman);
+			$sheet->getCell("G" . $rowIndex)->setValue($result->fine);
+			$sheet->getCell("H" . $rowIndex)->setValue($result->resultTimeForHuman);
+			$sheet->getCell("I" . $rowIndex)->setValue($result->percent . '%');
+			$i = 0;
+			while ($i < 9) {
+				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+				$i++;
+			}
+			$sheet->getStyleByColumnAndRow(0, $rowIndex, 8, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+			$rowIndex++;
+		}
+		$sheet->getStyleByColumnAndRow(0, $rowIndex, 8, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		
+		$sheet->getStyle("A1:A" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("B2:B" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("C2:C" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("D2:D" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("E2:E" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("F2:F" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("G2:G" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("H2:H" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("I2:I" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		
+		$sheet->getColumnDimension('A')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('C')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('D')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('E')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('F')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('G')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('H')
+			->setAutoSize(true);
+		$sheet->getColumnDimension('I')
+			->setAutoSize(true);
+		
+		$sheet->getColumnDimension('B')
+			->setWidth(20);
+		
+		$writer = \PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
+		$writer->save($path);
+		
+		return $path;
+	}
+	
+	/**
+	 * @param array   $results
+	 * @param Stage[] $stages
+	 *
+	 * @return string
+	 */
+	private function getChampionshipResult($results, $stages)
+	{
+		$path = tempnam("/tmp", "acc-");
+		$obj = new \PHPExcel();
+		foreach ($obj->getAllSheets() as $i => $sheet) {
+			$obj->removeSheetByIndex($i);
+		}
+		
+		$sheet = $obj->createSheet();
+		$sheet->setTitle('Итоги');
+		
+		$sheet->getCell("A1")->setValue('Место')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->setValue('Класс спортсмена')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("C1")->setValue('Город')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("D1")->setValue('Спортсмен')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$col = 4;
+		$place = 0;
+		$prevPoints = 0;
+		$prevCount = 1;
+		foreach ($stages as $stage) {
+			$sheet->getCellByColumnAndRow($col++, 1)->setValue($stage->title)->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		}
+		$sheet->getCellByColumnAndRow($col, 1)->setValue('Итого')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getStyleByColumnAndRow(0, 1, $col, 1)->getFont()->setBold(true);
+		$sheet->getStyleByColumnAndRow(0, 1, $col, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$rowIndex = 2;
+		foreach ($results as $result) {
+			/** @var Athlete $athlete */
+			$athlete = $result['athlete'];
+			if ($result['points'] > 0 && $result['points'] == $prevPoints) {
+				$prevCount += 1;
+			} else {
+				$place += $prevCount;
+				$prevCount = 1;
+			}
+			$prevPoints = $result['points'];
+			$sheet->getCell("A" . $rowIndex)->setValue($place);
+			$sheet->getCell("B" . $rowIndex)->setValue($athlete->athleteClassId ? $athlete->athleteClass->title : null);
+			$sheet->getCell("C" . $rowIndex)->setValue($athlete->city->title);
+			$sheet->getCell("D" . $rowIndex)->setValue($athlete->getFullName());
+			$col = 4;
+			foreach ($stages as $stage) {
+				if (isset($result['stages'][$stage->id])) {
+					$sheet->getCellByColumnAndRow($col++, $rowIndex)->setValue($result['stages'][$stage->id]);
+				} else {
+					$sheet->getCellByColumnAndRow($col++, $rowIndex)->setValue(0);
+				}
+			}
+			$sheet->getCellByColumnAndRow($col, $rowIndex)->setValue($result['points']);
+			$i = 0;
+			while ($i <= $col) {
+				$sheet->getStyleByColumnAndRow($i, $rowIndex, $i, $rowIndex)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+				$i++;
+			}
+			$sheet->getStyleByColumnAndRow(0, $rowIndex, $col, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+			$rowIndex++;
+		}
+		
+		$count = 4 + count($stages);
+		$sheet->getStyleByColumnAndRow(0, $rowIndex, $count, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		
+		$i = 0;
+		while ($i < $count) {
+			$sheet->getStyleByColumnAndRow($i, 1, $i)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+			if ($i != 1) {
+				$sheet->getColumnDimensionByColumn($i)
+					->setAutoSize(true);
+			}
+			$i++;
+		}
+		
+		$sheet->getColumnDimension('B')
 			->setWidth(20);
 		
 		$writer = \PHPExcel_IOFactory::createWriter($obj, 'Excel2007');

@@ -47,7 +47,7 @@ $time = time();
                 <div class="toggle">
                     <div class="title">Посмотреть схему</div>
                     <div class="toggle-content">
-		                <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
+						<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
                     </div>
                 </div>
             </div>
@@ -105,6 +105,14 @@ $time = time();
     <div class="alert alert-danger" style="display: none"></div>
 
     <div class="results pt-20">
+        <div class="pb-10">
+			<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+				'/export/export',
+				'modelId' => $figure->id,
+				'type'    => \champ\controllers\ExportController::TYPE_FIGURE,
+				'yearId'  => $year ? $year->id : null
+			]), ['class' => 'btn btn-light']) ?>
+        </div>
         <div class="small text-right">
 			<?php $count = count($results); ?>
 			<?php if ($count > 30) { ?>
