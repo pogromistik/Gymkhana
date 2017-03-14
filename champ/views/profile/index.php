@@ -71,8 +71,9 @@ use yii\helpers\Url;
 		    'select2Options' => ['pluginOptions' => ['allowClear' => true]],
 		    'pluginOptions'  => [
 			    'depends'     => ['country-id'],
-			    'url'         => Url::to(['/help/country-category']),
+			    'url'         => Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
 			    'loadingText' => 'Для выбранной страны нет городов...',
+			    'placeholder' => 'Выберите город...'
 		    ]
 	    ]); ?>
 

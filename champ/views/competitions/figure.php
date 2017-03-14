@@ -60,7 +60,37 @@ $time = time();
 		<?= \yii\bootstrap\Html::hiddenInput('yearId', $year ? $year->id : null) ?>
 		<?= \yii\bootstrap\Html::hiddenInput('showAll', $showAll, ['id' => 'showAll']) ?>
         <div class="row">
+            <div class="col-md-12 pb-10">
+				<?= Select2::widget([
+					'name'    => 'countryId',
+					'data'    => \common\models\Country::getAll(true),
+					'options' => [
+						'placeholder' => 'Выберите страну...',
+						'id'          => 'country-id',
+					],
+				]) ?>
+            </div>
             <div class="col-md-6 col-sm-12">
+				<?= \kartik\widgets\DepDrop::widget([
+					'name'           => 'regionIds',
+					'data'           => \common\models\Region::getAll(true),
+					'options'        => ['placeholder' => 'Выберите регион ...'],
+					'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
+					'select2Options' => ['pluginOptions' => ['allowClear' => true, 'multiple' => true]],
+					'pluginOptions'  => [
+						'depends'     => ['country-id'],
+						'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
+						'loadingText' => 'Для выбранной страны нет городов...',
+						'placeholder' => 'Выберите регион...'
+					],
+					'pluginEvents'   => [
+						'change' => 'function(e){
+				figureFilters();
+			}',
+					]
+				]);
+				?>
+				<?php /*
 				<?= Select2::widget([
 					'name'          => 'regionIds',
 					'data'          => \common\models\Region::getAll(true),
@@ -76,6 +106,8 @@ $time = time();
 			}',
 					]
 				]);
+				?>
+ */
 				?>
             </div>
             <div class="col-md-6 col-sm-12">
