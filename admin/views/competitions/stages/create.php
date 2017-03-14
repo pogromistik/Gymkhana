@@ -1,4 +1,5 @@
 <?php
+use common\models\Championship;
 /**
  * @var \yii\web\View        $this
  * @var \common\models\Stage $model
@@ -7,8 +8,9 @@
  */
 
 $this->title = 'Создание нового этапа';
-$this->params['breadcrumbs'][] = ['label' => 'Чемпионаты', 'url' => ['/competitions/championships/index']];
-$this->params['breadcrumbs'][] = ['label' => $model->championship->title, 'url' => ['/competitions/championships/view', 'id' => $model->championshipId]];
+$championship = $model->championship;
+$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => $championship->title, 'url' => ['/competitions/championships/view', 'id' => $model->championshipId]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stage-create">

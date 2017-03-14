@@ -198,7 +198,7 @@ AppAsset::register($this);
                                             href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
                                 </li>
                                 <li class="level-2 active">
-                                    <a href="<?= Url::to(['/competitions/championships/index']) ?>"> Чемпионаты<span
+                                    <a href="#"> Чемпионаты<span
                                                 class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
 	                                    <?php foreach (\common\models\Championship::$groupsTitle as $groupId => $title) { ?>
