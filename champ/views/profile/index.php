@@ -2,6 +2,10 @@
 use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
 use yii\bootstrap\Html;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\DepDrop;
+use common\models\Country;
+use yii\helpers\Url;
 
 /**
  * @var \common\models\Athlete $athlete
@@ -42,14 +46,35 @@ use yii\bootstrap\Html;
         <div class="help-for-athlete">
             <small>Информация, обязательная для заполнения:</small>
         </div>
-		
-		<?= $form->field($athlete, 'cityId')->widget(Select2::classname(), [
-			'name'    => 'kv-type-01',
-			'data'    => \common\models\City::getAll(true),
-			'options' => [
-				'placeholder' => 'Выберите город...',
-			],
-		]) ?>
+	
+	    <?= $form->field($athlete, 'countryId')->widget(Select2::classname(), [
+		    'data'    => Country::getAll(true),
+		    'options' => [
+			    'placeholder' => 'Выберите страну...',
+			    'id'          => 'country-id',
+		    ],
+	    ]); ?>
+	
+	    <?php $cities = [];
+	    if ($athlete->cityId) {
+		    $cities = [$athlete->cityId => $athlete->city->title];
+		    if ($athlete->countryId !== null) {
+			    $cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $athlete->countryId])->orderBy(['title' => SORT_ASC])->all(),
+				    'id', 'title');
+		    }
+	    }
+	    ?>
+	    <?= $form->field($athlete, 'cityId')->widget(DepDrop::classname(), [
+		    'data'           => $cities,
+		    'options'        => ['placeholder' => 'Выберите город ...'],
+		    'type'           => DepDrop::TYPE_SELECT2,
+		    'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+		    'pluginOptions'  => [
+			    'depends'     => ['country-id'],
+			    'url'         => Url::to(['/help/country-category']),
+			    'loadingText' => 'Для выбранной страны нет городов...',
+		    ]
+	    ]); ?>
 
         <div class="row">
             <div class="col-md-6 col-sm-12">
