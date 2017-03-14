@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use dosamigos\editable\Editable;
+use common\models\Championship;
 
 /**
  * @var \common\models\Participant              $participant
@@ -14,6 +15,9 @@ use dosamigos\editable\Editable;
  */
 
 $this->title = 'Участники';
+$championship = $stage->championship;
+$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' => ['/competitions/championships/view', 'id' => $stage->championshipId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/stages/view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

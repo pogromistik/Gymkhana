@@ -8,7 +8,6 @@ use common\models\Championship;
 /* @var $model common\models\Championship */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Разделы чемпионатов', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$model->groupId], 'url' => ['index', 'groupId' => $model->groupId]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

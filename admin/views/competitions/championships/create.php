@@ -9,7 +9,6 @@ use common\models\Championship;
  */
 
 $this->title = 'Добавить чемпионат';
-$this->params['breadcrumbs'][] = ['label' => 'Разделы чемпионатов', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$groupId], 'url' => ['index', 'groupId' => $groupId]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

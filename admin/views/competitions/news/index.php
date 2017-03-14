@@ -8,7 +8,6 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Новости ассоциации';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="assoc-news-index">
     <p>

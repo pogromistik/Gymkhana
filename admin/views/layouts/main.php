@@ -197,9 +197,14 @@ AppAsset::register($this);
                                     <a data-addr="/competitions/athlete"
                                             href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
                                 </li>
-                                <li>
-                                    <a data-addr="/competitions/championships"
-                                            href="<?= Url::to(['/competitions/championships/index']) ?>"> Чемпионаты</a>
+                                <li class="level-2 active">
+                                    <a href="<?= Url::to(['/competitions/championships/index']) ?>"> Чемпионаты<span
+                                                class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+	                                    <?php foreach (\common\models\Championship::$groupsTitle as $groupId => $title) { ?>
+                                            <li><?= Html::a($title, ['/competitions/championships/index', 'groupId' => $groupId]) ?></li>
+	                                    <?php } ?>
+                                    </ul>
                                 </li>
                                 <li>
                                     <a data-addr="/competitions/figures" href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>

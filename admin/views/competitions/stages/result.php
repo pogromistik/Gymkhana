@@ -1,12 +1,14 @@
 <?php
+use common\models\Championship;
 /**
  * @var \yii\web\View                $this
  * @var \common\models\Stage         $stage
  * @var \common\models\Participant[] $participants
  */
 
-$this->title = $stage->championship->title . ', ' . $stage->title . ': итоги';
-$this->params['breadcrumbs'][] = ['label' => 'Чемпионаты', 'url' => ['/competitions/championships/index']];
+$championship = $stage->championship;
+$this->title = $championship->title . ', ' . $stage->title . ': итоги';
+$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' => ['/competitions/championships/view', 'id' => $stage->championshipId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = 'Итоги';
