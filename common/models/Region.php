@@ -48,9 +48,13 @@ class Region extends \yii\db\ActiveRecord
 		];
 	}
 	
-	public static function getAll($asArrayHelper = false)
+	public static function getAll($asArrayHelper = false, $countryIds = null)
 	{
-		$result = self::find()->orderBy(['title' => SORT_ASC]);
+		$result = self::find();
+		if ($countryIds) {
+			$result = $result->andWhere(['countryId' => $countryIds]);
+		}
+		$result = $result->orderBy(['title' => SORT_ASC]);
 		if ($asArrayHelper) {
 			return ArrayHelper::map($result->all(), 'id', 'title');
 		}

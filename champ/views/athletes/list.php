@@ -42,12 +42,13 @@ $listView = new \yii\widgets\ListView([
         <?=
 		Select2::widget([
 			'model'         => $searchModel,
-			'attribute'     => 'regionId',
-			'data'          => \common\models\Region::getAll(true),
+			'attribute'     => 'countryId',
+			'data'          => \common\models\Country::getAll(true),
 			'maintainOrder' => true,
 			'options'       => [
-				'placeholder' => 'Выберите регион...',
-				'multiple'    => true,
+				'placeholder' => 'Выберите страну...',
+				'multiple'    => false,
+				'id'          => 'country-id',
 				'onchange'    => 'this.form.submit()'
 			],
 			'pluginOptions' => [
@@ -56,6 +57,24 @@ $listView = new \yii\widgets\ListView([
 		])
 		?></div>
     <div class="col-md-3 sol-sm-6">
+	    <?= \kartik\widgets\DepDrop::widget([
+		    'model'         => $searchModel,
+		    'attribute'     => 'regionId',
+		    'data'           => ($searchModel->countryId !== null) ? \common\models\Region::getAll(true, $searchModel->countryId)
+            : [],
+		    'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
+		    'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+		    'pluginOptions'  => [
+			    'depends'     => ['country-id'],
+			    'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
+			    'loadingText' => 'Для выбранной страны нет городов...',
+			    'placeholder' => 'Выберите регион...',
+                'multiple' => true
+		    ],
+	    ]);
+	    ?>
+	    
+        <?php /*
         <?=
 		Select2::widget([
 			'model'         => $searchModel,
@@ -71,7 +90,7 @@ $listView = new \yii\widgets\ListView([
 				'tags' => true
 			],
 		])
-		?></div>
+		?> */ ?></div>
     <div class="col-md-3 sol-sm-6">
 		<?=
 		Select2::widget([

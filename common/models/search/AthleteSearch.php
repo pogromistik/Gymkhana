@@ -20,7 +20,7 @@ class AthleteSearch extends Athlete
 	{
 		return [
 			[['id', 'login', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
-			[['firstName', 'cityId', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken', 'regionId', 'athleteClassId'], 'safe'],
+			[['firstName', 'cityId', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken', 'regionId', 'athleteClassId', 'countryId'], 'safe'],
 		];
 	}
 	
@@ -48,7 +48,7 @@ class AthleteSearch extends Athlete
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-			'sort' => ['defaultOrder' => ['lastName' => SORT_ASC, 'cityId' => SORT_ASC, 'firstName' => SORT_ASC]]
+			'sort'  => ['defaultOrder' => ['lastName' => SORT_ASC, 'cityId' => SORT_ASC, 'firstName' => SORT_ASC]]
 		]);
 		
 		$this->load($params);
@@ -70,7 +70,8 @@ class AthleteSearch extends Athlete
 			'updatedAt'        => $this->updatedAt,
 			'hasAccount'       => $this->hasAccount,
 			'lastActivityDate' => $this->lastActivityDate,
-			'regionId'         => $this->regionId
+			'regionId'         => $this->regionId,
+			'countryId'        => $this->countryId
 		]);
 		$query->andFilterWhere(['like', 'firstName', $this->firstName])
 			->andFilterWhere(['like', 'lastName', $this->lastName])
