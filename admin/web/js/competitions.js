@@ -14,10 +14,10 @@ $('.removeOverallFile').click(function (e) {
             if (data == true) {
                 location.reload(true);
             } else {
-                alert(data);
+                BootboxError(data);
             }
         }).fail(function (error) {
-            alert(error.responseText);
+            BootboxError(error.responseText);
         });
     }
 });
@@ -43,7 +43,7 @@ function newAthlete(data) {
         },
         error: function (result) {
             hideBackDrop();
-            alert(result);
+            BootboxError(result.responseText);
         }
     });
 }
@@ -59,10 +59,10 @@ $('.changeMotorcycleStatus').click(function (e) {
         if (data == true) {
             location.reload(true);
         } else {
-            alert(data);
+            BootboxError(data);
         }
     }).fail(function (error) {
-        alert(error.responseText);
+        BootboxError(error.responseText);
     });
 });
 
@@ -193,12 +193,12 @@ $(document).on("submit", '#ajaxForm', function (e) {
                 location.reload();
             } else {
                 hideBackDrop();
-                alert(result);
+                BootboxError(result);
             }
         },
         error: function (result) {
             hideBackDrop();
-            alert(result);
+            BootboxError(result.responseText);
         }
     });
 });
@@ -216,10 +216,10 @@ $('.change-status').click(function (e) {
         if (data == true) {
             location.reload(true);
         } else {
-            alert(data);
+            BootboxError(data);
         }
     }).fail(function (error) {
-        alert(error.responseText);
+        BootboxError(error.responseText);
     });
 });
 
@@ -239,12 +239,12 @@ $(document).on("submit", '.raceTimeForm', function (e) {
                 hideBackDrop();
             } else {
                 hideBackDrop();
-                alert(result);
+                BootboxError(result);
             }
         },
         error: function (result) {
             hideBackDrop();
-            alert(result);
+            BootboxError(result);
         }
     });
 });
@@ -283,7 +283,7 @@ function AddAllResults(form) {
         },
         error: function (result) {
             hideBackDrop();
-            alert(result);
+            BootboxError(result.responseText);
         }
     });
 }
@@ -336,10 +336,12 @@ $('.changeParticipantStatus').click(function (e) {
         if (data == true) {
             location.reload(true);
         } else {
-            alert(data);
+            hideBackDrop();
+            BootboxError(data);
         }
     }).fail(function (error) {
-        alert(error.responseText);
+        hideBackDrop();
+        BootboxError(error.responseText);
     });
 });
 
@@ -355,7 +357,8 @@ $('.findByFirstName').click(function (e) {
         $('.modalList').html(data);
         $('#athletesList').modal('show')
     }).fail(function (error) {
-        alert(error.responseText);
+        hideBackDrop();
+        BootboxError(error.responseText);
     });
 });
 
@@ -527,6 +530,7 @@ $('.setParticipantsClasses').click(function (e) {
     e.preventDefault();
     var elem = $(this);
     var stageId = elem.data('id');
+    showBackDrop();
     $.get('/competitions/participants/set-classes', {
         stageId: stageId
     }).done(function (data) {
@@ -535,11 +539,12 @@ $('.setParticipantsClasses').click(function (e) {
             alert('Классы успешно установлены');
             location.reload();
         } else {
-            alert(data);
+            BootboxError(data);
             console.log(data);
         }
     }).fail(function (error) {
-        alert(error.responseText);
+        hideBackDrop();
+        BootboxError(error.responseText);
         console.log(error);
     });
 });
@@ -549,6 +554,7 @@ $('.getRequest').click(function (e) {
     var elem = $(this);
     var action = elem.data('action');
     var id = elem.data('id');
+    showBackDrop();
     $.get(action, {
         id: id
     }).done(function (data) {
@@ -556,39 +562,12 @@ $('.getRequest').click(function (e) {
         if (data == true) {
             location.reload();
         } else {
-            bootbox.dialog({
-                locale: 'ru',
-                title: 'Ошибка!',
-                message: data,
-                className: 'danger',
-                buttons: {
-                    confirm: {
-                        label: 'ОК',
-                        className: "btn-primary",
-                        callback: function () {
-                            return true;
-                        }
-                    }
-                }
-            });
+            BootboxError(data);
             console.log(data);
         }
     }).fail(function (error) {
-        bootbox.dialog({
-            locale: 'ru',
-            title: 'Ошибка!',
-            message: error.responseText,
-            className: 'danger',
-            buttons: {
-                confirm: {
-                    label: 'ОК',
-                    className: "btn-primary",
-                    callback: function () {
-                        return true;
-                    }
-                }
-            }
-        });
+        hideBackDrop();
+        BootboxError(error.responseText);
         console.log(error);
     });
 });
@@ -600,6 +579,7 @@ $('.getRequestWithConfirm').click(function (e) {
     if (confirm(text)) {
         var action = elem.data('action');
         var id = elem.data('id');
+        showBackDrop();
         $.get(action, {
             id: id
         }).done(function (data) {
@@ -607,39 +587,12 @@ $('.getRequestWithConfirm').click(function (e) {
             if (data == true) {
                 location.reload();
             } else {
-                bootbox.dialog({
-                    locale: 'ru',
-                    title: 'Ошибка!',
-                    message: data,
-                    className: 'danger',
-                    buttons: {
-                        confirm: {
-                            label: 'ОК',
-                            className: "btn-primary",
-                            callback: function () {
-                                return true;
-                            }
-                        }
-                    }
-                });
+                BootboxError(data);
                 console.log(data);
             }
         }).fail(function (error) {
-            bootbox.dialog({
-                locale: 'ru',
-                title: 'Ошибка!',
-                message: error.responseText,
-                className: 'danger',
-                buttons: {
-                    confirm: {
-                        label: 'ОК',
-                        className: "btn-primary",
-                        callback: function () {
-                            return true;
-                        }
-                    }
-                }
-            });
+            hideBackDrop();
+            BootboxError(error);
             console.log(error);
         });
     }
@@ -684,10 +637,10 @@ $('.stageCalcResult').click(function (e) {
             if (data == true) {
                 location.href = '/competitions/stages/result?stageId=' + id;
             } else {
-                alert(data);
+                BootboxError(data);
             }
         }).fail(function (error) {
-            alert(error.responseText);
+            BootboxError(error.responseText);
         });
     }
 });
@@ -702,10 +655,10 @@ $('.createCabinet').click(function (e) {
             if (data == true) {
                 location.reload();
             } else {
-                alert(data);
+                BootboxError(data);
             }
         }).fail(function (error) {
-            alert(error.responseText);
+            BootboxError(error.responseText);
         });
     }
 });
@@ -726,12 +679,12 @@ $(document).on("submit", '#figureTimeForm', function (e) {
                     '&date=' + date + '&success=true';
             } else {
                 hideBackDrop();
-                alert(result);
+                BootboxError(result);
             }
         },
         error: function (result) {
             hideBackDrop();
-            alert(result);
+            BootboxError(result);
         }
     });
 });
@@ -766,10 +719,28 @@ $('.deletePhoto').click(function (e) {
             location.reload();
         } else {
             hideBackDrop();
-            alert(data);
+            BootboxError(data);
         }
     }).fail(function (error) {
         hideBackDrop();
-        alert(error.responseText);
+        BootboxError(error.responseText);
     });
 });
+
+function BootboxError(text) {
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Ошибка!',
+        message: text,
+        className: 'danger',
+        buttons: {
+            confirm: {
+                label: 'ОК',
+                className: "btn-primary",
+                callback: function () {
+                    return true;
+                }
+            }
+        }
+    });
+}
