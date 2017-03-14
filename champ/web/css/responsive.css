@@ -36,6 +36,14 @@
     .header {
         background: #f4f4f4;
     }
+
+    .documents .list .info li {
+        list-style: disc;
+    }
+
+    .documents .list .info ul {
+        padding-left: 20px;
+    }
 }
 
 @media (max-width: 876px) {
