@@ -10,10 +10,9 @@ use yii\helpers\Url;
 use yii\bootstrap\Html;
 
 ?>
-
+<h3>Новости</h3>
 <div class="z-100">
     <div class="news">
-        <h3>Новости</h3>
 		<?php foreach ($news as $item) { ?>
             <div class="item">
 				<?php if ($item->title) { ?>

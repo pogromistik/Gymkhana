@@ -14,6 +14,8 @@ use yii\widgets\MaskedInput;
  */
 ?>
 <div class="tmp-figure-result-index">
+    
+    <h3>Отправка своего результата по базовой фигуре</h3>
 	
     <h4><?= Html::a('посмотреть историю', ['/figures/requests']) ?></h4>
     

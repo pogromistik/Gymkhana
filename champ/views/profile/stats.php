@@ -11,6 +11,8 @@ use yii\bootstrap\Html;
  */
 ?>
 
+<h3>Статистика</h3>
+
 <?= $this->render('compareWith') ?>
 
 <div class="figures pt-10">

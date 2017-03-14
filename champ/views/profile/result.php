@@ -23,9 +23,11 @@ $colspan = count($athletes) + 1;
         <h3>Общая информация</h3>
         <table class="table w-<?= $colspan ?>">
             <tr>
-                <td><?= $me->getFullName() ?><?php if ($me->number) { ?>, №<?= $me->number ?><?php } ?></td>
+                <td><?= \yii\bootstrap\Html::a($me->getFullName(), ['/athletes/view', 'id' => $me->id], ['target' => '_blank']) ?>
+					<?php if ($me->number) { ?>, №<?= $me->number ?><?php } ?></td>
 				<?php foreach ($athletes as $athlete) { ?>
-                    <td><?= $athlete->getFullName() ?><?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></td>
+                    <td><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+						<?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></td>
 				<?php } ?>
             </tr>
             <tr>

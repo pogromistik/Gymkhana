@@ -8,7 +8,7 @@ use yii\bootstrap\Html;
  * @var string | null $active
  */
 ?>
-
+    <h3>Результаты соревнований</h3>
     <div class="list">
 		<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
             <div class="item">
@@ -34,14 +34,14 @@ use yii\bootstrap\Html;
                                             Для чемпионата пока не создано ни одного этапа.
 										<?php } else { ?>
                                             <div class="pl-10">
-                                                <?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-                                                <?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+												<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
+													<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                     <br>
-                                                <?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
-	                                                <?= Html::a('Предварительные итоги чемпионата',
-                                                        ['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+												<?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
+													<?= Html::a('Предварительные итоги чемпионата',
+														['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                     <br>
-                                                <?php } ?>
+												<?php } ?>
 												<?php foreach ($stages as $stage) { ?>
 													<?php
 													$title = $stage->title . ', ' . $stage->city->title;
@@ -70,14 +70,14 @@ use yii\bootstrap\Html;
                                                     Для чемпионата пока не создано ни одного этапа.
 												<?php } else { ?>
                                                     <div class="pl-10">
-	                                                    <?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-		                                                    <?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+														<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
+															<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                             <br>
-	                                                    <?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
-		                                                    <?= Html::a('Предварительные итоги чемпионата',
-                                                                ['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+														<?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
+															<?= Html::a('Предварительные итоги чемпионата',
+																['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                             <br>
-	                                                    <?php } ?>
+														<?php } ?>
 														<?php foreach ($stages as $stage) { ?>
 															<?php
 															$title = $stage->title . ', ' . $stage->city->title;
@@ -157,7 +157,7 @@ use yii\bootstrap\Html;
                                             Для фигуры пока нет ни одного результата.
 										<?php } else { ?>
                                             <div class="pl-10">
-	                                            <?= Html::a('Лучшие результаты за всё время', ['/competitions/figure', 'id' => $figure->id]) ?>
+												<?= Html::a('Лучшие результаты за всё время', ['/competitions/figure', 'id' => $figure->id]) ?>
                                             </div>
 											<?php foreach ($years as $year) { ?>
                                                 <div class="pl-10">

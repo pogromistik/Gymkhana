@@ -29,12 +29,14 @@ $listView = new \yii\widgets\ListView([
 ]);
 ?>
 
+<h3>Спортсмены</h3>
+
 <?php $form = \yii\bootstrap\ActiveForm::begin([
 	'id'                     => 'search',
 	'method'                 => 'get',
 	'enableClientValidation' => false
 ]); ?>
-<div class="row table">
+<div class="row">
 
     <div class="col-md-3 sol-sm-6">
         <?=
