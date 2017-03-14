@@ -2,12 +2,14 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use common\models\Championship;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Чемпионаты', 'url' => ['/competitions/championships/index']];
+$championship = $model->championship;
+$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $model->championship->title, 'url' => ['/competitions/championships/view', 'id' => $model->championshipId]];
 $this->params['breadcrumbs'][] = ['label' => 'Все этапы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
