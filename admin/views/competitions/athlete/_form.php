@@ -11,6 +11,19 @@ use kartik\widgets\Select2;
 
 <div class="athlete-form">
 	<?php $form = ActiveForm::begin(['options' => ['id' => $model->isNewRecord ? 'newAthlete' : 'updateAthlete']]); ?>
+	
+	<?php if (!$model->isNewRecord && $model->photo) { ?>
+        <div class="row">
+            <div class="col-md-2 col-sm-4 img-in-profile">
+				<?= Html::img(\Yii::getAlias('@filesView') . '/' . $model->photo) ?>
+                <br>
+                <a href="#" class="btn btn-warning btn-block deletePhoto" data-id="<?= $model->id ?>"
+                   data-model="<?= \admin\controllers\competitions\HelpController::PHOTO_ATHLETE ?>">удалить</a>
+                <br>
+            </div>
+        </div>
+	<?php } ?>
+	
 	<?= $form->field($model, 'cityId')->widget(Select2::classname(), [
 		'name'    => 'kv-type-01',
 		'data'    => \common\models\City::getAll(true),
