@@ -9,10 +9,13 @@ use yii\bootstrap\Html;
  */
 ?>
 
+<h3>Редактирование профиля</h3>
+
 <?php if ($success) { ?>
     <div class="alert alert-success">Изменения успешно сохранены</div>
 <?php } ?>
 
+<h4><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h4>
     <div class="athlete-form">
 		<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
 

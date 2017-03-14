@@ -104,7 +104,8 @@ $time = time();
 									<?= $participant->athleteClassId ? $participant->athleteClass->title : null ?>
                                 </td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
-                                <td rowspan="<?= $stage->countRace ?>"><?= $athlete->getFullName() ?>
+                                <td rowspan="<?= $stage->countRace ?>">
+									<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
                                     <br><?= $athlete->city->title ?></td>
                                 <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 								<?php if ($first) { ?>
@@ -198,7 +199,12 @@ $time = time();
                             <tr>
                                 <td><?= $place++ ?> / <?= $participant->placeOfClass ?></td>
                                 <td>
-                                    №<?= $participant->number ?> <?= $athlete->getFullName() ?>
+									<?php if ($participant->number) { ?>
+										<?= \yii\bootstrap\Html::a('№' . $participant->number . ' ' . $athlete->getFullName(),
+											['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+									<?php } else { ?>
+										<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+									<?php } ?>
                                     <br>
                                     <small>
 										<?= $athlete->city->title ?>
