@@ -74,7 +74,14 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 							'pk'        => $item->id,
 							'value'     => $item->fileName,
 							'placement' => 'right',
-						]
+							'text' => [
+								'width' => '500px'
+							],
+							'width' => '500px'
+						],
+                        'options' => [
+	                        'width' => '500px'
+                        ]
 					]);
 				}
 			],

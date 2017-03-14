@@ -293,3 +293,8 @@ img {
 .danger .modal-header {
     background: #fddcdc;
 }
+
+.editable-input, .editable-input input {
+    width: 100%!important;
+    max-width: 500px!important;
+}
