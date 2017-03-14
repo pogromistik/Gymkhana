@@ -574,4 +574,62 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionTranslateCountries()
+	{
+		$filePath = 'admin/web/files/translate.xlsx';
+		
+		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
+		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
+		$array = [];
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($worksheet->getRowIterator() as $i => $row) {
+			$cellIterator = $row->getCellIterator();
+			/**
+			 * @var \PHPExcel_Cell $cell
+			 */
+			foreach ($cellIterator as $j => $cell) {
+				if ($cell->getFormattedValue() !== null) {
+					switch ($j) {
+						case 'A':
+							$array[$i]['ru']=$cell->getFormattedValue();
+							break;
+						case 'B':
+							$array[$i]['en']=$cell->getFormattedValue();
+							break;
+					}
+				}
+			}
+		}
+		
+		$count = 0;
+		foreach ($array as $i => $data) {
+			echo $i . PHP_EOL;
+			$country = Country::findOne(['upper("title")' => mb_strtoupper($data['ru'])]);
+			if ($data['ru'] == 'Россия') {
+				if (!$country) {
+					$country = Country::findOne(['upper("title")' => 'RUSSIA']);
+				}
+				$country->title = 'Россия';
+				if (!$country->save()) {
+					$transaction->rollBack();
+					return var_dump($country->errors);
+				}
+			} else {
+				if ($country) {
+					$country->title = $data['en'];
+					$count++;
+					if (!$country->save()) {
+						$transaction->rollBack();
+						
+						return var_dump($country->errors);
+					}
+				}
+			}
+		}
+		$transaction->commit();
+		
+		echo $count . ' from ' . Country::find()->count() . PHP_EOL;
+		return true;
+	}
 }
