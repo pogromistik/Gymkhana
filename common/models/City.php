@@ -81,6 +81,11 @@ class City extends \yii\db\ActiveRecord
 	
 	public function beforeValidate()
 	{
+		if ($this->isNewRecord) {
+			if ($this->regionId && !$this->countryId) {
+				$this->countryId = $this->region->countryId;
+			}
+		}
 		return parent::beforeValidate();
 	}
 	
