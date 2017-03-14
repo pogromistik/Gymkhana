@@ -33,12 +33,14 @@ use yii\web\UploadedFile;
  * @property integer       $lastActivityDate
  * @property integer       $regionId
  * @property integer       $photo
+ * @property integer       $countryId
  *
  * @property Motorcycle[]  $motorcycles
  * @property Motorcycle[]  $activeMotorcycles
  * @property AthletesClass $athleteClass
  * @property City          $city
  * @property Region        $region
+ * @property Country $country
  */
 class Athlete extends BaseActiveRecord implements IdentityInterface
 {
@@ -128,8 +130,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function rules()
 	{
 		return [
-			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId'], 'required'],
-			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
+			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId', 'countryId'], 'required'],
+			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status',
+				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId'], 'integer'],
 			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
@@ -210,7 +213,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			'lastActivityDate'   => 'Дата последней активности',
 			'regionId'           => 'Регион',
 			'photo'              => 'Фотография',
-			'photoFile'          => 'Фотография'
+			'photoFile'          => 'Фотография',
+			'countryId'          => 'Страна'
 		];
 	}
 	
@@ -304,6 +308,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function getRegion()
 	{
 		return $this->hasOne(Region::className(), ['id' => 'regionId']);
+	}
+	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
 	}
 	
 	public static function getActiveAthletes($withoutId = null)
