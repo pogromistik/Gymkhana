@@ -3,6 +3,7 @@ use yii\bootstrap\ActiveForm;
 use kartik\widgets\TimePicker;
 use yii\widgets\MaskedInput;
 use yii\bootstrap\Html;
+use common\models\Championship;
 
 /**
  * @var \yii\web\View              $this
@@ -10,9 +11,12 @@ use yii\bootstrap\Html;
  * @var \common\models\Participant $participant
  * @var string                     $error
  */
-
-$this->title = $stage->championship->title . ', ' . $stage->title;
-
+$championship = $stage->championship;
+$this->title = $championship->title . ', ' . $stage->title;
+$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' => ['/competitions/championships/view', 'id' => $stage->championshipId]];
+$this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/stages/view', 'id' => $stage->id]];
+$this->params['breadcrumbs'][] = 'Заезды';
 $attempt = 0;
 ?>
 

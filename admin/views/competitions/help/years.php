@@ -9,7 +9,6 @@ use common\models\Year;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Года';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="years-index">
 

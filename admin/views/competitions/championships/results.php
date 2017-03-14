@@ -10,7 +10,6 @@ use common\models\Championship;
  * @var integer                     $showAll
  */
 $this->title = 'Результаты: ' . $championship->title;
-$this->params['breadcrumbs'][] = ['label' => 'Разделы чемпионатов', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $championship->title, 'url' => ['view', 'id' => $championship->id]];
 $this->params['breadcrumbs'][] = 'Результаты';

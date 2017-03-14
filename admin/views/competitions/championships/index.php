@@ -14,8 +14,6 @@ use common\models\Year;
  */
 
 $this->title = Championship::$groupsTitle[$groupId];
-$this->params['breadcrumbs'][] = ['label' => 'Разделы чемпионатов', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="championship-index">
     <p>
