@@ -5,12 +5,14 @@ namespace admin\controllers\competitions;
 use common\models\Athlete;
 use common\models\City;
 use admin\controllers\BaseController;
+use common\models\Country;
 use common\models\Figure;
 use common\models\HelpModel;
 use common\models\Region;
 use common\models\search\YearSearch;
 use common\models\Stage;
 use common\models\Year;
+use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -177,5 +179,36 @@ class HelpController extends BaseController
 		}
 		
 		return true;
+	}
+	
+	public function actionCountryCategory()
+	{
+		$this->can('competitions');
+		
+		if (isset($_POST['depdrop_parents'])) {
+			$parent = $_POST['depdrop_parents'];
+			if ($parent != null) {
+				$countryId = $parent[0];
+				$out = self::getSubCatList($countryId);
+				echo Json::encode(['output' => $out, 'selected' => '']);
+				
+				return;
+			}
+		}
+		echo Json::encode(['output' => '', 'selected' => '']);
+	}
+	
+	public function getSubCatList($countryId)
+	{
+		$this->can('competitions');
+		
+		$country = Country::findOne($countryId);
+		$cities = $country->cities;
+		$result = [];
+		foreach ($cities as $city) {
+			$result[] = ['id' => $city->id, 'name' => $city->title];
+		}
+		
+		return $result;
 	}
 }
