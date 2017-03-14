@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use common\models\Athlete;
 use common\models\City;
 use admin\controllers\BaseController;
 use common\models\Figure;
@@ -20,6 +21,7 @@ class HelpController extends BaseController
 {
 	const PHOTO_STAGE = 1;
 	const PHOTO_FIGURE = 2;
+	const PHOTO_ATHLETE = 3;
 	
 	public function actionAddCity()
 	{
@@ -158,6 +160,10 @@ class HelpController extends BaseController
 			case self::PHOTO_FIGURE:
 				$model = Figure::findOne($id);
 				$varName = 'picture';
+				break;
+			case self::PHOTO_ATHLETE:
+				$model = Athlete::findOne($id);
+				$varName = 'photo';
 		}
 		if (!$model) {
 			return 'Возникла ошибка при удалении фотографии';
