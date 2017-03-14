@@ -10,6 +10,9 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $id
  * @property string  $title
+ * @property integer $countryId
+ *
+ * @property Country  $country
  */
 class Region extends \yii\db\ActiveRecord
 {
@@ -27,7 +30,9 @@ class Region extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
+			[['countryId', 'title'], 'required'],
 			[['title'], 'string', 'max' => 255],
+			['countryId', 'integer']
 		];
 	}
 	
@@ -37,8 +42,9 @@ class Region extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id'    => 'ID',
-			'title' => 'Название',
+			'id'        => 'ID',
+			'title'     => 'Название',
+			'countryId' => 'Страна'
 		];
 	}
 	
@@ -48,6 +54,12 @@ class Region extends \yii\db\ActiveRecord
 		if ($asArrayHelper) {
 			return ArrayHelper::map($result->all(), 'id', 'title');
 		}
+		
 		return $result->all();
+	}
+	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
 	}
 }

@@ -16,8 +16,10 @@ use yii\helpers\ArrayHelper;
  * @property integer $showInRussiaPage
  * @property string  $federalDistrict
  * @property integer $regionId
+ * @property integer $countryId
  *
  * @property Region  $region
+ * @property Country $country
  */
 class City extends \yii\db\ActiveRecord
 {
@@ -35,8 +37,8 @@ class City extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title', 'regionId'], 'required'],
-			[['showInRussiaPage', 'regionId'], 'integer'],
+			[['title', 'regionId', 'countryId'], 'required'],
+			[['showInRussiaPage', 'regionId', 'countryId'], 'integer'],
 			[['top', 'left'], 'number'],
 			[['title', 'link', 'federalDistrict'], 'string'],
 			[['showInRussiaPage'], 'default', 'value' => 0],
@@ -57,7 +59,8 @@ class City extends \yii\db\ActiveRecord
 			'left'             => 'Left',
 			'showInRussiaPage' => 'Показывать на странице "Россия"',
 			'federalDistrict'  => 'Федеральный округ',
-			'regionId'         => 'Регион'
+			'regionId'         => 'Регион',
+			'countryId'        => 'Страна'
 		];
 	}
 	
@@ -86,12 +89,18 @@ class City extends \yii\db\ActiveRecord
 		return $this->hasOne(Region::className(), ['id' => 'regionId']);
 	}
 	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
+	}
+	
 	public static function getAll($asArrayHelper = false)
 	{
 		$result = self::find()->orderBy(['title' => SORT_ASC]);
 		if ($asArrayHelper) {
 			return ArrayHelper::map($result->all(), 'id', 'title');
 		}
+		
 		return $result->all();
 	}
 }
