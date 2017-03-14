@@ -226,11 +226,15 @@ class CompetitionsController extends BaseController
 			
 			return $response;
 		}
+		$countryId = \Yii::$app->request->post('countryId');
 		$regionIds = \Yii::$app->request->post('regionIds');
 		$classIds = \Yii::$app->request->post('classIds');
 		$yearId = \Yii::$app->request->post('yearId');
 		$showAll = \Yii::$app->request->post('showAll');
 		$year = null;
+		if ($countryId && !$regionIds) {
+			$regionIds = Region::find()->select('id')->where(['countryId' => $countryId])->asArray()->column();
+		}
 		if ($yearId) {
 			$year = Year::findOne($yearId);
 			if (!$year) {

@@ -54,6 +54,7 @@ use yii\helpers\Url;
 			'depends'     => ['country-id'],
 			'url'         => Url::to(['/competitions/help/country-category']),
 			'loadingText' => 'Для выбранной страны нет городов...',
+			'placeholder' => 'Выберите город...'
 		]
 	]); ?>
 	
