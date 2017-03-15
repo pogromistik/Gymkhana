@@ -35,7 +35,7 @@ if (!\Yii::$app->user->isGuest) {
 <h1 style="display: none"><?= $this->context->pageTitle ?></h1>
 
 <div class="background-img">
-	<?= Html::img('/img/background2.PNG') ?>
+	<?= Html::img('/img/'.$this->context->background) ?>
 </div>
 
 <div class="container-fluid">

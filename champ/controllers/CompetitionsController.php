@@ -135,6 +135,9 @@ class CompetitionsController extends BaseController
 			];
 		}
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'background3.png';
+		
 		return $this->render('results', [
 			'results'      => $results,
 			'figuresArray' => $figuresArray,
