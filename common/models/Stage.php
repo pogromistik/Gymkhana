@@ -28,6 +28,7 @@ use yii\web\UploadedFile;
  * @property integer       $regionId
  * @property string        $trackPhoto
  * @property integer       $trackPhotoStatus
+ * @property integer       $countryId
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -87,7 +88,7 @@ class Stage extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['championshipId', 'title', 'cityId', 'dateAdded', 'dateUpdated', 'regionId'], 'required'],
+			[['championshipId', 'title', 'cityId', 'dateAdded', 'dateUpdated', 'regionId', 'countryId'], 'required'],
 			[[
 				'championshipId',
 				'cityId',
@@ -101,7 +102,8 @@ class Stage extends BaseActiveRecord
 				'countRace',
 				'referenceTime',
 				'regionId',
-				'trackPhotoStatus'
+				'trackPhotoStatus',
+				'countryId'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			['description', 'string'],
@@ -139,7 +141,8 @@ class Stage extends BaseActiveRecord
 			'referenceTimeHuman'     => 'Эталонное время',
 			'trackPhoto'             => 'Фото трассы',
 			'photoFile'              => 'Фото трассы',
-			'trackPhotoStatus'       => 'Опубликовать трассу'
+			'trackPhotoStatus'       => 'Опубликовать трассу',
+			'countryId'              => 'Страна'
 		];
 	}
 	

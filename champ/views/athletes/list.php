@@ -39,7 +39,7 @@ $listView = new \yii\widgets\ListView([
 <div class="row">
 
     <div class="col-md-3 sol-sm-6">
-        <?=
+		<?=
 		Select2::widget([
 			'model'         => $searchModel,
 			'attribute'     => 'countryId',
@@ -57,24 +57,26 @@ $listView = new \yii\widgets\ListView([
 		])
 		?></div>
     <div class="col-md-3 sol-sm-6">
-	    <?= \kartik\widgets\DepDrop::widget([
-		    'model'         => $searchModel,
-		    'attribute'     => 'regionId',
-		    'data'           => ($searchModel->countryId !== null) ? \common\models\Region::getAll(true, $searchModel->countryId)
-            : [],
-		    'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
-		    'select2Options' => ['pluginOptions' => ['allowClear' => true,'placeholder' => 'Выберите регион...']],
-		    'pluginOptions'  => [
-			    'depends'     => ['country-id'],
-			    'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
-			    'loadingText' => 'Для выбранной страны нет городов...',
-			    'placeholder' => 'Выберите регион...',
-                'multiple' => true
-		    ],
-	    ]);
-	    ?>
-	    
-        <?php /*
+		<?= \kartik\widgets\DepDrop::widget([
+			'model'          => $searchModel,
+			'attribute'      => 'regionId',
+			'data'           => ($searchModel->countryId !== null) ? \common\models\Region::getAll(true, $searchModel->countryId)
+				: [],
+			'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
+			'select2Options' => ['pluginOptions' => ['allowClear' => true, 'placeholder' => 'Выберите регион...', 'multiple' => true]],
+			'pluginOptions'  => [
+				'depends'     => ['country-id'],
+				'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
+				'loadingText' => 'Для выбранной страны нет городов...',
+				'placeholder' => 'Выберите регион...',
+			],
+			'options'        => [
+				'onchange' => 'this.form.submit()'
+			]
+		]);
+		?>
+		
+		<?php /*
         <?=
 		Select2::widget([
 			'model'         => $searchModel,

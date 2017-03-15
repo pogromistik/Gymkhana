@@ -73,7 +73,7 @@ $time = time();
             <div class="col-md-6 col-sm-12">
 				<?= \kartik\widgets\DepDrop::widget([
 					'name'           => 'regionIds',
-					'data'           => \common\models\Region::getAll(true),
+					'data'           => [],
 					'options'        => ['placeholder' => 'Выберите регион ...'],
 					'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
 					'select2Options' => ['pluginOptions' => ['allowClear' => true, 'multiple' => true]],

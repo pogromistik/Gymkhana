@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
  * @property string  $federalDistrict
  * @property integer $regionId
  * @property integer $countryId
+ * @property string  $state
  *
  * @property Region  $region
  * @property Country $country
@@ -40,9 +41,8 @@ class City extends \yii\db\ActiveRecord
 			[['title', 'regionId', 'countryId'], 'required'],
 			[['showInRussiaPage', 'regionId', 'countryId'], 'integer'],
 			[['top', 'left'], 'number'],
-			[['title', 'link', 'federalDistrict'], 'string'],
+			[['title', 'link', 'federalDistrict', 'state'], 'string'],
 			[['showInRussiaPage'], 'default', 'value' => 0],
-			['title', 'unique'],
 		];
 	}
 	
@@ -86,6 +86,7 @@ class City extends \yii\db\ActiveRecord
 				$this->countryId = $this->region->countryId;
 			}
 		}
+		
 		return parent::beforeValidate();
 	}
 	
@@ -103,7 +104,9 @@ class City extends \yii\db\ActiveRecord
 	{
 		$result = self::find()->orderBy(['title' => SORT_ASC]);
 		if ($asArrayHelper) {
-			return ArrayHelper::map($result->all(), 'id', 'title');
+			return ArrayHelper::map($result->all(), 'id', function (Region $item) {
+				return html_entity_decode($item->title);
+			});
 		}
 		
 		return $result->all();

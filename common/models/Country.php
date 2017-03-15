@@ -10,6 +10,8 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer  $id
  * @property string   $title
+ * @property string   $title_en
+ * @property string   $title_original
  *
  * @property City[]   $cities
  * @property Region[] $regions
@@ -30,7 +32,8 @@ class Country extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title'], 'string', 'max' => 255],
+			['title', 'required'],
+			[['title', 'title_en', 'title_original'], 'string', 'max' => 255],
 		];
 	}
 	
@@ -41,7 +44,7 @@ class Country extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'    => 'ID',
-			'title' => 'Title',
+			'title' => 'Название на русском',
 		];
 	}
 	
@@ -49,7 +52,15 @@ class Country extends \yii\db\ActiveRecord
 	{
 		$result = self::find()->orderBy(['title' => SORT_ASC]);
 		if ($asArrayHelper) {
-			return ArrayHelper::map($result->all(), 'id', 'title');
+			return ArrayHelper::map($result->all(), 'id', function (Country $item) {
+				if ($item->title_original) {
+					return html_entity_decode($item->title . ' (' . $item->title_original . ')');
+				} elseif ($item->title_en) {
+					return html_entity_decode($item->title . ' (' . $item->title_en . ')');
+				}
+				
+				return html_entity_decode($item->title);
+			});
 		}
 		
 		return $result->all();

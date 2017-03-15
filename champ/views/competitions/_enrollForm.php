@@ -31,6 +31,10 @@ $championship = $stage->championship;
                 <h4 class="text-center">Укажите информацию о себе</h4>
 				<?= $form->field($participant, 'lastName')->textInput(['placeholder' => 'Ваша фамилия']) ?>
 				<?= $form->field($participant, 'firstName')->textInput(['placeholder' => 'Полное имя']) ?>
+                <?php if (!$participant->countryId) { ?>
+                    <?php $participant->countryId = 1 ?>
+                <?php } ?>
+				<?= $form->field($participant, 'countryId')->dropDownList(\common\models\Country::getAll(true)); ?>
 				<?= $form->field($participant, 'city')->textInput(['placeholder' => 'Ваш город']) ?>
 				<?= $form->field($participant, 'phone')->textInput(['placeholder' => 'Номер телефона']) ?>
                 

@@ -30,301 +30,15 @@ use common\models\Stage;
 use common\models\Track;
 use common\models\Year;
 use yii\console\Controller;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 class RunController extends Controller
 {
-	public function actionInsertTables()
-	{
-		$transaction = \Yii::$app->db->beginTransaction();
-		$items = (new Query())->from('about_block')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new AboutBlock();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('pages')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Page();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('about_slider')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new AboutSlider();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('albums')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Album();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('cities')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new City();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('contacts')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Contacts();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('dop_pages')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new DopPage();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('files')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Files();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('groups_menu')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new GroupMenu();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('help_project')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new HelpProject();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('layouts')->all();
-		foreach ($items as $block) {
-			$item = new Layout();
-			foreach ($item->attributes as $attribute => $value) {
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('links')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Link();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('main_menu')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new MainMenu();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('main_photo')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new MainPhoto();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('marshals')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Marshal();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('menu_items')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new MenuItem();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('news')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new News();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('news_block')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new NewsBlock();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('news_slider')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new NewsSlider();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('regular')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Regular();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('tracks')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Track();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		
-		$items = (new Query())->from('years')->orderBy(['id' => SORT_ASC])->all();
-		foreach ($items as $block) {
-			$item = new Year();
-			foreach ($item->attributes as $attribute => $value) {
-				if ($attribute == 'id') {
-					continue;
-				}
-				$item->$attribute = $block[$attribute];
-			}
-			$item->save(false);
-		}
-		$transaction->commit();
-	}
-	
 	public function actionCleanIncrement($tableName, $pk)
 	{
 		\Yii::$app->db->createCommand('SELECT setval(\'"' . $tableName . '_' . $pk . '_seq"\'::regclass, MAX("' . $pk . '")) FROM "' . $tableName . '"')->execute();
-	}
-	
-	public function actionTest()
-	{
-		$time = '01:58.69';
-		list($min, $secs) = explode(':', $time);
-		$time = ($min * 60000) + $secs * 1000;
-		echo $time . PHP_EOL;
-		$referenceTime = floor($time / 1.175);
-		echo $referenceTime . PHP_EOL;
-		
-		$min = str_pad(floor($referenceTime / 60000), 2, '0', STR_PAD_LEFT);
-		echo 'min: ' . $min . PHP_EOL;
-		$sec = str_pad(floor(($referenceTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
-		echo 'sec: ' . $sec . PHP_EOL;
-		$mls = str_pad(round(($referenceTime - $min * 60000 - $sec * 1000) / 10, 0, PHP_ROUND_HALF_DOWN), 2, '0', STR_PAD_LEFT);
-		echo 'mls: ' . $mls . PHP_EOL;
-		$referenceTimeHuman = $min . ':' . $sec . '.' . $mls;
-		echo $referenceTimeHuman . PHP_EOL;
-		
-		return true;
 	}
 	
 	public function actionAddRegions()
@@ -352,6 +66,7 @@ class RunController extends Controller
 	
 	public static function actionInsertCountry()
 	{
+		Country::deleteAll();
 		$filePath = 'admin/web/files/country.xlsx';
 		
 		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
@@ -479,7 +194,7 @@ class RunController extends Controller
 					switch ($j) {
 						case 'A':
 							$i = $cell->getFormattedValue();
-							$regions[$i]='';
+							$regions[$i] = '';
 							break;
 						case 'C':
 							$title = $cell->getFormattedValue();
@@ -592,10 +307,10 @@ class RunController extends Controller
 				if ($cell->getFormattedValue() !== null) {
 					switch ($j) {
 						case 'A':
-							$array[$i]['ru']=$cell->getFormattedValue();
+							$array[$i]['ru'] = $cell->getFormattedValue();
 							break;
 						case 'B':
-							$array[$i]['en']=$cell->getFormattedValue();
+							$array[$i]['en'] = $cell->getFormattedValue();
 							break;
 					}
 				}
@@ -606,30 +321,247 @@ class RunController extends Controller
 		foreach ($array as $i => $data) {
 			echo $i . PHP_EOL;
 			$country = Country::findOne(['upper("title")' => mb_strtoupper($data['ru'])]);
-			if ($data['ru'] == 'Россия') {
-				if (!$country) {
-					$country = Country::findOne(['upper("title")' => 'RUSSIA']);
-				}
-				$country->title = 'Россия';
+			if ($country) {
+				$country->title_en = $data['en'];
+				$count++;
 				if (!$country->save()) {
 					$transaction->rollBack();
+					
 					return var_dump($country->errors);
-				}
-			} else {
-				if ($country) {
-					$country->title = $data['en'];
-					$count++;
-					if (!$country->save()) {
-						$transaction->rollBack();
-						
-						return var_dump($country->errors);
-					}
 				}
 			}
 		}
 		$transaction->commit();
 		
 		echo $count . ' from ' . Country::find()->count() . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionInsertCountries()
+	{
+		include('admin/web/files/countries.php');
+		Country::deleteAll();
+		$i = 0;
+		foreach (array_chunk($countries, 100) as $chunk) {
+			echo $i . PHP_EOL;
+			foreach ($chunk as $countryData) {
+				$country = new Country();
+				$country->id = $countryData['country_id'];
+				$country->title = $countryData['name'];
+				if (!$country->save()) {
+					foreach ($country->errors as $attr => $error) {
+						foreach ($error as $info) {
+							file_put_contents('text.txt', $attr . ': ' . $info, FILE_APPEND);
+						}
+					}
+				}
+			}
+			$i += 100;
+		}
+		echo 'success!' . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionInsertRegion()
+	{
+		Region::deleteAll();
+		$subQuery = new Query();
+		$subQuery->select('*, rank() over (partition by "region" order by "id" asc) n');
+		$subQuery->from('cities');
+		$results = new Query();
+		$results->from('(' . $subQuery->createCommand()->rawSql . ') A');
+		$results->where(new Expression('n=1'));
+		$results->orderBy(['a."region"' => SORT_ASC]);
+		$count = 0;
+		foreach ($results->all() as $result) {
+			if ($result['region'] && $result['region'] != '') {
+				$region = new Region();
+				$region->title = $result['region'];
+				$region->countryId = $result['country_id'];
+				if (!$region->save()) {
+					foreach ($region->errors as $attr => $error) {
+						foreach ($error as $info) {
+							file_put_contents('text.txt', $result['region'] . '-' . $attr . ': ' . $info, FILE_APPEND);
+							echo 'error' . PHP_EOL;
+							
+							return false;
+						}
+					}
+				}
+				echo $count++ . PHP_EOL;
+			}
+		}
+		
+		return 'success';
+	}
+	
+	public function actionInsertCity()
+	{
+		City::deleteAll(['or', ['link' => null], ['link' => '']]);
+		$citiesAndRegionsQuery = (new Query())->from('cities_all')->orderBy(['id' => SORT_ASC]);
+		$count = 0;
+		$regions = ArrayHelper::map(Region::find()->all(), 'id', 'title');
+		$oldCities = City::find()->select('title')->asArray()->column();
+		foreach ($citiesAndRegionsQuery->batch() as $citiesAndRegions) {
+			echo $count . PHP_EOL;
+			$transaction = \Yii::$app->db->beginTransaction();
+			foreach ($citiesAndRegions as $citiesAndRegion) {
+				if (!$citiesAndRegion['region'] || $citiesAndRegion['region'] == '') {
+					if ($citiesAndRegion['city'] == 'Москва') {
+						$citiesAndRegion['region'] = 'Московская область';
+					} elseif ($citiesAndRegion['city'] == 'Санкт-Петербург') {
+						$citiesAndRegion['region'] = 'Санкт-Петербург город';
+					} elseif ($citiesAndRegion['city'] == 'Таянды') {
+						$citiesAndRegion['region'] = 'Челябинская область';
+					} elseif ($citiesAndRegion['city'] == 'Малое Василево') {
+						$citiesAndRegion['region'] = 'Тверская область';
+					} else {
+						$citiesAndRegion['region'] = 'Other';
+					}
+				}
+				if ($citiesAndRegion['region'] == 'Other') {
+					$region = Region::findOne(['title' => 'Other', 'countryId' => $citiesAndRegion['country_id']]);
+					if (!$region) {
+						$region = new Region();
+						$region->title = 'Other';
+						$region->countryId = $citiesAndRegion['country_id'];
+						$region->save();
+					}
+					$regionId = $region->id;
+				} else {
+					$regionId = array_search($citiesAndRegion['region'], $regions);
+				}
+				
+				if (!$regionId) {
+					$transaction->rollBack();
+					file_put_contents('text.txt', $citiesAndRegion['id'] . '-' . $citiesAndRegion['title'] . ': ' . 'region not found', FILE_APPEND);
+					echo 'error' . PHP_EOL;
+					
+					return false;
+				}
+				
+				/** @var City $city */
+				if (in_array($citiesAndRegion['city'], $oldCities)) {
+					$city = City::find()->where(['upper("title")' => mb_strtoupper($citiesAndRegion['city'])])->one();
+				} else {
+					$city = new City();
+					$city->title = $citiesAndRegion['city'];
+				}
+				$city->countryId = $citiesAndRegion['country_id'];
+				$city->regionId = $regionId;
+				$city->state = $citiesAndRegion['state'];
+				if (!$city->save()) {
+					foreach ($city->errors as $attr => $error) {
+						foreach ($error as $info) {
+							$transaction->rollBack();
+							file_put_contents('text.txt', $citiesAndRegion['id'] . '-' . $attr . ': ' . $info, FILE_APPEND);
+							
+							echo 'error' . PHP_EOL;
+							
+							return false;
+						}
+					}
+				}
+				$count++;
+			}
+			$transaction->commit();
+		}
+		
+		echo 'success';
+		
+		return true;
+	}
+	
+	public function actionInsertCitiesAndRegions()
+	{
+		//Region::deleteAll();
+		//City::deleteAll(['or', ['link' => null], ['link' => '']]);
+		$citiesAndRegionsQuery = (new Query())->from('cities')->offset(365000)->orderBy(['id' => SORT_ASC]);
+		$count = 0;
+		$oldCities = City::find()->select('title')->asArray()->column();
+		foreach ($citiesAndRegionsQuery->batch(1000) as $citiesAndRegions) {
+			echo $count . PHP_EOL;
+			$transaction = \Yii::$app->db->beginTransaction();
+			foreach ($citiesAndRegions as $citiesAndRegion) {
+				if (!$citiesAndRegion['region'] || $citiesAndRegion['region'] == '') {
+					if ($citiesAndRegion['city'] == 'Москва') {
+						$citiesAndRegion['region'] = 'Московская область';
+					} elseif ($citiesAndRegion['city'] == 'Санкт-Петербург') {
+						$citiesAndRegion['region'] = 'Санкт-Петербург город';
+					} elseif ($citiesAndRegion['city'] == 'Таянды') {
+						$citiesAndRegion['region'] = 'Челябинская область';
+					} elseif ($citiesAndRegion['city'] == 'Малое Василево') {
+						$citiesAndRegion['region'] = 'Тверская область';
+					} else {
+						$citiesAndRegion['region'] = 'Other';
+					}
+				}
+				$region = Region::findOne(['upper("title")' => mb_strtoupper($citiesAndRegion['region'])]);
+				if (!$region) {
+					$region = new Region();
+					$region->title = $citiesAndRegion['region'];
+					$region->countryId = $citiesAndRegion['country_id'];
+					if (!$region->save()) {
+						foreach ($region->errors as $attr => $error) {
+							foreach ($error as $info) {
+								$transaction->rollBack();
+								file_put_contents('text.txt', $citiesAndRegion['id'] . '-' . $attr . ': ' . $info, FILE_APPEND);
+								
+								return false;
+							}
+						}
+					}
+				}
+				
+				/** @var City $city */
+				if (in_array($citiesAndRegion['city'], $oldCities)) {
+					$city = City::find()->where(['upper("title")' => mb_strtoupper($citiesAndRegion['city'])])->one();
+				} else {
+					$city = City::find()->where(['upper("title")' => mb_strtoupper($citiesAndRegion['city'])])
+						->andWhere(['regionId' => $region->id])->one();
+				}
+				if (!$city) {
+					$city = new City();
+					$city->title = $citiesAndRegion['city'];
+				}
+				$city->countryId = $citiesAndRegion['country_id'];
+				$city->regionId = $region->id;
+				$city->state = $citiesAndRegion['state'];
+				if (!$city->save()) {
+					foreach ($city->errors as $attr => $error) {
+						foreach ($error as $info) {
+							$transaction->rollBack();
+							file_put_contents('text.txt', $citiesAndRegion['id'] . '-' . $attr . ': ' . $info, FILE_APPEND);
+							
+							return false;
+						}
+					}
+				}
+				$count++;
+			}
+			$transaction->commit();
+		}
+		
+		echo 'success ' . $count . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionFixes()
+	{
+		$regionsQuery = City::find();
+		$count = 0;
+		foreach ($regionsQuery->batch(1000) as $regions) {
+			echo $count . PHP_EOL;
+			foreach ($regions as $region) {
+				$count++;
+				$region->title = html_entity_decode($region->title);
+				$region->save();
+			}
+		}
+		
 		return true;
 	}
 }
