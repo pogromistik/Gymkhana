@@ -51,7 +51,7 @@ class Region extends \yii\db\ActiveRecord
 	public static function getAll($asArrayHelper = false, $countryIds = null)
 	{
 		$result = self::find();
-		if ($countryIds) {
+		if ($countryIds !== null) {
 			$result = $result->andWhere(['countryId' => $countryIds]);
 		}
 		$result = $result->orderBy(['title' => SORT_ASC]);
