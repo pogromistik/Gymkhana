@@ -15,6 +15,7 @@ class BaseController extends Controller
 	public $pageTitle = '';
 	public $keywords = '';
 	public $url = '';
+	public $background = 'background2.PNG';
 	
 	public function actionDownload($id)
 	{
