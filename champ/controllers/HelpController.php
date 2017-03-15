@@ -3,9 +3,12 @@
 namespace champ\controllers;
 
 
+use common\models\City;
 use common\models\Country;
+use yii\db\Query;
 use yii\web\Controller;
 use yii\helpers\Json;
+use yii\web\Response;
 
 /**
  * AthleteController implements the CRUD actions for Athlete model.
@@ -41,7 +44,7 @@ class HelpController extends Controller
 	public function getCitiesSubCatList($countryId)
 	{
 		$country = Country::findOne($countryId);
-		$cities = $country->cities;
+		$cities = $country->getCities()->limit(50)->all();
 		$result = [];
 		foreach ($cities as $city) {
 			$result[] = ['id' => $city->id, 'name' => $city->title];
@@ -60,5 +63,44 @@ class HelpController extends Controller
 		}
 		
 		return $result;
+	}
+	
+	public function actionCityList($title = null, $id = null, $countryId = null) {
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$out = ['results' => ['id' => '', 'text' => '']];
+		if (!is_null($title)) {
+			$query = new Query();
+			$query->select('id, title AS text')
+				->from(City::tableName())
+				->where(['like', 'upper("title")', mb_strtoupper($title)])
+				->andWhere(['countryId' => $countryId])
+				->limit(20);
+			$command = $query->createCommand();
+			$data = $command->queryAll();
+			$out['results'] = array_values($data);
+		}
+		elseif ($id > 0) {
+			$out['results'] = ['id' => $id, 'text' => City::findOne($id)->title];
+		}
+		return $out;
+	}
+	
+	public function actionCountryList($title = null, $id = null) {
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$out = ['results' => ['id' => '', 'text' => '']];
+		if (!is_null($title)) {
+			$query = new Query();
+			$query->select('id, title AS text')
+				->from(Country::tableName())
+				->where(['like', 'title', $title])
+				->limit(20);
+			$command = $query->createCommand();
+			$data = $command->queryAll();
+			$out['results'] = array_values($data);
+		}
+		elseif ($id > 0) {
+			$out['results'] = ['id' => $id, 'text' => Country::findOne($id)->title];
+		}
+		return $out;
 	}
 }

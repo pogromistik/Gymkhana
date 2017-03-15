@@ -7,6 +7,7 @@ use yii\helpers\ArrayHelper;
 use common\models\Country;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Athlete */
@@ -40,21 +41,41 @@ use yii\helpers\Url;
 	if ($model->cityId) {
 		$cities = [$model->cityId => $model->city->title];
 		if ($model->countryId !== null) {
-			$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->countryId])->orderBy(['title' => SORT_ASC])->all(),
+			$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->countryId])
+				->andWhere(['!=', 'id', $model->cityId])
+				->orderBy(['title' => SORT_ASC])->limit(50)->all(),
 				'id', 'title');
+			$cities[$model->cityId] = $model->city->title;
 		}
 	}
 	?>
+	<?php $url = \yii\helpers\Url::to(['/competitions/help/city-list']); ?>
 	<?= $form->field($model, 'cityId')->widget(DepDrop::classname(), [
 		'data'           => $cities,
 		'options'        => ['placeholder' => 'Выберите город ...'],
 		'type'           => DepDrop::TYPE_SELECT2,
-		'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+		'select2Options' => [
+			'pluginOptions' => [
+				'allowClear' => true,
+				'minimumInputLength' => 3,
+				'language' => [
+					'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+				],
+				'ajax' => [
+					'url' => $url,
+					'dataType' => 'json',
+					'data' => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+				],
+				'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+				'templateResult' => new JsExpression('function(city) { return city.text; }'),
+				'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+			],
+		],
 		'pluginOptions'  => [
 			'depends'     => ['country-id'],
-			'url'         => Url::to(['/competitions/help/country-category']),
+			'url'         => Url::to(['/competitions/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
 			'loadingText' => 'Для выбранной страны нет городов...',
-			'placeholder' => 'Выберите город...'
+			'placeholder' => 'Выберите город...',
 		]
 	]); ?>
 	

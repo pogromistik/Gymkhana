@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DepDrop;
 use common\models\Country;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /**
  * @var \common\models\Athlete $athlete
@@ -59,21 +60,41 @@ use yii\helpers\Url;
 	    if ($athlete->cityId) {
 		    $cities = [$athlete->cityId => $athlete->city->title];
 		    if ($athlete->countryId !== null) {
-			    $cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $athlete->countryId])->orderBy(['title' => SORT_ASC])->all(),
+			    $cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $athlete->countryId])
+                    ->andWhere(['!=', 'id', $athlete->cityId])
+                    ->orderBy(['title' => SORT_ASC])->limit(50)->all(),
 				    'id', 'title');
+			    $cities[$athlete->cityId] = $athlete->city->title;
 		    }
 	    }
 	    ?>
+        <?php $url = \yii\helpers\Url::to(['/help/city-list']); ?>
 	    <?= $form->field($athlete, 'cityId')->widget(DepDrop::classname(), [
 		    'data'           => $cities,
 		    'options'        => ['placeholder' => 'Выберите город ...'],
 		    'type'           => DepDrop::TYPE_SELECT2,
-		    'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+		    'select2Options' => [
+		            'pluginOptions' => [
+		                    'allowClear' => true,
+		                    'minimumInputLength' => 3,
+		                    'language' => [
+			                    'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+		                    ],
+		                    'ajax' => [
+			                    'url' => $url,
+			                    'dataType' => 'json',
+			                    'data' => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+		                    ],
+		                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+		                    'templateResult' => new JsExpression('function(city) { return city.text; }'),
+		                    'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+                    ],
+            ],
 		    'pluginOptions'  => [
 			    'depends'     => ['country-id'],
 			    'url'         => Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
 			    'loadingText' => 'Для выбранной страны нет городов...',
-			    'placeholder' => 'Выберите город...'
+			    'placeholder' => 'Выберите город...',
 		    ]
 	    ]); ?>
 

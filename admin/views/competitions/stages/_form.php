@@ -5,6 +5,11 @@ use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
+use yii\helpers\Url;
+use kartik\widgets\DepDrop;
+use yii\web\JsExpression;
+use yii\helpers\ArrayHelper;
+use common\models\Country;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
@@ -14,13 +19,52 @@ use kartik\widgets\DateTimePicker;
 <div class="stage-form">
 	
 	<?php $form = ActiveForm::begin(); ?>
-	<?= $form->field($model, 'cityId')->widget(Select2::classname(), [
-		'name'    => 'kv-type-01',
-		'data'    => \common\models\City::getAll(true),
+	<?= $form->field($model, 'countryId')->widget(Select2::classname(), [
+		'data'    => Country::getAll(true),
 		'options' => [
-			'placeholder' => 'Выберите город...',
+			'placeholder' => 'Выберите страну...',
+			'id'          => 'country-id',
 		],
-	]) ?>
+	]); ?>
+    <?php
+    $cities = [];
+    if ($model->cityId) {
+	    $cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->city->countryId])
+		    ->andWhere(['!=', 'id', $model->cityId])
+		    ->orderBy(['title' => SORT_ASC])->limit(50)->all(),
+		    'id', 'title');
+	    $cities[$model->cityId] = $model->city->title;
+    }
+    ?>
+	<?php $url = \yii\helpers\Url::to(['/competitions/help/city-list']); ?>
+	<?= $form->field($model, 'cityId')->widget(DepDrop::classname(), [
+		'data'           => $cities,
+		'options'        => ['placeholder' => 'Выберите город ...'],
+		'type'           => DepDrop::TYPE_SELECT2,
+		'select2Options' => [
+			'pluginOptions' => [
+				'allowClear' => true,
+				'minimumInputLength' => 3,
+				'language' => [
+					'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+				],
+				'ajax' => [
+					'url' => $url,
+					'dataType' => 'json',
+					'data' => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+				],
+				'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+				'templateResult' => new JsExpression('function(city) { return city.text; }'),
+				'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+			],
+		],
+		'pluginOptions'  => [
+			'depends'     => ['country-id'],
+			'url'         => Url::to(['/competitions/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
+			'loadingText' => 'Для выбранной страны нет городов...',
+			'placeholder' => 'Выберите город...',
+		]
+	]); ?>
 	
 	<?= $form->field($model, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
 	
