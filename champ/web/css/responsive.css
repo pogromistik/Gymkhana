@@ -2,6 +2,12 @@
     .col-bg-3 {
         width: 25%;
     }
+    .col-bg-7 {
+        width: 58.33333333%;
+    }
+    .col-bg-5 {
+        width: 41.66666667%;
+    }
 }
 
 @media (max-width: 1350px) {
@@ -16,6 +22,7 @@
     }
 
     .detail-news {
+        width: 70%;
         width: 70%;
     }
 
@@ -43,6 +50,27 @@
 
     .documents .list .info ul {
         padding-left: 20px;
+    }
+
+    .list-nav ul li {
+        text-transform: capitalize;
+        display: inline-block;
+        padding-right: 30px;
+    }
+
+    .list-nav {
+        margin: 0;
+        padding: 0;
+    }
+
+    .list-nav ul {
+        padding-left: 15px;
+    }
+
+    .list-nav ul li:before {
+        color: #56a025;
+        content: "\2022";
+        padding-right: 5px;
     }
 }
 
