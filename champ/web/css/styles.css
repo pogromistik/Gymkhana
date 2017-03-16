@@ -654,3 +654,13 @@ a.deletePhoto {
     color: #f4f4f4;
     z-index: 1;
 }
+
+.list-nav {
+    margin-top: 10px;
+    padding-left: 30px;
+}
+
+.list-nav ul li {
+    list-style: none;
+    text-transform: uppercase;
+}
