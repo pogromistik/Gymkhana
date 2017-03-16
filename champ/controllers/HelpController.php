@@ -5,6 +5,8 @@ namespace champ\controllers;
 
 use common\models\City;
 use common\models\Country;
+use common\models\Region;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\web\Controller;
 use yii\helpers\Json;
@@ -70,11 +72,14 @@ class HelpController extends Controller
 		$out = ['results' => ['id' => '', 'text' => '']];
 		if (!is_null($title)) {
 			$query = new Query();
-			$query->select('id, title AS text')
-				->from(City::tableName())
-				->where(['like', 'upper("title")', mb_strtoupper($title)])
-				->andWhere(['countryId' => $countryId])
-				->limit(20);
+			$query->select('"Cities"."id", ("Cities"."title" || \' (\' || "Regions"."title" || \')\') AS text')
+				->from([City::tableName(), Region::tableName()])
+				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title)])
+				->andWhere(new Expression('"Regions"."id" = "Cities"."regionId"'));
+			if ($countryId) {
+				$query->andWhere(['"Cities"."countryId"' => $countryId]);
+			}
+			$query->limit(20);
 			$command = $query->createCommand();
 			$data = $command->queryAll();
 			$out['results'] = array_values($data);
