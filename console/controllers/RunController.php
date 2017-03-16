@@ -516,7 +516,7 @@ class RunController extends Controller
 				}
 				
 				/** @var City $city */
-				if (in_array($citiesAndRegion['city'], $oldCities)) {
+				if (in_array($citiesAndRegion['city'], $oldCities) && $citiesAndRegion['biggest_city'] == 't') {
 					$city = City::find()->where(['upper("title")' => mb_strtoupper($citiesAndRegion['city'])])->one();
 				} else {
 					$city = City::find()->where(['upper("title")' => mb_strtoupper($citiesAndRegion['city'])])
