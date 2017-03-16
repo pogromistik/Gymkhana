@@ -105,7 +105,7 @@ class City extends \yii\db\ActiveRecord
 		$result = self::find()->orderBy(['title' => SORT_ASC]);
 		if ($asArrayHelper) {
 			return ArrayHelper::map($result->all(), 'id', function (Region $item) {
-				return html_entity_decode($item->title);
+				return $item->title;
 			});
 		}
 		

@@ -56,10 +56,10 @@ class Country extends \yii\db\ActiveRecord
 				if ($item->title_original) {
 					return html_entity_decode($item->title . ' (' . $item->title_original . ')');
 				} elseif ($item->title_en) {
-					return html_entity_decode($item->title . ' (' . $item->title_en . ')');
+					return $item->title . ' (' . $item->title_en . ')';
 				}
 				
-				return html_entity_decode($item->title);
+				return $item->title;
 			});
 		}
 		
