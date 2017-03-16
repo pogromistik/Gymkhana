@@ -98,7 +98,13 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public static function findByLogin($login)
 	{
-		return static::findOne(['login' => $login]);
+		$notEmail = preg_replace('~\D+~', '', $login);
+		if ($notEmail === $login) {
+			$athlete = static::findOne(['login' => $login, 'status' => self::STATUS_ACTIVE]);
+		} else {
+			$athlete = static::findOne(['email' => $login, 'status' => self::STATUS_ACTIVE]);
+		}
+		return $athlete;
 	}
 	
 	public function validatePassword($password)

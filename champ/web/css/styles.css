@@ -654,3 +654,15 @@ a.deletePhoto {
     color: #f4f4f4;
     z-index: 1;
 }
+
+.registration-city {
+    margin-bottom: 15px;
+}
+
+.registration-city .form-group, .registration-city .help-block {
+    margin-bottom: 0;
+}
+
+.registration-city .inactive {
+    display: none;
+}

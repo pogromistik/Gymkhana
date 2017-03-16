@@ -3,9 +3,12 @@ namespace champ\controllers;
 
 use champ\models\LoginForm;
 use common\models\AssocNews;
+use common\models\Athlete;
 use common\models\DocumentSection;
 use common\models\Feedback;
+use common\models\TmpAthlete;
 use Yii;
+use yii\base\UserException;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 
@@ -117,5 +120,65 @@ class SiteController extends BaseController
 		} else {
 			return var_dump($form->errors);
 		}
+	}
+	
+	public function actionRegistration()
+	{
+		$this->pageTitle = 'Регистрация в личном кабинете';
+		
+		if (!\Yii::$app->user->isGuest) {
+			return $this->goHome();
+		}
+		
+		$registration = new TmpAthlete();
+		
+		return $this->render('registration', [
+			'registration' => $registration
+		]);
+	}
+	
+	public function actionAddRegistration()
+	{
+		$form = new TmpAthlete();
+		if ($form->load(\Yii::$app->request->post())) {
+			$marks = \Yii::$app->request->post('mark');
+			$models = \Yii::$app->request->post('model');
+			if (!$marks) {
+				return 'Необходимо указать марку мотоцикла';
+			}
+			if (!$models) {
+				return 'Необходимо указать модель мотоцикла';
+			}
+			if (count($marks) != count($models)) {
+				return 'Для каждого мотоцикла необходимо указать марку и модель';
+			}
+			$motorcycles = [];
+			foreach ($marks as $i => $mark) {
+				if (!$mark || !$models[$i]) {
+					return 'Для каждого мотоцикла необходимо указать марку и модель';
+				}
+				$motorcycles[] = ['mark' => $mark, 'model' => $models[$i]];
+			}
+			$form->motorcycles = $motorcycles;
+			if (!$form->cityId && !$form->city) {
+				return 'Необходимо указать город';
+			}
+			if (!$form->email) {
+				return 'Необходимо указать email';
+			}
+			if (Athlete::findOne(['email' => $form->email]) || TmpAthlete::findOne(['email' => $form->email])) {
+				return 'Указанный email занят';
+			}
+			if (!$form->validate()) {
+				return 'Необходимо заполнить все поля, кроме номера телефона';
+			}
+			if ($form->save()) {
+				return true;
+			}
+			
+			return 'Возникла ошибка при сохранении данных';
+		}
+		
+		return 'Возникла ошибка при регистрации';
 	}
 }
