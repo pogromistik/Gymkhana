@@ -187,10 +187,17 @@ class TmpParticipantController extends Controller
 			return 'Мотоцикл не найден';
 		}
 		
+		/** @var Participant $old */
 		$old = Participant::find()->where(['stageId' => $tmpParticipant->stageId])
-			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->all();
+			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->one();
 		if ($old) {
-			return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+			if ($old->status == Participant::STATUS_ACTIVE) {
+				return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+			} elseif ($old->status == Participant::STATUS_DISQUALIFICATION) {
+				return 'Спортсмен дисквалифицирован, регистрация невозможна';
+			}
+			$old->status = Participant::STATUS_ACTIVE;
+			$old->save();
 		}
 		
 		$transaction = \Yii::$app->db->beginTransaction();
@@ -205,11 +212,17 @@ class TmpParticipantController extends Controller
 		$participant = new Participant();
 		$participant->athleteId = $athlete->id;
 		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
 		$participant->stageId = $tmpParticipant->stageId;
 		$participant->championshipId = $tmpParticipant->championshipId;
+		if ($tmpParticipant->number) {
+			$participant->number = $tmpParticipant->number;
+		} else {
+			$athlete = $participant->athlete;
+			$championship = $participant->championship;
+			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+				$participant->number = $athlete->number;
+			}
+		}
 		if (!$participant->save()) {
 			$transaction->rollBack();
 			return var_dump($participant->errors);
@@ -258,11 +271,17 @@ class TmpParticipantController extends Controller
 		$participant = new Participant();
 		$participant->athleteId = $athlete->id;
 		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
 		$participant->stageId = $tmpParticipant->stageId;
 		$participant->championshipId = $tmpParticipant->championshipId;
+		if ($tmpParticipant->number) {
+			$participant->number = $tmpParticipant->number;
+		} else {
+			$athlete = $participant->athlete;
+			$championship = $participant->championship;
+			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+				$participant->number = $athlete->number;
+			}
+		}
 		if (!$participant->save()) {
 			$transaction->rollBack();
 			return var_dump($participant->errors);

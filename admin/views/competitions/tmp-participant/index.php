@@ -72,6 +72,8 @@ $this->title = 'Заявки на участие, требующие одобр�
 							]
 						]) . ($participant->number ? ', №' . $participant->number : '');
 					$result .= '<br>';
+					$result .= $participant->country->title;
+					$result .= '<br>';
 					$result .= '<small>' .
 						Editable::widget([
 							'name'          => 'city',
@@ -125,12 +127,12 @@ $this->title = 'Заявки на участие, требующие одобр�
 							$athlete = $data['athlete'];
 							$result .= $athlete->getFullName() . ', ' . $athlete->city->title;
 							$result .= ' ' . Html::a('Зарегистрировать на новом мотоцикле',
-								['competitions/tmp-participant/add-motorcycle-and-registration'],
-								[
-									'class'              => 'btn btn-info addMotorcycleAndRegistration',
-									'data-tmp-id'        => $participant->id,
-									'data-athlete-id'    => $athlete->id,
-								]);
+									['competitions/tmp-participant/add-motorcycle-and-registration'],
+									[
+										'class'           => 'btn btn-info addMotorcycleAndRegistration',
+										'data-tmp-id'     => $participant->id,
+										'data-athlete-id' => $athlete->id,
+									]);
 							
 							$result .= '<br>';
 							foreach ($data['motorcycles'] as $motorcycleData) {
@@ -139,23 +141,23 @@ $this->title = 'Заявки на участие, требующие одобр�
 								$result .= $motorcycle->getFullTitle();
 								if ($motorcycleData['isCoincidences']) {
 									$result .= '<span class="fa fa-check success"></span>';
-								} else {
-									$result .= ' ' . Html::a('Зарегистрировать на этом мотоцикле',
-											['competitions/tmp-participant/registration'],
-											[
-												'class'              => 'btn btn-default registrationAthlete',
-												'data-tmp-id'        => $participant->id,
-												'data-athlete-id'    => $athlete->id,
-												'data-motorcycle-id' => $motorcycle->id
-											]);
 								}
+								$result .= ' ' . Html::a('Зарегистрировать на этом мотоцикле',
+										['competitions/tmp-participant/registration'],
+										[
+											'class'              => 'btn btn-default registrationAthlete',
+											'data-tmp-id'        => $participant->id,
+											'data-athlete-id'    => $athlete->id,
+											'data-motorcycle-id' => $motorcycle->id
+										]);
+								$result .= '<br>';
 							}
 							/** @var \common\models\Participant[] $requests */
 							$requests = $data['requests'];
 							if ($requests) {
 								$result .= '<br><b>Спортсмен уже оставлял заявку на участие:</b><br>';
 								foreach ($requests as $request) {
-									$result .= 'на ' . $request->motorcycle->getFullTitle();
+									$result .= 'на ' . $request->motorcycle->getFullTitle() . '<br>';
 								}
 							}
 							$result .= '<hr>';

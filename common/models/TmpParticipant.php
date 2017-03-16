@@ -29,6 +29,7 @@ use Yii;
  * @property Athlete      $athlete
  * @property Stage        $stage
  * @property Championship $championship
+ * @property Country      $country
  */
 class TmpParticipant extends BaseActiveRecord
 {
@@ -116,6 +117,11 @@ class TmpParticipant extends BaseActiveRecord
 	public function getChampionship()
 	{
 		return $this->hasOne(Championship::className(), ['id' => 'championshipId']);
+	}
+	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
 	}
 	
 	public static function createForm($stageId)
