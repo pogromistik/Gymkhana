@@ -312,7 +312,7 @@ class CompetitionsController extends BaseController
 			$result['numbers'] = '<div class="row">';
 			$count = ceil(count($numbers) / 3);
 			foreach (array_chunk($numbers, $count) as $numbersChunk) {
-				$result['numbers'] .= '<div class="col-md-3">';
+				$result['numbers'] .= '<div class="col-xs-3">';
 				foreach ($numbersChunk as $number) {
 					$result['numbers'] .= $number . '<br>';
 				}

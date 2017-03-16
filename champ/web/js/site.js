@@ -83,3 +83,47 @@ $(document).ready(function () {
 $('.toggle .title').click(function () {
     $(this).parent().find('.toggle-content').slideToggle();
 });
+
+$('#cityNotFound').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    $('#city-list').slideToggle();
+    $('#city-text').slideToggle();
+    if (elem.hasClass('list')) {
+        elem.removeClass('list');
+        elem.addClass('text');
+        elem.text('Вернуть список городов');
+    } else {
+        $('#city-text-input').val(null);
+        elem.removeClass('text');
+        elem.addClass('list');
+        elem.text('Нажмите, если вашего города нет в списке');
+    }
+});
+
+$(document).on("submit", '.registrationAthlete', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+    $('.alert').hide();
+
+    $.ajax({
+        url: "/site/add-registration",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет' +
+                    'отправлен на указанную почту в течение 24 часов. Если этого не произойдёт - пожалуйста, сообщите нам.').show();
+                //form.trigger('reset');
+            } else {
+                form.find('.alert-danger').text(result).show();
+            }
+            hideBackDrop();
+        },
+        error: function (error) {
+            alert(error.responseText);
+            hideBackDrop();
+        }
+    });
+});
