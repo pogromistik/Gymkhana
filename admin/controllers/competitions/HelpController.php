@@ -12,6 +12,7 @@ use common\models\Region;
 use common\models\search\YearSearch;
 use common\models\Stage;
 use common\models\Year;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
@@ -112,10 +113,12 @@ class HelpController extends BaseController
 		$region->title = $region;
 		if (!$region->save()) {
 			$result['error'] = var_dump($region);
+			
 			return $result;
 		}
 		
 		$result['error'] = true;
+		
 		return $result;
 	}
 	
@@ -232,25 +235,27 @@ class HelpController extends BaseController
 		return $result;
 	}
 	
-	public function actionCityList($title = null, $id = null, $countryId = null) {
+	public function actionCityList($title = null, $id = null, $countryId = null)
+	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$out = ['results' => ['id' => '', 'text' => '']];
 		if (!is_null($title)) {
 			$query = new Query();
-			$query->select('id, title AS text')
-				->from(City::tableName())
-				->where(['like', 'upper("title")', mb_strtoupper($title)]);
+			$query->select('"Cities"."id", ("Cities"."title" || \' (\' || "Regions"."title" || \')\') AS text')
+				->from([City::tableName(), Region::tableName()])
+				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title)])
+				->andWhere(new Expression('"Regions"."id" = "Cities"."regionId"'));
 			if ($countryId) {
-				$query->andWhere(['countryId' => $countryId]);
+				$query->andWhere(['"Cities"."countryId"' => $countryId]);
 			}
 			$query->limit(20);
 			$command = $query->createCommand();
 			$data = $command->queryAll();
 			$out['results'] = array_values($data);
-		}
-		elseif ($id > 0) {
+		} elseif ($id > 0) {
 			$out['results'] = ['id' => $id, 'text' => City::findOne($id)->title];
 		}
+		
 		return $out;
 	}
 }

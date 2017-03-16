@@ -369,7 +369,7 @@ class RunController extends Controller
 		Region::deleteAll();
 		$subQuery = new Query();
 		$subQuery->select('*, rank() over (partition by "region" order by "id" asc) n');
-		$subQuery->from('cities');
+		$subQuery->from('cities_all');
 		$results = new Query();
 		$results->from('(' . $subQuery->createCommand()->rawSql . ') A');
 		$results->where(new Expression('n=1'));
@@ -436,7 +436,7 @@ class RunController extends Controller
 				
 				if (!$regionId) {
 					$transaction->rollBack();
-					file_put_contents('text.txt', $citiesAndRegion['id'] . '-' . $citiesAndRegion['title'] . ': ' . 'region not found', FILE_APPEND);
+					file_put_contents('text.txt', $citiesAndRegion['id'] . '-' . $citiesAndRegion['city'] . ': ' . 'region not found', FILE_APPEND);
 					echo 'error' . PHP_EOL;
 					
 					return false;
@@ -563,5 +563,26 @@ class RunController extends Controller
 		}
 		
 		return true;
+	}
+	
+	public function actionNotUniqueCities()
+	{
+		$titles = City::find()->select("title")->where(['countryId' => 1])->groupBy("title")->having('count(*)>1')->asArray()->column();
+		$regionIds = City::find()->select("regionId")->where(['title' => $titles])->distinct()->asArray()->column();
+		$regions = ArrayHelper::map(Region::findAll($regionIds), 'id', 'title');
+		$items = City::find()->where(['title' => $titles]);
+		$count = 0;
+		foreach ($items->batch(1000) as $data) {
+			echo $count . PHP_EOL;
+			/** @var City $city */
+			foreach ($data as $city) {
+				$city->title = $city->title . ' (' . $regions[$city->regionId] . ')';
+				$city->save(false);
+				$count++;
+			}
+		}
+		echo 'success' . PHP_EOL;
+		
+		return false;
 	}
 }
