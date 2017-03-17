@@ -646,13 +646,44 @@ a.deletePhoto {
 }
 
 .triangle {
-    border: 50px solid transparent;	border-right: 50px solid #56a025; border-bottom: 50px solid #56a025; width:0;height:0;
     position: absolute;
     bottom: 0;
     right: 0;
     font-size: 24px;
-    color: #f4f4f4;
     z-index: 1;
+    border: 50px solid transparent;
+    width: 0;
+    height: 0;
+}
+
+.triangle-green {
+    border-right: 50px solid #00bb04;
+    border-bottom: 50px solid #00bb04;
+    color: #f4f4f4;
+}
+
+.triangle-red {
+    border-right: 50px solid #ff014a;
+    border-bottom: 50px solid #ff014a;
+    color: #f4f4f4;
+}
+
+.triangle-blue {
+    border-right: 50px solid #0082f4;
+    border-bottom: 50px solid #0082f4;
+    color: #f4f4f4;
+}
+
+.triangle-yellow {
+    border-right: 50px solid #ffcd00;
+    border-bottom: 50px solid #ffcd00;
+    color: #f4f4f4;
+}
+
+.triangle-white {
+    border-right: 50px solid #ffffff;
+    border-bottom: 50px solid #ffffff;
+    color: #000000;
 }
 
 .list-nav {

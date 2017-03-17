@@ -5,6 +5,14 @@ use yii\bootstrap\Html;
  * @var \common\models\Motorcycle[] $motorcycles
  */
 $athlete = $model;
+$cssClass = 'default';
+$athleteClass = null;
+if ($athlete->athleteClassId) {
+    $athleteClass = $athlete->athleteClass;
+    if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title)])) {
+        $cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title)];
+    }
+}
 ?>
 
 <div class="col-xs-12 col-sm-6 col-lg-4 col-bg-3 item">
@@ -41,7 +49,7 @@ $athlete = $model;
 					<?= $athlete->number ? '№' . $athlete->number : '' ?>
 				</div>
 			</div>
-            <div class="triangle"><?= $athlete->athleteClass ? $athlete->athleteClass->title : '' ?></div>
+            <div class="triangle triangle-<?= $cssClass ?>"><?= $athleteClass ? $athleteClass->title : '' ?></div>
 		</div>
 	</a>
 </div>
