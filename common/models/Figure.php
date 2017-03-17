@@ -129,4 +129,18 @@ class Figure extends \yii\db\ActiveRecord
 	{
 		return $this->hasMany(FigureTime::className(), ['figureId' => 'id']);
 	}
+	
+	/**
+	 * @return Figure[]
+	 */
+	public static function getAll($withoutId)
+	{
+		$result = self::find()->orderBy(['title' => SORT_ASC]);
+		if ($withoutId) {
+			$result = $result->andWhere(['not', ['id' => $withoutId]]);
+		}
+		$result = $result->all();
+		
+		return $result;
+	}
 }

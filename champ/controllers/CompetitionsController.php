@@ -154,6 +154,7 @@ class CompetitionsController extends BaseController
 		$this->pageTitle = $stage->title;
 		$this->description = '';
 		$this->keywords = '';
+		$this->layout = 'full-content';
 		
 		return $this->render('stage', [
 			'stage' => $stage
@@ -186,8 +187,8 @@ class CompetitionsController extends BaseController
 			$results = $results->all();
 		} else {
 			$results = FigureTime::find();
-			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n
-       from "FigureTimes" where "figureId" = '.$id.') A'));
+			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n 
+			from "FigureTimes" where "figureId" = ' . $id . ') A'));
 			$results->select('*');
 			$results->where(new Expression('n=1'));
 			$results->andWhere(new Expression('"Athletes"."id"="athleteId"'));
@@ -201,6 +202,7 @@ class CompetitionsController extends BaseController
 		$this->pageTitle = $figure->title;
 		$this->description = '';
 		$this->keywords = '';
+		$this->layout = 'full-content';
 		
 		return $this->render('figure', [
 			'figure'  => $figure,
