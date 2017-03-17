@@ -61,6 +61,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	const STATUS_DELETE = 3;
 	const TIMEOUT = 3600;
 	
+	public static $classesCss = [
+		'A'  => 'red',
+		'B'  => 'blue',
+		'C1' => 'green',
+		'C2' => 'green',
+		'C3' => 'green',
+		'C4' => 'green',
+		'C5' => 'green',
+		'D1' => 'yellow',
+		'D2' => 'yellow',
+		'D3' => 'yellow',
+		'D4' => 'yellow',
+		'D5' => 'yellow',
+		'N'  => 'white'
+	];
+	
 	public static $statusesTitle =
 		[
 			self::STATUS_BLOCKED => 'Заблокирован',
