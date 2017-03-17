@@ -660,6 +660,11 @@ a.deletePhoto {
     padding-left: 30px;
 }
 
+.list-nav ul {
+    position: fixed;
+    right: 20%;
+}
+
 .list-nav ul li {
     list-style: none;
     text-transform: uppercase;

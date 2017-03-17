@@ -14,6 +14,9 @@
     .content {
         width: 70%;
     }
+    .list-nav ul {
+        right: 50px;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -22,7 +25,6 @@
     }
 
     .detail-news {
-        width: 70%;
         width: 70%;
     }
 
@@ -65,6 +67,7 @@
 
     .list-nav ul {
         padding-left: 15px;
+        position: static;
     }
 
     .list-nav ul li:before {
