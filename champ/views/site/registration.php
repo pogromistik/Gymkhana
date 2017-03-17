@@ -83,7 +83,7 @@ use kartik\widgets\DepDrop;
 
     <h4 class="text-center">Укажите мотоцикл</h4>
 	<?php $i = 0; ?>
-    <div class="row">
+    <div class="row motorcycles">
         <div class="col-sm-6 col-xs-12">
             <div class="form-group field-tmpathlete-mark has-success">
                 <label class="control-label" for="tmpathlete-mark">Марка</label>
@@ -97,6 +97,8 @@ use kartik\widgets\DepDrop;
             </div>
         </div>
     </div>
+
+    <a href="#" class="appendMotorcycle" data-i = <?= $i ?>>Добавить ещё один мотоцикл</a>
 
     <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>

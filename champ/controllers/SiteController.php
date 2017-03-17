@@ -154,6 +154,9 @@ class SiteController extends BaseController
 			}
 			$motorcycles = [];
 			foreach ($marks as $i => $mark) {
+				if (!$mark && !$models[$i]) {
+					continue;
+				}
 				if (!$mark || !$models[$i]) {
 					return 'Для каждого мотоцикла необходимо указать марку и модель';
 				}
@@ -161,6 +164,9 @@ class SiteController extends BaseController
 					'mark' => (string)$mark,
 					'model' => (string)$models[$i]
 				];
+			}
+			if (!$motorcycles) {
+				return 'Необходимо указать минимум один мотоцикл';
 			}
 			$form->motorcycles = json_encode($motorcycles);
 			if (!$form->cityId && !$form->city) {
@@ -183,5 +189,10 @@ class SiteController extends BaseController
 		}
 		
 		return 'Возникла ошибка при регистрации';
+	}
+	
+	public function actionAppendMotorcycle($i)
+	{
+		return $this->renderAjax('_append', ['i' => $i+1]);
 	}
 }

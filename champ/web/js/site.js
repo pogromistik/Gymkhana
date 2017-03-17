@@ -115,7 +115,7 @@ $(document).on("submit", '.registrationAthlete', function (e) {
             if (result == true) {
                 form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет' +
                     'отправлен на указанную почту в течение 24 часов. Если этого не произойдёт - пожалуйста, сообщите нам.').show();
-                //form.trigger('reset');
+                form.trigger('reset');
             } else {
                 form.find('.alert-danger').text(result).show();
             }
@@ -125,5 +125,23 @@ $(document).on("submit", '.registrationAthlete', function (e) {
             alert(error.responseText);
             hideBackDrop();
         }
+    });
+});
+
+$('.appendMotorcycle').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var i = elem.data('i');
+    if (i > 1) {
+        $('.alert-danger').text('Нельзя добавить больше 3 мотоциклов. При необходимости, вы можете добавить их потом в личном кабинете').show();
+        return false;
+    }
+    $.get('/site/append-motorcycle', {
+        i: i
+    }).done(function (data) {
+        elem.data('i', i+1);
+        $('.motorcycles').append(data);
+    }).fail(function (error) {
+        alert(error.responseText);
     });
 });
