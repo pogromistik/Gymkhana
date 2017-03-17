@@ -2,7 +2,9 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "TmpAthletes".
@@ -24,8 +26,12 @@ use Yii;
  * @property Country $country
  * @property City    $cityModel
  */
-class TmpAthlete extends \yii\db\ActiveRecord
+class TmpAthlete extends BaseActiveRecord
 {
+	const STATUS_NEW = 0;
+	const STATUS_CANCEL = 2;
+	const STATUS_ACCEPT = 1;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -57,7 +63,7 @@ class TmpAthlete extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'athleteId'   => 'Athlete ID',
+			'athleteId'   => 'Спортсмен',
 			'firstName'   => 'Имя',
 			'lastName'    => 'Фамилия',
 			'phone'       => 'Телефон',
@@ -65,7 +71,7 @@ class TmpAthlete extends \yii\db\ActiveRecord
 			'countryId'   => 'Страна',
 			'cityId'      => 'Город',
 			'city'        => 'Город',
-			'motorcycles' => 'Мотоцикл',
+			'motorcycles' => 'Мотоциклы',
 			'status'      => 'Статус',
 			'dateAdded'   => 'Date Added',
 			'dateUpdated' => 'Date Updated',
@@ -81,7 +87,6 @@ class TmpAthlete extends \yii\db\ActiveRecord
 			} elseif ($this->city && $this->cityId) {
 				$this->cityId = null;
 			}
-			$this->motorcycles = json_encode($this->motorcycles);
 		}
 		$this->dateUpdated = time();
 		if ($this->phone) {
@@ -104,5 +109,45 @@ class TmpAthlete extends \yii\db\ActiveRecord
 	public function getCityModel()
 	{
 		return $this->hasOne(City::className(), ['id' => 'cityId']);
+	}
+	
+	public function getFullName()
+	{
+		return $this->lastName . ' ' . $this->firstName;
+	}
+	
+	public function getCoincidences()
+	{
+		/** @var Athlete[] $athletes */
+		$athletes = Athlete::find()->where([
+			'or',
+			['upper("firstName")' => mb_strtoupper($this->firstName, 'UTF-8'), 'upper("lastName")' => mb_strtoupper($this->lastName, 'UTF-8')],
+			['upper("firstName")' => mb_strtoupper($this->lastName, 'UTF-8'), 'upper("lastName")' => mb_strtoupper($this->firstName, 'UTF-8')]
+		])->all();
+		if (!$athletes) {
+			return null;
+		}
+		$result = [];
+		foreach ($athletes as $athlete) {
+			$result[$athlete->id] = [
+				'athlete'           => $athlete,
+				'hasAllMotorcycles' => true,
+			];
+			
+			$athleteMotorcycles = $this->getMotorcycles();
+			foreach ($athleteMotorcycles as $motorcycle) {
+				$has = $athlete->getMotorcycles()
+					->andWhere(['or',
+						['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'])], ['upper("model")' => mb_strtoupper($motorcycle['model'])]],
+						['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'])], ['upper("mark")' => mb_strtoupper($motorcycle['model'])]],
+					])->one();
+				if (!$has) {
+					$result[$athlete->id]['hasAllMotorcycles'] = false;
+					break;
+				}
+			}
+		}
+		
+		return $result;
 	}
 }

@@ -40,7 +40,7 @@ use yii\web\UploadedFile;
  * @property AthletesClass $athleteClass
  * @property City          $city
  * @property Region        $region
- * @property Country $country
+ * @property Country       $country
  */
 class Athlete extends BaseActiveRecord implements IdentityInterface
 {
@@ -120,6 +120,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		} else {
 			$athlete = static::findOne(['email' => $login, 'status' => self::STATUS_ACTIVE]);
 		}
+		
 		return $athlete;
 	}
 	
@@ -357,5 +358,20 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function getFullName()
 	{
 		return $this->lastName . ' ' . $this->firstName;
+	}
+	
+	public function createCabinet()
+	{
+		$password = 111111;
+		$this->login = $this->id + 6000;
+		$this->generateAuthKey();
+		$this->setPassword($password);
+		$this->hasAccount = 1;
+		$this->status = self::STATUS_ACTIVE;
+		if (!$this->save()) {
+			return false;
+		}
+		
+		return true;
 	}
 }
