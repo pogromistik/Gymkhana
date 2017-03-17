@@ -744,3 +744,80 @@ function BootboxError(text) {
         }
     });
 }
+
+$('.registrationOldAthlete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var tmpId = elem.data('tmp-id');
+    var athleteId = elem.data('athlete-id');
+    var hasAllMotorcycles = elem.data('all-motorcycles');
+
+    if (hasAllMotorcycles) {
+        createLK(tmpId, athleteId);
+    } else {
+        changeMotorcycles(tmpId, athleteId);
+    }
+});
+
+function createLK(tmpId, athleteId) {
+    showBackDrop();
+    $.get('/competitions/tmp-athletes/registration-old-athlete', {
+        tmpId: tmpId, athleteId: athleteId
+    }).done(function (data) {
+        if (data == true) {
+            location.reload();
+        } else {
+            hideBackDrop();
+            BootboxError(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+}
+
+function changeMotorcycles(tmpId, athleteId) {
+    showBackDrop();
+    $.get('/competitions/tmp-athletes/change-motorcycles', {
+        tmpId: tmpId, athleteId: athleteId
+    }).done(function (data) {
+        if (data['error']) {
+            hideBackDrop();
+            BootboxError(data['error']);
+        } else {
+            hideBackDrop();
+            $('.modalMotorcycles').html(data['page']);
+            $('#changeMotorcycles').modal('show')
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+}
+
+$(document).on("submit", '.addMotorcycleAndRegistration', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    form.find('.button').hide();
+    form.find('.wait-text').text('Пожалуйста, подождите...');
+    form.find('.alert').hide();
+    $.ajax({
+        url: '/competitions/tmp-athletes/add-motorcycles-and-registration',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                form.find('.button').show();
+                form.find('.wait-text').text('');
+                form.find('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            form.find('.button').hide();
+            form.find('.wait-text').text('');
+            form.find('.alert-danger').text(result.responseText).hide();
+        }
+    });
+});

@@ -157,9 +157,12 @@ class SiteController extends BaseController
 				if (!$mark || !$models[$i]) {
 					return 'Для каждого мотоцикла необходимо указать марку и модель';
 				}
-				$motorcycles[] = ['mark' => $mark, 'model' => $models[$i]];
+				$motorcycles[] = [
+					'mark' => (string)$mark,
+					'model' => (string)$models[$i]
+				];
 			}
-			$form->motorcycles = $motorcycles;
+			$form->motorcycles = json_encode($motorcycles);
 			if (!$form->cityId && !$form->city) {
 				return 'Необходимо указать город';
 			}
