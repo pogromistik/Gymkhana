@@ -51,8 +51,6 @@ class TmpAthlete extends BaseActiveRecord
 			[['motorcycles'], 'string'],
 			[['firstName', 'lastName', 'phone', 'email', 'city'], 'string', 'max' => 255],
 			['email', 'email'],
-			['email', 'unique'],
-			['email', 'unique', 'targetClass' => Athlete::className(), 'message' => 'Спортсмен с таким e-mail уже существует.']
 		];
 	}
 	

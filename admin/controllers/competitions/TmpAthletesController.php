@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
 use common\models\Athlete;
+use common\models\City;
 use common\models\Motorcycle;
 use common\models\TmpParticipant;
 use dosamigos\editable\EditableAction;
@@ -226,11 +227,13 @@ class TmpAthletesController extends BaseController
 			$new->model = $data['model'];
 			if (!$new->save()) {
 				$transaction->rollBack();
+				
 				return 'Возникла ошибка при сохранении мотоцикла';
 			}
 		}
 		if (!$oldAthlete->createCabinet()) {
 			$transaction->rollBack();
+			
 			return 'При создании личного кабинета возникла ошибка';
 		}
 		
@@ -239,6 +242,99 @@ class TmpAthletesController extends BaseController
 		$tmpAthlete->save();
 		
 		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionRegistrationNewAthlete($id)
+	{
+		$tmpAthlete = TmpAthlete::findOne($id);
+		if (!$tmpAthlete) {
+			return 'Заявка не найдена';
+		}
+		if ($tmpAthlete->athleteId) {
+			if ($tmpAthlete->status == TmpAthlete::STATUS_NEW) {
+				$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
+				$tmpAthlete->save();
+			}
+			
+			return 'Заявка уже была обработана, личный кабинет создан';
+		}
+		if (!$tmpAthlete->cityId) {
+			return 'Необходимо выбрать город из списка';
+		}
+		
+		$athlete = new Athlete();
+		$athlete->firstName = $tmpAthlete->firstName;
+		$athlete->lastName = $tmpAthlete->lastName;
+		$athlete->cityId = $tmpAthlete->cityId;
+		if ($athlete->phone) {
+			$athlete->phone = $tmpAthlete->phone;
+		}
+		$athlete->email = $tmpAthlete->email;
+		$athlete->countryId = $tmpAthlete->countryId;
+		$transaction = \Yii::$app->db->beginTransaction();
+		if (!$athlete->save()) {
+			$transaction->rollBack();
+			
+			return 'Возникла ошибка при создании спортсмена';
+		}
+		
+		$motorcycles = $tmpAthlete->getMotorcycles();
+		foreach ($motorcycles as $motorcycle) {
+			$new = new Motorcycle();
+			$new->mark = $motorcycle['mark'];
+			$new->model = $motorcycle['model'];
+			$new->athleteId = $athlete->id;
+			if (!$new->save()) {
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при добавлении мотоцикла';
+			}
+		}
+		
+		if (!$athlete->createCabinet()) {
+			$transaction->rollBack();
+			
+			return 'Возникла ошибка при создании кабинета';
+		}
+		
+		$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
+		$tmpAthlete->athleteId = $athlete->id;
+		if (!$tmpAthlete->save()) {
+			$transaction->rollBack();
+		}
+		
+		$transaction->commit();
+		return true;
+	}
+	
+	public function actionSaveNewCity()
+	{
+		$id = \Yii::$app->request->post('id');
+		$city = \Yii::$app->request->post('city');
+		if (!$id || !$city) {
+			return 'Неверные данные';
+		}
+		
+		$tmp = TmpAthlete::findOne($id);
+		if (!$tmp) {
+			return 'Спортсмен не найден';
+		}
+		if ($tmp->cityId) {
+			return 'Спортсмену уже установлен город';
+		}
+		
+		$city = City::findOne(['countryId' => $tmp->countryId, 'id' => $city]);
+		if (!$city) {
+			return 'Город не найден';
+		}
+		
+		$tmp->cityId = $city->id;
+		$tmp->city = $city->title;
+		if (!$tmp->save()) {
+			return var_dump($tmp);
+		}
 		
 		return true;
 	}
