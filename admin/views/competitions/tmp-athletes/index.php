@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use dosamigos\editable\Editable;
+use kartik\widgets\Select2;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\TmpAthletesSearch */
@@ -50,18 +52,33 @@ $this->title = 'Заявки на регистрацию в личном каб�
 					if ($athlete->cityId) {
 						return $athlete->city;
 					} else {
-						return Editable::widget([
+					    $html = $athlete->city . '<br>';
+						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewAthlete']);
+						$html .= Html::hiddenInput('id', $athlete->id);
+					    $html .= Select2::widget([
 							'name'          => 'city',
-							'value'         => $athlete->city,
-							'url'           => 'update',
-							'type'          => 'text',
-							'mode'          => 'inline',
-							'clientOptions' => [
-								'pk'        => $athlete->id,
-								'value'     => $athlete->city,
-								'placement' => 'right',
-							]
+							'data'          => [],
+							'maintainOrder' => true,
+							'options'       => ['placeholder' => 'Выберите город...', 'multiple' => false],
+							'pluginOptions' => [
+								'maximumInputLength' => 10,
+								'ajax' => [
+									'url' => \yii\helpers\Url::to(['/competitions/help/city-list']),
+									'dataType' => 'json',
+									'data' => new JsExpression('function(params) { return {title:params.term, countryId:'.$athlete->countryId.'}; }')
+								],
+								'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+								'templateResult' => new JsExpression('function(city) { return city.text; }'),
+								'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+							],
+							'pluginEvents'  => [
+								'change' => 'function(e){
+				cityForNewAthlete();
+			}',
+							],
 						]);
+					    $html .= Html::endForm();
+						return $html;
 					}
 				}
 			],
@@ -89,8 +106,8 @@ $this->title = 'Заявки на регистрацию в личном каб�
 						foreach ($coincidences as $coincidence) {
 							/** @var \common\models\Athlete $coincidenceAthlete */
 							$coincidenceAthlete = $coincidence['athlete'];
-							$result .=  Html::a($coincidenceAthlete->getFullName(), ['/competitions/athlete/view', 'id' => $coincidenceAthlete->id], ['target' => '_blank'])
-								 . ', ' . $coincidenceAthlete->country->title;
+							$result .= Html::a($coincidenceAthlete->getFullName(), ['/competitions/athlete/view', 'id' => $coincidenceAthlete->id], ['target' => '_blank'])
+								. ', ' . $coincidenceAthlete->country->title;
 							$result .= '<br>' . $coincidenceAthlete->city->title;
 							if ($coincidenceAthlete->email) {
 								$result .= '<br>' . $coincidenceAthlete->email;
@@ -102,9 +119,9 @@ $this->title = 'Заявки на регистрацию в личном каб�
 							$result .= '<br>' . Html::a('создать кабинет этому спортсмену',
 									['/competitions/tmp-athletes/registration-old-athlete'],
 									[
-										'class'                  => 'btn btn-info registrationOldAthlete',
-										'data-tmp-id'            => $athlete->id,
-										'data-athlete-id'        => $coincidenceAthlete->id,
+										'class'                => 'btn btn-info registrationOldAthlete',
+										'data-tmp-id'          => $athlete->id,
+										'data-athlete-id'      => $coincidenceAthlete->id,
 										'data-all-motorcycles' => (int)$coincidence['hasAllMotorcycles']
 									]);
 							$result .= '<hr>';
@@ -125,10 +142,12 @@ $this->title = 'Заявки на регистрацию в личном каб�
 				'format' => 'raw',
 				'value'  => function (\common\models\TmpAthlete $athlete) {
 					return Html::a('Создать и зарегистрировать нового спортсмена',
-						['competitions/tmp-athletes/registration-old-athlete'],
+						['/competitions/tmp-athletes/registration-new-athlete'],
 						[
-							'class'       => 'btn btn-success registrationOldAthlete',
-							'data-tmp-id' => $athlete->id,
+							'class'       => 'btn btn-success getRequestWithConfirm',
+							'data-action' => '/competitions/tmp-athletes/registration-new-athlete',
+							'data-text'   => 'Уверены, что хотите создать нового спортсмена?',
+							'data-id'     => $athlete->id,
 						]);
 				}
 			],

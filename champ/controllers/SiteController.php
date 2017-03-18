@@ -181,7 +181,7 @@ class SiteController extends BaseController
 			if (!$form->validate()) {
 				return 'Необходимо заполнить все поля, кроме номера телефона';
 			}
-			if ($form->save()) {
+			if ($form->save(false)) {
 				return true;
 			}
 			

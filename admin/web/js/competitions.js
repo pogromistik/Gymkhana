@@ -821,3 +821,24 @@ $(document).on("submit", '.addMotorcycleAndRegistration', function (e) {
         }
     });
 });
+
+function cityForNewAthlete() {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/tmp-athletes/save-new-city',
+        type: "POST",
+        data: $('#cityForNewAthlete').serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+}
