@@ -15,8 +15,10 @@ use common\models\Year;
 use Yii;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii2fullcalendar\models\Event;
 
 /**
  * Site controller
@@ -57,12 +59,38 @@ class CompetitionsController extends BaseController
 			}
 		}*/
 		
+		$events = [];
+		
 		foreach (Championship::$groupsTitle as $group => $title) {
 			$championships[$group] = Championship::find()->where(['groupId' => $group])
 				->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->all();
+			
+			foreach ($championships[$group] as $championship) {
+				$stages = $championship->getStages()
+					->andWhere(['not', ['status' => \common\models\Stage::STATUS_PAST]])->all();
+				if ($group == Championship::GROUPS_RUSSIA) {
+					$background = '#58a1b1';
+					$color = '#fff';
+				} else {
+					$background = '#65cc72';
+					$color = '#fff';
+				}
+				foreach ($stages as $stage) {
+					$event = new Event();
+					$event->id = $stage->id;
+					$event->title = $stage->title;
+					$event->allDay = true;
+					$event->backgroundColor = $background;
+					$event->color = $background;
+					$event->textColor = $color;
+					$event->url = Url::to(['/competitions/stage', 'id' => $stage->id]);
+					$event->start = date('Y-m-d', $stage->dateOfThe);
+					$events[] = $event;
+				}
+			}
 		}
 		
-		return $this->render('schedule', ['championships' => $championships]);
+		return $this->render('schedule', ['championships' => $championships, 'events' => $events]);
 	}
 	
 	public function actionResults($active = null)
