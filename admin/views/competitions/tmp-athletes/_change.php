@@ -17,15 +17,28 @@ use yii\bootstrap\Html;
 				<?php echo Html::beginForm(['/competitions/tmp-athletes/add-motorcycles-and-registration'], 'post', [
 					'class' => 'addMotorcycleAndRegistration'
 				]); ?>
-				<?= Html::hiddenInput('tmpId', $tmpAthlete->id) ?>
-				<?= Html::hiddenInput('athleteId', $oldAthlete->id) ?>
-				<?php foreach ($notFoundMotorcycles as $i => $item) { ?>
-                    <label>
-						<?= Html::checkbox('motorcycles[' . $i . ']', false, ['value' => $i]) ?>
-						<?= $item ?>
-                    </label>
-                    <br>
-				<?php } ?>
+				<div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <h4>Мотоциклы для добавления</h4>
+	                    <?= Html::hiddenInput('tmpId', $tmpAthlete->id) ?>
+	                    <?= Html::hiddenInput('athleteId', $oldAthlete->id) ?>
+	                    <?php foreach ($notFoundMotorcycles as $i => $item) { ?>
+                            <label>
+			                    <?= Html::checkbox('motorcycles[' . $i . ']', false, ['value' => $i]) ?>
+			                    <?= $item ?>
+                            </label>
+                            <br>
+	                    <?php } ?>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <h4>Мотоциклы, которые уже есть у спортсмена</h4>
+                        <ul>
+                        <?php foreach ($oldAthlete->motorcycles as $motorcycle) { ?>
+                            <li><?= $motorcycle->getFullTitle() ?></li>
+                        <?php } ?>
+                        </ul>
+                    </div>
+                </div>
                 <div class="pt-10">
                     <div class="alert alert-danger" style="display: none"></div>
                     <div class="button">
