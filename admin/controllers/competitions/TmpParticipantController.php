@@ -110,11 +110,7 @@ class TmpParticipantController extends BaseController
 				return 'Город не найден';
 			}
 		} else {
-			$city = City::findOne(['upper("title")' => mb_strtoupper($tmpParticipant->city, 'UTF-8')]);
-			if (!$city) {
-				$transaction->rollBack();
-				return 'Город отсутствует в системе';
-			}
+			return 'Необходимо выбрать город из списка';
 		}
 		
 		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
@@ -310,6 +306,38 @@ class TmpParticipantController extends BaseController
 		}
 		
 		$transaction->commit();
+		return true;
+	}
+	
+	public function actionSaveNewCity()
+	{
+		$this->can('competitions');
+		
+		$id = \Yii::$app->request->post('id');
+		$city = \Yii::$app->request->post('city');
+		if (!$id || !$city) {
+			return 'Неверные данные';
+		}
+		
+		$tmp = TmpParticipant::findOne($id);
+		if (!$tmp) {
+			return 'Спортсмен не найден';
+		}
+		if ($tmp->cityId) {
+			return 'Спортсмену уже установлен город';
+		}
+		
+		$city = City::findOne(['countryId' => $tmp->countryId, 'id' => $city]);
+		if (!$city) {
+			return 'Город не найден';
+		}
+		
+		$tmp->cityId = $city->id;
+		$tmp->city = $city->title;
+		if (!$tmp->save()) {
+			return var_dump($tmp);
+		}
+		
 		return true;
 	}
 }
