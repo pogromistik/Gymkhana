@@ -338,4 +338,19 @@ class TmpAthletesController extends BaseController
 		
 		return true;
 	}
+	
+	public function actionCancel($id)
+	{
+		$tmp = TmpAthlete::findOne($id);
+		if (!$tmp) {
+			return 'Заявка не найдена';
+		}
+		if ($tmp->status != TmpAthlete::STATUS_NEW) {
+			return 'Заявка была обработана ранее';
+		}
+		
+		$tmp->status = TmpAthlete::STATUS_CANCEL;
+		$tmp->save();
+		return true;
+	}
 }
