@@ -148,7 +148,15 @@ $this->title = 'Заявки на регистрацию в личном каб�
 							'data-action' => '/competitions/tmp-athletes/registration-new-athlete',
 							'data-text'   => 'Уверены, что хотите создать нового спортсмена?',
 							'data-id'     => $athlete->id,
-						]);
+						]) . '<br>'
+                        .  Html::a('Отклонить заявку',
+							['/competitions/tmp-athletes/cancel'],
+							[
+								'class'       => 'btn btn-danger getRequestWithConfirm',
+								'data-action' => '/competitions/tmp-athletes/cancel',
+								'data-text'   => 'Уверены, что хотите отклонить заявку?',
+								'data-id'     => $athlete->id,
+							]);
 				}
 			],
 		],
