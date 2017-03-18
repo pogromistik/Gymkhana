@@ -43,44 +43,46 @@ AppAsset::register($this);
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-			<?php $countNewLK = \common\models\TmpAthlete::find()
-				->where(['status' => \common\models\TmpAthlete::STATUS_NEW])->count() ?>
-			<?php if ($countNewLK) { ?>
-                <li>
-                    <a href="<?= Url::to(['/competitions/tmp-athletes/index']) ?>"><i
-                                class="fa fa-registered fa-fw"></i> Заявки на
-                        ЛК <?= $countNewLK ? '(' . $countNewLK . ')' : '' ?></a>
-                </li>
-			<?php } ?>
-	
-	        <?php $countNewFigure = \common\models\TmpFigureResult::find()
-		        ->where(['isNew' => 1])->count() ?>
-			<?php if ($countNewFigure) { ?>
-                <li>
-                    <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
-                                class="fa fa-bullhorn fa-fw"></i> Новые результаты
-                        фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
-                </li>
-			<?php } ?>
-			
-			<?php $countNewReg = \common\models\TmpParticipant::find()
-				->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
-			<?php if ($countNewReg) { ?>
-                <li>
-					<?php $countNewReg = \common\models\TmpParticipant::find()
-						->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
-                    <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
-                                class="fa fa-registered fa-fw"></i> Регистрации на
-                        этап <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
-                </li>
-			<?php } ?>
+			<?php if (\Yii::$app->user->can('competitions')) { ?>
+				<?php $countNewLK = \common\models\TmpAthlete::find()
+					->where(['status' => \common\models\TmpAthlete::STATUS_NEW])->count() ?>
+				<?php if ($countNewLK) { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/tmp-athletes/index']) ?>"><i
+                                    class="fa fa-registered fa-fw"></i> Заявки на
+                            ЛК <?= $countNewLK ? '(' . $countNewLK . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
+				
+				<?php $countNewFigure = \common\models\TmpFigureResult::find()
+					->where(['isNew' => 1])->count() ?>
+				<?php if ($countNewFigure) { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
+                                    class="fa fa-bullhorn fa-fw"></i> Новые результаты
+                            фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
+				
+				<?php $countNewReg = \common\models\TmpParticipant::find()
+					->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
+				<?php if ($countNewReg) { ?>
+                    <li>
+						<?php $countNewReg = \common\models\TmpParticipant::find()
+							->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
+                        <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
+                                    class="fa fa-registered fa-fw"></i> Регистрации на
+                            этап <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
 
-            <li>
-				<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
-                <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
-                            class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
+                <li>
+					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
+                    <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
+                                class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
 
-            </li>
+                </li>
+			<?php } ?>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>

@@ -137,6 +137,8 @@ class ParticipantsController extends BaseController
 	
 	public function actionChangeSort()
 	{
+		$this->can('competitions');
+		
 		$sortList = \Yii::$app->request->getBodyParam('sort_list');
 		$sortItems = explode(',', $sortList);
 		$i = 1;
@@ -431,6 +433,8 @@ class ParticipantsController extends BaseController
 	
 	public function approveClassForParticipant(Participant $participant)
 	{
+		$this->can('competitions');
+		
 		if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {
 			return 'Запись уже была обработана';
 		}
