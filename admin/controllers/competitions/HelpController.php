@@ -160,6 +160,8 @@ class HelpController extends BaseController
 	
 	public function actionDeletePhoto($id, $modelId)
 	{
+		$this->can('competitions');
+		
 		$model = null;
 		switch ($modelId) {
 			case self::PHOTO_STAGE:

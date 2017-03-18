@@ -2,18 +2,18 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use common\models\Athlete;
 use Yii;
 use common\models\Notice;
 use common\models\search\NoticeSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * NoticeController implements the CRUD actions for Notice model.
  */
-class NoticeController extends Controller
+class NoticeController extends BaseController
 {
     /**
      * @inheritdoc
@@ -36,6 +36,8 @@ class NoticeController extends Controller
      */
     public function actionIndex()
     {
+	    $this->can('competitions');
+	    
         $searchModel = new NoticeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 	    $dataProvider->query->select('text');
@@ -55,6 +57,8 @@ class NoticeController extends Controller
      */
     public function actionCreate()
     {
+	    $this->can('competitions');
+	    
         $model = new Notice();
 
         if ($model->load(Yii::$app->request->post())) {
@@ -90,6 +94,8 @@ class NoticeController extends Controller
      */
     protected function findModel($id)
     {
+	    $this->can('competitions');
+	    
         if (($model = Notice::findOne($id)) !== null) {
             return $model;
         } else {

@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\City;
 use common\models\Motorcycle;
@@ -10,13 +11,12 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\TmpParticipant;
 use common\models\search\TmpParticipantSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
  * TmpParticipantController implements the CRUD actions for TmpParticipant model.
  */
-class TmpParticipantController extends Controller
+class TmpParticipantController extends BaseController
 {
 	public function actions()
 	{
@@ -36,6 +36,8 @@ class TmpParticipantController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->can('competitions');
+		
 		$searchModel = new TmpParticipantSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TmpParticipant::STATUS_NEW]);
@@ -55,6 +57,8 @@ class TmpParticipantController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$this->can('competitions');
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -71,6 +75,8 @@ class TmpParticipantController extends Controller
 	 */
 	protected function findModel($id)
 	{
+		$this->can('competitions');
+		
 		if (($model = TmpParticipant::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -80,6 +86,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionFindAthletes($lastName)
 	{
+		$this->can('competitions');
+		
 		$lastName = mb_strtoupper($lastName, 'UTF-8');
 		$athletes = Athlete::find()->where(['upper("lastName")' => $lastName])->orWhere(['upper("lastName")' => $lastName])->all();
 		return $this->renderAjax('_athletes', ['athletes' => $athletes, 'lastName' => $lastName]);
@@ -87,6 +95,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionAddAndRegistration($id)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -157,6 +167,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionCancel($id)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -172,6 +184,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionRegistration($tmpParticipantId, $athleteId, $motorcycleId)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -240,6 +254,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionAddMotorcycleAndRegistration($tmpParticipantId, $athleteId)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
