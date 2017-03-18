@@ -5,6 +5,7 @@ use dosamigos\editable\Editable;
 use kartik\widgets\Select2;
 use yii\grid\GridView;
 use common\models\TmpParticipant;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\TmpParticipantSearch */
@@ -74,19 +75,39 @@ $this->title = 'Заявки на участие, требующие одобр�
 					$result .= '<br>';
 					$result .= $participant->country->title;
 					$result .= '<br>';
-					$result .= '<small>' .
-						Editable::widget([
+					$result .= '<small>' . $participant->city . '</small>';
+					$html = '';
+					if (!$participant->cityId) {
+						$html = '<br>';
+						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewParticipant']);
+						$html .= Html::hiddenInput('id', $participant->id);
+						$html .= Select2::widget([
 							'name'          => 'city',
-							'value'         => $participant->city,
-							'url'           => 'update',
-							'type'          => 'text',
-							'mode'          => 'inline',
-							'clientOptions' => [
-								'pk'        => $participant->id,
-								'value'     => $participant->city,
-								'placement' => 'right',
-							]
-						]) . ($participant->phone ? ', ' . $participant->phone : '') . '</small>';
+							'data'          => [],
+							'maintainOrder' => true,
+							'options'       => ['placeholder' => 'Выберите город...', 'multiple' => false],
+							'pluginOptions' => [
+								'maximumInputLength' => 10,
+								'ajax' => [
+									'url' => \yii\helpers\Url::to(['/competitions/help/city-list']),
+									'dataType' => 'json',
+									'data' => new JsExpression('function(params) { return {title:params.term, countryId:'.$participant->countryId.'}; }')
+								],
+								'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+								'templateResult' => new JsExpression('function(city) { return city.text; }'),
+								'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+							],
+							'pluginEvents'  => [
+								'change' => 'function(e){
+				cityForNewParticipant();
+			}',
+							],
+						]);
+						$html .= Html::endForm();
+						$html .= '<br>';
+                    }
+                    $result .= $html;
+					$result .= '<small>' . ($participant->phone ? ', ' . $participant->phone : '') . '</small>';
 					$result .= '<br>';
 					$result .= Editable::widget([
 							'name'          => 'motorcycleMark',

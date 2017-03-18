@@ -842,3 +842,24 @@ function cityForNewAthlete() {
         }
     });
 }
+
+function cityForNewParticipant() {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/tmp-participant/save-new-city',
+        type: "POST",
+        data: $('#cityForNewParticipant').serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+}

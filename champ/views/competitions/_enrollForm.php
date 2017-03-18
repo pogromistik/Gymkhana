@@ -7,12 +7,14 @@ use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use common\models\City;
+use kartik\widgets\DepDrop;
+use yii\web\JsExpression;
 
 $participant = \common\models\TmpParticipant::createForm($stage->id);
 $championship = $stage->championship;
 ?>
 
-<div class="modal fade" id="enrollForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="enrollForm" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<?php $form = ActiveForm::begin(['options' => ['class' => 'newRegistration',
@@ -34,8 +36,59 @@ $championship = $stage->championship;
                 <?php if (!$participant->countryId) { ?>
                     <?php $participant->countryId = 1 ?>
                 <?php } ?>
-				<?= $form->field($participant, 'countryId')->dropDownList(\common\models\Country::getAll(true)); ?>
-				<?= $form->field($participant, 'city')->textInput(['placeholder' => 'Ваш город']) ?>
+				<?= $form->field($participant, 'countryId')->widget(Select2::classname(), [
+					'data'    => \common\models\Country::getAll(true),
+					'options' => [
+						'placeholder' => 'Выберите страну...',
+						'id'          => 'country-id',
+					],
+				]); ?>
+				
+				<?php
+				$url = \yii\helpers\Url::to(['/help/city-list']);
+				$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $participant->countryId])
+					->orderBy(['title' => SORT_ASC])->limit(50)->all(),
+					'id', 'title');
+				?>
+                
+                <div class="registration-city">
+                    <div id="city-list">
+						<?= $form->field($participant, 'cityId')->widget(DepDrop::classname(), [
+							'data'           => $participant,
+							'options'        => ['placeholder' => 'Выберите город...'],
+							'type'           => DepDrop::TYPE_SELECT2,
+							'select2Options' => [
+								'pluginOptions' => [
+									'allowClear'         => true,
+									'minimumInputLength' => 3,
+									'language'           => [
+										'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+									],
+									'ajax'               => [
+										'url'      => $url,
+										'dataType' => 'json',
+										'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+									],
+									'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+									'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+									'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
+								],
+							],
+							'pluginOptions'  => [
+								'depends'     => ['country-id'],
+								'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
+								'loadingText' => 'Для выбранной страны нет городов...',
+								'placeholder' => 'Выберите город...',
+							]
+						]); ?>
+                    </div>
+                    <div class="small">
+                        <a href="#" class="list" id="cityNotFound">Нажмите, если вашего города нет в списке</a>
+                    </div>
+                    <div id="city-text" class="inactive">
+						<?= $form->field($participant, 'city')->textInput(['placeholder' => 'Введите Ваш город и регион', 'id' => 'city-text-input']) ?>
+                    </div>
+                </div>
 				<?= $form->field($participant, 'phone')->textInput(['placeholder' => 'Номер телефона']) ?>
                 
 				<h4 class="text-center">Укажите мотоцикл, на котором будете участвовать</h4>

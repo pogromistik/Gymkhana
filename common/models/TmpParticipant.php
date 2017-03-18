@@ -88,6 +88,11 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
+			if (!$this->city && $this->cityId) {
+				$this->city = $this->cityModel->title;
+			} elseif ($this->city && $this->cityId) {
+				$this->cityId = null;
+			}
 		}
 		$this->dateUpdated = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
