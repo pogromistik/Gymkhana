@@ -427,6 +427,10 @@ class CompetitionsController extends BaseController
 			return 'Регистрация на этап завершилась.';
 		}
 		
+		if (!$form->city && !$form->cityId) {
+			return 'Необходимо указать город';
+		}
+		
 		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {
 			if ($form->number) {
 				$freeNumbers = Championship::getFreeNumbers($stage);

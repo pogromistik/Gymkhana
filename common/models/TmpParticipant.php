@@ -52,7 +52,7 @@ class TmpParticipant extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['championshipId', 'stageId', 'firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'countryId',
+			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
 				'dateAdded', 'dateUpdated'], 'required'],
 			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
 			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone'], 'string', 'max' => 255],
