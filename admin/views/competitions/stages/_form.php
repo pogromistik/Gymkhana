@@ -26,16 +26,16 @@ use common\models\Country;
 			'id'          => 'country-id',
 		],
 	]); ?>
-    <?php
-    $cities = [];
-    if ($model->cityId) {
-	    $cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->city->countryId])
-		    ->andWhere(['!=', 'id', $model->cityId])
-		    ->orderBy(['title' => SORT_ASC])->limit(50)->all(),
-		    'id', 'title');
-	    $cities[$model->cityId] = $model->city->title;
-    }
-    ?>
+	<?php
+	$cities = [];
+	if ($model->cityId) {
+		$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->city->countryId])
+			->andWhere(['!=', 'id', $model->cityId])
+			->orderBy(['title' => SORT_ASC])->limit(50)->all(),
+			'id', 'title');
+		$cities[$model->cityId] = $model->city->title;
+	}
+	?>
 	<?php $url = \yii\helpers\Url::to(['/competitions/help/city-list']); ?>
 	<?= $form->field($model, 'cityId')->widget(DepDrop::classname(), [
 		'data'           => $cities,
@@ -43,19 +43,19 @@ use common\models\Country;
 		'type'           => DepDrop::TYPE_SELECT2,
 		'select2Options' => [
 			'pluginOptions' => [
-				'allowClear' => true,
+				'allowClear'         => true,
 				'minimumInputLength' => 3,
-				'language' => [
+				'language'           => [
 					'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
 				],
-				'ajax' => [
-					'url' => $url,
+				'ajax'               => [
+					'url'      => $url,
 					'dataType' => 'json',
-					'data' => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+					'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
 				],
-				'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-				'templateResult' => new JsExpression('function(city) { return city.text; }'),
-				'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+				'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+				'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+				'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
 			],
 		],
 		'pluginOptions'  => [
@@ -132,6 +132,21 @@ use common\models\Country;
 </div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 		<?= $form->field($model, 'trackPhotoStatus')->checkbox() ?>
 	<?php } ?>
+	
+	<?= $form->field($model, 'documentId',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Предварительно необходимо загрузить нужный регламент в раздел "'
+			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
+                ['target' => '_blank']) . '".</div>{input}</div>'])
+		->widget(Select2::classname(), [
+			'data'    => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
+			'options' => [
+				'placeholder' => 'Выберите регламент...'
+			],
+            'pluginOptions' => [
+	            'allowClear'         => true,
+            ]
+		]) ?>
 	
 	<?= $form->field($model, 'class',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">

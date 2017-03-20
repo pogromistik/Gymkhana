@@ -29,12 +29,14 @@ use yii\web\UploadedFile;
  * @property string        $trackPhoto
  * @property integer       $trackPhotoStatus
  * @property integer       $countryId
+ * @property integer       $documentId
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
  * @property City          $city
  * @property Participant[] $participants
  * @property Participant[] $activeParticipants
+ * @property OverallFile   $document
  */
 class Stage extends BaseActiveRecord
 {
@@ -103,7 +105,8 @@ class Stage extends BaseActiveRecord
 				'referenceTime',
 				'regionId',
 				'trackPhotoStatus',
-				'countryId'
+				'countryId',
+				'documentId'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			['description', 'string'],
@@ -142,7 +145,8 @@ class Stage extends BaseActiveRecord
 			'trackPhoto'             => 'Фото трассы',
 			'photoFile'              => 'Фото трассы',
 			'trackPhotoStatus'       => 'Опубликовать трассу',
-			'countryId'              => 'Страна'
+			'countryId'              => 'Страна',
+			'documentId'             => 'Регламент'
 		];
 	}
 	
@@ -343,5 +347,10 @@ class Stage extends BaseActiveRecord
 		$transaction->commit();
 		
 		return true;
+	}
+	
+	public function getDocument()
+	{
+		return $this->hasOne(OverallFile::className(), ['id' => 'documentId']);
 	}
 }

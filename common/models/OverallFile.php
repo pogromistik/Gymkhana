@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  * @property string  $title
  * @property string  $fileName
  * @property string  $filePath
+ * @property integer $inArchive
  */
 class OverallFile extends BaseActiveRecord
 {
@@ -38,9 +39,10 @@ class OverallFile extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['userId', 'date'], 'integer'],
+			[['userId', 'date', 'inArchive'], 'integer'],
 			[['modelClass', 'modelId', 'title', 'fileName', 'filePath'], 'string', 'max' => 255],
-			[['files'], 'file', 'maxFiles' => 10]
+			[['files'], 'file', 'maxFiles' => 10],
+			['inArchive', 'default', 'value' => 0]
 		];
 	}
 	
@@ -99,5 +101,14 @@ class OverallFile extends BaseActiveRecord
 		}
 		
 		return true;
+	}
+	
+	public static function getActualRegulations()
+	{
+		return self::find()->where(['modelClass' => DocumentSection::className()])
+			->andWhere(['modelId' => DocumentSection::REGULATIONS])
+			->andWhere(['inArchive' => 0])
+			->orderBy(['date' => SORT_DESC])
+			->all();
 	}
 }

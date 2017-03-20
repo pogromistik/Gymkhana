@@ -9,10 +9,14 @@ use Yii;
  *
  * @property integer       $id
  * @property string        $title
+ *
  * @property OverallFile[] $files
+ * @property OverallFile[] $actualFiles
  */
 class DocumentSection extends \yii\db\ActiveRecord
 {
+	const REGULATIONS = 2;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -48,5 +52,12 @@ class DocumentSection extends \yii\db\ActiveRecord
 	public function getFiles()
 	{
 		return $this->hasMany(OverallFile::className(), ['modelId' => 'id'])->andOnCondition(['modelClass' => self::className()]);
+	}
+	
+	public function getActualFiles()
+	{
+		return $this->hasMany(OverallFile::className(), ['modelId' => 'id'])
+			->andOnCondition(['modelClass' => self::className()])
+			->andOnCondition(['inArchive' => 0])->orderBy(['date' => SORT_DESC]);
 	}
 }
