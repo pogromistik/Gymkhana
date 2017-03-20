@@ -12,7 +12,7 @@ use yii\bootstrap\Html;
 <div class="documents">
     <div class="list">
 		<?php foreach ($sections as $section) {
-			$files = $section->files;
+			$files = $section->actualFiles;
 			?>
             <div class="item">
                 <div class="toggle">

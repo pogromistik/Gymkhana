@@ -35,6 +35,11 @@ $time = time();
                     <p>Регистрация на этап завершена</p>
 				<?php } ?>
 			<?php } ?>
+            <?php if ($stage->documentId) { ?>
+	            <div class="regulations">
+		            <?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
+                </div>
+            <?php } ?>
 			
 			<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
                 <div class="track-photo">
