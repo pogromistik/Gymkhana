@@ -109,6 +109,9 @@
     .content {
         padding-top: 0;
     }
+    .full-content {
+        padding-top: 10px;
+    }
 }
 
 @media (max-width: 788px) {
@@ -129,6 +132,12 @@
     }
     .pk-menu-items {
         display: none!important;
+    }
+    .header .white-menu {
+        height: auto;
+    }
+    .dropdown-menu > li > a {
+        color: #4b4e53;
     }
 }
 
