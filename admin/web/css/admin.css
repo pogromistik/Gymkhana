@@ -304,3 +304,9 @@ img {
 }
 
 .nav > li > a:hover, .nav > li > a:focus  { background-color: #56a025; }
+
+.bg-blue {
+    background: #73afe8;
+    color: #fff;
+    font-weight: bold;
+}
