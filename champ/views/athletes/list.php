@@ -29,7 +29,7 @@ $listView = new \yii\widgets\ListView([
 ]);
 ?>
 
-<h3>Спортсмены</h3>
+<h2>Спортсмены</h2>
 
 <?php $form = \yii\bootstrap\ActiveForm::begin([
 	'id'                     => 'search',

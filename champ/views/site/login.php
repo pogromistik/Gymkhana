@@ -8,11 +8,9 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Вход в личный кабинет';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
+<h2>Вход в личный кабинет</h2>
 <div class="site-login">
-	<p>Заполните все поля:</p>
-	
 	<div class="row">
 		<div class="col-lg-5">
 			<?php $form = ActiveForm::begin(['id' => 'login-form']); ?>

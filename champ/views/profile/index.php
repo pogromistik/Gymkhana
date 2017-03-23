@@ -14,7 +14,7 @@ use yii\web\JsExpression;
  */
 ?>
 
-<h3>Редактирование профиля</h3>
+<h2>Редактирование профиля</h2>
 
 <?php if ($success) { ?>
     <div class="alert alert-success">Изменения успешно сохранены</div>

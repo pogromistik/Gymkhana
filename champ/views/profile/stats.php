@@ -11,7 +11,7 @@ use yii\bootstrap\Html;
  */
 ?>
 
-<h3>Статистика</h3>
+<h2>Статистика</h2>
 
 <?= $this->render('compareWith') ?>
 
