@@ -712,3 +712,43 @@ a.deletePhoto {
 .registration-city .inactive {
     display: none;
 }
+
+.header .white-menu {
+    height: 80px;
+}
+
+.affix {
+    position: fixed;
+    height: 60px;
+    transition: height .4s ease
+}
+
+.affix .white-menu {
+    height: 60px;
+    transition: height .4s ease
+}
+
+.affix .white-menu, .white-menu {
+    transition: height .3s ease 0s, background .3s ease 0s;
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0)
+}
+
+.affix .white-menu, .white-menu {
+    -webkit-transform: translateZ(0)
+}
+
+.affix .white-menu {
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background: #fdfbfb;
+    transform: translateZ(0);
+    box-shadow: 0 1px 15px rgba(0, 0, 0, .15)
+}
+
+.affix .white-menu {
+    -webkit-box-shadow: 0 1px 15px rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 1px 15px rgba(0, 0, 0, .15)
+}

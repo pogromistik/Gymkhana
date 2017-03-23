@@ -33,6 +33,7 @@ $('.list .item .toggle .title').click(function () {
 });
 
 /*------МЕНЮ ПРИ ПРОЛИСТЫВАНИИ-------*/
+/*
 $(function () {
     $(window).scroll(function () {
         var width = screen.width;
@@ -46,6 +47,7 @@ $(function () {
         }
     });
 });
+*/
 
 //активный пункт меню
 (function() {
@@ -76,8 +78,16 @@ var equalizer = function (equalizer) {
     equalizer.height(maxHeight);
 };
 
+function initAffixCheck() {
+    "use strict";
+    var e = $(".header");
+    var windowT = $(window);
+    e.affix({offset: {top: 1}}), windowT.width() < 1025 && (windowT.off(".affix"), e.removeData("bs.affix").removeClass("affix affix-top affix-bottom"))
+}
+
 $(document).ready(function () {
     equalizer($('.athletes .item .card'));
+    initAffixCheck();
 });
 
 $('.toggle .title').click(function () {
