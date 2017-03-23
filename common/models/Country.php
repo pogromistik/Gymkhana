@@ -43,8 +43,10 @@ class Country extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id'    => 'ID',
-			'title' => 'Название на русском',
+			'id'             => 'ID',
+			'title'          => 'Название на русском',
+			'title_en'       => 'Название на английском',
+			'title_original' => 'Оригинальное название'
 		];
 	}
 	
