@@ -18,7 +18,7 @@ class OverallFileSearch extends OverallFile
 	public function rules()
 	{
 		return [
-			[['id', 'userId', 'date'], 'integer'],
+			[['id', 'userId', 'date', 'sort'], 'integer'],
 			[['modelClass', 'modelId', 'title', 'fileName', 'filePath'], 'safe'],
 		];
 	}
@@ -46,6 +46,7 @@ class OverallFileSearch extends OverallFile
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => ['defaultOrder' => ['sort' => SORT_ASC]]
 		]);
 		
 		$this->load($params);

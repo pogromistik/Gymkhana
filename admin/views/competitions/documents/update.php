@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 				'filter'    => '<div class="input-group">
   <span class="input-group-addon"><i class="fa fa-search"></i></span>
 ' . Html::activeInput('text', $searchModel, 'fileName', ['class' => 'form-control',
-                                                         'placeholder' => 'Поиск по имени файла...']) . '
+				                                         'placeholder' => 'Поиск по имени файла...']) . '
 </div>',
 				'value'     => function (\common\models\OverallFile $item) {
 					return Editable::widget([
@@ -79,9 +79,29 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 							],
 							'width' => '500px'
 						],
-                        'options' => [
-	                        'width' => '500px'
-                        ]
+						'options' => [
+							'width' => '500px'
+						]
+					]);
+				}
+			],
+			
+			[
+				'attribute' => 'sort',
+				'format'    => 'raw',
+				'filter'    => false,
+				'value'     => function (\common\models\OverallFile $item) {
+					return Editable::widget([
+						'name'          => 'sort',
+						'value'         => $item->sort,
+						'url'           => '/competitions/documents/update-file',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $item->id,
+							'value'     => $item->sort,
+							'placement' => 'right',
+						]
 					]);
 				}
 			],
