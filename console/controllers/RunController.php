@@ -41,6 +41,11 @@ class RunController extends Controller
 		\Yii::$app->db->createCommand('SELECT setval(\'"' . $tableName . '_' . $pk . '_seq"\'::regclass, MAX("' . $pk . '")) FROM "' . $tableName . '"')->execute();
 	}
 	
+	public function actionCleanCitiesIncrement()
+	{
+		\Yii::$app->db->createCommand('SELECT setval(\'"Russia_id_seq"\'::regclass, MAX("id")) FROM "Cities"')->execute();
+	}
+	
 	public function actionAddRegions()
 	{
 		$athletes = Athlete::find()->all();
@@ -584,5 +589,29 @@ class RunController extends Controller
 		echo 'success' . PHP_EOL;
 		
 		return false;
+	}
+	
+	public function actionDeleteCities()
+	{
+		$citiesQuery = City::find();
+		$delete = 0;
+		$countItems = 0;
+		foreach ($citiesQuery->batch() as $cities) {
+			echo  $countItems . PHP_EOL;
+			/** @var City $city */
+			foreach ($cities as $city) {
+				if (!$city->link) {
+					$count = City::find()->where(['title' => $city->title, 'regionId' => $city->regionId])->count();
+					if ($count > 1) {
+						$city->delete();
+						$delete++;
+					}
+				}
+				$countItems++;
+			}
+		}
+		
+		echo 'Delete ' . $delete . ' items' . PHP_EOL;
+		return true;
 	}
 }

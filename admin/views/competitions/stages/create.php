@@ -14,13 +14,8 @@ $this->params['breadcrumbs'][] = ['label' => $championship->title, 'url' => ['/c
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stage-create">
-	
-	<?= $this->render('//competitions/common/_city-form', ['errorCity' => $errorCity, 'success' => $success, 'actionType' => 'withId']) ?>
-
-    <hr>
 
     <h3>Создать этап</h3>
-    <div class="alert alert-info">Рекомендуем сначала проверить, есть ли необходимый город в списке</div>
 	<?= $this->render('_form', [
 		'model' => $model,
 	]) ?>

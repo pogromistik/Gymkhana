@@ -9,6 +9,7 @@ use common\models\Country;
 use common\models\Figure;
 use common\models\HelpModel;
 use common\models\Region;
+use common\models\search\CitySearch;
 use common\models\search\YearSearch;
 use common\models\Stage;
 use common\models\Year;
@@ -192,6 +193,8 @@ class HelpController extends BaseController
 	
 	public function actionCountryCategory($type)
 	{
+		$this->can('competitions');
+		
 		if (isset($_POST['depdrop_parents'])) {
 			$parent = $_POST['depdrop_parents'];
 			if ($parent != null) {
@@ -215,6 +218,8 @@ class HelpController extends BaseController
 	
 	public function getCitiesSubCatList($countryId)
 	{
+		$this->can('competitions');
+		
 		$country = Country::findOne($countryId);
 		$cities = $country->getCities()->limit(50)->all();
 		$result = [];
@@ -227,6 +232,8 @@ class HelpController extends BaseController
 	
 	public function getRegionsSubCatList($countryId)
 	{
+		$this->can('competitions');
+		
 		$country = Country::findOne($countryId);
 		$regions = $country->regions;
 		$result = [];
@@ -239,6 +246,8 @@ class HelpController extends BaseController
 	
 	public function actionCityList($title = null, $id = null, $countryId = null)
 	{
+		$this->can('competitions');
+		
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$out = ['results' => ['id' => '', 'text' => '']];
 		if (!is_null($title)) {
@@ -259,5 +268,85 @@ class HelpController extends BaseController
 		}
 		
 		return $out;
+	}
+	
+	public function actionCities()
+	{
+		$this->can('competitions');
+		
+		$searchModel = new CitySearch();
+		$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+		
+		return $this->render('cities', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider
+		]);
+	}
+	
+	public function actionCreateCity()
+	{
+		$city = new City();
+		$error = null;
+		if ($city->load(\Yii::$app->request->post())) {
+			$title = mb_strtoupper(trim($city->title));
+			$oldCity = City::findOne(['countryId' => $city->countryId, 'regionId' => $city->regionId,
+			'upper("title")' => $title]);
+			if ($oldCity) {
+				$error = 'В выбранном регионе уже есть город с таким названием';
+			} else {
+				if ($city->save()) {
+					return $this->redirect('cities');
+				} else {
+					$error = var_dump($city->save());
+				}
+			}
+		}
+		
+		return $this->render('create-city', ['city' => $city, 'error' => $error]);
+	}
+	
+	public function actionCreateRegion()
+	{
+		$region = new Region();
+		$error = null;
+		if ($region->load(\Yii::$app->request->post())) {
+			$title = mb_strtoupper(trim($region->title));
+			$oldRegion = Region::findOne(['countryId'      => $region->countryId,
+			                              'upper("title")' => $title]);
+			if ($oldRegion) {
+				$error = 'В выбранной стране уже есть регион с таким названием';
+			} else {
+				if ($region->save()) {
+					return $this->redirect('cities');
+				} else {
+					$error = var_dump($region->save());
+				}
+			}
+		}
+		
+		return $this->render('create-region', ['region' => $region, 'error' => $error]);
+	}
+	
+	public function actionCreateCountry()
+	{
+		$country = new Country();
+		$error = null;
+		if ($country->load(\Yii::$app->request->post())) {
+			$title = mb_strtoupper(trim($country->title));
+			$oldCountry = Country::find()->where(['upper("title")' => $title])
+			->orWhere(['upper("title_en")' => $title])
+				->orWhere(['upper("title_original")' => $title])->one();
+			if ($oldCountry) {
+				$error = 'Уже есть страна с таким названием';
+			} else {
+				if ($country->save()) {
+					return $this->redirect('cities');
+				} else {
+					$error = var_dump($country->save());
+				}
+			}
+		}
+		
+		return $this->render('create-country', ['country' => $country, 'error' => $error]);
 	}
 }

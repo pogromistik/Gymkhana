@@ -201,6 +201,9 @@ AppAsset::register($this);
                                     <a href="<?= Url::to(['/competitions/help/years']) ?>"> Года</a>
                                 </li>
                                 <li>
+                                    <a href="<?= Url::to(['/competitions/help/cities']) ?>"> Города</a>
+                                </li>
+                                <li>
                                     <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
                                         чемпионатов</a>
                                 </li>
