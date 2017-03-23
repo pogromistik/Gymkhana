@@ -7,7 +7,7 @@ use yii\bootstrap\Html;
  */
 ?>
 <?php $time = time(); ?>
-<h3>Расписание соревнований</h3>
+<h2>Расписание соревнований</h2>
 <div class="list">
 	<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
         <div class="item">

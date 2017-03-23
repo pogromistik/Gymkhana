@@ -13,7 +13,7 @@ use kartik\widgets\DepDrop;
  * @var \common\models\TmpAthlete $registration
  */
 ?>
-
+<h2>Регистрация в личном кабинете</h2>
 <?php $form = ActiveForm::begin(['options' => ['class' => 'registrationAthlete']]) ?>
 <div class="registration-form">
 

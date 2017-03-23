@@ -8,7 +8,7 @@ use yii\bootstrap\Html;
  * @var string | null $active
  */
 ?>
-    <h3>Результаты соревнований</h3>
+    <h2>Результаты соревнований</h2>
     <div class="list">
 		<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
             <div class="item">

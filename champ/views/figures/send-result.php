@@ -14,11 +14,11 @@ use yii\widgets\MaskedInput;
  */
 ?>
 <div class="tmp-figure-result-index">
-    
-    <h3>Отправка своего результата по базовой фигуре</h3>
-	
+
+    <h2>Отправка своего результата по базовой фигуре</h2>
+
     <h4><?= Html::a('посмотреть историю', ['/figures/requests']) ?></h4>
-    
+	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'sendFigureResult']]); ?>
 	
 	<?= $form->field($model, 'athleteId')->hiddenInput()->error(false)->label(false) ?>
@@ -40,7 +40,7 @@ use yii\widgets\MaskedInput;
 			'format'         => 'dd.mm.yyyy',
 			'todayHighlight' => true
 		]
-    ]) ?>
+	]) ?>
 	
 	<?= $form->field($model, 'timeForHuman', ['inputTemplate' => '<div class="input-with-description"><div class="text">
  мин:сек.мсек
@@ -55,7 +55,7 @@ use yii\widgets\MaskedInput;
 	<?= $form->field($model, 'fine')->textInput() ?>
 	
 	<?= $form->field($model, 'videoLink')->textInput(['maxlength' => true]) ?>
-    
+
     <div class="alert alert-error" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
 

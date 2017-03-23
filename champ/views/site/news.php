@@ -10,7 +10,7 @@ use yii\bootstrap\Html;
 
 ?>
 
-<h3><?= $news->title ?></h3>
+<h2><?= $news->title ?></h2>
 
 <div class="z-100">
 	<div class="detail-news">
