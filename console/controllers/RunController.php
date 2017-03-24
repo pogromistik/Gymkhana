@@ -20,6 +20,7 @@ use common\models\MainMenu;
 use common\models\MainPhoto;
 use common\models\Marshal;
 use common\models\MenuItem;
+use common\models\Motorcycle;
 use common\models\News;
 use common\models\NewsBlock;
 use common\models\NewsSlider;
@@ -612,6 +613,83 @@ class RunController extends Controller
 		}
 		
 		echo 'Delete ' . $delete . ' items' . PHP_EOL;
+		return true;
+	}
+	
+	public function actionInsertAthletes()
+	{
+		$filePath = 'admin/web/files/athletes.xlsx';
+		
+		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
+		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
+		$array = [];
+		foreach ($worksheet->getRowIterator() as $i => $row) {
+			$cellIterator = $row->getCellIterator();
+			/**
+			 * @var \PHPExcel_Cell $cell
+			 */
+			foreach ($cellIterator as $j => $cell) {
+				if ($cell->getFormattedValue() !== null) {
+					switch ($j) {
+						case 'A':
+							$array[$i]['lastName'] = trim($cell->getFormattedValue());
+							break;
+						case 'B':
+							$array[$i]['firstName'] = trim($cell->getFormattedValue());
+							break;
+						case 'C':
+							$array[$i]['city'] = trim($cell->getFormattedValue());
+							break;
+						case 'D':
+							$array[$i]['mark'] = trim($cell->getFormattedValue());
+							break;
+						case 'E':
+							$array[$i]['model'] = trim($cell->getFormattedValue());
+							break;
+						case 'F':
+							$array[$i]['number'] = trim($cell->getFormattedValue());
+							break;
+					}
+				}
+			}
+		}
+		
+		foreach ($array as $i => $data) {
+			echo $i . PHP_EOL;
+			$athlete = Athlete::find()->where(['and', ['upper("firstName")' => mb_strtoupper($data['firstName'])], ['upper("lastName")' => mb_strtoupper($data['lastName'])]])
+				->orWhere(['and', ['upper("lastName")' => mb_strtoupper($data['firstName'])], ['upper("firstName")' => mb_strtoupper($data['lastName'])]])->one();
+			if (!$athlete) {
+				$city = City::findOne(['upper("title")' => mb_strtoupper($data['city'])]);
+				if (!$city) {
+					echo $i . ' city not found' . PHP_EOL;
+					return false;
+				}
+				$athlete = new Athlete();
+				$athlete->lastName = $data['lastName'];
+				$athlete->firstName = $data['firstName'];
+				$athlete->countryId = 1;
+				$athlete->regionId = $city->regionId;
+				$athlete->cityId = $city->id;
+				if ($data['number'] && $data['number'] != '') {
+					$athlete->number = $data['number'];
+				}
+				if (!$athlete->save()) {
+					return var_dump($athlete->errors);
+				}
+			}
+			$motorcycle = Motorcycle::find()->where(['upper("model")' => mb_strtoupper($data['model'])])
+				->andWhere(['upper("mark")' => mb_strtoupper($data['mark'])])->andWhere(['athleteId' => $athlete->id])->one();
+			if (!$motorcycle) {
+				$motorcycle = new Motorcycle();
+				$motorcycle->mark = $data['mark'];
+				$motorcycle->model = $data['model'];
+				$motorcycle->athleteId = $athlete->id;
+				if (!$motorcycle->save()) {
+					return var_dump($motorcycle->errors);
+				}
+			}
+		}
+		
 		return true;
 	}
 }

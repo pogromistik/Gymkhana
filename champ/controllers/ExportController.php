@@ -125,7 +125,7 @@ class ExportController extends BaseController
 				$attempt = 1;
 				foreach ($times as $time) {
 					$sheet->getCell("G" . $row)->setValue($attempt++)->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-					$sheet->getCell("H" . $row)->setValueExplicit($time->time, \PHPExcel_Cell_DataType::TYPE_NUMERIC)->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+					$sheet->getCell("H" . $row)->setValueExplicit($time->timeForHuman)->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 					$sheet->getCell("I" . $row)->setValue($time->fine)->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 					$row++;
 					$sheet->getStyleByColumnAndRow(6, $row, 8, $row)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
