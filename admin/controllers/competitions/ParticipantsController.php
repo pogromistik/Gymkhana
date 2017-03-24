@@ -20,6 +20,7 @@ use yii\db\Query;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ParticipantsController implements the CRUD actions for Participant model.
@@ -231,25 +232,38 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$result = [
+			'error'   => false,
+			'success' => false,
+			'id'      => null
+		];
+		
 		$params = \Yii::$app->request->getBodyParams();
-		if (isset($params['Time']['id'])) {
+		
+		if (isset($params['Time']['id']) && $params['Time']['id'] != '') {
 			$time = Time::findOne($params['Time']['id']);
 		} else {
 			$time = new Time();
 		}
 		if ($time->load(\Yii::$app->request->post())) {
 			if (!$time->timeForHuman) {
-				return $time->participant->athlete->getFullName() . ': необходимо указать время';
+				$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
+				return $result;
 			}
 			trim($time->timeForHuman, '_');
 			if ($time->save()) {
-				return true;
+				$result['success'] = true;
+				$result['id'] = $time->id;
+				return $result;
 			}
 			
-			return var_dump($time->errors);
+			$result['error'] = var_dump($time->errors);
+			return $result;
 		}
 		
-		return false;
+		$result['error'] = true;
+		return $result;
 	}
 	
 	public function actionChangeStatus($id)

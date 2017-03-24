@@ -66,14 +66,35 @@ class Time extends BaseActiveRecord
 	public function beforeValidate()
 	{
 		if ($this->isNewRecord) {
-			$this->attemptNumber = self::find()->where(['participantId' => $this->participantId,
-			                                            'stageId'       => $this->stageId])->max('"attemptNumber"') + 1;
+			$attempts = self::find()->select('attemptNumber')->where(['participantId' => $this->participantId,
+			                                                          'stageId'       => $this->stageId])->asArray()->column();
+			if (count($attempts) != $this->attemptNumber-1) {
+				$attempt = 1;
+				while ($attempt < $this->attemptNumber) {
+					if (!in_array($attempt, $attempts)) {
+						$time = new Time();
+						$time->participantId = $this->participantId;
+						$time->stageId = $this->stageId;
+						$time->time = 3599990;
+						$time->fine = 0;
+						$time->timeForHuman = '59:59.99';
+						$time->resultTime = $time->time;
+						$time->attemptNumber = $attempt;
+						$time->save(false);
+					}
+					$attempt++;
+				}
+			}
 		}
+		
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
-			$this->time = ($min * 60000) + $secs*1000;
+			$this->time = ($min * 60000) + $secs * 1000;
+			if ($this->time > 3599990) {
+				$this->time = 3599990;
+			}
 		}
-		$this->resultTime = $this->time + $this->fine*1000;
+		$this->resultTime = $this->time + $this->fine * 1000;
 		
 		return parent::beforeValidate();
 	}
@@ -83,9 +104,9 @@ class Time extends BaseActiveRecord
 		parent::afterFind();
 		if ($this->time) {
 			$min = str_pad(floor($this->time / 60000), 2, '0', STR_PAD_LEFT);
-			$sec = str_pad(floor(($this->time - $min*60000)/1000), 2, '0', STR_PAD_LEFT);
-			$mls = str_pad(($this->time-$min*60000-$sec*1000)/10, 2, '0', STR_PAD_LEFT);
-			$this->timeForHuman = $min.':'.$sec.'.'.$mls;
+			$sec = str_pad(floor(($this->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(($this->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
+			$this->timeForHuman = $min . ':' . $sec . '.' . $mls;
 		}
 	}
 	

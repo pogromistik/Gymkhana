@@ -57,9 +57,8 @@ $attempt = 0;
         <div class="row">
 			<?= $form->field($timeModel, 'stageId')->hiddenInput()->label(false)->error(false) ?>
 			<?= $form->field($timeModel, 'participantId')->hiddenInput()->label(false)->error(false) ?>
-			<?php if ($timeModel->id) { ?>
-				<?= $form->field($timeModel, 'id')->hiddenInput()->label(false)->error(false) ?>
-			<?php } ?>
+	        <?= $form->field($timeModel, 'id')->hiddenInput(['class' => 'timeId'])->label(false)->error(false) ?>
+	        <?= $form->field($timeModel, 'attemptNumber')->hiddenInput(['value' => $attempt])->label(false)->error(false) ?>
             <div class="col-sm-1"><?= $participant->number ?></div>
             <div class="col-sm-3"><?= $participant->athlete->getFullName() ?></div>
             <div class="col-sm-3"><?= $participant->motorcycle->getFullTitle() ?></div>

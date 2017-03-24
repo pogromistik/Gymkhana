@@ -187,14 +187,15 @@ $(document).on("submit", '.raceTimeForm', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            if (result == true) {
+            if (result['success'] == true) {
                 form.find('.row').addClass('result-line');
+                form.find('.timeId').val(result['id']);
                 var next = form.next();
                 next.find('input[name="Time[timeForHuman]"]').focus();
                 hideBackDrop();
             } else {
                 hideBackDrop();
-                BootboxError(result);
+                BootboxError(result['error']);
             }
         },
         error: function (result) {
@@ -220,19 +221,21 @@ function AddAllResults(form) {
         data: form.serialize(),
         success: function (result) {
             var next = form.next();
-            if (result == true) {
+            if (result['success'] == true) {
                 form.find('.row').addClass('result-line');
                 if (next.attr('id')) {
                     AddAllResults(next);
                 } else {
                     hideBackDrop();
+                    location.reload();
                 }
             } else {
-                alert(result);
+                alert(result['error']);
                 if (next.attr('id')) {
                     AddAllResults(next);
                 } else {
                     hideBackDrop();
+                    location.reload();
                 }
             }
         },
