@@ -260,9 +260,14 @@ class Stage extends BaseActiveRecord
 		$participants = $this->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 		$place = 1;
 		$transaction = \Yii::$app->db->beginTransaction();
-		/** @var Participant $first */
-		$first = reset($participants);
-		$referenceTime = floor($first->bestTime / $first->athleteClass->coefficient);
+		/** @var Participant $best */
+		$best = $this->getActiveParticipants()->where(['athleteClassId' => $this->class])->orderBy(['bestTime' => SORT_ASC])->one();
+		if (!$best) {
+			$transaction->rollBack();
+			
+			return 'Неправильно указан класс соревнований: нет ни одного результата в классе ' . $this->classModel->title;
+		}
+		$referenceTime = floor($best->bestTime / $best->athleteClass->coefficient);
 		$this->referenceTime = $referenceTime;
 		if ($this->status != self::STATUS_CALCULATE_RESULTS && $this->status != Stage::STATUS_PAST) {
 			$this->status = self::STATUS_CALCULATE_RESULTS;
@@ -274,74 +279,76 @@ class Stage extends BaseActiveRecord
 		}
 		$points = ArrayHelper::map(Point::find()->all(), 'id', 'point');
 		foreach ($participants as $participant) {
-			$participant->place = $place++;
-			$participant->placeOfClass = $this->getActiveParticipants()
-					->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
-			$participant->placeOfAthleteClass = $this->getActiveParticipants()
-					->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfAthleteClass"') + 1;
-			$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
-			
-			//баллы
-			if (isset($points[$participant->place]) && $participant->percent != 0) {
-				$participant->points = $points[$participant->place];
-			} else {
-				$participant->points = 0;
-			}
-			
-			//Рассчёт класса
-			if ($participant->athleteClassId) {
-				$participant->newAthleteClassId = null;
-				$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
+			if ($participant->bestTime && $participant->bestTime < 1800000) {
+				$participant->place = $place++;
+				$participant->placeOfClass = $this->getActiveParticipants()
+						->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
+				$participant->placeOfAthleteClass = $this->getActiveParticipants()
+						->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfAthleteClass"') + 1;
+				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
 				
-				/** @var AthletesClass $resultClass */
-				$resultClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
-					->orderBy(['percent' => SORT_ASC])->one();
-				if ($resultClass && $resultClass->id != $participant->id) {
-					if ($stageClass->percent > $resultClass->percent) {
-						if ($stageClass->id != $participant->athleteClassId) {
-							$participant->newAthleteClassId = $stageClass->id;
-							$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
-						}
-					} elseif (!$participant->athleteClassId ||
-						$participant->athleteClass->percent > $resultClass->percent
-					) {
-						$participant->newAthleteClassId = $resultClass->id;
-						$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
-					}
+				//баллы
+				if (isset($points[$participant->place]) && $participant->percent != 0) {
+					$participant->points = $points[$participant->place];
+				} else {
+					$participant->points = 0;
 				}
-			}
-			/*if ($stageClass) {
-				$offset = AthletesClass::find()->where(['<=', 'percent', $stageClass->percent])
-					->andWhere(['!=', 'id', $stageClass->id])->count()-1;
-
-				$newClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
-					->orderBy(['percent' => SORT_ASC])->one();
-				if ($newClass) {
-					if ($participant->id == 19) {
-						//return var_dump($newClass->title);
-					}
-					$offset += AthletesClass::find()->where(['<=', 'percent', $newClass->percent])
-						->andWhere(['!=', 'id', $newClass->id])->count();
+				
+				//Рассчёт класса
+				if ($participant->athleteClassId) {
+					$participant->newAthleteClassId = null;
+					$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
 					
-					$newClass = AthletesClass::find()->offset($offset)->limit(1)->orderBy(['percent' => SORT_ASC])->one();
-					if ($newClass && $newClass->id != $participant->athlete->athleteClassId) {
-						if ($stageClass->percent > $newClass->percent) {
-							if ($stageClass->id != $participant->athleteClassId) {
+					/** @var AthletesClass $resultClass */
+					$resultClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
+						->orderBy(['percent' => SORT_ASC])->one();
+					if ($resultClass && $resultClass->id != $participant->id) {
+						if ($stageClass->percent > $resultClass->percent) {
+							if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent) {
 								$participant->newAthleteClassId = $stageClass->id;
+								$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
 							}
 						} elseif (!$participant->athleteClassId ||
-							$participant->athleteClass->percent > $newClass->percent
+							$participant->athleteClass->percent > $resultClass->percent
 						) {
-							$participant->newAthleteClassId = $newClass->id;
+							$participant->newAthleteClassId = $resultClass->id;
+							$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
 						}
 					}
 				}
-			}*/
-			
-			if (!$participant->save()) {
-				$transaction->rollBack();
+				/*if ($stageClass) {
+					$offset = AthletesClass::find()->where(['<=', 'percent', $stageClass->percent])
+						->andWhere(['!=', 'id', $stageClass->id])->count()-1;
+	
+					$newClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
+						->orderBy(['percent' => SORT_ASC])->one();
+					if ($newClass) {
+						if ($participant->id == 19) {
+							//return var_dump($newClass->title);
+						}
+						$offset += AthletesClass::find()->where(['<=', 'percent', $newClass->percent])
+							->andWhere(['!=', 'id', $newClass->id])->count();
+						
+						$newClass = AthletesClass::find()->offset($offset)->limit(1)->orderBy(['percent' => SORT_ASC])->one();
+						if ($newClass && $newClass->id != $participant->athlete->athleteClassId) {
+							if ($stageClass->percent > $newClass->percent) {
+								if ($stageClass->id != $participant->athleteClassId) {
+									$participant->newAthleteClassId = $stageClass->id;
+								}
+							} elseif (!$participant->athleteClassId ||
+								$participant->athleteClass->percent > $newClass->percent
+							) {
+								$participant->newAthleteClassId = $newClass->id;
+							}
+						}
+					}
+				}*/
 				
-				return var_dump($participant->errors);
+				if (!$participant->save()) {
+					$transaction->rollBack();
+					
+					return var_dump($participant->errors);
+				}
 			}
 		}
 		$transaction->commit();

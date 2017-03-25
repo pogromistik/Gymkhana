@@ -23,7 +23,7 @@ use common\models\AthletesClass;
 	<?= $form->field($model, 'athleteId')->widget(Select2::classname(), [
 		'name'    => 'kv-type-01',
 		'data'    => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(), 'id', function (\common\models\Athlete $item) {
-			return $item->lastName . ' ' . $item->firstName . '(' . $item->city->title . ')';
+			return $item->lastName . ' ' . $item->firstName . ' (' . $item->city->title . ')';
 		}),
 		'options' => [
 			'placeholder' => 'Выберите спортсмена...',
@@ -33,6 +33,9 @@ use common\models\AthletesClass;
 	
 	<?= $form->field($model, 'motorcycleId')->widget(\kartik\widgets\DepDrop::className(), [
 		'options'       => ['id' => 'motorcycle-id'],
+        'data' => ArrayHelper::map(\common\models\Motorcycle::findAll(['athleteId' => $model->athleteId]), 'id', function (\common\models\Motorcycle $item) {
+	        return $item->mark . ' ' . $item->model;
+        }),
 		'pluginOptions' => [
 			'depends'     => ['athlete-id'],
 			'placeholder' => 'Выберите мотоцикл...',
