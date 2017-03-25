@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 		<?= $form->field($figureTime, 'athleteId')->widget(Select2::classname(), [
 			'name'    => 'kv-type-01',
 			'data'    => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(), 'id', function (\common\models\Athlete $item) {
-				return $item->lastName . ' ' . $item->firstName;
+				return $item->lastName . ' ' . $item->firstName . '  (' . $item->city->title . ')';
 			}),
 			'options' => [
 				'placeholder' => 'Выберите спортсмена...',

@@ -308,6 +308,7 @@ class ProfileController extends AccessController
 			if ($place > 0) {
 				$countParticipants = count($bestResults);
 				$percent = ($countParticipants - $place) / $countParticipants * 100;
+				$percent = round($percent, 0);
 			}
 			if ($result) {
 				$figuresResult[] = [
