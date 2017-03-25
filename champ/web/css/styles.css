@@ -612,6 +612,7 @@ a.deletePhoto {
     position: relative;
     height: 159px;
     z-index: 10;
+    width: calc(100% - 130px);
 }
 
 .athletes .img img {
