@@ -860,3 +860,21 @@ a.deletePhoto {
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
    color: #4b4e53;
 }
+
+.fc-event-container {
+    padding: 0!important;
+}
+.fc-content-skeleton, .fc-content-skeleton table {
+    height: 98%;
+}
+.fc-content-skeleton table a{
+    display: block;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 10px;
+    line-height: 16px;
+}
+.fc-day-grid-event .fc-content  {
+    white-space: normal;
+}
