@@ -74,7 +74,7 @@ class HelpController extends Controller
 			$query = new Query();
 			$query->select('"Cities"."id", ("Cities"."title" || \' (\' || "Regions"."title" || \')\') AS text')
 				->from([City::tableName(), Region::tableName()])
-				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title)])
+				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title, 'UTF-8')])
 				->andWhere(new Expression('"Regions"."id" = "Cities"."regionId"'));
 			if ($countryId) {
 				$query->andWhere(['"Cities"."countryId"' => $countryId]);

@@ -9,8 +9,8 @@ $cssClass = 'default';
 $athleteClass = null;
 if ($athlete->athleteClassId) {
     $athleteClass = $athlete->athleteClass;
-    if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title)])) {
-        $cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title)];
+    if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title, 'UTF-8')])) {
+        $cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title, 'UTF-8')];
     }
 }
 ?>

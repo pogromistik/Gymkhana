@@ -170,7 +170,7 @@ class FigureTime extends BaseActiveRecord
 				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
 			} elseif (!$figure->bestTimeInRussia || $this->resultTime < $figure->bestTimeInRussia) {
 				$athlete = $this->athlete;
-				if (mb_strtoupper($athlete->country->title) == 'РОССИЯ') {
+				if (mb_strtoupper($athlete->country->title, 'UTF-8') == 'РОССИЯ') {
 					$this->recordType = self::RECORD_IN_RUSSIA;
 					$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
 				}

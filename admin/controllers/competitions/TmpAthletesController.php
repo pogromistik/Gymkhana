@@ -146,8 +146,8 @@ class TmpAthletesController extends BaseController
 		foreach ($tmpAthlete->getMotorcycles() as $motorcycle) {
 			$has = $oldAthlete->getMotorcycles()
 				->andWhere(['or',
-					['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'])], ['upper("model")' => mb_strtoupper($motorcycle['model'])]],
-					['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'])], ['upper("mark")' => mb_strtoupper($motorcycle['model'])]],
+					['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
+					['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
 				])->one();
 			if (!$has) {
 				$notFoundMotorcycles[$i] = $motorcycle['mark'] . ' ' . $motorcycle['model'];
@@ -222,8 +222,8 @@ class TmpAthletesController extends BaseController
 			/** @var Motorcycle $old */
 			$old = $oldAthlete->getMotorcycles()
 				->andWhere(['or',
-					['and', ['upper("mark")' => mb_strtoupper($data['mark'])], ['upper("model")' => mb_strtoupper($data['model'])]],
-					['and', ['upper("model")' => mb_strtoupper($data['mark'])], ['upper("mark")' => mb_strtoupper($data['model'])]],
+					['and', ['upper("mark")' => mb_strtoupper($data['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($data['model'], 'UTF-8')]],
+					['and', ['upper("model")' => mb_strtoupper($data['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($data['model'], 'UTF-8')]],
 				])->one();
 			if ($old) {
 				$transaction->rollBack();
