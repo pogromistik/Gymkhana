@@ -136,8 +136,8 @@ class TmpAthlete extends BaseActiveRecord
 			foreach ($athleteMotorcycles as $motorcycle) {
 				$has = $athlete->getMotorcycles()
 					->andWhere(['or',
-						['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'])], ['upper("model")' => mb_strtoupper($motorcycle['model'])]],
-						['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'])], ['upper("mark")' => mb_strtoupper($motorcycle['model'])]],
+						['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
+						['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
 					])->one();
 				if (!$has) {
 					$result[$athlete->id]['hasAllMotorcycles'] = false;

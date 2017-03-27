@@ -69,7 +69,7 @@ class CitySearch extends City
 			'countryId' => $this->countryId,
 		]);
 		
-		$query->andFilterWhere(['like', 'upper("title")', mb_strtoupper(trim($this->title))]);
+		$query->andFilterWhere(['like', 'upper("title")', mb_strtoupper(trim($this->title), 'UTF-8')]);
 		$query->andFilterWhere(['like', 'link', $this->link]);
 		
 		return $dataProvider;

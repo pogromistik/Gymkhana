@@ -36,8 +36,8 @@
 				$participantClass = null;
 				if ($participant->athleteClassId) {
 					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title)])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title)];
+					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
 					}
 				}
 				?>
@@ -137,8 +137,8 @@
 				$participantClass = null;
 				if ($participant->athleteClassId) {
 					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title)])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title)];
+					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
 					}
 				}
 				?>

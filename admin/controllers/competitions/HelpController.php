@@ -254,7 +254,7 @@ class HelpController extends BaseController
 			$query = new Query();
 			$query->select('"Cities"."id", ("Cities"."title" || \' (\' || "Regions"."title" || \')\') AS text')
 				->from([City::tableName(), Region::tableName()])
-				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title)])
+				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title, 'UTF-8')])
 				->andWhere(new Expression('"Regions"."id" = "Cities"."regionId"'));
 			if ($countryId) {
 				$query->andWhere(['"Cities"."countryId"' => $countryId]);
@@ -288,7 +288,7 @@ class HelpController extends BaseController
 		$city = new City();
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
-			$title = mb_strtoupper(trim($city->title));
+			$title = mb_strtoupper(trim($city->title), 'UTF-8');
 			$oldCity = City::findOne(['countryId' => $city->countryId, 'regionId' => $city->regionId,
 			'upper("title")' => $title]);
 			if ($oldCity) {
@@ -310,7 +310,7 @@ class HelpController extends BaseController
 		$region = new Region();
 		$error = null;
 		if ($region->load(\Yii::$app->request->post())) {
-			$title = mb_strtoupper(trim($region->title));
+			$title = mb_strtoupper(trim($region->title), 'UTF-8');
 			$oldRegion = Region::findOne(['countryId'      => $region->countryId,
 			                              'upper("title")' => $title]);
 			if ($oldRegion) {
@@ -332,7 +332,7 @@ class HelpController extends BaseController
 		$country = new Country();
 		$error = null;
 		if ($country->load(\Yii::$app->request->post())) {
-			$title = mb_strtoupper(trim($country->title));
+			$title = mb_strtoupper(trim($country->title), 'UTF-8');
 			$oldCountry = Country::find()->where(['upper("title")' => $title])
 			->orWhere(['upper("title_en")' => $title])
 				->orWhere(['upper("title_original")' => $title])->one();

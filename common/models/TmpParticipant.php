@@ -170,10 +170,10 @@ class TmpParticipant extends BaseActiveRecord
 			/** @var Motorcycle $motorcycle */
 			foreach ($athlete->getMotorcycles()->andWhere(['status' => Motorcycle::STATUS_ACTIVE])->all() as $motorcycle) {
 				$isCoincidences = false;
-				if ((mb_strtoupper($motorcycle->mark) == mb_strtoupper($this->motorcycleMark)
-						&& mb_strtoupper($motorcycle->model) == mb_strtoupper($this->motorcycleModel))
-					|| mb_strtoupper($motorcycle->mark) == mb_strtoupper($this->motorcycleModel)
-					&& mb_strtoupper($motorcycle->model) == mb_strtoupper($this->motorcycleMark)
+				if ((mb_strtoupper($motorcycle->mark, 'UTF-8') == mb_strtoupper($this->motorcycleMark, 'UTF-8')
+						&& mb_strtoupper($motorcycle->model, 'UTF-8') == mb_strtoupper($this->motorcycleModel, 'UTF-8'))
+					|| mb_strtoupper($motorcycle->mark, 'UTF-8') == mb_strtoupper($this->motorcycleModel, 'UTF-8')
+					&& mb_strtoupper($motorcycle->model, 'UTF-8') == mb_strtoupper($this->motorcycleMark, 'UTF-8')
 				) {
 					$isCoincidences = true;
 				}
