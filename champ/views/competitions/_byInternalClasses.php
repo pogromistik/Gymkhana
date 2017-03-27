@@ -96,7 +96,6 @@
                 <td rowspan="<?= $stage->countRace ?>"></td>
                 <td rowspan="<?= $stage->countRace ?>"></td>
                 <td rowspan="<?= $stage->countRace ?>"></td>
-                <td rowspan="<?= $stage->countRace ?>"></td>
             </tr>
 			<?php
 			$attempt = 1;
