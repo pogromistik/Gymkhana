@@ -755,3 +755,71 @@ a.deletePhoto {
     -webkit-box-shadow: 0 1px 15px rgba(0, 0, 0, .15);
     -moz-box-shadow: 0 1px 15px rgba(0, 0, 0, .15)
 }
+
+.result-green {
+    background: #b5e4b6;
+}
+
+.result-red {
+    background: #ffe7ee;
+}
+
+.result-blue {
+    background: #d7edff;
+}
+
+.result-yellow {
+    background: #f8ff8a;
+}
+
+.result-white {
+    background: #ffffff;
+    color: #000000;
+}
+
+.result-scheme {
+    display: none;
+}
+.result-scheme.active {
+    display: block;
+}
+
+.internal-class-0 {
+    background: #65d0e4;
+}
+
+.internal-class-1 {
+    background: #b5e4b6;
+}
+
+.internal-class-2 {
+    background: #e7d7b4;
+}
+
+.internal-class-3 {
+    background: #d7edff;
+}
+
+.internal-class-4 {
+    background: #f8ff8a;
+}
+
+.internal-class-5 {
+    background: #ffffff;
+}
+
+.internal-class-6 {
+    background: #d5ff9e;
+}
+
+.internal-class-7 {
+    background: #d1a0ff;
+}
+
+.internal-class-8 {
+    background: #fff1bb;
+}
+
+.internal-class-9 {
+    background: #bdd4bc;
+}

@@ -2,6 +2,7 @@
 namespace champ\controllers;
 
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
@@ -156,8 +157,30 @@ class CompetitionsController extends BaseController
 		$this->keywords = '';
 		$this->layout = 'full-content';
 		
+		$participantsQuery = Participant::find();
+		$participantsQuery->select('b.*');
+		$participantsQuery->from(['b' => Participant::tableName(), 'c' => AthletesClass::tableName()]);
+		$participantsQuery->where(['b.stageId' => $stage->id]);
+		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
+		$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+		$participantsByJapan = $participantsQuery
+			->orderBy([
+				'c."percent"'  => SORT_ASC,
+				'b."bestTime"' => SORT_ASC,
+				'b."sort"'     => SORT_ASC,
+				'b."id"'       => SORT_ASC
+			])
+			->all();
+		
+		if ($stage->championship->internalClasses) {
+			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])->andWhere(['status' => Participant::STATUS_ACTIVE])
+				->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+		}
+		
 		return $this->render('stage', [
-			'stage' => $stage
+			'stage'                         => $stage,
+			'participantsByJapan'           => $participantsByJapan,
+			'participantsByInternalClasses' => $participantsByInternalClasses
 		]);
 	}
 	
