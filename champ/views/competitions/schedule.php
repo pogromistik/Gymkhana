@@ -8,6 +8,14 @@ use yii\bootstrap\Html;
 ?>
 <?php $time = time(); ?>
 <h2>Расписание соревнований</h2>
+
+<?= \yii2fullcalendar\yii2fullcalendar::widget(array(
+	'events'=> $events,
+    'options' => [
+	    'lang' => 'ru'
+    ]
+));
+?>
 <div class="list">
 	<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
         <div class="item">
