@@ -37,7 +37,7 @@ use yii\bootstrap\Html;
 												<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
 													<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                     <br>
-												<?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
+												<?php } else { ?>
 													<?= Html::a('Предварительные итоги чемпионата',
 														['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                     <br>
@@ -73,7 +73,7 @@ use yii\bootstrap\Html;
 														<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
 															<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                             <br>
-														<?php } elseif ($yearInfo['status'] == \common\models\Championship::STATUS_PRESENT) { ?>
+														<?php } else { ?>
 															<?= Html::a('Предварительные итоги чемпионата',
 																['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                             <br>

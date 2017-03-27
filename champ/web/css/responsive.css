@@ -8,6 +8,18 @@
     .col-bg-5 {
         width: 41.66666667%;
     }
+    .col-bg-8 {
+        width: 66.66666667%;
+    }
+    .col-bg-4 {
+        width: 33.33333333%;
+    }
+}
+
+@media (max-width: 1512px) {
+    .list-nav ul{
+        right: 20px;
+    }
 }
 
 @media (max-width: 1350px) {
@@ -44,6 +56,7 @@
 
     .header {
         background: #f4f4f4;
+        height: 60px;
     }
 
     .documents .list .info li {

@@ -156,3 +156,8 @@ $('.appendMotorcycle').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$('.change-result-scheme').click(function (e) {
+    e.preventDefault();
+    $('.result-scheme').slideToggle();
+});
