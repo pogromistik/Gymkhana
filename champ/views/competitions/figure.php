@@ -161,7 +161,7 @@ $time = time();
             </div>
         </div>
 
-        <a href="<?= \yii\helpers\Url::to(['/competitions/results', 'active' => 'figures']) ?>">Вернуться к фигурам</a>
+        <a href="<?= \yii\helpers\Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">Вернуться к фигурам</a>
     </div>
 
     <div class="col-bg-5 col-lg-3 col-md-2 col-sm-12 list-nav">

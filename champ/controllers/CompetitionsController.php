@@ -14,6 +14,7 @@ use common\models\Stage;
 use common\models\TmpParticipant;
 use common\models\Year;
 use Yii;
+use yii\data\Pagination;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
@@ -24,6 +25,10 @@ use yii\web\Response;
  */
 class CompetitionsController extends BaseController
 {
+	const RESULTS_FIGURES = 'figure';
+	const RESULTS_RUSSIA = 'russia';
+	const RESULTS_REGIONAL = 'regional';
+	
 	public function actionSchedule()
 	{
 		$this->pageTitle = 'Расписание соревнований';
@@ -66,11 +71,90 @@ class CompetitionsController extends BaseController
 		return $this->render('schedule', ['championships' => $championships]);
 	}
 	
-	public function actionResults($active = null)
+	public function actionResults($by = null)
 	{
 		$this->pageTitle = 'Расписание соревнований';
 		$this->description = 'Расписание соревнований';
 		$this->keywords = 'Расписание соревнований';
+		
+		$this->layout = 'main-with-img';
+		$this->background = 'background3.png';
+		
+		if ($by) {
+			switch ($by) {
+				case self::RESULTS_FIGURES:
+					$figures = Figure::find();
+					$pagination = new Pagination([
+						'defaultPageSize' => 20,
+						'totalCount'      => $figures->count(),
+					]);
+					$figures = $figures->orderBy(['title' => SORT_ASC])->offset($pagination->offset)->limit($pagination->limit)->all();
+					$figuresArray = [];
+					/** @var Figure[] $figures */
+					foreach ($figures as $figure) {
+						$yearIds = $figure->getResults()->select('yearId')->asArray()->column();
+						$years = Year::find()->where(['id' => $yearIds])->orderBy(['year' => SORT_DESC])->all();
+						$figuresArray[] = [
+							'figure' => $figure,
+							'years'  => $years
+						];
+					}
+					return $this->render('figures-results', ['figuresArray' => $figuresArray, 'pagination' => $pagination]);
+				case self::RESULTS_RUSSIA:
+					/** @var Championship[] $championships */
+					$championships = Championship::find()->where(['groupId' => Championship::GROUPS_RUSSIA])
+						->orderBy(['dateAdded' => SORT_DESC])->all();
+					$results = [];
+					foreach ($championships as $championship) {
+						$results[$championship->yearId] = [
+							'year'   => $championship->year->year,
+							'stages' => $championship->stages,
+							'status' => $championship->status,
+							'id'     => $championship->id
+						];
+					}
+					if (isset($results)) {
+						krsort($results);
+					}
+					return $this->render('russia-result', ['results' => $results]);
+				case self::RESULTS_REGIONAL:
+					$results = [];
+					$query = Championship::find();
+					$query->from(['a' => Championship::tableName(), 'b' => RegionalGroup::tableName(), 'c' => Year::tableName()]);
+					$query->select('"a".*, "b".title as "groupTitle", "c"."year"');
+					$query->where(['a."groupId"' => Championship::GROUPS_REGIONAL]);
+					$query->andWhere(new Expression('"a"."regionGroupId" = "b"."id"'));
+					$query->andWhere(new Expression('"a"."yearId" = "c"."id"'));
+					$query->orderBy(['a."regionGroupId"' => SORT_ASC, 'a."dateAdded"' => SORT_DESC]);
+					$championships = $query->asArray()->all();
+					
+					foreach ($championships as $item) {
+						if (!isset($results[$item['regionGroupId']])) {
+							$results[$item['regionGroupId']] = [
+								'title' => $item['groupTitle'],
+								'years' => []
+							];
+						}
+						$results[$item['regionGroupId']]['years'][$item['yearId']] = [
+							'year'   => $item['year'],
+							'stages' => Stage::find()->where(['championshipId' => $item['id']])
+								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
+							'status' => $item['status'],
+							'id'     => $item['id']
+						];
+						
+						if (isset($results)) {
+							krsort($results[$item['regionGroupId']]['years']);
+							ksort($results);
+						}
+					}
+					return $this->render('regional-result', ['results' => $results]);
+			}
+		}
+		
+		return $this->render('results', ['by' => $by]);
+		
+		
 		
 		$results = [];
 		foreach (Championship::$groupsTitle as $group => $title) {
@@ -141,8 +225,7 @@ class CompetitionsController extends BaseController
 		
 		return $this->render('results', [
 			'results'      => $results,
-			'figuresArray' => $figuresArray,
-			'active'       => $active
+			'figuresArray' => $figuresArray
 		]);
 	}
 	
@@ -172,6 +255,7 @@ class CompetitionsController extends BaseController
 			])
 			->all();
 		
+		$participantsByInternalClasses = [];
 		if ($stage->championship->internalClasses) {
 			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])->andWhere(['status' => Participant::STATUS_ACTIVE])
 				->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
