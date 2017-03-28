@@ -84,9 +84,9 @@ class CompetitionsController extends BaseController
 	
 	public function actionResults($by = null)
 	{
-		$this->pageTitle = 'Расписание соревнований';
-		$this->description = 'Расписание соревнований';
-		$this->keywords = 'Расписание соревнований';
+		$this->pageTitle = 'Итоги соревнований';
+		$this->description = 'Итоги соревнований';
+		$this->keywords = 'Итоги соревнований';
 		
 		$this->layout = 'main-with-img';
 		$this->background = 'background3.png';
