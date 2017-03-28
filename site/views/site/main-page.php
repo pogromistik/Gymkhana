@@ -150,7 +150,7 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="element  clearfix col1-3 grey height0">
+                            <div class="element  clearfix col1-3 grey">
                                 <div class="icons team"></div>
 								<?php if ($menuItem = reset($menuItems['graySquare'])) {
 									$page = $menuItem->page;
@@ -196,7 +196,7 @@ use yii\bootstrap\Html;
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
-                                <div class="element  clearfix col1-3">
+                                <div class="element  clearfix col1-3 grey">
                                     <div class="icons illustration"></div>
 									<?php if ($menuItem = next($menuItems['graySquare'])) {
 										$page = $menuItem->page;
