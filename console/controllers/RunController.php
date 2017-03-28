@@ -698,7 +698,6 @@ class RunController extends Controller
 	{
 		file_put_contents('test.txt', 'тест крон');
 		file_put_contents('/var/www/www-root/data/www/developer174/test2.txt', 'тест крон');
-		throw new NotFoundHttpException();
 		return true;
 	}
 }
