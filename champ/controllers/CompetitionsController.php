@@ -38,65 +38,45 @@ class CompetitionsController extends BaseController
 		$this->keywords = 'Расписание соревнований';
 		
 		$championships = [];
-		/*foreach (Championship::$groupsTitle as $group => $title) {
-			switch ($group) {
-				case Championship::GROUPS_RUSSIA:
-					$championships[$group] = Championship::find()->where(['groupId' => $group])->orderBy(['dateAdded' => SORT_DESC])->all();
-					break;
-				case Championship::GROUPS_REGIONAL:
-					$query = Championship::find();
-					$query->from(['a' => Championship::tableName(), 'b' => RegionalGroup::tableName()]);
-					$query->select('"a".*, "b".title as "groupTitle"');
-					$query->where(['a."groupId"' => $group]);
-					$query->andWhere(new Expression('"a"."regionGroupId" = "b"."id"'));
-					$query->orderBy(['a."regionGroupId"' => SORT_ASC, 'a."dateAdded"' => SORT_DESC]);
-					$result = $query->asArray()->all();
-					
-					foreach ($result as $item) {
-						if (!isset($championships[$group][$item['regionGroupId']])) {
-							$championships[$group][$item['regionGroupId']] = [
-								'title'         => $item['groupTitle'],
-								'championships' => []
-							];
-						}
-						$championships[$group][$item['regionGroupId']]['championships'][] = $item;
-					}
-					break;
-			}
-		}*/
-		
 		$events = [];
+		$allStages = [];
 		
-		foreach (Championship::$groupsTitle as $group => $title) {
-			$championships[$group] = Championship::find()->where(['groupId' => $group])
-				->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->all();
-			
-			foreach ($championships[$group] as $championship) {
-				$stages = $championship->getStages()
-					->andWhere(['not', ['status' => \common\models\Stage::STATUS_PAST]])->all();
-				if ($group == Championship::GROUPS_RUSSIA) {
-					$background = '#58a1b1';
-					$color = '#fff';
-				} else {
-					$background = '#65cc72';
-					$color = '#fff';
+		$championshipIds = Championship::find()->select('id')
+			->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+		$stages = Stage::find()->where(['championshipId' => $championshipIds])->andWhere(['not', ['status' => Stage::STATUS_PAST]])
+			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
+		
+		$background = '#58a1b1';
+		$color = '#fff';
+		$dates = [];
+		$notDate = [];
+		/** @var Stage[] $stages */
+		foreach ($stages as $stage) {
+			if (!$stage->dateOfThe) {
+				$notDate[] = $stage;
+			} else {
+				$month = (new \DateTime(date('01.m.Y', $stage->dateOfThe),
+					new \DateTimeZone('Asia/Yekaterinburg')))
+					->setTime(10, 00,
+						00)->getTimestamp();
+				if (!isset($dates[$month])) {
+					$dates[$month] = [];
 				}
-				foreach ($stages as $stage) {
-					$event = new Event();
-					$event->id = $stage->id;
-					$event->title = $stage->title;
-					$event->allDay = true;
-					$event->backgroundColor = $background;
-					$event->color = $background;
-					$event->textColor = $color;
-					$event->url = Url::to(['/competitions/stage', 'id' => $stage->id]);
-					$event->start = date('Y-m-d', $stage->dateOfThe);
-					$events[] = $event;
-				}
+				$dates[$month][] = $stage;
 			}
+			$event = new Event();
+			$event->id = $stage->id;
+			$event->title = $stage->title;
+			$event->allDay = true;
+			$event->backgroundColor = $background;
+			$event->color = $background;
+			$event->textColor = $color;
+			$event->url = Url::to(['/competitions/stage', 'id' => $stage->id]);
+			$event->start = date('Y-m-d', $stage->dateOfThe);
+			$events[] = $event;
 		}
 		
-		return $this->render('schedule', ['championships' => $championships, 'events' => $events]);
+		return $this->render('schedule', ['dates' => $dates, 'notDate' => $notDate, 'events' => $events]);
 	}
 	
 	public function actionResults($by = null)
@@ -127,6 +107,7 @@ class CompetitionsController extends BaseController
 							'years'  => $years
 						];
 					}
+					
 					return $this->render('figures-results', ['figuresArray' => $figuresArray, 'pagination' => $pagination]);
 				case self::RESULTS_RUSSIA:
 					/** @var Championship[] $championships */
@@ -144,6 +125,7 @@ class CompetitionsController extends BaseController
 					if (isset($results)) {
 						krsort($results);
 					}
+					
 					return $this->render('russia-result', ['results' => $results]);
 				case self::RESULTS_REGIONAL:
 					$results = [];
@@ -176,12 +158,12 @@ class CompetitionsController extends BaseController
 							ksort($results);
 						}
 					}
+					
 					return $this->render('regional-result', ['results' => $results]);
 			}
 		}
 		
 		return $this->render('results', ['by' => $by]);
-		
 		
 		
 		$results = [];
