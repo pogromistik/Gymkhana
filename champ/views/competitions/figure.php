@@ -48,7 +48,7 @@ $time = time();
 				<?php if ($figure->picture) { ?>
                     <div class="track-photo">
                         <div class="toggle">
-                            <div class="title">Посмотреть схему</div>
+                            <div class="title">Посмотреть схему фигуры</div>
                             <div class="toggle-content">
 								<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
                             </div>
