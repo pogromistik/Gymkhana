@@ -150,7 +150,7 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="element  clearfix col1-3 grey">
+                            <div class="element  clearfix col1-3 grey height0">
                                 <div class="icons team"></div>
 								<?php if ($menuItem = reset($menuItems['graySquare'])) {
 									$page = $menuItem->page;
