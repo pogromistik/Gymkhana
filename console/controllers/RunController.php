@@ -696,7 +696,6 @@ class RunController extends Controller
 	
 	public function actionTest()
 	{
-		file_put_contents('test.txt', 'тест крон');
 		file_put_contents('/var/www/www-root/data/www/developer174/test2.txt', 'тест крон');
 		return true;
 	}
