@@ -34,6 +34,7 @@ use yii\console\Controller;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 class RunController extends Controller
 {
@@ -697,6 +698,7 @@ class RunController extends Controller
 	{
 		file_put_contents('test.txt', 'тест крон');
 		file_put_contents('/var/www/www-root/data/www/developer174/test2.txt', 'тест крон');
+		throw new NotFoundHttpException();
 		return true;
 	}
 }
