@@ -79,11 +79,17 @@ $time = time();
 					
 					<?php if ($participantsByInternalClasses) { ?>
                         <div class="result-scheme active">
-                            <a href="#" class="change-result-scheme text-right">Посмотреть результаты по классам награждений</a>
+                            <div class="change-type">
+                                <a href="#" class="change-result-scheme">Посмотреть результаты по классам
+                                    награждений</a>
+                            </div>
 							<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
                         </div>
                         <div class="result-scheme">
-                            <a href="#" class="change-result-scheme text-right">Посмотреть результаты по японской схеме</a>
+                            <div class="change-type">
+                                <a href="#" class="change-result-scheme">Посмотреть результаты по японской
+                                    схеме</a>
+                            </div>
 							<?= $this->render('_byInternalClasses', ['stage' => $stage, 'participants' => $participantsByInternalClasses]) ?>
                         </div>
 					<?php } else { ?>

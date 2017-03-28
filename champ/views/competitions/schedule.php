@@ -2,91 +2,91 @@
 use yii\bootstrap\Html;
 
 /**
- * @var \yii\web\View $this
- * @var array         $championships
+ * @var \yii\web\View        $this
+ * @var array                $dates
+ * @var array                $notDate
+ * @var \common\models\Stage $stage
+ * @var array                $events
  */
 ?>
-<?php $time = time(); ?>
 <h2>Расписание соревнований</h2>
 
-<?= \yii2fullcalendar\yii2fullcalendar::widget(array(
-	'events'=> $events,
-    'options' => [
-	    'lang' => 'ru'
-    ]
-));
-?>
-<div class="list">
-	<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
-        <div class="item">
-            <div class="toggle">
-                <div class="background"></div>
-                <div class="title">
-					<?= $title ?>
-                </div>
-                <div class="info">
-					<?php if (!$championships[$group]) { ?>
-                        В данном разделе пока нет соревнований.
-					<?php } else { ?>
-						<?php switch ($group) {
-							case \common\models\Championship::GROUPS_RUSSIA:
-								/** @var \common\models\Championship $championship */
-								$championship = reset($championships[$group]);
-								/** @var \common\models\Stage[] $stages */
-								$stages = $championship->getStages()
-									->andWhere(['not', ['status' => \common\models\Stage::STATUS_PAST]])->all();
-								if (!$stages) { ?>
-                                    В данный момент нет актуальных регистраций на этап.
-									<?php
-								} else {
-									foreach ($stages as $stage) {
-										?>
-										<?php
-										$title = $stage->title . ', ' . $stage->city->title;
-										if ($stage->dateOfThe) {
-											$title .= ' ' . $stage->dateOfTheHuman;
-										}
-										?>
-										<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
-										<?php
-									}
-								}
-								break;
-							case \common\models\Championship::GROUPS_REGIONAL:
-								foreach ($championships[$group] as $championship) {
-									?>
-                                    <div class="title-with-bg">
-										<?= $championship->title ?>
+<div class="result-scheme active">
+    <div class="change-type">
+        <a class="change-result-scheme">Посмотреть список</a>
+    </div>
+	<?= \yii2fullcalendar\yii2fullcalendar::widget([
+		'events'        => $events,
+		'options'       => [
+			'lang' => 'ru',
+		],
+		'clientOptions' => [
+			'language' => 'ru'
+		],
+		'header'        => [
+			'right'  => 'title',
+			'center' => '',
+			'left'   => 'prevYear,prev,next,nextYear today',
+		]
+	]);
+	?>
+</div>
+<div class="result-scheme">
+    <div class="change-type">
+        <a href="#" class="change-result-scheme">Посмотреть календарь</a>
+    </div>
+    <div class="schedule">
+        <table class="table table-striped">
+			<?php if ($notDate) { ?>
+                <tr>
+                    <th>
+                        <div class="month">
+                            Дата проведения не установлена
+                        </div>
+                    </th>
+                </tr>
+				<?php foreach ($notDate as $stage) { ?>
+                    <tr>
+                        <td>
+                            <div class="row item">
+                                <div class="col-md-2 col-xs-3">
+                                </div>
+                                <div class="col-md-10 col-xs-9">
+									<?= Html::a($stage->title . ', ' . $stage->city->title,
+										['/competitions/stage', 'id' => $stage->id]) ?>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+				<?php } ?>
+			<?php } ?>
+			
+			<?php if ($dates) { ?>
+				<?php foreach ($dates as $date => $stages) { ?>
+                    <tr>
+                        <th>
+                            <div class="month">
+								<?= \common\models\HelpModel::$month[date("n", $date)] ?>
+                            </div>
+                        </th>
+                    </tr>
+					<?php foreach ($stages as $stage) { ?>
+                        <tr>
+                            <td>
+                                <div class="row item">
+                                    <div class="col-md-2 col-xs-3">
+										<?= date("d.m.Y", $stage->dateOfThe) ?>
                                     </div>
-									<?php
-									/** @var \common\models\Stage[] $stages */
-									$stages = $championship->getStages()
-										->andWhere(['not', ['status' => \common\models\Stage::STATUS_PAST]])->all();
-									if (!$stages) { ?>
-                                        В данный момент нет актуальных регистраций.
-										<?php
-									} else {
-										foreach ($stages as $stage) {
-											?>
-                                            <div class="pl-10">
-												<?php
-												$title = $stage->title . ', ' . $stage->city->title;
-												if ($stage->dateOfThe) {
-													$title .= ' ' . $stage->dateOfTheHuman;
-												}
-												?>
-												<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
-                                            </div>
-											<?php
-										}
-									}
-								}
-								break;
-								?>
-							<?php }
-					} ?>
-                </div>
-            </div>
-        </div>
-	<?php } ?>
+                                    <div class="col-md-10 col-xs-9">
+										<?= Html::a($stage->title . ', ' . $stage->city->title,
+											['/competitions/stage', 'id' => $stage->id]) ?>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+					<?php } ?>
+				<?php } ?>
+			<?php } ?>
+        </table>
+    </div>
 </div>

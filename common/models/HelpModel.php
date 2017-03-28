@@ -69,6 +69,21 @@ class HelpModel extends Model
 	const MODEL_NEWS_SLIDER = 2;
 	const MODEL_ABOUT_SLIDER = 3;
 	
+	public static $month = [
+		1  => 'Январь',
+		2  => 'Февраль',
+		3  => 'Март',
+		4  => 'Апрель',
+		5  => 'Май',
+		6  => 'Июнь',
+		7  => 'Июль',
+		8  => 'Август',
+		9  => 'Сентябрь',
+		10 => 'Октябрь',
+		11 => 'Ноябрь',
+		12 => 'Декабрь'
+	];
+	
 	public static function savePreviewPhoto($model, $folder)
 	{
 		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;

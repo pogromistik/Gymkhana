@@ -54,10 +54,6 @@
         font-size: 10px;
     }
 
-    .header {
-        background: #f4f4f4;
-    }
-
     .documents .list .info li {
         list-style: disc;
     }
@@ -117,6 +113,7 @@
     }
     .header {
         position: static;
+        background: #f4f4f4;
     }
     .content {
         padding-top: 0;
