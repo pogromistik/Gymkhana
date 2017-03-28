@@ -67,6 +67,9 @@ class SiteController extends BaseController
 		$this->keywords = 'регламент соревнований, регламент мото джимхана, правила проведения соревнований, мото джимхана правила, 
 		мото джимхана классы, классы мото джимханы';
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'background4.png';
+		
 		$sections = DocumentSection::findAll(['status' => 1]);
 		
 		return $this->render('documents', [

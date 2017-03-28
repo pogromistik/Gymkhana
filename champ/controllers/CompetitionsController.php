@@ -76,6 +76,9 @@ class CompetitionsController extends BaseController
 			$events[] = $event;
 		}
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'background5.png';
+		
 		return $this->render('schedule', ['dates' => $dates, 'notDate' => $notDate, 'events' => $events]);
 	}
 	
@@ -107,6 +110,7 @@ class CompetitionsController extends BaseController
 							'years'  => $years
 						];
 					}
+					$this->background = 'background6.png';
 					
 					return $this->render('figures-results', ['figuresArray' => $figuresArray, 'pagination' => $pagination]);
 				case self::RESULTS_RUSSIA:
