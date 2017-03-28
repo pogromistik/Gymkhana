@@ -46,7 +46,7 @@ $time = time();
 			<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
                 <div class="track-photo">
                     <div class="toggle">
-                        <div class="title">Посмотреть схему</div>
+                        <div class="title">Посмотреть схему трассы</div>
                         <div class="toggle-content">
 							<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
                         </div>
