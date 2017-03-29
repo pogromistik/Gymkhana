@@ -3,38 +3,16 @@
 namespace console\controllers;
 
 use common\models\Athlete;
+use common\models\Championship;
 use common\models\City;
-use common\models\AboutBlock;
-use common\models\AboutSlider;
-use common\models\Album;
-use common\models\Contacts;
 use common\models\Country;
-use common\models\DopPage;
-use common\models\FigureTime;
-use common\models\Files;
-use common\models\GroupMenu;
-use common\models\HelpProject;
-use common\models\Layout;
-use common\models\Link;
-use common\models\MainMenu;
-use common\models\MainPhoto;
-use common\models\Marshal;
-use common\models\MenuItem;
 use common\models\Motorcycle;
-use common\models\News;
-use common\models\NewsBlock;
-use common\models\NewsSlider;
-use common\models\Page;
 use common\models\Region;
-use common\models\Regular;
 use common\models\Stage;
-use common\models\Track;
-use common\models\Year;
 use yii\console\Controller;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 class RunController extends Controller
 {
@@ -599,7 +577,7 @@ class RunController extends Controller
 		$delete = 0;
 		$countItems = 0;
 		foreach ($citiesQuery->batch() as $cities) {
-			echo  $countItems . PHP_EOL;
+			echo $countItems . PHP_EOL;
 			/** @var City $city */
 			foreach ($cities as $city) {
 				if (!$city->link) {
@@ -614,6 +592,7 @@ class RunController extends Controller
 		}
 		
 		echo 'Delete ' . $delete . ' items' . PHP_EOL;
+		
 		return true;
 	}
 	
@@ -663,6 +642,7 @@ class RunController extends Controller
 				$city = City::findOne(['upper("title")' => mb_strtoupper($data['city'])]);
 				if (!$city) {
 					echo $i . ' city not found' . PHP_EOL;
+					
 					return false;
 				}
 				$athlete = new Athlete();
@@ -694,9 +674,87 @@ class RunController extends Controller
 		return true;
 	}
 	
+	public function actionChangeChampionshipsStatus()
+	{
+		$time = time();
+		$count = 0;
+		
+		//чемпионат прошел
+		$championships = Championship::findAll(['status' => Championship::STATUS_PRESENT]);
+		foreach ($championships as $championship) {
+			$stages = $championship->stages;
+			/** @var Stage $stage */
+			foreach ($stages as $stage) {
+				if (!$stage->dateOfThe || $stage->dateOfThe > $time) {
+					continue 2;
+				}
+			}
+			$championship->status = Championship::STATUS_PAST;
+			$championship->save();
+			$count++;
+		}
+		
+		//чемпионат начался
+		$championships = Championship::findAll(['status' => Championship::STATUS_UPCOMING]);
+		foreach ($championships as $championship) {
+			if (Stage::find()->where(['championshipId' => $championship->id])
+				->andWhere(['<=', 'dateOfThe', $time])->one()
+			) {
+				$championship->status = Championship::STATUS_PRESENT;
+				$championship->save();
+				$count++;
+			}
+		}
+		
+		echo 'Change ' . $count . ' items';
+		
+		return true;
+	}
+	
+	public function actionChangeStagesStatus()
+	{
+		$time = time();
+		//открыта регистрация на этап
+		Stage::updateAll(['status' => Stage::STATUS_START_REGISTRATION], [
+			'and',
+			['status' => Stage::STATUS_UPCOMING],
+			['not', ['startRegistration' => null]],
+			['<=', 'startRegistration', $time]
+		]);
+		
+		//завершена регистрация на этап
+		Stage::updateAll(['status' => Stage::STATUS_END_REGISTRATION], [
+			'and',
+			['status' => Stage::STATUS_START_REGISTRATION],
+			['not', ['endRegistration' => null]],
+			['<=', 'endRegistration', $time]
+		]);
+		
+		//текущий этап
+		Stage::updateAll(['status' => Stage::STATUS_PRESENT], [
+			'and',
+			['<=', 'dateOfThe', $time],
+			['not', ['dateOfThe' => null]],
+			['status' => [Stage::STATUS_UPCOMING, Stage::STATUS_END_REGISTRATION, Stage::STATUS_END_REGISTRATION]]
+		]);
+		
+		//прошедший этап
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->where(['not', ['status' => Stage::STATUS_PAST]])->all();
+		foreach ($stages as $stage) {
+			if ($stage->dateOfThe && ($stage->dateOfThe + 86400) <= $time) {
+				$stage->status = Stage::STATUS_PAST;
+				$stage->save();
+			}
+		}
+		
+		return true;
+	}
+	
 	public function actionTest()
 	{
 		file_put_contents('/var/www/www-root/data/www/developer174/test2.txt', 'тест крон');
+		
 		return true;
 	}
 }
