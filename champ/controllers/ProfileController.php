@@ -69,8 +69,8 @@ class ProfileController extends AccessController
 		$this->pageTitle = 'Информация';
 		
 		$time = time();
-		$newStages = Stage::find()->where(['<=', 'startRegistration', $time])
-			->andWhere(['>=', 'endRegistration', $time])->all();
+		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
+			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])->all();
 		
 		$participants = null;
 		if ($newStages) {
