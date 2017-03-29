@@ -909,6 +909,7 @@ a.deletePhoto {
     color: #fff !important;
     padding: 10px;
     cursor: pointer;
+    display: inline-block;
 }
 
 .nav .open > a:focus {
