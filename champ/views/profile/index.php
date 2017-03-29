@@ -170,8 +170,8 @@ use yii\web\JsExpression;
         <thead>
         <tr>
             <th>Марка и модель</th>
-            <th>Статус</th>
-            <th>Добавлен</th>
+            <th class="show-pk">Статус</th>
+            <th class="show-pk">Добавлен</th>
             <th></th>
         </tr>
         </thead>
@@ -179,10 +179,10 @@ use yii\web\JsExpression;
 		<?php foreach ($motorcycles as $motorcycleInfo) { ?>
             <tr>
                 <td><?= $motorcycleInfo->mark ?> <?= $motorcycleInfo->model ?></td>
-                <td>
+                <td class="show-pk">
 					<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
                 </td>
-                <td>
+                <td class="show-pk">
 					<?= date("d.m.Y, H:i", $motorcycleInfo->dateAdded) ?>
                 </td>
                 <td>
