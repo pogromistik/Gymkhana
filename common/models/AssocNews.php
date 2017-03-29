@@ -97,30 +97,20 @@ class AssocNews extends \yii\db\ActiveRecord
 				/** @var Championship $championship */
 				$championship = $model;
 				$news = new AssocNews();
-				$news->previewText = 'В ' . $championship->year->year . ' году ';
-				if ($championship->status == Championship::STATUS_PAST) {
-					$news->previewText .= 'прошел ';
-				} else {
-					$news->previewText .= 'предстоит ';
-				}
-				$news->previewText .= $championship->title;
+				$news->previewText = 'Анонсирован ' . $championship->title . '.';
 				if ($championship->regionId) {
-					$news->previewText .= '. Регион проведения: ' . $championship->region->title;
+					$news->previewText .= ' Регион проведения: ' . $championship->region->title . '.';
 				}
-				$news->previewText .= '.';
+				if ($championship->description) {
+					$news->fullText = $championship->description;
+				}
 				$news->save();
 				break;
 			case self::TEMPLATE_STAGE:
 				/** @var Stage $stage */
 				$stage = $model;
 				$news = new AssocNews();
-				$news->previewText = 'В городе ' . $stage->city->title . ' ';
-				if ($stage->status == Stage::STATUS_PAST) {
-					$news->previewText .= 'прошел ';
-				} else {
-					$news->previewText .= 'предстоит ';
-				}
-				$news->previewText .= $stage->title . ', входящий в ' . $stage->championship->title;
+				$news->previewText = $stage->title . 'пройдёт в городе ' . $stage->city->title . '.';
 				if ($stage->location) {
 					$news->previewText .= '.<br>Место проведения этапа: ' . $stage->location;
 				}
@@ -129,9 +119,6 @@ class AssocNews extends \yii\db\ActiveRecord
 				}
 				if ($stage->startRegistration) {
 					$news->previewText .= '.<br>Начало регистрации: ' . $stage->startRegistrationHuman;
-				}
-				if ($stage->endRegistration) {
-					$news->previewText .= ', завершение регистрации: ' . $stage->endRegistrationHuman;
 				}
 				$news->previewText .='.';
 				$news->save();
