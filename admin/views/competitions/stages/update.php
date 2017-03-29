@@ -22,12 +22,12 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			'data-id' => $model->id
 		]) ?>
 	<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
-	<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
 	<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
 		[
 			'class'   => 'btn btn-default stageCalcResult',
 			'data-id' => $model->id
 		]) ?>
+	<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
 	
 	<?= $this->render('_form', [
 		'model' => $model,
