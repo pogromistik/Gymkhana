@@ -14,7 +14,7 @@ $city = $stage->city;
 if ($city->timezone) {
     $timezone = '(' . $city->title .', UTC ' . $city->utc . ')';
 } else {
-    $timezone = '(Москва, UTC +2)';
+    $timezone = '(Москва, UTC +3)';
 }
 
 ?>
