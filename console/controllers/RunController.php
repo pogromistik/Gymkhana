@@ -16,6 +16,75 @@ use yii\helpers\ArrayHelper;
 
 class RunController extends Controller
 {
+	public static $timezones = [
+		'Калининградская область'                     => ['Europe/Kaliningrad', '+2'],
+		'Псковская область'                           => ['Europe/Moscow', '+3'],
+		'Ивановская область'                          => ['Europe/Moscow', '+3'],
+		'Ставропольский край'                         => ['Europe/Moscow', '+3'],
+		'Московская область'                          => ['Europe/Moscow', '+3'],
+		'Мордовия'                                    => ['Europe/Moscow', '+3'],
+		'Новгородская область'                        => ['Europe/Moscow', '+3'],
+		'Пензенская область'                          => ['Europe/Moscow', '+3'],
+		'Калужская область'                           => ['Europe/Moscow', '+3'],
+		'Татарстан'                                   => ['Europe/Moscow', '+3'],
+		'Воронежская область'                         => ['Europe/Moscow', '+3'],
+		'Ростовская область'                          => ['Europe/Moscow', '+3'],
+		'Волгоградская область'                       => ['Europe/Moscow', '+3'],
+		'Ленинградская область'                       => ['Europe/Moscow', '+3'],
+		'Чувашская'                                   => ['Europe/Moscow', '+3'],
+		'Краснодарский край'                          => ['Europe/Moscow', '+3'],
+		'Кировская область'                           => ['Europe/Moscow', '+3'],
+		'Рязанская область'                           => ['Europe/Moscow', '+3'],
+		'Нижегородская область'                       => ['Europe/Moscow', '+3'],
+		'Липецкая область'                            => ['Europe/Moscow', '+3'],
+		'Астраханская область'                        => ['Europe/Samara', '+4'],
+		'Ульяновская область'                         => ['Europe/Samara', '+4'],
+		'Саратовская область'                         => ['Europe/Samara', '+4'],
+		'Самарская область'                           => ['Europe/Samara', '+4'],
+		'Удмуртская'                                  => ['Europe/Samara', '+4'],
+		'Ханты-Мансийский Автономный округ - Югра АО' => ['Asia/Yekaterinburg', '+5'],
+		'Челябинская область'                         => ['Asia/Yekaterinburg', '+5'],
+		'Уфимский район'                              => ['Asia/Yekaterinburg', '+5'],
+		'Свердловская область'                        => ['Asia/Yekaterinburg', '+5'],
+		'Оренбургская область'                        => ['Asia/Yekaterinburg', '+5'],
+		'Пермский край'                               => ['Asia/Yekaterinburg', '+5'],
+		'Башкортостан'                                => ['Asia/Yekaterinburg', '+5'],
+		'Курганская область'                          => ['Asia/Yekaterinburg', '+5'],
+		'Тюменская область'                           => ['Asia/Yekaterinburg', '+5'],
+		'Ямало-Ненецкий  АО'                          => ['Asia/Yekaterinburg', '+5'],
+		'Омская область'                              => ['Asia/Omsk', '+6'],
+		'Новосибирская область'                       => ['Asia/Novosibirsk', '+7'],
+		'Томская область'                             => ['Asia/Krasnoyarsk', '+7'],
+		'Ярославская область'                         => ['Asia/Krasnoyarsk', '+7'],
+		'Красноярский край'                           => ['Asia/Krasnoyarsk', '+7'],
+		'Алтайский край'                              => ['Asia/Barnaul', '+7'],
+		'Кемеровская область'                         => ['Asia/Krasnoyarsk', '+7'],
+		'Иркутская область'                           => ['Asia/Irkutsk', '+8'],
+		'Бурятия'                                     => ['Asia/Irkutsk', '+8'],
+		'Саха /Якутия/'                               => ['Asia/Yakutsk', '+9'],
+		'Приморский край'                             => ['Asia/Vladivostok', '+10'],
+		'Магаданская область'                         => ['Asia/Magadan', '+11'],
+		'Сахалинская область'                         => ['Asia/Magadan', '+11'],
+		'Камчатский край'                             => ['Asia/Kamchatka', '+12']
+	];
+	
+	public function actionUpdateRegions()
+	{
+		$count = 0;
+		foreach (self::$timezones as $timezone => $info) {
+			$region = Region::findOne(['title' => $timezone]);
+			if (!$region) {
+				echo 'Region not found ' . $info[0] . PHP_EOL;
+				
+				return false;
+			}
+			$count += City::updateAll(['timezone' => $info[0], 'utc' => $info[1]], ['regionId' => $region->id]);
+		}
+		echo 'Update ' . $count . ' items';
+		
+		return true;
+	}
+	
 	public function actionCleanIncrement($tableName, $pk)
 	{
 		\Yii::$app->db->createCommand('SELECT setval(\'"' . $tableName . '_' . $pk . '_seq"\'::regclass, MAX("' . $pk . '")) FROM "' . $tableName . '"')->execute();

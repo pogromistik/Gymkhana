@@ -157,16 +157,23 @@ class Stage extends BaseActiveRecord
 		}
 		$this->dateUpdated = time();
 		
+		$defaultTimeZone = HelpModel::DEFAULT_TIME_ZONE;
+		$city = City::findOne($this->cityId);
+		$timezone = $city->timezone;
+		if ($timezone && $timezone != '') {
+			$defaultTimeZone = $timezone;
+		}
+		
 		if ($this->dateOfTheHuman) {
-			$this->dateOfThe = (new \DateTime($this->dateOfTheHuman, new \DateTimeZone('Asia/Yekaterinburg')))->setTime(10, 0, 0)->getTimestamp();
+			$this->dateOfThe = (new \DateTime($this->dateOfTheHuman, new \DateTimeZone($defaultTimeZone)))->setTime(6, 0, 0)->getTimestamp();
 		}
 		if ($this->startRegistrationHuman) {
-			$this->startRegistration = (new \DateTime($this->startRegistrationHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+			$this->startRegistration = (new \DateTime($this->startRegistrationHuman, new \DateTimeZone($defaultTimeZone)))->getTimestamp();
 		} else {
 			$this->startRegistration = null;
 		}
 		if ($this->endRegistrationHuman) {
-			$this->endRegistration = (new \DateTime($this->endRegistrationHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+			$this->endRegistration = (new \DateTime($this->endRegistrationHuman, new \DateTimeZone($defaultTimeZone)))->getTimestamp();
 		} else {
 			$this->endRegistration = null;
 		}
@@ -202,11 +209,19 @@ class Stage extends BaseActiveRecord
 	public function afterFind()
 	{
 		parent::afterFind();
+		
+		$defaultTimeZone = HelpModel::DEFAULT_TIME_ZONE;
+		$timezone = $this->city->timezone;
+		if ($timezone && $timezone != '') {
+			$defaultTimeZone = $timezone;
+		}
+		date_default_timezone_set($defaultTimeZone);
 		if ($this->dateOfThe) {
 			$this->dateOfTheHuman = date('d.m.Y', $this->dateOfThe);
 		}
 		if ($this->startRegistration) {
-			$this->startRegistrationHuman = date('d.m.Y, H:i', $this->startRegistration);
+			$this->startRegistrationHuman =
+				date('d.m.Y, H:i', $this->startRegistration);
 		}
 		if ($this->endRegistration) {
 			$this->endRegistrationHuman = date('d.m.Y, H:i', $this->endRegistration);

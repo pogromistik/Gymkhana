@@ -52,6 +52,7 @@ $this->title = 'Города';
 					return $city->country->title;
 				}
 			],
+            'utc',
 			[
 				'format' => 'raw',
 				'value'  => function (\common\models\City $city) {

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -18,6 +19,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $regionId
  * @property integer $countryId
  * @property string  $state
+ * @property string  $timezone
+ * @property string  $utc
  *
  * @property Region  $region
  * @property Country $country
@@ -41,9 +44,30 @@ class City extends \yii\db\ActiveRecord
 			[['title', 'regionId', 'countryId'], 'required'],
 			[['showInRussiaPage', 'regionId', 'countryId'], 'integer'],
 			[['top', 'left'], 'number'],
-			[['title', 'link', 'federalDistrict', 'state'], 'string'],
+			[['title', 'link', 'federalDistrict', 'state', 'timezone', 'utc'], 'string'],
 			[['showInRussiaPage'], 'default', 'value' => 0],
+			['timezone', 'validateTimeZone']
 		];
+	}
+	
+	public function validateTimeZone($attribute, $params)
+	{
+		if (!$this->hasErrors() && $this->timezone && $this->timezone != '') {
+			$exist = false;
+			foreach(timezone_abbreviations_list() as $abbr => $timezone){
+				foreach($timezone as $val){
+					if(isset($val['timezone_id'])){
+						if ($val['timezone_id'] == $this->timezone) {
+							$exist = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!$exist) {
+				$this->addError($attribute, 'Временная зона не существует.');
+			}
+		}
 	}
 	
 	/**
@@ -60,7 +84,9 @@ class City extends \yii\db\ActiveRecord
 			'showInRussiaPage' => 'Показывать на странице "Россия"',
 			'federalDistrict'  => 'Федеральный округ',
 			'regionId'         => 'Регион',
-			'countryId'        => 'Страна'
+			'countryId'        => 'Страна',
+			'timezone'         => 'Временная зона',
+			'utc'              => 'Разница с UTC'
 		];
 	}
 	

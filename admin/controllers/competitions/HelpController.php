@@ -305,6 +305,28 @@ class HelpController extends BaseController
 		return $this->render('create-city', ['city' => $city, 'error' => $error]);
 	}
 	
+	public function actionCityUpdate($id)
+	{
+		$city = City::findOne($id);
+		$error = null;
+		if ($city->load(\Yii::$app->request->post())) {
+			$title = mb_strtoupper(trim($city->title), 'UTF-8');
+			$oldCity = City::findOne(['countryId' => $city->countryId, 'regionId' => $city->regionId,
+			                          'upper("title")' => $title]);
+			if ($oldCity && $oldCity->id != $city->id) {
+				$error = 'В выбранном регионе уже есть город с таким названием';
+			} else {
+				if ($city->save()) {
+					return $this->redirect('cities');
+				} else {
+					$error = var_dump($city->save());
+				}
+			}
+		}
+		
+		return $this->render('create-city', ['city' => $city, 'error' => $error]);
+	}
+	
 	public function actionCreateRegion()
 	{
 		$region = new Region();
