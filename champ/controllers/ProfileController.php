@@ -392,6 +392,7 @@ class ProfileController extends AccessController
 	
 	public function actionHelp()
 	{
+		$this->pageTitle = 'Справка';
 		return $this->render('help');
 	}
 }
