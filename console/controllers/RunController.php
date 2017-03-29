@@ -751,6 +751,18 @@ class RunController extends Controller
 		return true;
 	}
 	
+	public function actionChangePhotoStatus()
+	{
+		Stage::updateAll(['trackPhotoStatus' => Stage::PHOTO_PUBLISH], [
+			'and',
+			['not', ['trackPhoto' => null]],
+			['trackPhotoStatus' => Stage::PHOTO_NOT_PUBLISH],
+			['status' => Stage::STATUS_PAST]
+		]);
+		
+		return true;
+	}
+	
 	public function actionTest()
 	{
 		file_put_contents('/var/www/www-root/data/www/developer174/test2.txt', 'тест крон');
