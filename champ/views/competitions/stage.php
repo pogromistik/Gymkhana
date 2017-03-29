@@ -10,6 +10,13 @@ use yii\bootstrap\Html;
  * @var integer                      $sortBy
  */
 $time = time();
+$city = $stage->city;
+if ($city->timezone) {
+    $timezone = '(' . $city->title .', UTC ' . $city->utc . ')';
+} else {
+    $timezone = '(Москва, UTC +2)';
+}
+
 ?>
 
 <div class="row">
@@ -28,10 +35,10 @@ $time = time();
 			<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
 				<?php if ($stage->startRegistration) { ?>
                     <p>
-                        Начало регистрации: <?= $stage->startRegistrationHuman ?>
+                        Начало регистрации: <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
 						<?php if ($stage->endRegistration) { ?>
                             <br>
-                            Завершение регистрации: <?= $stage->endRegistrationHuman ?>
+                            Завершение регистрации: <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
 						<?php } ?>
                     </p>
 				<?php } else { ?>
@@ -62,7 +69,7 @@ $time = time();
 			<?php } ?>
 			
 			<?php if ($stage->startRegistration && $time >= $stage->startRegistration
-				&& (!$stage->endRegistration || $time <= $stage->endRegistration)
+				&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
 			) { ?>
                 <div class="pt-30">
 					<?php if (\Yii::$app->user->isGuest) { ?>

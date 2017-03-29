@@ -87,7 +87,8 @@ use common\models\Country;
 	]) ?>
 	
 	<?= $form->field($model, 'startRegistrationHuman',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">время считается GMT +5 (Челябинск)</div>{input}</div>'])
+		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
+пояс - по умолчанию будет установлено Московское время. Изменить пояс можно в разделе "города"</div>{input}</div>'])
 		->widget(DateTimePicker::classname(), [
 			'options'       => ['placeholder' => 'Введите дату и время начала регистрации'],
 			'removeButton'  => false,
@@ -99,7 +100,8 @@ use common\models\Country;
 		]) ?>
 	
 	<?= $form->field($model, 'endRegistrationHuman',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">время считается GMT +5 (Челябинск)</div>{input}</div>'])
+		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
+пояс - по умолчанию будет установлено Московское время. Изменить пояс можно в разделе "города"</div>{input}</div>'])
 		->widget(DateTimePicker::classname(), [
 			'options'       => ['placeholder' => 'Введите дату и время завершения регистрации'],
 			'removeButton'  => false,

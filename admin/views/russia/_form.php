@@ -32,8 +32,12 @@ use kartik\widgets\Select2;
     <?= $form->field($model, 'link')->textInput() ?>
 	
 	<?= $form->field($model, 'left')->textInput() ?>
-    
-    <?= $form->field($model, 'top')->textInput() ?>
+	
+	<?= $form->field($model, 'top')->textInput() ?>
+	
+	<?= $form->field($model, 'timezone')->textInput() ?>
+	
+	<?= $form->field($model, 'utc')->textInput() ?>
 	
 	<?= $form->field($model, 'showInRussiaPage')->checkbox() ?>
 

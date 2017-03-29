@@ -11,6 +11,8 @@ use yii\web\UploadedFile;
  */
 class HelpModel extends Model
 {
+	const DEFAULT_TIME_ZONE = 'Europe/Moscow';
+	
 	public static $thanks = [
 		'thankyou (английский)',
 		'falenderim (албанский)',
