@@ -2,3 +2,4 @@ SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 0 * * * * /opt/php55/bin/php /var/www/www-root/data/www/developer174/yii run/change-stages-status >> /var/log/cron.log
 0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/developer174/yii run/change-championships-status >> /var/log/cron.log
+0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/developer174/yii run/change-photo-status >> /var/log/cron.log
