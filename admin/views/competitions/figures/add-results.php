@@ -20,6 +20,12 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 
 <h3><?= date("d.m.Y", $date) ?></h3>
 
+<div class="alert alert-info">
+    После добавления результатов зайдите на
+    <?= \yii\bootstrap\Html::a('страницу фигуры', ['update', 'id' => $figure->id], ['target' => '_blank']) ?>
+    и в случае необходимости подтвердите новые классы и рекорды.
+</div>
+
 <?php if ($success) { ?>
     <div class="alert alert-success">Результат добавлен</div>
 <?php } ?>

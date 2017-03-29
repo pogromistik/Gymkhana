@@ -13,6 +13,10 @@ use common\models\TmpFigureResult;
 $this->title = 'Результаты фигур, требующие одобрения';
 ?>
 
+<div class="alert alert-info">
+    После добавления результатов зайдите на страницу фигуры и в случае необходимости подтвердите новые классы и рекорды.
+</div>
+
 <div class="tmp-participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
