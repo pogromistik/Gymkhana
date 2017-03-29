@@ -915,3 +915,11 @@ a.deletePhoto {
     background-color: #686c73;
     color: #fff;
 }
+
+.compareWithBlock .result {
+    background: #fff;
+}
+.compareWithBlock hr {
+    border-top: 1px solid #a4a5a9;
+    margin-bottom: 10px;
+}

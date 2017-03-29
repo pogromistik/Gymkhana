@@ -8,6 +8,7 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\Url;
 use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
 
@@ -306,7 +307,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			}
 		}
 		if (isset($changedAttributes['hasAccount']) && $this->hasAccount == 1) {
-			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей, подробнее - при запуске проекта будет выводиться ссылка');
+			$link = Url::to(['/profile/help']);
+			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.', $link);
 		}
 		parent::afterSave($insert, $changedAttributes);
 	}
