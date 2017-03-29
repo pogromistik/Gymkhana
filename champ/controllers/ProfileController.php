@@ -1,6 +1,7 @@
 <?php
 namespace champ\controllers;
 
+use champ\models\PasswordForm;
 use common\models\Athlete;
 use common\models\Championship;
 use common\models\ClassHistory;
@@ -31,12 +32,17 @@ class ProfileController extends AccessController
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
+		$password = new PasswordForm();
+		if ($password->load(\Yii::$app->request->post()) && $password->savePassw()) {
+			return $this->redirect(['index', 'success' => true]);
+		}
+		
 		$motorcycle = new Motorcycle();
 		if ($motorcycle->load(\Yii::$app->request->post()) && $motorcycle->save()) {
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
-		return $this->render('index', ['athlete' => $athlete, 'success' => $success]);
+		return $this->render('index', ['athlete' => $athlete, 'success' => $success, 'password' => $password]);
 	}
 	
 	public function actionChangeStatus($id)
@@ -382,5 +388,10 @@ class ProfileController extends AccessController
 		}
 		
 		return true;
+	}
+	
+	public function actionHelp()
+	{
+		return $this->render('help');
 	}
 }
