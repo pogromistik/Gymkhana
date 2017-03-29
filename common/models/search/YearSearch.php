@@ -47,6 +47,7 @@ class YearSearch extends Year
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+	        'sort' => ['defaultOrder' => ['year' => SORT_DESC]]
         ]);
 
         $this->load($params);
