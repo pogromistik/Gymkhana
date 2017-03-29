@@ -7,6 +7,7 @@ use yii\bootstrap\Html;
  * @var \common\models\Stage         $stage
  * @var \common\models\Participant[] $participantsByJapan
  * @var \common\models\Participant[] $participantsByInternalClasses
+ * @var integer                      $sortBy
  */
 $time = time();
 ?>
@@ -83,6 +84,13 @@ $time = time();
                                 <a href="#" class="change-result-scheme">Посмотреть результаты по классам
                                     награждений</a>
                             </div>
+                            <div class="text-right">
+                                <?php if ($sortBy) { ?>
+	                                <?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+                                <?php } else { ?>
+								<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+                                <?php } ?>
+                            </div>
 							<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
                         </div>
                         <div class="result-scheme">
@@ -90,9 +98,23 @@ $time = time();
                                 <a href="#" class="change-result-scheme">Посмотреть результаты по японской
                                     схеме</a>
                             </div>
+                            <div class="text-right">
+		                        <?php if ($sortBy) { ?>
+			                        <?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+		                        <?php } else { ?>
+			                        <?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+		                        <?php } ?>
+                            </div>
 							<?= $this->render('_byInternalClasses', ['stage' => $stage, 'participants' => $participantsByInternalClasses]) ?>
                         </div>
 					<?php } else { ?>
+                        <div class="text-right">
+							<?php if ($sortBy) { ?>
+								<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+							<?php } else { ?>
+								<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+							<?php } ?>
+                        </div>
 						<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
 					<?php } ?>
                 </div>

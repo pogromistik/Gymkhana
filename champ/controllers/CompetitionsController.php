@@ -37,9 +37,7 @@ class CompetitionsController extends BaseController
 		$this->description = 'Расписание соревнований';
 		$this->keywords = 'Расписание соревнований';
 		
-		$championships = [];
 		$events = [];
-		$allStages = [];
 		
 		$championshipIds = Championship::find()->select('id')
 			->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
@@ -170,7 +168,7 @@ class CompetitionsController extends BaseController
 		return $this->render('results', ['by' => $by]);
 	}
 	
-	public function actionStage($id)
+	public function actionStage($id, $sortBy = null)
 	{
 		$stage = Stage::findOne($id);
 		if (!$stage) {
@@ -187,25 +185,41 @@ class CompetitionsController extends BaseController
 		$participantsQuery->where(['b.stageId' => $stage->id]);
 		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
 		$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
-		$participantsByJapan = $participantsQuery
-			->orderBy([
-				'c."percent"'  => SORT_ASC,
-				'b."bestTime"' => SORT_ASC,
-				'b."sort"'     => SORT_ASC,
-				'b."id"'       => SORT_ASC
-			])
-			->all();
+		if ($sortBy) {
+			$participantsByJapan = $participantsQuery
+				->orderBy([
+					'b."bestTime"' => SORT_ASC,
+					'b."sort"'     => SORT_ASC,
+					'b."id"'       => SORT_ASC
+				])
+				->all();
+		} else {
+			$participantsByJapan = $participantsQuery
+				->orderBy([
+					'c."percent"'  => SORT_ASC,
+					'b."bestTime"' => SORT_ASC,
+					'b."sort"'     => SORT_ASC,
+					'b."id"'       => SORT_ASC
+				])
+				->all();
+		}
 		
 		$participantsByInternalClasses = [];
 		if ($stage->championship->internalClasses) {
-			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])->andWhere(['status' => Participant::STATUS_ACTIVE])
-				->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])
+				->andWhere(['status' => Participant::STATUS_ACTIVE]);
+			if ($sortBy) {
+				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+			} else {
+				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+			}
 		}
 		
 		return $this->render('stage', [
 			'stage'                         => $stage,
 			'participantsByJapan'           => $participantsByJapan,
-			'participantsByInternalClasses' => $participantsByInternalClasses
+			'participantsByInternalClasses' => $participantsByInternalClasses,
+			'sortBy'                        => $sortBy
 		]);
 	}
 	
