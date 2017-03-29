@@ -20,12 +20,20 @@ $this->title = 'Вход в личный кабинет';
 			<?= $form->field($model, 'password')->passwordInput()->label('Пароль') ?>
 			
 			<div class="form-group">
-                <div class="row">
-                    <div class="col-md-6 text-left">
-                        <?= Html::a('Регистрация', ['/site/registration'], ['class' => 'btn btn-light']) ?>
+                <div class="row show-pk">
+                    <div class="col-md-6 col-sm-6 text-left">
+						<?= Html::a('Регистрация', ['/site/registration'], ['class' => 'btn btn-light']) ?>
                     </div>
-                    <div class="col-md-6 text-right">
-	                    <?= Html::submitButton('Вход', ['class' => 'btn btn-dark', 'name' => 'login-button']) ?>
+                    <div class="col-md-6 col-sm-6 text-right">
+						<?= Html::submitButton('Вход', ['class' => 'btn btn-dark', 'name' => 'login-button']) ?>
+                    </div>
+                </div>
+                <div class="row show-mobile">
+                    <div class="col-md-12 text-left pb-10">
+		                <?= Html::submitButton('Вход', ['class' => 'btn btn-dark', 'name' => 'login-button']) ?>
+                    </div>
+                    <div class="col-md-12 text-left">
+						<?= Html::a('Регистрация', ['/site/registration'], ['class' => 'btn btn-light']) ?>
                     </div>
                 </div>
 			</div>
