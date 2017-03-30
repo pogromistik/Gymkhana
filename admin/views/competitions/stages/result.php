@@ -37,9 +37,9 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 <table class="table results">
     <thead>
     <tr>
-        <th>Место</th>
-        <th>Класс</th>
-        <th>Класс</th>
+        <th>Место вне класса</th>
+        <th>Класс спортсмена</th>
+        <th>Место в классе спортсмена</th>
         <th>№</th>
         <th>Участник</th>
         <th>Мотоцикл</th>
@@ -47,7 +47,8 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
         <th>Время</th>
         <th>Штраф</th>
         <th>Лучшее время</th>
-        <th>Место в классе</th>
+        <th>Класс награждения</th>
+        <th>Место в классе награждения</th>
         <th>Рейтинг</th>
         <th>Новый класс</th>
         <th>Баллы за этап</th>
@@ -63,9 +64,9 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 		}
 		?>
         <tr>
-            <td rowspan="<?= $stage->countRace ?>"><?= $place++ ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfAthleteClass ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
@@ -79,6 +80,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
                 <td></td>
 			<?php } ?>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfClass ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
             <td rowspan="<?= $stage->countRace ?>" class="newClass">

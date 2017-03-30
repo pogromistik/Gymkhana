@@ -22,8 +22,9 @@ $attempt = 0;
 
 <div class="alert alert-info">
     Формат времени: минуты:секунды.миллисекунды. Необходимо обязательно указывать все 6 цифр.<br>
-    В случае незачёта укажите число не меньше 59:59.99. Удобнее всего выставлять 99:99.99.<br>
-    Если штрафа нет - можно оставить поле пустым.
+    В случае незачета всё равно укажите время, за которое человек проехал трассу. Если времени нет - оставьте поле пустым или введите
+    время не меньше, чем 59:59.99.<br>
+    Если штрафа нет - введите 0 или оставьте поле пустым.
 </div>
 
 <?php if ($error) { ?>
@@ -45,6 +46,7 @@ $attempt = 0;
         <div class="col-sm-3"><b>Мотоцикл</b></div>
         <div class="col-sm-2"><b>Время</b></div>
         <div class="col-sm-1"><b>Штраф</b></div>
+        <div class="col-sm-1"><b>Незачет</b></div>
         <div class="col-sm-1"></div>
     </div>
     <hr>
@@ -78,6 +80,7 @@ $attempt = 0;
 				])->label(false) ?>
             </div>
             <div class="col-sm-1"><?= $form->field($timeModel, 'fine')->textInput()->label(false) ?></div>
+            <div class="col-sm-1"><?= $form->field($timeModel, 'isFail')->checkbox() ?></div>
             <div class="col-sm-1">
                 <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
             </div>
