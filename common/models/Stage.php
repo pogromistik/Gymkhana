@@ -316,7 +316,7 @@ class Stage extends BaseActiveRecord
 					
 					/** @var AthletesClass $resultClass */
 					$resultClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
-						->orderBy(['percent' => SORT_ASC])->one();
+						->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
 					if ($resultClass && $resultClass->id != $participant->id) {
 						if ($stageClass->percent > $resultClass->percent) {
 							if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent) {
