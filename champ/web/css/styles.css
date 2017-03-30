@@ -281,7 +281,7 @@ nav .navbar-toggle .icon-bar {
     padding-left: 10px;
 }
 
-.list .info .pl-10, .list .info li {
+.list .info .pl-10, .list .info li, .list .pl-10 {
     line-height: 25px;
 }
 
@@ -923,4 +923,8 @@ a.deletePhoto {
 .compareWithBlock hr {
     border-top: 1px solid #a4a5a9;
     margin-bottom: 10px;
+}
+
+table.results small.red {
+    color: darkred;
 }
