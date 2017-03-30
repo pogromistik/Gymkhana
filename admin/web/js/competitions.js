@@ -621,6 +621,24 @@ $('.createCabinet').click(function (e) {
     }
 });
 
+$('.deleteCabinet').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите удалить кабинет этого спортсмена?")) {
+        var id = $(this).data('id');
+        $.get('/competitions/athlete/delete-cabinet', {
+            athleteId: id
+        }).done(function (data) {
+            if (data == true) {
+                location.reload();
+            } else {
+                BootboxError(data);
+            }
+        }).fail(function (error) {
+            BootboxError(error.responseText);
+        });
+    }
+});
+
 $(document).on("submit", '#figureTimeForm', function (e) {
     e.preventDefault();
     showBackDrop();

@@ -27,6 +27,9 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 		<?php if (!$model->hasAccount) { ?>
 			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
 				['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+		<?php } else { ?>
+			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
+				['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
 		<?php } ?>
     </p>
 	
@@ -44,7 +47,7 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 			[
 				'attribute'      => 'login',
 				'contentOptions' => ['class' => 'bg-blue'],
-                'captionOptions' => ['class' => 'bg-blue']
+				'captionOptions' => ['class' => 'bg-blue']
 			],
 			[
 				'attribute' => 'athleteClassId',

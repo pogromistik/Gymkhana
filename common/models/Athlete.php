@@ -320,7 +320,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function getActiveMotorcycles()
 	{
-		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->andOnCondition(['status' => self::STATUS_ACTIVE])->orderBy(['dateAdded' => SORT_DESC]);
+		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->andOnCondition(['status' => Motorcycle::STATUS_ACTIVE])->orderBy(['dateAdded' => SORT_DESC]);
 	}
 	
 	public function getAthleteClass()
@@ -370,6 +370,20 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		$this->setPassword($password);
 		$this->hasAccount = 1;
 		$this->status = self::STATUS_ACTIVE;
+		if (!$this->save()) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public function deleteCabinet()
+	{
+		$this->login = null;
+		$this->authKey = null;
+		$this->passwordHash = null;
+		$this->hasAccount = 0;
+		$this->status = self::STATUS_DELETE;
 		if (!$this->save()) {
 			return false;
 		}
