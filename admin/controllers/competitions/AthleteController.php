@@ -207,4 +207,21 @@ class AthleteController extends BaseController
 		
 		return true;
 	}
+	
+	public function actionDeleteCabinet($athleteId)
+	{
+		$this->can('competitions');
+		
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		if ($athlete->hasAccount) {
+			if (!$athlete->deleteCabinet()) {
+				return 'Возникла ошибка при сохранении данных';
+			}
+		}
+		
+		return true;
+	}
 }

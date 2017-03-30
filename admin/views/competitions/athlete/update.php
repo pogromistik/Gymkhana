@@ -24,6 +24,9 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	<?php if (!$model->hasAccount) { ?>
 		<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
 			['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+	<?php } else { ?>
+		<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
+			['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
 	<?php } ?>
 
     <h3>Информация о спортсмене</h3>
@@ -50,18 +53,18 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			<?php foreach ($motorcycles as $motorcycleInfo) { ?>
                 <tr>
                     <td>
-		                <?= Editable::widget([
-			                'name'          => 'mark',
-			                'value'         => $motorcycleInfo->mark,
-			                'url'           => 'update-motorcycle',
-			                'type'          => 'text',
-			                'mode'          => 'inline',
-			                'clientOptions' => [
-				                'pk'        => $motorcycleInfo->id,
-				                'value'     => $motorcycleInfo->mark,
-				                'placement' => 'right',
-			                ]
-		                ]); ?>
+						<?= Editable::widget([
+							'name'          => 'mark',
+							'value'         => $motorcycleInfo->mark,
+							'url'           => 'update-motorcycle',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $motorcycleInfo->id,
+								'value'     => $motorcycleInfo->mark,
+								'placement' => 'right',
+							]
+						]); ?>
                     </td>
                     <td>
 						<?= Editable::widget([
