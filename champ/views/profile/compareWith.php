@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
         <div class="pb-10">
 			<?= Html::beginForm(['/stats/compare-with'], 'get', ['id' => 'compareWith']) ?>
             сравнить свои результаты за <?= Html::dropDownList('year', null, ArrayHelper::map(
-		        \common\models\Year::findAll(['status' => \common\models\Year::STATUS_ACTIVE]), 'year', 'year'),
+		        \common\models\Year::find()->where(['status' => \common\models\Year::STATUS_ACTIVE])->orderBy(['year' => SORT_ASC])->all(), 'year', 'year'),
 		        ['class' => 'form-control', 'prompt' => 'всё время']
 	        ) ?>
             с <?= Select2::widget([

@@ -2,26 +2,41 @@
 use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
 use yii\bootstrap\Html;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\DepDrop;
+use common\models\Country;
+use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /**
- * @var \common\models\Athlete $athlete
- * @var string                 $success
+ * @var \common\models\Athlete     $athlete
+ * @var string                     $success
+ * @var \champ\models\PasswordForm $password
  */
 ?>
 
-<h3>Редактирование профиля</h3>
+    <h2>Редактирование профиля</h2>
 
 <?php if ($success) { ?>
     <div class="alert alert-success">Изменения успешно сохранены</div>
 <?php } ?>
 
-<h4><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h4>
+    <h3>Изменение пароля</h3>
+<?php $form = ActiveForm::begin() ?>
+<?= $form->field($password, 'pass')->passwordInput()->label('Пароль'); ?>
+<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
+<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
+<?php $form->end() ?>
+
+
+    <h3><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h3>
     <div class="athlete-form">
 		<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
 
         <div class="help-for-athlete">
             <small>Размер загружаемого изображения не должен превышать 100КБ. Допустимые форматы: png, jpg.
-            Необходимые пропорции: 3x4 (300x400 pixels)</small>
+                Необходимые пропорции: 3x4 (300x400 pixels)
+            </small>
         </div>
 		<?php if ($athlete->photo) { ?>
             <div class="row">
@@ -43,13 +58,55 @@ use yii\bootstrap\Html;
             <small>Информация, обязательная для заполнения:</small>
         </div>
 		
-		<?= $form->field($athlete, 'cityId')->widget(Select2::classname(), [
-			'name'    => 'kv-type-01',
-			'data'    => \common\models\City::getAll(true),
+		<?= $form->field($athlete, 'countryId')->widget(Select2::classname(), [
+			'data'    => Country::getAll(true),
 			'options' => [
-				'placeholder' => 'Выберите город...',
+				'placeholder' => 'Выберите страну...',
+				'id'          => 'country-id',
 			],
-		]) ?>
+		]); ?>
+		
+		<?php $cities = [];
+		if ($athlete->cityId) {
+			$cities = [$athlete->cityId => $athlete->city->title];
+			if ($athlete->countryId !== null) {
+				$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $athlete->countryId])
+					->andWhere(['!=', 'id', $athlete->cityId])
+					->orderBy(['title' => SORT_ASC])->limit(50)->all(),
+					'id', 'title');
+				$cities[$athlete->cityId] = $athlete->city->title;
+			}
+		}
+		?>
+		<?php $url = \yii\helpers\Url::to(['/help/city-list']); ?>
+		<?= $form->field($athlete, 'cityId')->widget(DepDrop::classname(), [
+			'data'           => $cities,
+			'options'        => ['placeholder' => 'Выберите город ...'],
+			'type'           => DepDrop::TYPE_SELECT2,
+			'select2Options' => [
+				'pluginOptions' => [
+					'allowClear'         => true,
+					'minimumInputLength' => 3,
+					'language'           => [
+						'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+					],
+					'ajax'               => [
+						'url'      => $url,
+						'dataType' => 'json',
+						'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+					],
+					'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+					'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+					'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
+				],
+			],
+			'pluginOptions'  => [
+				'depends'     => ['country-id'],
+				'url'         => Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
+				'loadingText' => 'Для выбранной страны нет городов...',
+				'placeholder' => 'Выберите город...',
+			]
+		]); ?>
 
         <div class="row">
             <div class="col-md-6 col-sm-12">
@@ -107,14 +164,14 @@ use yii\bootstrap\Html;
             <a href="#" data-toggle="modal" data-target="#feedbackForm">свяжитесь с администрацией</a>.
         </small>
     </div>
-	<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
+<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
 <?php if ($motorcycles = $athlete->motorcycles) { ?>
     <table class="table">
         <thead>
         <tr>
             <th>Марка и модель</th>
-            <th>Статус</th>
-            <th>Добавлен</th>
+            <th class="show-pk">Статус</th>
+            <th class="show-pk">Добавлен</th>
             <th></th>
         </tr>
         </thead>
@@ -122,10 +179,10 @@ use yii\bootstrap\Html;
 		<?php foreach ($motorcycles as $motorcycleInfo) { ?>
             <tr>
                 <td><?= $motorcycleInfo->mark ?> <?= $motorcycleInfo->model ?></td>
-                <td>
+                <td class="show-pk">
 					<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
                 </td>
-                <td>
+                <td class="show-pk">
 					<?= date("d.m.Y, H:i", $motorcycleInfo->dateAdded) ?>
                 </td>
                 <td>

@@ -42,6 +42,12 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 		    <?= $this->render('_classes', [
 			    'model' => $model,
 		    ]) ?>
+            <h3>Этапы чемпионата</h3>
+            <?php foreach ($model->stages as $stage) { ?>
+                <div class="item">
+                    <?= Html::a($stage->title, ['/competitions/stages/view', 'id' => $stage->id]) ?>
+                </div>
+            <?php } ?>
         </div>
     </div>
 	

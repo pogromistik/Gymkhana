@@ -5,6 +5,11 @@ use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
+use yii\helpers\Url;
+use kartik\widgets\DepDrop;
+use yii\web\JsExpression;
+use yii\helpers\ArrayHelper;
+use common\models\Country;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
@@ -14,13 +19,52 @@ use kartik\widgets\DateTimePicker;
 <div class="stage-form">
 	
 	<?php $form = ActiveForm::begin(); ?>
-	<?= $form->field($model, 'cityId')->widget(Select2::classname(), [
-		'name'    => 'kv-type-01',
-		'data'    => \common\models\City::getAll(true),
+	<?= $form->field($model, 'countryId')->widget(Select2::classname(), [
+		'data'    => Country::getAll(true),
 		'options' => [
-			'placeholder' => 'Выберите город...',
+			'placeholder' => 'Выберите страну...',
+			'id'          => 'country-id',
 		],
-	]) ?>
+	]); ?>
+	<?php
+	$cities = [];
+	if ($model->cityId) {
+		$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->city->countryId])
+			->andWhere(['!=', 'id', $model->cityId])
+			->orderBy(['title' => SORT_ASC])->limit(50)->all(),
+			'id', 'title');
+		$cities[$model->cityId] = $model->city->title;
+	}
+	?>
+	<?php $url = \yii\helpers\Url::to(['/competitions/help/city-list']); ?>
+	<?= $form->field($model, 'cityId')->widget(DepDrop::classname(), [
+		'data'           => $cities,
+		'options'        => ['placeholder' => 'Выберите город ...'],
+		'type'           => DepDrop::TYPE_SELECT2,
+		'select2Options' => [
+			'pluginOptions' => [
+				'allowClear'         => true,
+				'minimumInputLength' => 3,
+				'language'           => [
+					'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+				],
+				'ajax'               => [
+					'url'      => $url,
+					'dataType' => 'json',
+					'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+				],
+				'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+				'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+				'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
+			],
+		],
+		'pluginOptions'  => [
+			'depends'     => ['country-id'],
+			'url'         => Url::to(['/competitions/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
+			'loadingText' => 'Для выбранной страны нет городов...',
+			'placeholder' => 'Выберите город...',
+		]
+	]); ?>
 	
 	<?= $form->field($model, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
 	
@@ -43,7 +87,8 @@ use kartik\widgets\DateTimePicker;
 	]) ?>
 	
 	<?= $form->field($model, 'startRegistrationHuman',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">время считается GMT +5 (Челябинск)</div>{input}</div>'])
+		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
+пояс - по умолчанию будет установлено Московское время. Изменить пояс можно в разделе "города"</div>{input}</div>'])
 		->widget(DateTimePicker::classname(), [
 			'options'       => ['placeholder' => 'Введите дату и время начала регистрации'],
 			'removeButton'  => false,
@@ -55,7 +100,8 @@ use kartik\widgets\DateTimePicker;
 		]) ?>
 	
 	<?= $form->field($model, 'endRegistrationHuman',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">время считается GMT +5 (Челябинск)</div>{input}</div>'])
+		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
+пояс - по умолчанию будет установлено Московское время. Изменить пояс можно в разделе "города"</div>{input}</div>'])
 		->widget(DateTimePicker::classname(), [
 			'options'       => ['placeholder' => 'Введите дату и время завершения регистрации'],
 			'removeButton'  => false,
@@ -88,6 +134,21 @@ use kartik\widgets\DateTimePicker;
 </div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 		<?= $form->field($model, 'trackPhotoStatus')->checkbox() ?>
 	<?php } ?>
+	
+	<?= $form->field($model, 'documentId',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Предварительно необходимо загрузить нужный регламент в раздел "'
+			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
+                ['target' => '_blank']) . '".</div>{input}</div>'])
+		->widget(Select2::classname(), [
+			'data'    => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
+			'options' => [
+				'placeholder' => 'Выберите регламент...'
+			],
+            'pluginOptions' => [
+	            'allowClear'         => true,
+            ]
+		]) ?>
 	
 	<?= $form->field($model, 'class',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">

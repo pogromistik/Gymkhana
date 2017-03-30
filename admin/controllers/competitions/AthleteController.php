@@ -3,12 +3,14 @@
 namespace admin\controllers\competitions;
 
 use common\models\City;
+use common\models\Country;
 use common\models\Motorcycle;
 use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Athlete;
 use common\models\search\AthleteSearch;
 use admin\controllers\BaseController;
+use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -199,14 +201,25 @@ class AthleteController extends BaseController
 			return 'Необходимо указать почту в профиле спортсмена';
 		}
 		
-		$password = 111111;
-		$athlete->login = $athlete->id + 6000;
-		$athlete->generateAuthKey();
-		$athlete->setPassword($password);
-		$athlete->hasAccount = 1;
-		$athlete->status = Athlete::STATUS_ACTIVE;
-		if (!$athlete->save()) {
+		if (!$athlete->createCabinet()) {
 			return 'Возникла ошибка при сохранении данных';
+		}
+		
+		return true;
+	}
+	
+	public function actionDeleteCabinet($athleteId)
+	{
+		$this->can('competitions');
+		
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		if ($athlete->hasAccount) {
+			if (!$athlete->deleteCabinet()) {
+				return 'Возникла ошибка при сохранении данных';
+			}
 		}
 		
 		return true;

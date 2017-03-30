@@ -17,6 +17,8 @@ use yii\web\UploadedFile;
  * @property string  $title
  * @property string  $fileName
  * @property string  $filePath
+ * @property integer $inArchive
+ * @property integer $sort
  */
 class OverallFile extends BaseActiveRecord
 {
@@ -38,9 +40,10 @@ class OverallFile extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['userId', 'date'], 'integer'],
+			[['userId', 'date', 'inArchive', 'sort'], 'integer'],
 			[['modelClass', 'modelId', 'title', 'fileName', 'filePath'], 'string', 'max' => 255],
-			[['files'], 'file', 'maxFiles' => 10]
+			[['files'], 'file', 'maxFiles' => 10],
+			['inArchive', 'default', 'value' => 0]
 		];
 	}
 	
@@ -58,7 +61,8 @@ class OverallFile extends BaseActiveRecord
 			'title'      => 'Название (отображается пользователю)',
 			'fileName'   => 'Имя файла (под этим названием скачивается файл)',
 			'filePath'   => 'Папка',
-			'files'      => 'Файлы'
+			'files'      => 'Файлы',
+			'sort'       => 'Сортировка'
 		];
 	}
 	
@@ -99,5 +103,23 @@ class OverallFile extends BaseActiveRecord
 		}
 		
 		return true;
+	}
+	
+	public static function getActualRegulations()
+	{
+		return self::find()->where(['modelClass' => DocumentSection::className()])
+			->andWhere(['modelId' => DocumentSection::REGULATIONS])
+			->andWhere(['inArchive' => 0])
+			->orderBy(['sort' => SORT_ASC, 'date' => SORT_DESC])
+			->all();
+	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord && !$this->sort) {
+			$this->sort = self::find()->where(['modelId' => $this->modelId, 'modelClass' => $this->modelClass])
+				->max('"sort"')+1;
+		}
+		return parent::beforeValidate();
 	}
 }

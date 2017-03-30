@@ -9,8 +9,9 @@ use common\models\TmpFigureResult;
 /* @var $searchModel common\models\search\TmpFigureResultSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Результаты фигур, требующие одобрения';
 ?>
+
+<h2><?= $this->context->pageTitle ?></h2>
 
 <div class="tmp-participant-index table-responsive">
 	<?= GridView::widget([

@@ -8,6 +8,7 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\Url;
 use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
 
@@ -33,12 +34,14 @@ use yii\web\UploadedFile;
  * @property integer       $lastActivityDate
  * @property integer       $regionId
  * @property integer       $photo
+ * @property integer       $countryId
  *
  * @property Motorcycle[]  $motorcycles
  * @property Motorcycle[]  $activeMotorcycles
  * @property AthletesClass $athleteClass
  * @property City          $city
  * @property Region        $region
+ * @property Country       $country
  */
 class Athlete extends BaseActiveRecord implements IdentityInterface
 {
@@ -117,7 +120,14 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public static function findByLogin($login)
 	{
-		return static::findOne(['login' => $login]);
+		$notEmail = preg_replace('~\D+~', '', $login);
+		if ($notEmail === $login) {
+			$athlete = static::findOne(['login' => $login, 'status' => self::STATUS_ACTIVE]);
+		} else {
+			$athlete = static::findOne(['email' => $login, 'status' => self::STATUS_ACTIVE]);
+		}
+		
+		return $athlete;
 	}
 	
 	public function validatePassword($password)
@@ -149,8 +159,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function rules()
 	{
 		return [
-			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId'], 'required'],
-			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
+			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId', 'countryId'], 'required'],
+			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status',
+				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId'], 'integer'],
 			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
@@ -231,7 +242,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			'lastActivityDate'   => 'Дата последней активности',
 			'regionId'           => 'Регион',
 			'photo'              => 'Фотография',
-			'photoFile'          => 'Фотография'
+			'photoFile'          => 'Фотография',
+			'countryId'          => 'Страна'
 		];
 	}
 	
@@ -300,7 +312,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			}
 		}
 		if (isset($changedAttributes['hasAccount']) && $this->hasAccount == 1) {
-			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей, подробнее - при запуске проекта будет выводиться ссылка');
+			$link = Url::to(['/profile/help']);
+			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.', $link);
 		}
 		parent::afterSave($insert, $changedAttributes);
 	}
@@ -312,7 +325,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function getActiveMotorcycles()
 	{
-		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->andOnCondition(['status' => self::STATUS_ACTIVE])->orderBy(['dateAdded' => SORT_DESC]);
+		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->andOnCondition(['status' => Motorcycle::STATUS_ACTIVE])->orderBy(['dateAdded' => SORT_DESC]);
 	}
 	
 	public function getAthleteClass()
@@ -328,6 +341,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function getRegion()
 	{
 		return $this->hasOne(Region::className(), ['id' => 'regionId']);
+	}
+	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
 	}
 	
 	public static function getActiveAthletes($withoutId = null)
@@ -347,5 +365,34 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function getFullName()
 	{
 		return $this->lastName . ' ' . $this->firstName;
+	}
+	
+	public function createCabinet()
+	{
+		$password = 111111;
+		$this->login = $this->id + 6000;
+		$this->generateAuthKey();
+		$this->setPassword($password);
+		$this->hasAccount = 1;
+		$this->status = self::STATUS_ACTIVE;
+		if (!$this->save()) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public function deleteCabinet()
+	{
+		$this->login = null;
+		$this->authKey = null;
+		$this->passwordHash = null;
+		$this->hasAccount = 0;
+		$this->status = self::STATUS_DELETE;
+		if (!$this->save()) {
+			return false;
+		}
+		
+		return true;
 	}
 }

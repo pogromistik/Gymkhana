@@ -33,6 +33,7 @@ $('.list .item .toggle .title').click(function () {
 });
 
 /*------МЕНЮ ПРИ ПРОЛИСТЫВАНИИ-------*/
+/*
 $(function () {
     $(window).scroll(function () {
         var width = screen.width;
@@ -46,6 +47,7 @@ $(function () {
         }
     });
 });
+*/
 
 //активный пункт меню
 (function() {
@@ -76,10 +78,92 @@ var equalizer = function (equalizer) {
     equalizer.height(maxHeight);
 };
 
+function initAffixCheck() {
+    "use strict";
+    var e = $(".header");
+    var windowT = $(window);
+    e.affix({offset: {top: 1}}), windowT.width() < 1025 && (windowT.off(".affix"), e.removeData("bs.affix").removeClass("affix affix-top affix-bottom"))
+}
+
 $(document).ready(function () {
     equalizer($('.athletes .item .card'));
+    $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $(this).parent().siblings().removeClass('open');
+        $(this).parent().toggleClass('open');
+    });
+    initAffixCheck();
 });
 
 $('.toggle .title').click(function () {
     $(this).parent().find('.toggle-content').slideToggle();
+});
+
+$('#cityNotFound').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    $('#city-list').slideToggle();
+    $('#city-text').slideToggle();
+    if (elem.hasClass('list')) {
+        elem.removeClass('list');
+        elem.addClass('text');
+        elem.text('Вернуть список городов');
+    } else {
+        $('#city-text-input').val(null);
+        elem.removeClass('text');
+        elem.addClass('list');
+        elem.text('Нажмите, если вашего города нет в списке');
+    }
+});
+
+$(document).on("submit", '.registrationAthlete', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+    $('.alert').hide();
+
+    $.ajax({
+        url: "/site/add-registration",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            $('html, body').animate({ scrollTop: $('.modal-footer').offset().top }, 500);
+            if (result == true) {
+                form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет' +
+                    'отправлен на указанную почту в течение 24 часов. Если этого не произойдёт - пожалуйста, сообщите нам.').show();
+                form.trigger('reset');
+            } else {
+                form.find('.alert-danger').text(result).show();
+            }
+            hideBackDrop();
+        },
+        error: function (error) {
+            alert(error.responseText);
+            hideBackDrop();
+        }
+    });
+});
+
+$('.appendMotorcycle').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var i = elem.data('i');
+    if (i > 1) {
+        $('.alert-danger').text('Нельзя добавить больше 3 мотоциклов. При необходимости, вы можете добавить их потом в личном кабинете').show();
+        return false;
+    }
+    $.get('/site/append-motorcycle', {
+        i: i
+    }).done(function (data) {
+        elem.data('i', i+1);
+        $('.motorcycles').append(data);
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});
+
+$('.change-result-scheme').click(function (e) {
+    e.preventDefault();
+    $('.result-scheme').slideToggle();
 });

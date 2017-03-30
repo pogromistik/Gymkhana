@@ -2,6 +2,7 @@
 namespace champ\controllers;
 
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
@@ -13,100 +14,140 @@ use common\models\Stage;
 use common\models\TmpParticipant;
 use common\models\Year;
 use Yii;
+use yii\data\Pagination;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii2fullcalendar\models\Event;
 
 /**
  * Site controller
  */
 class CompetitionsController extends BaseController
 {
+	const RESULTS_FIGURES = 'figure';
+	const RESULTS_RUSSIA = 'russia';
+	const RESULTS_REGIONAL = 'regional';
+	
 	public function actionSchedule()
 	{
 		$this->pageTitle = 'Расписание соревнований';
 		$this->description = 'Расписание соревнований';
 		$this->keywords = 'Расписание соревнований';
 		
-		$championships = [];
-		/*foreach (Championship::$groupsTitle as $group => $title) {
-			switch ($group) {
-				case Championship::GROUPS_RUSSIA:
-					$championships[$group] = Championship::find()->where(['groupId' => $group])->orderBy(['dateAdded' => SORT_DESC])->all();
-					break;
-				case Championship::GROUPS_REGIONAL:
-					$query = Championship::find();
-					$query->from(['a' => Championship::tableName(), 'b' => RegionalGroup::tableName()]);
-					$query->select('"a".*, "b".title as "groupTitle"');
-					$query->where(['a."groupId"' => $group]);
-					$query->andWhere(new Expression('"a"."regionGroupId" = "b"."id"'));
-					$query->orderBy(['a."regionGroupId"' => SORT_ASC, 'a."dateAdded"' => SORT_DESC]);
-					$result = $query->asArray()->all();
-					
-					foreach ($result as $item) {
-						if (!isset($championships[$group][$item['regionGroupId']])) {
-							$championships[$group][$item['regionGroupId']] = [
-								'title'         => $item['groupTitle'],
-								'championships' => []
-							];
-						}
-						$championships[$group][$item['regionGroupId']]['championships'][] = $item;
-					}
-					break;
-			}
-		}*/
+		$events = [];
 		
-		foreach (Championship::$groupsTitle as $group => $title) {
-			$championships[$group] = Championship::find()->where(['groupId' => $group])
-				->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->all();
+		$championshipIds = Championship::find()->select('id')
+			->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+		$stages = Stage::find()->where(['championshipId' => $championshipIds])->andWhere(['not', ['status' => Stage::STATUS_PAST]])
+			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
+		
+		$background = '#58a1b1';
+		$color = '#fff';
+		$dates = [];
+		$notDate = [];
+		/** @var Stage[] $stages */
+		foreach ($stages as $stage) {
+			if (!$stage->dateOfThe) {
+				$notDate[] = $stage;
+			} else {
+				$month = (new \DateTime(date('01.m.Y', $stage->dateOfThe),
+					new \DateTimeZone('Asia/Yekaterinburg')))
+					->setTime(10, 00,
+						00)->getTimestamp();
+				if (!isset($dates[$month])) {
+					$dates[$month] = [];
+				}
+				$dates[$month][] = $stage;
+			}
+			$event = new Event();
+			$event->id = $stage->id;
+			$event->title = $stage->title;
+			$event->allDay = true;
+			$event->backgroundColor = $background;
+			$event->color = $background;
+			$event->textColor = $color;
+			$event->url = Url::to(['/competitions/stage', 'id' => $stage->id]);
+			$event->start = date('Y-m-d', $stage->dateOfThe);
+			$events[] = $event;
 		}
 		
-		return $this->render('schedule', ['championships' => $championships]);
+		$this->layout = 'main-with-img';
+		$this->background = 'background5.png';
+		
+		return $this->render('schedule', ['dates' => $dates, 'notDate' => $notDate, 'events' => $events]);
 	}
 	
-	public function actionResults($active = null)
+	public function actionResults($by = null)
 	{
-		$this->pageTitle = 'Расписание соревнований';
-		$this->description = 'Расписание соревнований';
-		$this->keywords = 'Расписание соревнований';
+		$this->pageTitle = 'Итоги соревнований';
+		$this->description = 'Итоги соревнований';
+		$this->keywords = 'Итоги соревнований';
 		
-		$results = [];
-		foreach (Championship::$groupsTitle as $group => $title) {
-			switch ($group) {
-				case Championship::GROUPS_RUSSIA:
+		$this->layout = 'main-with-img';
+		$this->background = 'background3.png';
+		
+		if ($by) {
+			switch ($by) {
+				case self::RESULTS_FIGURES:
+					$figures = Figure::find();
+					$pagination = new Pagination([
+						'defaultPageSize' => 20,
+						'totalCount'      => $figures->count(),
+					]);
+					$figures = $figures->orderBy(['title' => SORT_ASC])->offset($pagination->offset)->limit($pagination->limit)->all();
+					$figuresArray = [];
+					/** @var Figure[] $figures */
+					foreach ($figures as $figure) {
+						$yearIds = $figure->getResults()->select('yearId')->asArray()->column();
+						$years = Year::find()->where(['id' => $yearIds])->orderBy(['year' => SORT_DESC])->all();
+						$figuresArray[] = [
+							'figure' => $figure,
+							'years'  => $years
+						];
+					}
+					$this->background = 'background6.png';
+					
+					return $this->render('figures-results', ['figuresArray' => $figuresArray, 'pagination' => $pagination]);
+				case self::RESULTS_RUSSIA:
 					/** @var Championship[] $championships */
-					$championships = Championship::find()->where(['groupId' => $group])->orderBy(['dateAdded' => SORT_DESC])->all();
+					$championships = Championship::find()->where(['groupId' => Championship::GROUPS_RUSSIA])
+						->orderBy(['dateAdded' => SORT_DESC])->all();
+					$results = [];
 					foreach ($championships as $championship) {
-						$results[$group][$championship->yearId] = [
+						$results[$championship->yearId] = [
 							'year'   => $championship->year->year,
 							'stages' => $championship->stages,
 							'status' => $championship->status,
 							'id'     => $championship->id
 						];
 					}
-					if (isset($results[$group])) {
-						krsort($results[$group]);
+					if (isset($results)) {
+						krsort($results);
 					}
-					break;
-				case Championship::GROUPS_REGIONAL:
+					
+					return $this->render('russia-result', ['results' => $results]);
+				case self::RESULTS_REGIONAL:
+					$results = [];
 					$query = Championship::find();
 					$query->from(['a' => Championship::tableName(), 'b' => RegionalGroup::tableName(), 'c' => Year::tableName()]);
 					$query->select('"a".*, "b".title as "groupTitle", "c"."year"');
-					$query->where(['a."groupId"' => $group]);
+					$query->where(['a."groupId"' => Championship::GROUPS_REGIONAL]);
 					$query->andWhere(new Expression('"a"."regionGroupId" = "b"."id"'));
 					$query->andWhere(new Expression('"a"."yearId" = "c"."id"'));
 					$query->orderBy(['a."regionGroupId"' => SORT_ASC, 'a."dateAdded"' => SORT_DESC]);
 					$championships = $query->asArray()->all();
 					
 					foreach ($championships as $item) {
-						if (!isset($results[$group][$item['regionGroupId']])) {
-							$results[$group][$item['regionGroupId']] = [
+						if (!isset($results[$item['regionGroupId']])) {
+							$results[$item['regionGroupId']] = [
 								'title' => $item['groupTitle'],
 								'years' => []
 							];
 						}
-						$results[$group][$item['regionGroupId']]['years'][$item['yearId']] = [
+						$results[$item['regionGroupId']]['years'][$item['yearId']] = [
 							'year'   => $item['year'],
 							'stages' => Stage::find()->where(['championshipId' => $item['id']])
 								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
@@ -114,38 +155,20 @@ class CompetitionsController extends BaseController
 							'id'     => $item['id']
 						];
 						
-						if (isset($results[$group])) {
-							krsort($results[$group][$item['regionGroupId']]['years']);
-							ksort($results[$group]);
+						if (isset($results)) {
+							krsort($results[$item['regionGroupId']]['years']);
+							ksort($results);
 						}
 					}
-					break;
+					
+					return $this->render('regional-result', ['results' => $results]);
 			}
 		}
 		
-		/** @var Figure[] $figures */
-		$figures = Figure::find()->orderBy(['title' => SORT_ASC])->all();
-		$figuresArray = [];
-		foreach ($figures as $figure) {
-			$yearIds = $figure->getResults()->select('yearId')->asArray()->column();
-			$years = Year::find()->where(['id' => $yearIds])->orderBy(['year' => SORT_DESC])->all();
-			$figuresArray[] = [
-				'figure' => $figure,
-				'years'  => $years
-			];
-		}
-		
-		$this->layout = 'main-with-img';
-		$this->background = 'background3.png';
-		
-		return $this->render('results', [
-			'results'      => $results,
-			'figuresArray' => $figuresArray,
-			'active'       => $active
-		]);
+		return $this->render('results', ['by' => $by]);
 	}
 	
-	public function actionStage($id)
+	public function actionStage($id, $sortBy = null)
 	{
 		$stage = Stage::findOne($id);
 		if (!$stage) {
@@ -156,8 +179,47 @@ class CompetitionsController extends BaseController
 		$this->keywords = '';
 		$this->layout = 'full-content';
 		
+		$participantsQuery = Participant::find();
+		$participantsQuery->select('b.*');
+		$participantsQuery->from(['b' => Participant::tableName(), 'c' => AthletesClass::tableName()]);
+		$participantsQuery->where(['b.stageId' => $stage->id]);
+		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
+		$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+		if ($sortBy) {
+			$participantsByJapan = $participantsQuery
+				->orderBy([
+					'b."bestTime"' => SORT_ASC,
+					'b."sort"'     => SORT_ASC,
+					'b."id"'       => SORT_ASC
+				])
+				->all();
+		} else {
+			$participantsByJapan = $participantsQuery
+				->orderBy([
+					'c."percent"'  => SORT_ASC,
+					'b."bestTime"' => SORT_ASC,
+					'b."sort"'     => SORT_ASC,
+					'b."id"'       => SORT_ASC
+				])
+				->all();
+		}
+		
+		$participantsByInternalClasses = [];
+		if ($stage->championship->internalClasses) {
+			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])
+				->andWhere(['status' => Participant::STATUS_ACTIVE]);
+			if ($sortBy) {
+				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+			} else {
+				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+			}
+		}
+		
 		return $this->render('stage', [
-			'stage' => $stage
+			'stage'                         => $stage,
+			'participantsByJapan'           => $participantsByJapan,
+			'participantsByInternalClasses' => $participantsByInternalClasses,
+			'sortBy'                        => $sortBy
 		]);
 	}
 	
@@ -231,11 +293,15 @@ class CompetitionsController extends BaseController
 			
 			return $response;
 		}
+		$countryId = \Yii::$app->request->post('countryId');
 		$regionIds = \Yii::$app->request->post('regionIds');
 		$classIds = \Yii::$app->request->post('classIds');
 		$yearId = \Yii::$app->request->post('yearId');
 		$showAll = \Yii::$app->request->post('showAll');
 		$year = null;
+		if ($countryId && !$regionIds) {
+			$regionIds = Region::find()->select('id')->where(['countryId' => $countryId])->asArray()->column();
+		}
 		if ($yearId) {
 			$year = Year::findOne($yearId);
 			if (!$year) {
@@ -310,7 +376,7 @@ class CompetitionsController extends BaseController
 			$result['numbers'] = '<div class="row">';
 			$count = ceil(count($numbers) / 3);
 			foreach (array_chunk($numbers, $count) as $numbersChunk) {
-				$result['numbers'] .= '<div class="col-md-3">';
+				$result['numbers'] .= '<div class="col-xs-3">';
 				foreach ($numbersChunk as $number) {
 					$result['numbers'] .= $number . '<br>';
 				}
@@ -421,6 +487,10 @@ class CompetitionsController extends BaseController
 		
 		if ($stage->endRegistration && time() > $stage->endRegistration) {
 			return 'Регистрация на этап завершилась.';
+		}
+		
+		if (!$form->city && !$form->cityId) {
+			return 'Необходимо указать город';
 		}
 		
 		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {

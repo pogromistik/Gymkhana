@@ -2,17 +2,17 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use Yii;
 use common\models\Point;
 use common\models\search\PointSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * AdditionalController implements the CRUD actions for Point model.
  */
-class AdditionalController extends Controller
+class AdditionalController extends BaseController
 {
 	/**
 	 * @inheritdoc
@@ -36,6 +36,8 @@ class AdditionalController extends Controller
 	 */
 	public function actionPoints()
 	{
+		$this->can('competitions');
+		
 		$searchModel = new PointSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -53,6 +55,8 @@ class AdditionalController extends Controller
 	 */
 	public function actionCreatePoints()
 	{
+		$this->can('competitions');
+		
 		$model = new Point();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -74,6 +78,8 @@ class AdditionalController extends Controller
 	 */
 	public function actionUpdatePoints($id)
 	{
+		$this->can('competitions');
+		
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {

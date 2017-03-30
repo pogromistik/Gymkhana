@@ -43,7 +43,7 @@ if ($model->previewText) {
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'заголовок новости, не обязателен']) ?>
 	
 	<?= $form->field($model, 'previewText',
-		['inputTemplate' => '<div class="input-with-description">{input}</div><div class="text-right color-green" id="length">осталось символов: ' . $length . '</div>'])->textarea(['rows'        => 3,
+		['inputTemplate' => '<div class="input-with-description">{input}</div><div class="text-left color-green" id="length">осталось символов: ' . $length . '</div>'])->textarea(['rows'        => 3,
 	                                                                                                                                                                                 'placeholder' => 'краткий текст, обязательное поле',
 	                                                                                                                                                                                 'id'          => 'smallText']) ?>
 	

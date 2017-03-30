@@ -49,12 +49,12 @@ $(document).on("submit", '.newRegistration', function (e) {
     form.find('.form-text').text('Пожалуйста, подождите...');
     form.find('.button').hide();
     form.find('.alert').hide();
-
     $.ajax({
         url: "/competitions/" + action,
         type: "POST",
         data: form.serialize(),
         success: function (result) {
+            $('#enrollForm').animate({ scrollTop: $('.modal-footer').offset().top }, 500);
             if (result == true) {
                 form.trigger('reset');
                 form.find('.alert-success').text('Вы успешно зарегистрированы на этап.').show();
@@ -75,6 +75,7 @@ $('.freeNumbersList').click(function (e) {
         stageId: id
     }).done(function (data) {
         if (data['success'] == true) {
+            $('#enrollForm').animate({ scrollTop: $('.button').offset().top+100 }, 500);
             $('.free-numbers .list').html(data['numbers']);
             $('.free-numbers').show();
         } else {

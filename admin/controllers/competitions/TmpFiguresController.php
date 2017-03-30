@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\City;
 use common\models\FigureTime;
@@ -13,15 +14,13 @@ use common\models\TmpFigureResult;
 use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\TmpParticipant;
-use common\models\search\TmpParticipantSearch;
 use yii\helpers\Url;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
  * TmpParticipantController implements the CRUD actions for TmpParticipant model.
  */
-class TmpFiguresController extends Controller
+class TmpFiguresController extends BaseController
 {
 	public function actions()
 	{
@@ -41,6 +40,7 @@ class TmpFiguresController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->can('competitions');
 		$searchModel = new TmpFigureResultSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['isNew' => 1]);
@@ -60,6 +60,7 @@ class TmpFiguresController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$this->can('competitions');
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -76,6 +77,7 @@ class TmpFiguresController extends Controller
 	 */
 	protected function findModel($id)
 	{
+		$this->can('competitions');
 		if (($model = TmpParticipant::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -85,6 +87,7 @@ class TmpFiguresController extends Controller
 	
 	public function actionFindAthletes($lastName)
 	{
+		$this->can('competitions');
 		$lastName = mb_strtoupper($lastName, 'UTF-8');
 		$athletes = Athlete::find()->where(['upper("lastName")' => $lastName])->orWhere(['upper("lastName")' => $lastName])->all();
 		
@@ -93,6 +96,7 @@ class TmpFiguresController extends Controller
 	
 	public function actionAddAndRegistration($id)
 	{
+		$this->can('competitions');
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -171,6 +175,8 @@ class TmpFiguresController extends Controller
 	
 	public function actionCancel($id)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -186,6 +192,8 @@ class TmpFiguresController extends Controller
 	
 	public function actionRegistration($tmpParticipantId, $athleteId, $motorcycleId)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -245,6 +253,8 @@ class TmpFiguresController extends Controller
 	
 	public function actionAddMotorcycleAndRegistration($tmpParticipantId, $athleteId)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -303,6 +313,8 @@ class TmpFiguresController extends Controller
 	
 	public function actionApprove($id)
 	{
+		$this->can('competitions');
+		
 		$tmp = TmpFigureResult::findOne($id);
 		if (!$tmp) {
 			return 'Результат не найден';
@@ -352,6 +364,8 @@ class TmpFiguresController extends Controller
 	
 	public function actionCancelResult()
 	{
+		$this->can('competitions');
+		
 		$id = \Yii::$app->request->post('id');
 		if (!$id) {
 			return 'Результат не найден';

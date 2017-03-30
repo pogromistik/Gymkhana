@@ -21,7 +21,8 @@ class CitySearch extends City
 		return [
 			[['id', 'link'], 'integer'],
 			[['top', 'left'], 'number'],
-			[['title', 'link'], 'string']
+			[['title', 'link'], 'string'],
+			[['countryId'], 'integer']
 		];
 	}
 	
@@ -61,13 +62,14 @@ class CitySearch extends City
 		
 		// grid filtering conditions
 		$query->andFilterWhere([
-			'id'   => $this->id,
-			'link' => $this->link,
-			'top'  => $this->top,
-			'left' => $this->left,
+			'id'        => $this->id,
+			'link'      => $this->link,
+			'top'       => $this->top,
+			'left'      => $this->left,
+			'countryId' => $this->countryId,
 		]);
 		
-		$query->andFilterWhere(['like', 'title', $this->title]);
+		$query->andFilterWhere(['like', 'upper("title")', mb_strtoupper(trim($this->title), 'UTF-8')]);
 		$query->andFilterWhere(['like', 'link', $this->link]);
 		
 		return $dataProvider;

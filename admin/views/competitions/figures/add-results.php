@@ -20,6 +20,12 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 
 <h3><?= date("d.m.Y", $date) ?></h3>
 
+<div class="alert alert-info">
+    После добавления результатов зайдите на
+    <?= \yii\bootstrap\Html::a('страницу фигуры', ['update', 'id' => $figure->id], ['target' => '_blank']) ?>
+    и в случае необходимости подтвердите новые классы и рекорды.
+</div>
+
 <?php if ($success) { ?>
     <div class="alert alert-success">Результат добавлен</div>
 <?php } ?>
@@ -52,7 +58,7 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 		<?= $form->field($figureTime, 'athleteId')->widget(Select2::classname(), [
 			'name'    => 'kv-type-01',
 			'data'    => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(), 'id', function (\common\models\Athlete $item) {
-				return $item->lastName . ' ' . $item->firstName;
+				return $item->lastName . ' ' . $item->firstName . '  (' . $item->city->title . ')';
 			}),
 			'options' => [
 				'placeholder' => 'Выберите спортсмена...',

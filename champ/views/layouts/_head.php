@@ -64,7 +64,13 @@ use yii\helpers\Url;
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
                                 <li><a href="/competitions/schedule">Расписание</a></li>
-                                <li><a href="/competitions/results">Результаты</a></li>
+                                <li class="dropdown dropdown-submenu"><a href="#" data-toggle="dropdown">Результаты</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">Базовые фигуры</a> </li>
+                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">Чемпионаты России</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">Региональные соревнования</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                         <li>
