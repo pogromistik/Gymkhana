@@ -53,7 +53,13 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
                         <td>1.</td>
-                        <td><?= $first->timeForHuman ?></td>
+                        <td>
+	                        <?php if ($first->isFail) { ?>
+                                <strike><?= $first->timeForHuman ?></strike>
+	                        <?php } else { ?>
+		                        <?= $first->timeForHuman ?>
+	                        <?php } ?>
+                        </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
                         <td>1.</td>
@@ -75,7 +81,13 @@
                     <tr class="result-<?= $cssClass ?>">
                         <td><?= $attempt ?>.</td>
 						<?php if ($next) { ?>
-                            <td><?= $next->timeForHuman ?></td>
+                            <td>
+								<?php if ($next->isFail) { ?>
+                                    <strike><?= $next->timeForHuman ?></strike>
+								<?php } else { ?>
+									<?= $next->timeForHuman ?>
+								<?php } ?>
+                            </td>
                             <td><?= $next->fine ?></td>
 						<?php } else { ?>
                             <td></td>
@@ -164,9 +176,18 @@
                     </td>
                     <td>
 						<?php foreach ($times as $time) { ?>
-							<?= $time->timeForHuman ?>
-							<?php if ($time->fine) { ?>
-                                <span class="red"> +<?= $time->fine ?></span>
+							<?php if ($time->isFail) { ?>
+                                <strike>
+	                                <?= $time->timeForHuman ?>
+	                                <?php if ($time->fine) { ?>
+                                        <span class="red"> +<?= $time->fine ?></span>
+	                                <?php } ?>
+                                </strike>
+							<?php } else { ?>
+								<?= $time->timeForHuman ?>
+								<?php if ($time->fine) { ?>
+                                    <span class="red"> +<?= $time->fine ?></span>
+								<?php } ?>
 							<?php } ?>
                             <br>
 						<?php } ?>
