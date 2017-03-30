@@ -208,6 +208,14 @@ class TmpParticipantController extends BaseController
 			}
 			$old->status = Participant::STATUS_ACTIVE;
 			$old->save();
+			
+			$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
+			$tmpParticipant->athleteId = $athlete->id;
+			if (!$tmpParticipant->save()) {
+				return var_dump($tmpParticipant->errors);
+			}
+			
+			return true;
 		}
 		
 		$transaction = \Yii::$app->db->beginTransaction();
@@ -227,8 +235,7 @@ class TmpParticipantController extends BaseController
 		if ($tmpParticipant->number) {
 			$participant->number = $tmpParticipant->number;
 		} else {
-			$athlete = $participant->athlete;
-			$championship = $participant->championship;
+			$championship = $tmpParticipant->championship;
 			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
 				$participant->number = $athlete->number;
 			}
@@ -236,12 +243,6 @@ class TmpParticipantController extends BaseController
 		if (!$participant->save()) {
 			$transaction->rollBack();
 			return var_dump($participant->errors);
-		}
-		
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			return var_dump($tmpParticipant->errors);
 		}
 		
 		$transaction->commit();
