@@ -15,6 +15,7 @@ use Yii;
  * @property integer     $fine
  * @property integer     $resultTime
  * @property integer     $attemptNumber
+ * @property integer     $isFail
  *
  * @property Participant $participant
  * @property Stage       $stage
@@ -23,7 +24,13 @@ class Time extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
 	
+	const IS_FAIL_NO = 0;
+	const IS_FAIL_YES = 1;
+	
 	public $timeForHuman;
+	
+	const FAIL_TIME = 3599990;
+	const FAIL_TIME_FOR_HUMAN = '59:59.99';
 	
 	/**
 	 * @inheritdoc
@@ -42,7 +49,7 @@ class Time extends BaseActiveRecord
 			[['participantId', 'stageId', 'time', 'resultTime', 'attemptNumber', 'timeForHuman'], 'required'],
 			[['participantId', 'stageId', 'time', 'fine', 'resultTime', 'attemptNumber'], 'integer'],
 			['timeForHuman', 'string'],
-			['fine', 'default', 'value' => 0]
+			[['fine', 'isFail'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -60,6 +67,7 @@ class Time extends BaseActiveRecord
 			'fine'          => 'Штраф',
 			'resultTime'    => 'Итоговое время заезда',
 			'attemptNumber' => 'Номер попытки',
+			'isFail'        => 'Незачет'
 		];
 	}
 	
@@ -68,16 +76,17 @@ class Time extends BaseActiveRecord
 		if ($this->isNewRecord) {
 			$attempts = self::find()->select('attemptNumber')->where(['participantId' => $this->participantId,
 			                                                          'stageId'       => $this->stageId])->asArray()->column();
-			if (count($attempts) != $this->attemptNumber-1) {
+			if (count($attempts) != $this->attemptNumber - 1) {
 				$attempt = 1;
 				while ($attempt < $this->attemptNumber) {
 					if (!in_array($attempt, $attempts)) {
 						$time = new Time();
 						$time->participantId = $this->participantId;
 						$time->stageId = $this->stageId;
-						$time->time = 3599990;
+						$time->time = self::FAIL_TIME;
 						$time->fine = 0;
 						$time->timeForHuman = '59:59.99';
+						$time->isFail = self::IS_FAIL_YES;
 						$time->resultTime = $time->time;
 						$time->attemptNumber = $attempt;
 						$time->save(false);
@@ -90,8 +99,8 @@ class Time extends BaseActiveRecord
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
 			$this->time = ($min * 60000) + $secs * 1000;
-			if ($this->time > 3599990) {
-				$this->time = 3599990;
+			if ($this->time > self::FAIL_TIME) {
+				$this->time = self::FAIL_TIME;
 			}
 		}
 		$this->resultTime = $this->time + $this->fine * 1000;
@@ -114,8 +123,14 @@ class Time extends BaseActiveRecord
 	{
 		parent::afterSave($insert, $changedAttributes);
 		$participant = $this->participant;
-		$participant->bestTime = self::find()->where(['participantId' => $this->participantId,
-		                                              'stageId'       => $this->stageId])->min('"resultTime"');
+		$bestTime = self::find()->where(['participantId' => $this->participantId,
+		                                 'stageId'       => $this->stageId,
+		                                 'isFail'        => self::IS_FAIL_NO
+		])->min('"resultTime"');
+		if (!$bestTime) {
+			$bestTime = null;
+		}
+		$participant->bestTime = $bestTime;
 		$participant->save();
 	}
 	

@@ -248,21 +248,29 @@ class ParticipantsController extends BaseController
 		}
 		if ($time->load(\Yii::$app->request->post())) {
 			if (!$time->timeForHuman) {
-				$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
-				return $result;
+				if ($time->isFail == Time::IS_FAIL_YES) {
+					$time->timeForHuman = Time::FAIL_TIME_FOR_HUMAN;
+				} else {
+					$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
+					
+					return $result;
+				}
 			}
 			trim($time->timeForHuman, '_');
 			if ($time->save()) {
 				$result['success'] = true;
 				$result['id'] = $time->id;
+				
 				return $result;
 			}
 			
 			$result['error'] = var_dump($time->errors);
+			
 			return $result;
 		}
 		
 		$result['error'] = true;
+		
 		return $result;
 	}
 	
