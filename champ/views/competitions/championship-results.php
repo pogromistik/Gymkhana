@@ -60,7 +60,7 @@ $this->title = 'Результаты: ' . $championship->title;
 	<?= \yii\bootstrap\Html::a('Показать всех участников',
 		['championship-result', 'championshipId' => $championship->id, 'showAll' => true]) ?>
 <?php } ?>
-<table class="table">
+<table class="table table-responsive">
     <thead>
     <tr>
         <th>Место</th>

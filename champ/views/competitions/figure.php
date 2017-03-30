@@ -48,7 +48,7 @@ $time = time();
 				<?php if ($figure->picture) { ?>
                     <div class="track-photo">
                         <div class="toggle">
-                            <div class="title">Посмотреть схему</div>
+                            <div class="title">Посмотреть схему фигуры</div>
                             <div class="toggle-content">
 								<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
                             </div>
@@ -57,44 +57,76 @@ $time = time();
 				<?php } ?>
             </div>
 
-            <div class="filters">
-				<?= \yii\bootstrap\Html::beginForm('', 'post', ['id' => 'figureFilterForm']) ?>
-				<?= \yii\bootstrap\Html::hiddenInput('figureId', $figure->id) ?>
-				<?= \yii\bootstrap\Html::hiddenInput('yearId', $year ? $year->id : null) ?>
-				<?= \yii\bootstrap\Html::hiddenInput('showAll', $showAll, ['id' => 'showAll']) ?>
-                <div class="row">
-                    <div class="col-md-6 col-sm-12">
-						<?= Select2::widget([
-							'name'          => 'regionIds',
-							'data'          => \common\models\Region::getAll(true),
-							'maintainOrder' => true,
-							'options'       => ['placeholder' => 'Выберите регион...', 'multiple' => true],
-							'pluginOptions' => [
-								'tags'               => true,
-								'maximumInputLength' => 10
-							],
-							'pluginEvents'  => [
-								'change' => 'function(e){
+    <div class="filters">
+		<?= \yii\bootstrap\Html::beginForm('', 'post', ['id' => 'figureFilterForm']) ?>
+		<?= \yii\bootstrap\Html::hiddenInput('figureId', $figure->id) ?>
+		<?= \yii\bootstrap\Html::hiddenInput('yearId', $year ? $year->id : null) ?>
+		<?= \yii\bootstrap\Html::hiddenInput('showAll', $showAll, ['id' => 'showAll']) ?>
+        <div class="row">
+            <div class="col-md-12 pb-10">
+				<?= Select2::widget([
+					'name'    => 'countryId',
+					'data'    => \common\models\Country::getAll(true),
+					'options' => [
+						'placeholder' => 'Выберите страну...',
+						'id'          => 'country-id',
+					],
+				]) ?>
+            </div>
+            <div class="col-md-6 col-sm-12">
+				<?= \kartik\widgets\DepDrop::widget([
+					'name'           => 'regionIds',
+					'data'           => [],
+					'options'        => ['placeholder' => 'Выберите регион ...'],
+					'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
+					'select2Options' => ['pluginOptions' => ['allowClear' => true, 'multiple' => true]],
+					'pluginOptions'  => [
+						'depends'     => ['country-id'],
+						'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
+						'loadingText' => 'Для выбранной страны нет городов...',
+						'placeholder' => 'Выберите регион...'
+					],
+					'pluginEvents'   => [
+						'change' => 'function(e){
 				figureFilters();
 			}',
-							]
-						]);
-						?>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-						<?= Select2::widget([
-							'name'          => 'classIds',
-							'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
-								->where(['status' => \common\models\AthletesClass::STATUS_ACTIVE])
-								->orderBy(['percent' => SORT_ASC])->all(), 'id', 'title'),
-							'maintainOrder' => true,
-							'options'       => ['placeholder' => 'Выберите класс...', 'multiple' => true],
-							'pluginOptions' => [
-								'tags'               => true,
-								'maximumInputLength' => 10
-							],
-							'pluginEvents'  => [
-								'change' => 'function(e){
+					]
+				]);
+				?>
+				<?php /*
+				<?= Select2::widget([
+					'name'          => 'regionIds',
+					'data'          => \common\models\Region::getAll(true),
+					'maintainOrder' => true,
+					'options'       => ['placeholder' => 'Выберите регион...', 'multiple' => true],
+					'pluginOptions' => [
+						'tags'               => true,
+						'maximumInputLength' => 10
+					],
+					'pluginEvents'  => [
+						'change' => 'function(e){
+				figureFilters();
+			}',
+					]
+				]);
+				?>
+ */
+				?>
+            </div>
+            <div class="col-md-6 col-sm-12">
+				<?= Select2::widget([
+					'name'          => 'classIds',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
+						->where(['status' => \common\models\AthletesClass::STATUS_ACTIVE])
+						->orderBy(['percent' => SORT_ASC])->all(), 'id', 'title'),
+					'maintainOrder' => true,
+					'options'       => ['placeholder' => 'Выберите класс...', 'multiple' => true],
+					'pluginOptions' => [
+						'tags'               => true,
+						'maximumInputLength' => 10
+					],
+					'pluginEvents'  => [
+						'change' => 'function(e){
 				figureFilters();
 			}',
 							]
@@ -129,7 +161,7 @@ $time = time();
             </div>
         </div>
 
-        <a href="<?= \yii\helpers\Url::to(['/competitions/results', 'active' => 'figures']) ?>">Вернуться к фигурам</a>
+        <a href="<?= \yii\helpers\Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">Вернуться к фигурам</a>
     </div>
 
     <div class="col-bg-5 col-lg-3 col-md-2 col-sm-12 list-nav">

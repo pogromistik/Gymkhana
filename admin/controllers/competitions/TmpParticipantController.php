@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\City;
 use common\models\Motorcycle;
@@ -10,13 +11,12 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\TmpParticipant;
 use common\models\search\TmpParticipantSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
  * TmpParticipantController implements the CRUD actions for TmpParticipant model.
  */
-class TmpParticipantController extends Controller
+class TmpParticipantController extends BaseController
 {
 	public function actions()
 	{
@@ -36,6 +36,8 @@ class TmpParticipantController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->can('competitions');
+		
 		$searchModel = new TmpParticipantSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TmpParticipant::STATUS_NEW]);
@@ -55,6 +57,8 @@ class TmpParticipantController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$this->can('competitions');
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -71,6 +75,8 @@ class TmpParticipantController extends Controller
 	 */
 	protected function findModel($id)
 	{
+		$this->can('competitions');
+		
 		if (($model = TmpParticipant::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -80,6 +86,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionFindAthletes($lastName)
 	{
+		$this->can('competitions');
+		
 		$lastName = mb_strtoupper($lastName, 'UTF-8');
 		$athletes = Athlete::find()->where(['upper("lastName")' => $lastName])->orWhere(['upper("lastName")' => $lastName])->all();
 		return $this->renderAjax('_athletes', ['athletes' => $athletes, 'lastName' => $lastName]);
@@ -87,6 +95,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionAddAndRegistration($id)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -100,11 +110,7 @@ class TmpParticipantController extends Controller
 				return 'Город не найден';
 			}
 		} else {
-			$city = City::findOne(['upper("title")' => mb_strtoupper($tmpParticipant->city, 'UTF-8')]);
-			if (!$city) {
-				$transaction->rollBack();
-				return 'Город отсутствует в системе';
-			}
+			return 'Необходимо выбрать город из списка';
 		}
 		
 		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
@@ -157,6 +163,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionCancel($id)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -172,6 +180,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionRegistration($tmpParticipantId, $athleteId, $motorcycleId)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -187,10 +197,17 @@ class TmpParticipantController extends Controller
 			return 'Мотоцикл не найден';
 		}
 		
+		/** @var Participant $old */
 		$old = Participant::find()->where(['stageId' => $tmpParticipant->stageId])
-			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->all();
+			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->one();
 		if ($old) {
-			return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+			if ($old->status == Participant::STATUS_ACTIVE) {
+				return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+			} elseif ($old->status == Participant::STATUS_DISQUALIFICATION) {
+				return 'Спортсмен дисквалифицирован, регистрация невозможна';
+			}
+			$old->status = Participant::STATUS_ACTIVE;
+			$old->save();
 		}
 		
 		$transaction = \Yii::$app->db->beginTransaction();
@@ -205,11 +222,17 @@ class TmpParticipantController extends Controller
 		$participant = new Participant();
 		$participant->athleteId = $athlete->id;
 		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
 		$participant->stageId = $tmpParticipant->stageId;
 		$participant->championshipId = $tmpParticipant->championshipId;
+		if ($tmpParticipant->number) {
+			$participant->number = $tmpParticipant->number;
+		} else {
+			$athlete = $participant->athlete;
+			$championship = $participant->championship;
+			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+				$participant->number = $athlete->number;
+			}
+		}
 		if (!$participant->save()) {
 			$transaction->rollBack();
 			return var_dump($participant->errors);
@@ -227,6 +250,8 @@ class TmpParticipantController extends Controller
 	
 	public function actionAddMotorcycleAndRegistration($tmpParticipantId, $athleteId)
 	{
+		$this->can('competitions');
+		
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
@@ -258,11 +283,17 @@ class TmpParticipantController extends Controller
 		$participant = new Participant();
 		$participant->athleteId = $athlete->id;
 		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
 		$participant->stageId = $tmpParticipant->stageId;
 		$participant->championshipId = $tmpParticipant->championshipId;
+		if ($tmpParticipant->number) {
+			$participant->number = $tmpParticipant->number;
+		} else {
+			$athlete = $participant->athlete;
+			$championship = $participant->championship;
+			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+				$participant->number = $athlete->number;
+			}
+		}
 		if (!$participant->save()) {
 			$transaction->rollBack();
 			return var_dump($participant->errors);
@@ -275,6 +306,38 @@ class TmpParticipantController extends Controller
 		}
 		
 		$transaction->commit();
+		return true;
+	}
+	
+	public function actionSaveNewCity()
+	{
+		$this->can('competitions');
+		
+		$id = \Yii::$app->request->post('id');
+		$city = \Yii::$app->request->post('city');
+		if (!$id || !$city) {
+			return 'Неверные данные';
+		}
+		
+		$tmp = TmpParticipant::findOne($id);
+		if (!$tmp) {
+			return 'Спортсмен не найден';
+		}
+		if ($tmp->cityId) {
+			return 'Спортсмену уже установлен город';
+		}
+		
+		$city = City::findOne(['countryId' => $tmp->countryId, 'id' => $city]);
+		if (!$city) {
+			return 'Город не найден';
+		}
+		
+		$tmp->cityId = $city->id;
+		$tmp->city = $city->title;
+		if (!$tmp->save()) {
+			return var_dump($tmp);
+		}
+		
 		return true;
 	}
 }

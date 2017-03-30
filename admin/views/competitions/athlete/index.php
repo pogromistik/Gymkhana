@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kartik\widgets\Select2;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\AthleteSearch */
@@ -57,10 +58,22 @@ $this->title = 'Спортсмены';
 				'filter'    => Select2::widget([
 					'model'     => $searchModel,
 					'attribute' => 'cityId',
-					'data'      => \common\models\City::getAll(true),
+					'data'      => $searchModel->cityId ? [$searchModel->cityId => $searchModel->city->title] : [],
 					'theme'     => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
-						'allowClear' => true
+						'allowClear' => true,
+						'minimumInputLength' => 3,
+						'language' => [
+							'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+						],
+						'ajax' => [
+							'url' =>  \yii\helpers\Url::to(['/competitions/help/city-list']),
+							'dataType' => 'json',
+							'data' => new JsExpression('function(params) { return {title:params.term}; }')
+						],
+						'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+						'templateResult' => new JsExpression('function(city) { return city.text; }'),
+						'templateSelection' => new JsExpression('function (city) { return city.text; }'),
 					],
 					'options'   => [
 						'placeholder' => 'Укажите город...',

@@ -11,7 +11,6 @@ $this->title = $model->title;
 $championship = $model->championship;
 $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $model->championship->title, 'url' => ['/competitions/championships/view', 'id' => $model->championshipId]];
-$this->params['breadcrumbs'][] = ['label' => 'Все этапы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stage-view">
@@ -25,12 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
 				'data-id' => $model->id
 			]) ?>
 		<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
-		<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
 		<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
 			[
 				'class'   => 'btn btn-default stageCalcResult',
 				'data-id' => $model->id
 			]) ?>
+		<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
     </p>
 	
 	<?= DetailView::widget([

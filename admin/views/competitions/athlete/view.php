@@ -23,11 +23,14 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 <div class="athlete-view">
 
     <p>
-	    <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-	    <?php if (!$model->hasAccount) { ?>
-		    <?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-			    ['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
-        <?php } ?>
+		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?php if (!$model->hasAccount) { ?>
+			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
+				['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+		<?php } else { ?>
+			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
+				['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
+		<?php } ?>
     </p>
 	
 	<?= DetailView::widget([
@@ -42,8 +45,13 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 			'phone',
 			'email:email',
 			[
+				'attribute'      => 'login',
+				'contentOptions' => ['class' => 'bg-blue'],
+				'captionOptions' => ['class' => 'bg-blue']
+			],
+			[
 				'attribute' => 'athleteClassId',
-				'value'     => $model->athleteClassId ? $model->athleteClass->title : ''
+				'value'     => $model->athleteClassId ? $model->athleteClass->title : '',
 			],
 			'number',
 			[
@@ -54,7 +62,6 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 				'attribute' => 'updatedAt',
 				'value'     => date("d.m.Y, H:i", $model->updatedAt)
 			],
-			'login',
 			[
 				'attribute' => 'hasAccount',
 				'value'     => $model->hasAccount ? 'Да' : 'Нет'

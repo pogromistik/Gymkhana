@@ -89,51 +89,6 @@ $(document).on("submit", '#newRegionalGroup', function (e) {
     });
 });
 
-$(document).on("submit", '#newCityForm', function (e) {
-    e.preventDefault();
-    showBackDrop();
-    $('.alert-danger').hide();
-    var form = $(this);
-    var action = form.data('action');
-    var actionType = form.data('action-type');
-    $.ajax({
-        url: "/competitions/help/add-city",
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            if (result['success'] == true) {
-                switch (actionType) {
-                    case 'withId':
-                        location.href = action + '&success=1';
-                        break;
-                    case 'withoutId':
-                        location.href = action + '?success=1';
-                        break;
-                }
-            } else if (result['hasCity'] == true) {
-                switch (actionType) {
-                    case 'withId':
-                        location.href = action + '&errorCity=1';
-                        break;
-                    case 'withoutId':
-                        location.href = action + '?errorCity=1';
-                        break;
-                }
-            } else if (result['error']) {
-                hideBackDrop();
-                $('.alert-danger').text(result['error']).show();
-            } else {
-                hideBackDrop();
-                alert('Возникла ошибка при сохранении данных');
-            }
-        },
-        error: function (result) {
-            hideBackDrop();
-            alert(result);
-        }
-    });
-});
-
 $(document).on("submit", '#newRegionForm', function (e) {
     e.preventDefault();
     showBackDrop();
@@ -232,14 +187,15 @@ $(document).on("submit", '.raceTimeForm', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            if (result == true) {
+            if (result['success'] == true) {
                 form.find('.row').addClass('result-line');
+                form.find('.timeId').val(result['id']);
                 var next = form.next();
                 next.find('input[name="Time[timeForHuman]"]').focus();
                 hideBackDrop();
             } else {
                 hideBackDrop();
-                BootboxError(result);
+                BootboxError(result['error']);
             }
         },
         error: function (result) {
@@ -265,19 +221,21 @@ function AddAllResults(form) {
         data: form.serialize(),
         success: function (result) {
             var next = form.next();
-            if (result == true) {
+            if (result['success'] == true) {
                 form.find('.row').addClass('result-line');
                 if (next.attr('id')) {
                     AddAllResults(next);
                 } else {
                     hideBackDrop();
+                    location.reload();
                 }
             } else {
-                alert(result);
+                alert(result['error']);
                 if (next.attr('id')) {
                     AddAllResults(next);
                 } else {
                     hideBackDrop();
+                    location.reload();
                 }
             }
         },
@@ -663,6 +621,24 @@ $('.createCabinet').click(function (e) {
     }
 });
 
+$('.deleteCabinet').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите удалить кабинет этого спортсмена?")) {
+        var id = $(this).data('id');
+        $.get('/competitions/athlete/delete-cabinet', {
+            athleteId: id
+        }).done(function (data) {
+            if (data == true) {
+                location.reload();
+            } else {
+                BootboxError(data);
+            }
+        }).fail(function (error) {
+            BootboxError(error.responseText);
+        });
+    }
+});
+
 $(document).on("submit", '#figureTimeForm', function (e) {
     e.preventDefault();
     showBackDrop();
@@ -741,6 +717,125 @@ function BootboxError(text) {
                     return true;
                 }
             }
+        }
+    });
+}
+
+$('.registrationOldAthlete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var tmpId = elem.data('tmp-id');
+    var athleteId = elem.data('athlete-id');
+    var hasAllMotorcycles = elem.data('all-motorcycles');
+
+    if (hasAllMotorcycles) {
+        createLK(tmpId, athleteId);
+    } else {
+        changeMotorcycles(tmpId, athleteId);
+    }
+});
+
+function createLK(tmpId, athleteId) {
+    showBackDrop();
+    $.get('/competitions/tmp-athletes/registration-old-athlete', {
+        tmpId: tmpId, athleteId: athleteId
+    }).done(function (data) {
+        if (data == true) {
+            location.reload();
+        } else {
+            hideBackDrop();
+            BootboxError(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+}
+
+function changeMotorcycles(tmpId, athleteId) {
+    showBackDrop();
+    $.get('/competitions/tmp-athletes/change-motorcycles', {
+        tmpId: tmpId, athleteId: athleteId
+    }).done(function (data) {
+        if (data['error']) {
+            hideBackDrop();
+            BootboxError(data['error']);
+        } else {
+            hideBackDrop();
+            $('.modalMotorcycles').html(data['page']);
+            $('#changeMotorcycles').modal('show')
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+}
+
+$(document).on("submit", '.addMotorcycleAndRegistration', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    form.find('.button').hide();
+    form.find('.wait-text').text('Пожалуйста, подождите...');
+    form.find('.alert').hide();
+    $.ajax({
+        url: '/competitions/tmp-athletes/add-motorcycles-and-registration',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                form.find('.button').show();
+                form.find('.wait-text').text('');
+                form.find('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            form.find('.button').hide();
+            form.find('.wait-text').text('');
+            form.find('.alert-danger').text(result.responseText).hide();
+        }
+    });
+});
+
+function cityForNewAthlete() {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/tmp-athletes/save-new-city',
+        type: "POST",
+        data: $('#cityForNewAthlete').serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+}
+
+function cityForNewParticipant() {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/tmp-participant/save-new-city',
+        type: "POST",
+        data: $('#cityForNewParticipant').serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
         }
     });
 }

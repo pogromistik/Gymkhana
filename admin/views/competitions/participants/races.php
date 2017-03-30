@@ -20,6 +20,12 @@ $this->params['breadcrumbs'][] = 'Заезды';
 $attempt = 0;
 ?>
 
+<div class="alert alert-info">
+    Формат времени: минуты:секунды.миллисекунды. Необходимо обязательно указывать все 6 цифр.<br>
+    В случае незачёта укажите число не меньше 59:59.99. Удобнее всего выставлять 99:99.99.<br>
+    Если штрафа нет - можно оставить поле пустым.
+</div>
+
 <?php if ($error) { ?>
     <div class="alert alert-danger">
         Не установлены классы спортсменов
@@ -57,9 +63,8 @@ $attempt = 0;
         <div class="row">
 			<?= $form->field($timeModel, 'stageId')->hiddenInput()->label(false)->error(false) ?>
 			<?= $form->field($timeModel, 'participantId')->hiddenInput()->label(false)->error(false) ?>
-			<?php if ($timeModel->id) { ?>
-				<?= $form->field($timeModel, 'id')->hiddenInput()->label(false)->error(false) ?>
-			<?php } ?>
+	        <?= $form->field($timeModel, 'id')->hiddenInput(['class' => 'timeId'])->label(false)->error(false) ?>
+	        <?= $form->field($timeModel, 'attemptNumber')->hiddenInput(['value' => $attempt])->label(false)->error(false) ?>
             <div class="col-sm-1"><?= $participant->number ?></div>
             <div class="col-sm-3"><?= $participant->athlete->getFullName() ?></div>
             <div class="col-sm-3"><?= $participant->motorcycle->getFullTitle() ?></div>

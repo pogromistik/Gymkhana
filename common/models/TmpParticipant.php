@@ -23,11 +23,13 @@ use Yii;
  * @property integer      $dateUpdated
  * @property integer      $status
  * @property integer      $athleteId
+ * @property integer      $countryId
  *
  * @property City         $cityModel
  * @property Athlete      $athlete
  * @property Stage        $stage
  * @property Championship $championship
+ * @property Country      $country
  */
 class TmpParticipant extends BaseActiveRecord
 {
@@ -50,8 +52,9 @@ class TmpParticipant extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['championshipId', 'stageId', 'firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'dateAdded', 'dateUpdated'], 'required'],
-			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId'], 'integer'],
+			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
+				'dateAdded', 'dateUpdated'], 'required'],
+			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
 			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone'], 'string', 'max' => 255],
 		];
 	}
@@ -76,7 +79,8 @@ class TmpParticipant extends BaseActiveRecord
 			'dateAdded'       => 'Дата создания',
 			'dateUpdated'     => 'Дата редактирования',
 			'status'          => 'Статус',
-			'athleteId'       => 'Спортсмен'
+			'athleteId'       => 'Спортсмен',
+			'countryId'       => 'Страна'
 		];
 	}
 	
@@ -84,6 +88,11 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
+			if (!$this->city && $this->cityId) {
+				$this->city = $this->cityModel->title;
+			} elseif ($this->city && $this->cityId) {
+				$this->cityId = null;
+			}
 		}
 		$this->dateUpdated = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
@@ -113,6 +122,11 @@ class TmpParticipant extends BaseActiveRecord
 	public function getChampionship()
 	{
 		return $this->hasOne(Championship::className(), ['id' => 'championshipId']);
+	}
+	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
 	}
 	
 	public static function createForm($stageId)
@@ -156,8 +170,10 @@ class TmpParticipant extends BaseActiveRecord
 			/** @var Motorcycle $motorcycle */
 			foreach ($athlete->getMotorcycles()->andWhere(['status' => Motorcycle::STATUS_ACTIVE])->all() as $motorcycle) {
 				$isCoincidences = false;
-				if (($motorcycle->mark == $this->motorcycleMark && $motorcycle->model == $this->motorcycleModel)
-					|| $motorcycle->mark == $this->motorcycleModel && $motorcycle->model == $this->motorcycleMark
+				if ((mb_strtoupper($motorcycle->mark, 'UTF-8') == mb_strtoupper($this->motorcycleMark, 'UTF-8')
+						&& mb_strtoupper($motorcycle->model, 'UTF-8') == mb_strtoupper($this->motorcycleModel, 'UTF-8'))
+					|| mb_strtoupper($motorcycle->mark, 'UTF-8') == mb_strtoupper($this->motorcycleModel, 'UTF-8')
+					&& mb_strtoupper($motorcycle->model, 'UTF-8') == mb_strtoupper($this->motorcycleMark, 'UTF-8')
 				) {
 					$isCoincidences = true;
 				}

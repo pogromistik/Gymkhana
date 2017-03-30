@@ -43,24 +43,46 @@ AppAsset::register($this);
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-            <li>
-		        <?php $countNewFigure = \common\models\TmpFigureResult::find()
-			        ->where(['isNew' => 1])->count() ?>
-                <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
-                            class="fa fa-bullhorn fa-fw"></i> Новые результаты фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
-            </li>
-            <li>
-	            <?php $countNewReg = \common\models\TmpParticipant::find()
-                    ->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
-                <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
-                            class="fa fa-registered fa-fw"></i> Новые регистрации <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
-            </li>
-            <li>
-				<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
-                <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
-                            class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
-                
-            </li>
+			<?php if (\Yii::$app->user->can('competitions')) { ?>
+				<?php $countNewLK = \common\models\TmpAthlete::find()
+					->where(['status' => \common\models\TmpAthlete::STATUS_NEW])->count() ?>
+				<?php if ($countNewLK) { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/tmp-athletes/index']) ?>"><i
+                                    class="fa fa-registered fa-fw"></i> Заявки на
+                            ЛК <?= $countNewLK ? '(' . $countNewLK . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
+				
+				<?php $countNewFigure = \common\models\TmpFigureResult::find()
+					->where(['isNew' => 1])->count() ?>
+				<?php if ($countNewFigure) { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
+                                    class="fa fa-bullhorn fa-fw"></i> Новые результаты
+                            фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
+				
+				<?php $countNewReg = \common\models\TmpParticipant::find()
+					->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
+				<?php if ($countNewReg) { ?>
+                    <li>
+						<?php $countNewReg = \common\models\TmpParticipant::find()
+							->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
+                        <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
+                                    class="fa fa-registered fa-fw"></i> Регистрации на
+                            этап <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
+
+                <li>
+					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
+                    <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
+                                class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
+
+                </li>
+			<?php } ?>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -179,38 +201,44 @@ AppAsset::register($this);
                                     <a href="<?= Url::to(['/competitions/help/years']) ?>"> Года</a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для чемпионатов</a>
+                                    <a href="<?= Url::to(['/competitions/help/cities']) ?>"> Города</a>
+                                </li>
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
+                                        чемпионатов</a>
                                 </li>
                                 <li>
                                     <a data-addr="/competitions/news"
-                                            href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
+                                       href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
                                 </li>
                                 <li>
-                                    <a data-addr = "/competitions/documents"
-                                            href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
+                                    <a data-addr="/competitions/documents"
+                                       href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
                                 </li>
                                 <li>
                                     <a data-addr="/competitions/classes"
-                                            href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы спортсменов</a>
+                                       href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы спортсменов</a>
                                 </li>
                                 <li>
                                     <a data-addr="/competitions/athlete"
-                                            href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
+                                       href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
                                 </li>
                                 <li class="level-2 active">
                                     <a href="#"> Чемпионаты<span
                                                 class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
-	                                    <?php foreach (\common\models\Championship::$groupsTitle as $groupId => $title) { ?>
+										<?php foreach (\common\models\Championship::$groupsTitle as $groupId => $title) { ?>
                                             <li><?= Html::a($title, ['/competitions/championships/index', 'groupId' => $groupId]) ?></li>
-	                                    <?php } ?>
+										<?php } ?>
                                     </ul>
                                 </li>
                                 <li>
-                                    <a data-addr="/competitions/figures" href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
+                                    <a data-addr="/competitions/figures"
+                                       href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                 </li>
                                 <li>
-                                    <a data-addr="/competitions/notice" href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить уведомление</a>
+                                    <a data-addr="/competitions/notice"
+                                       href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить уведомление</a>
                                 </li>
                             </ul>
                         </li>

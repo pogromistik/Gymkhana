@@ -8,11 +8,11 @@
 use yii\bootstrap\Html;
 
 ?>
-<h3>Документы</h3>
+<h2>Документы</h2>
 <div class="documents">
     <div class="list">
 		<?php foreach ($sections as $section) {
-			$files = $section->files;
+			$files = $section->actualFiles;
 			?>
             <div class="item">
                 <div class="toggle">

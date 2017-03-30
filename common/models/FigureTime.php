@@ -150,7 +150,7 @@ class FigureTime extends BaseActiveRecord
 			/** @var AthletesClass $newClass */
 			$newClass = AthletesClass::find()->where(['>=', 'percent', $this->percent])
 				->andWhere(['status' => AthletesClass::STATUS_ACTIVE])
-				->orderBy(['percent' => SORT_ASC])->one();
+				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
 			if ($newClass && $newClass->id != $this->athleteClassId) {
 				if ($this->athleteClassId) {
 					$oldClass = $this->athleteClass;
@@ -169,8 +169,11 @@ class FigureTime extends BaseActiveRecord
 				$this->recordType = self::RECORD_IN_WORLD;
 				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
 			} elseif (!$figure->bestTimeInRussia || $this->resultTime < $figure->bestTimeInRussia) {
-				$this->recordType = self::RECORD_IN_RUSSIA;
-				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
+				$athlete = $this->athlete;
+				if (mb_strtoupper($athlete->country->title, 'UTF-8') == 'РОССИЯ') {
+					$this->recordType = self::RECORD_IN_RUSSIA;
+					$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
+				}
 			}
 		}
 		

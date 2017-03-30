@@ -33,7 +33,7 @@ class AthletesClass extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title', 'coefficient', 'percent', 'status'], 'required'],
+			[['title', 'coefficient', 'percent'], 'required'],
 			[['sort', 'status'], 'integer'],
 			[['percent', 'coefficient'], 'number'],
 			[['description', 'title'], 'string'],

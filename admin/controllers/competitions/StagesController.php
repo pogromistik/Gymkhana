@@ -15,24 +15,6 @@ use yii\web\NotFoundHttpException;
 class StagesController extends BaseController
 {
 	/**
-	 * Lists all Stage models.
-	 *
-	 * @return mixed
-	 */
-	public function actionIndex()
-	{
-		$this->can('competitions');
-		
-		$searchModel = new StageSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		
-		return $this->render('index', [
-			'searchModel'  => $searchModel,
-			'dataProvider' => $dataProvider,
-		]);
-	}
-	
-	/**
 	 * Displays a single Stage model.
 	 *
 	 * @param integer $id

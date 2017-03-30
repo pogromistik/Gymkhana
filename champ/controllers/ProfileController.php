@@ -1,6 +1,7 @@
 <?php
 namespace champ\controllers;
 
+use champ\models\PasswordForm;
 use common\models\Athlete;
 use common\models\Championship;
 use common\models\ClassHistory;
@@ -31,12 +32,17 @@ class ProfileController extends AccessController
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
+		$password = new PasswordForm();
+		if ($password->load(\Yii::$app->request->post()) && $password->savePassw()) {
+			return $this->redirect(['index', 'success' => true]);
+		}
+		
 		$motorcycle = new Motorcycle();
 		if ($motorcycle->load(\Yii::$app->request->post()) && $motorcycle->save()) {
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
-		return $this->render('index', ['athlete' => $athlete, 'success' => $success]);
+		return $this->render('index', ['athlete' => $athlete, 'success' => $success, 'password' => $password]);
 	}
 	
 	public function actionChangeStatus($id)
@@ -63,8 +69,8 @@ class ProfileController extends AccessController
 		$this->pageTitle = 'Информация';
 		
 		$time = time();
-		$newStages = Stage::find()->where(['<=', 'startRegistration', $time])
-			->andWhere(['>=', 'endRegistration', $time])->all();
+		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
+			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])->all();
 		
 		$participants = null;
 		if ($newStages) {
@@ -308,6 +314,7 @@ class ProfileController extends AccessController
 			if ($place > 0) {
 				$countParticipants = count($bestResults);
 				$percent = ($countParticipants - $place) / $countParticipants * 100;
+				$percent = round($percent, 0);
 			}
 			if ($result) {
 				$figuresResult[] = [
@@ -381,5 +388,11 @@ class ProfileController extends AccessController
 		}
 		
 		return true;
+	}
+	
+	public function actionHelp()
+	{
+		$this->pageTitle = 'Справка';
+		return $this->render('help');
 	}
 }

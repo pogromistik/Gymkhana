@@ -15,15 +15,9 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": ">=2.0.6",
+        "yiisoft/yii2": "~2.0.6",
         "yiisoft/yii2-bootstrap": "*",
-        "yiisoft/yii2-swiftmailer": "*"
-    },
-    "require-dev": {
-        "yiisoft/yii2-codeception": "*",
-        "yiisoft/yii2-debug": "*",
-        "yiisoft/yii2-gii": "*",
-        "yiisoft/yii2-faker": "*",
+        "yiisoft/yii2-swiftmailer": "*",
         "perminder-klair/yii2-dropzone": "dev-master",
         "kartik-v/yii2-widget-fileinput": "@dev",
         "2amigos/yii2-editable-widget": "^0.1.4",
@@ -35,7 +29,14 @@
         "kartik-v/yii2-sortable-input": "*",
         "kartik-v/yii2-editable": "*",
         "kartik-v/yii2-popover-x": "*",
-        "bower-asset/bootbox": "~4.3.0"
+        "bower-asset/bootbox": "~4.3.0",
+        "philippfrenzel/yii2fullcalendar":"~2"
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "*",
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*"
     },
     "config": {
         "process-timeout": 1800

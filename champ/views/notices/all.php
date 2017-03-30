@@ -10,6 +10,7 @@ use common\models\Notice;
 
 $this->title = 'Уведомления';
 ?>
+<h2>Уведомления</h2>
 <div class="notice-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
