@@ -230,10 +230,11 @@ img {
 }
 
 .results td, .results th {
-    vertical-align: middle!important;
+    vertical-align: middle !important;
     border-collapse: collapse;
     border: 1px solid #dddddd;
 }
+
 .results {
     border-top: 1px solid #dddddd;
 }
@@ -243,13 +244,16 @@ img {
     padding: 20px;
     border-left: 3px solid #eee;
 }
+
 .bs-callout h4 {
     margin-top: 0;
     margin-bottom: 5px;
 }
+
 .bs-callout-info h4 {
     color: #f0ad4e;
 }
+
 .bs-callout-info {
     color: #2c6e88;
     background-color: #d9e9f7;
@@ -295,18 +299,26 @@ img {
 }
 
 .editable-input, .editable-input input {
-    width: 100%!important;
-    max-width: 500px!important;
+    width: 100% !important;
+    max-width: 500px !important;
 }
 
 .level-2 ul {
     padding-left: 15px;
 }
 
-.nav > li > a:hover, .nav > li > a:focus  { background-color: #56a025; }
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #56a025;
+}
 
 .bg-blue {
     background: #73afe8;
     color: #fff;
+    font-weight: bold;
+}
+
+.bg-green {
+    background: #5def76;
+    color: #4b4e53;
     font-weight: bold;
 }

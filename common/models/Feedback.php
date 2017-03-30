@@ -16,6 +16,7 @@ use Yii;
  * @property integer $dateAdded
  * @property integer $dateUpdated
  * @property integer $athleteId
+ * @property integer $isNew
  *
  * @property Athlete $athlete
  */

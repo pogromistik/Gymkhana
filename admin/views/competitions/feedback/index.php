@@ -9,12 +9,34 @@ use yii\grid\GridView;
 
 $this->title = 'Обратная связь';
 ?>
+
+<div class="alert alert-info">
+    Зелёным цветом выделены новые заявки
+</div>
+
 <div class="feedback-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
 		'columns'      => [
-			'username',
+			[
+				'attribute'      => 'username',
+				'format'         => 'raw',
+				'value'          => function (\common\models\Feedback $item) {
+					if ($item->athleteId) {
+						return Html::a($item->username, ['/competitions/athlete/update', 'id' => $item->athleteId],
+							['target' => '_blank']);
+					}
+					
+					return $item->username;
+				},
+				'contentOptions' => function (\common\models\Feedback $item) {
+					if ($item->isNew) {
+					    return ['class' => 'bg-green'];
+                    };
+					return [];
+				},
+			],
 			'phone',
 			'email:email',
 			[
