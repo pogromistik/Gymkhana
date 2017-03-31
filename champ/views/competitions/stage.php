@@ -142,9 +142,9 @@ if ($city->timezone) {
 		if ($stages) {
 			?>
             <ul>
-				<?php foreach ($stages as $stage) { ?>
+				<?php foreach ($stages as $item) { ?>
                     <li>
-						<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?>
+						<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
                     </li>
 				<?php } ?>
             </ul>
