@@ -12,6 +12,10 @@ use yii\web\JsExpression;
 /* @var $this yii\web\View */
 /* @var $model common\models\Athlete */
 /* @var $form yii\widgets\ActiveForm */
+
+if (!$model->countryId) {
+	$model->countryId = 1;
+}
 ?>
 
 <div class="athlete-form">
@@ -47,6 +51,10 @@ use yii\web\JsExpression;
 				'id', 'title');
 			$cities[$model->cityId] = $model->city->title;
 		}
+	} elseif ($model->countryId !== null) {
+		$cities = ArrayHelper::map(\common\models\City::find()->where(['countryId' => $model->countryId])
+			->orderBy(['title' => SORT_ASC])->limit(50)->all(),
+			'id', 'title');
 	}
 	?>
 	<?php $url = \yii\helpers\Url::to(['/competitions/help/city-list']); ?>
@@ -56,19 +64,19 @@ use yii\web\JsExpression;
 		'type'           => DepDrop::TYPE_SELECT2,
 		'select2Options' => [
 			'pluginOptions' => [
-				'allowClear' => true,
+				'allowClear'         => true,
 				'minimumInputLength' => 3,
-				'language' => [
+				'language'           => [
 					'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
 				],
-				'ajax' => [
-					'url' => $url,
+				'ajax'               => [
+					'url'      => $url,
 					'dataType' => 'json',
-					'data' => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+					'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
 				],
-				'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-				'templateResult' => new JsExpression('function(city) { return city.text; }'),
-				'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+				'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+				'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+				'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
 			],
 		],
 		'pluginOptions'  => [
