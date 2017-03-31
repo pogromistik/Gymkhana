@@ -110,7 +110,7 @@ class AssocNews extends \yii\db\ActiveRecord
 				/** @var Stage $stage */
 				$stage = $model;
 				$news = new AssocNews();
-				$news->previewText = $stage->title . 'пройдёт в городе ' . $stage->city->title . '.';
+				$news->previewText = $stage->title . ' пройдёт в городе ' . $stage->city->title;
 				if ($stage->location) {
 					$news->previewText .= '.<br>Место проведения этапа: ' . $stage->location;
 				}
