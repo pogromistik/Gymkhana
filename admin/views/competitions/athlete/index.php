@@ -20,18 +20,18 @@ $this->title = 'Спортсмены';
 		'filterModel'  => $searchModel,
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
-            
+			
 			[
 				'attribute' => 'lastName',
 				'filter'    => Select2::widget([
-					'model'     => $searchModel,
-					'attribute' => 'lastName',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['lastName' => SORT_ASC])->all(), 'lastName', 'lastName'),
-					'theme'     => Select2::THEME_BOOTSTRAP,
+					'model'         => $searchModel,
+					'attribute'     => 'lastName',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['lastName' => SORT_ASC])->all(), 'lastName', 'lastName'),
+					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
 					],
-					'options'   => [
+					'options'       => [
 						'placeholder' => 'Укажите фамилию...',
 					]
 				])
@@ -39,14 +39,14 @@ $this->title = 'Спортсмены';
 			[
 				'attribute' => 'firstName',
 				'filter'    => Select2::widget([
-					'model'     => $searchModel,
-					'attribute' => 'firstName',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['firstName' => SORT_ASC])->all(), 'firstName', 'firstName'),
-					'theme'     => Select2::THEME_BOOTSTRAP,
+					'model'         => $searchModel,
+					'attribute'     => 'firstName',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['firstName' => SORT_ASC])->all(), 'firstName', 'firstName'),
+					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
 					],
-					'options'   => [
+					'options'       => [
 						'placeholder' => 'Укажите имя...',
 					]
 				])
@@ -56,26 +56,26 @@ $this->title = 'Спортсмены';
 			[
 				'attribute' => 'cityId',
 				'filter'    => Select2::widget([
-					'model'     => $searchModel,
-					'attribute' => 'cityId',
-					'data'      => $searchModel->cityId ? [$searchModel->cityId => $searchModel->city->title] : [],
-					'theme'     => Select2::THEME_BOOTSTRAP,
+					'model'         => $searchModel,
+					'attribute'     => 'cityId',
+					'data'          => $searchModel->cityId ? [$searchModel->cityId => $searchModel->city->title] : [],
+					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
-						'allowClear' => true,
+						'allowClear'         => true,
 						'minimumInputLength' => 3,
-						'language' => [
+						'language'           => [
 							'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
 						],
-						'ajax' => [
-							'url' =>  \yii\helpers\Url::to(['/competitions/help/city-list']),
+						'ajax'               => [
+							'url'      => \yii\helpers\Url::to(['/competitions/help/city-list']),
 							'dataType' => 'json',
-							'data' => new JsExpression('function(params) { return {title:params.term}; }')
+							'data'     => new JsExpression('function(params) { return {title:params.term}; }')
 						],
-						'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-						'templateResult' => new JsExpression('function(city) { return city.text; }'),
-						'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+						'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+						'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+						'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
 					],
-					'options'   => [
+					'options'       => [
 						'placeholder' => 'Укажите город...',
 					]
 				]),
@@ -86,15 +86,15 @@ $this->title = 'Спортсмены';
 			[
 				'attribute' => 'athleteClassId',
 				'filter'    => Select2::widget([
-					'model'     => $searchModel,
-					'attribute' => 'athleteClassId',
-					'data'      => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
-                        ->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['id' => SORT_ASC])->all(), 'id', 'title'),
-					'theme'     => Select2::THEME_BOOTSTRAP,
+					'model'         => $searchModel,
+					'attribute'     => 'athleteClassId',
+					'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()
+						->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['id' => SORT_ASC])->all(), 'id', 'title'),
+					'theme'         => Select2::THEME_BOOTSTRAP,
 					'pluginOptions' => [
 						'allowClear' => true
 					],
-					'options'   => [
+					'options'       => [
 						'placeholder' => 'Укажите класс...',
 					]
 				]),
@@ -104,11 +104,18 @@ $this->title = 'Спортсмены';
 			],
 			'number',
 			[
+				'attribute' => 'hasAccount',
+				'format'    => 'raw',
+				'value'     => function (\common\models\Athlete $athlete) {
+					return $athlete->hasAccount ? 'Да' : 'Нет';
+				}
+			],
+			[
 				'format' => 'raw',
 				'value'  => function (\common\models\Athlete $athlete) {
 					return Html::a('<span class="fa fa-eye"></span>', ['view', 'id' => $athlete->id], [
 						'class' => 'btn btn-info',
-                        'title' => 'Просмотр'
+						'title' => 'Просмотр'
 					]);
 				}
 			],
@@ -117,7 +124,7 @@ $this->title = 'Спортсмены';
 				'value'  => function (\common\models\Athlete $athlete) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
 						'class' => 'btn btn-primary',
-                        'title' => 'Редактирование'
+						'title' => 'Редактирование'
 					]);
 				}
 			],
