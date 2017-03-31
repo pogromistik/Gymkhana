@@ -67,7 +67,7 @@ $this->title = 'Результаты: ' . $championship->title;
         <th>Класс</th>
         <th>Спортсмен</th>
 		<?php foreach ($stages as $stage) { ?>
-            <th><?= \yii\helpers\Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id], ['target' => '_blank']) ?></th>
+            <th><?= \yii\helpers\Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?></th>
 		<?php } ?>
         <th>Итого</th>
     </tr>
