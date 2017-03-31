@@ -106,6 +106,7 @@ $this->title = 'Спортсмены';
 			[
 				'attribute' => 'hasAccount',
 				'format'    => 'raw',
+				'filter'    => false,
 				'value'     => function (\common\models\Athlete $athlete) {
 					return $athlete->hasAccount ? 'Да' : 'Нет';
 				}
