@@ -60,7 +60,7 @@ $listView = new \yii\widgets\ListView([
 		<?= \kartik\widgets\DepDrop::widget([
 			'model'          => $searchModel,
 			'attribute'      => 'regionId',
-			'data'           => ($searchModel->countryId !== null) ? \common\models\Region::getAll(true, $searchModel->countryId)
+			'data'           => ($searchModel->countryId !== null && $searchModel->countryId != '') ? \common\models\Region::getAll(true, $searchModel->countryId)
 				: [],
 			'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
 			'select2Options' => ['pluginOptions' => ['allowClear' => true, 'placeholder' => 'Выберите регион...', 'multiple' => true]],
