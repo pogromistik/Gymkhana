@@ -401,7 +401,7 @@ class CompetitionsController extends BaseController
 		$form = new Participant();
 		$form->load(\Yii::$app->request->post());
 		
-		$stage = $form->stage;
+		$stage = Stage::findOne($form->stageId);
 		if (!$stage->startRegistration) {
 			return 'Регистрация на этап ещё не началась';
 		}
@@ -480,7 +480,7 @@ class CompetitionsController extends BaseController
 		$form = new TmpParticipant();
 		$form->load(\Yii::$app->request->post());
 		
-		$stage = $form->stage;
+		$stage = Stage::findOne($form->stageId);
 		if (!$stage->startRegistration) {
 			return 'Регистрация на этап ещё не началась';
 		}
