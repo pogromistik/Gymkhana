@@ -14,6 +14,7 @@ use common\models\Stage;
 use common\models\TmpParticipant;
 use common\models\Year;
 use Yii;
+use yii\base\UserException;
 use yii\data\Pagination;
 use yii\db\Expression;
 use yii\db\Query;
@@ -38,10 +39,13 @@ class CompetitionsController extends BaseController
 		$this->keywords = 'Расписание соревнований';
 		
 		$events = [];
-		
+		$currentYear = Year::getCurrent();
+		if (!$currentYear) {
+			throw new UserException();
+		}
 		$championshipIds = Championship::find()->select('id')
-			->andWhere(['status' => Championship::$statusesForActual])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
-		$stages = Stage::find()->where(['championshipId' => $championshipIds])->andWhere(['not', ['status' => Stage::STATUS_PAST]])
+			->andWhere(['yearId' => $currentYear->id])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
 		$background = '#58a1b1';
