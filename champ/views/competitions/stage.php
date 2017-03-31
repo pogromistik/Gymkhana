@@ -147,6 +147,9 @@ if ($city->timezone) {
 						<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
                     </li>
 				<?php } ?>
+                <li>
+	                <?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $stage->championshipId]) ?>
+                </li>
             </ul>
 			<?php
 		}
