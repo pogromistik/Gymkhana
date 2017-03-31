@@ -115,21 +115,23 @@ class ParticipantsController extends BaseController
 			throw new NotFoundHttpException('Этап не найден');
 		}
 		$query = new Query();
-		$query->from(['a' => Participant::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
+		$query->from(['a' => Participant::tableName(), 'd' => AthletesClass::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
 		$query->where(['a.stageId' => $stageId]);
-		$query->select(['a."id", b."lastName", b."firstName", c."mark", c."model", a."number"']);
+		$query->select(['a."id", b."lastName", b."firstName", c."mark", c."model", a."number", d."title"']);
 		$query->andWhere(['a.status' => Participant::STATUS_ACTIVE]);
 		$query->andWhere(new Expression('"a"."athleteId" = "b"."id"'));
 		$query->andWhere(new Expression('"a"."motorcycleId" = "c"."id"'));
+		$query->andWhere(new Expression('"a"."athleteClassId" = "d"."id"'));
 		$query->orderBy(['a.sort' => SORT_ASC, 'a.id' => SORT_ASC]);
 		$participants = $query->all();
 		$participantsArray = [];
 		foreach ($participants as $participant) {
 			$content = $participant['lastName'] . ' ' . $participant['firstName'];
+			$content .= ', ' . $participant['title'];
 			if (isset($participant['number'])) {
 				$content .= ', №' . $participant['number'];
 			}
-			$content .= ', ' . $participant['model'] . ' ' . $participant['mark'];
+			$content .= ', ' . $participant['mark'] . ' ' . $participant['model'];
 			$participantsArray[$participant['id']] = ['content' => $content];
 		}
 		
