@@ -16,6 +16,19 @@ use kartik\widgets\Select2;
 	
 	<?php $form = ActiveForm::begin(); ?>
 	
+	<?php if ($model->groupId == Championship::GROUPS_REGIONAL) { ?>
+		<?= $form->field($model, 'regionGroupId',
+			['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Если в списке нет необходимого раздела - создайте его в <a href="#createGroup">форме внизу страницы</a> .
+</div>{input}</div>'])->widget(Select2::classname(), [
+			'name'    => 'kv-type-01',
+			'data'    => \yii\helpers\ArrayHelper::map(\common\models\RegionalGroup::find()->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
+			'options' => [
+				'placeholder' => 'Выберите раздел. Добавить новый раздел можно внизу страницы',
+			],
+		]) ?>
+	<?php } ?>
+	
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'название чемпионата, необязательное поле']) ?>
 	
 	<?= $form->field($model, 'description')->textarea(['rows' => 3, 'placeholder' => 'краткое описание, необязательное поле']) ?>
@@ -25,19 +38,6 @@ use kartik\widgets\Select2;
 	<?= $form->field($model, 'status')->dropDownList(Championship::$statusesTitle) ?>
 	
 	<?= $form->field($model, 'groupId')->hiddenInput()->label(false)->error(false) ?>
-	
-	<?php if ($model->groupId == Championship::GROUPS_REGIONAL) { ?>
-		<?= $form->field($model, 'regionGroupId',
-			['inputTemplate' => '<div class="input-with-description"><div class="text">
- Если в списке нет необходимого раздела - создайте его в форме ниже.
-</div>{input}</div>'])->widget(Select2::classname(), [
-			'name'    => 'kv-type-01',
-			'data'    => \yii\helpers\ArrayHelper::map(\common\models\RegionalGroup::find()->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
-			'options' => [
-				'placeholder' => 'Выберите раздел. Добавить новый раздел можно ниже',
-			],
-		]) ?>
-	<?php } ?>
 	
 	<?php if ($model->groupId != Championship::GROUPS_RUSSIA) { ?>
 		<?= $form->field($model, 'regionId',
