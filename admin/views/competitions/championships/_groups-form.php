@@ -7,6 +7,8 @@ use dosamigos\editable\Editable;
 $group = new RegionalGroup();
 ?>
 
+<div id="createGroup"></div>
+
 <div class="championship-form">
     <h3>Добавить группу региональных соревнований</h3>
     
