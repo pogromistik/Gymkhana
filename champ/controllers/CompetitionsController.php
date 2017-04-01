@@ -131,6 +131,7 @@ class CompetitionsController extends BaseController
 					if (isset($results)) {
 						krsort($results);
 					}
+					$this->background = 'background7.png';
 					
 					return $this->render('russia-result', ['results' => $results]);
 				case self::RESULTS_REGIONAL:
