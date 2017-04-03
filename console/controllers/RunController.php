@@ -6,7 +6,7 @@ use common\models\Athlete;
 use common\models\Championship;
 use common\models\City;
 use common\models\Country;
-use common\models\Errors;
+use common\models\Error;
 use common\models\Motorcycle;
 use common\models\Region;
 use common\models\Stage;
@@ -838,7 +838,7 @@ class RunController extends Controller
 		exec('df -h', $output, $return_var);
 		if ($output) {
 			if (!isset($output[1])) {
-				$errors = new Errors();
+				$errors = new Error();
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
@@ -848,7 +848,7 @@ class RunController extends Controller
 			$string = $output[1];
 			$array = explode('G', $string);
 			if (!isset($array[2])) {
-				$errors = new Errors();
+				$errors = new Error();
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
@@ -858,14 +858,14 @@ class RunController extends Controller
 			$size = trim($array[2]);
 			echo $size . PHP_EOL;
 			if ($size < 1) {
-				$errors = new Errors();
-				$errors->type = Errors::TYPE_CRITICAL_ERROR;
+				$errors = new Error();
+				$errors->type = Error::TYPE_CRITICAL_ERROR;
 				$errors->text = 'На хостинге осталось менее 1GB свободного места';
 				$errors->save();
 			} else {
-				$errors = new Errors();
-				$errors->text = 'На хостинге осталось менее ' . $size . 'GB свободного места';
-				$errors->type = Errors::TYPE_DB;
+				$errors = new Error();
+				$errors->text = 'На хостинге осталось ' . $size . 'GB свободного места';
+				$errors->type = Error::TYPE_DB;
 				$errors->save();
 			}
 		}
