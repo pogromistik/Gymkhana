@@ -17,11 +17,20 @@ use Yii;
 class Error extends \yii\db\ActiveRecord
 {
 	const TYPE_OTHER = 1;
-	const TYPE_DB = 2;
+	const TYPE_SIZE = 2;
 	const TYPE_CRITICAL_ERROR = 3;
+	public static $typesTitle = [
+		self::TYPE_OTHER          => 'Другое',
+		self::TYPE_CRITICAL_ERROR => 'Критическая ошибка',
+		self::TYPE_SIZE           => 'Недостаток места на хостинге'
+	];
 	
 	const STATUS_NEW = 0;
 	const STATUS_FIXED = 1;
+	public static $statusesTitle = [
+		self::STATUS_NEW   => 'Новая',
+		self::STATUS_FIXED => 'Исправленная'
+	];
 	
 	/**
 	 * @inheritdoc
@@ -50,11 +59,11 @@ class Error extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'type'        => 'Type',
-			'text'        => 'Text',
-			'status'      => 'Status',
-			'dateAdded'   => 'Date Added',
-			'dateUpdated' => 'Date Updated',
+			'type'        => 'Тип',
+			'text'        => 'Текст',
+			'status'      => 'Статус',
+			'dateAdded'   => 'Дата создания',
+			'dateUpdated' => 'Дата редактирования',
 		];
 	}
 	

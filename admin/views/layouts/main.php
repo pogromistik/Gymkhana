@@ -11,8 +11,12 @@ use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 use yii\helpers\Url;
 use \admin\assets\BootboxAsset;
+use common\models\Error;
 
 AppAsset::register($this);
+
+$criticalErrors = Error::findOne(['status' => Error::STATUS_NEW, 'type' => Error::TYPE_CRITICAL_ERROR]);
+$errors = Error::findAll(['status' => Error::STATUS_NEW]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -251,6 +255,34 @@ AppAsset::register($this);
     </nav>
 
     <div id="page-wrapper">
+		<?php if (\Yii::$app->user->can('developer')) { ?>
+			<?php if ($errors) { ?>
+                <div class="pt-20">
+                    <div class="alert alert-danger">
+						<?php if (count($errors) <= 3) { ?>
+                            <ul>
+								<?php foreach ($errors as $error) { ?>
+                                    <li><?= $error->text ?></li>
+								<?php } ?>
+                            </ul>
+							<?= Html::a('Посмотреть список ошибок', ['/admin/errors-list']) ?>
+						<?php } else { ?>
+							<?= Html::a('Посмотреть список', ['/admin/errors-list']) ?>
+						<?php } ?>
+                    </div>
+                </div>
+			<?php } ?>
+		<?php } else { ?>
+			<?php if ($criticalErrors) { ?>
+                <div class="pt-20">
+                    <div class="alert alert-danger">
+                        На сайте обнаружены критические ошибки. Пожалуйста, свяжитесь с
+                        <a href="https://vk.com/id19792817" target="_blank">разработчиками</a>
+                        для их устранения.
+                    </div>
+                </div>
+			<?php } ?>
+		<?php } ?>
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header"><?= $this->title ?></h1>
