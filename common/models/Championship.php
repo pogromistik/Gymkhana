@@ -327,4 +327,21 @@ class Championship extends BaseActiveRecord
 	{
 		return ($a['points'] > $b['points']) ? -1 : 1;
 	}
+	
+	public function getInternalClassesTitle($asArray = false)
+	{
+		$classes = [];
+		foreach ($this->internalClasses as $class) {
+			$classes[] = $class->title;
+		}
+		if ($asArray) {
+			return $classes;
+		}
+		
+		if ($classes) {
+			return implode(', ', $classes);
+		}
+		
+		return null;
+	}
 }

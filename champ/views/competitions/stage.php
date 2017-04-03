@@ -57,6 +57,10 @@ $championship = $stage->championship;
                         Классы награждения: <?= $internalClassesTitle ?>
                     </div>
 				<?php } ?>
+                
+                <div class="pb-10">
+                    <?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
+                </div>
 				
 				<?php if ($stage->referenceTime) { ?>
                     <div>
