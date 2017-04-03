@@ -837,7 +837,7 @@ class RunController extends Controller
 		exec('df -h', $output, $return_var);
 		if ($output) {
 			$string = $output[1];
-			$array = explode(' ', $string);
+			$array = explode('G', $string);
 			var_dump($array);
 		}
 		
