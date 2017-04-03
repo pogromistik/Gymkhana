@@ -835,7 +835,7 @@ class RunController extends Controller
 	public function actionTest()
 	{
 		exec('df -h', $output, $return_var);
-		var_dump($return_var);
+		var_dump($output);
 		
 		return true;
 	}
