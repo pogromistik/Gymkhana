@@ -928,3 +928,7 @@ a.deletePhoto {
 table.results small.red {
     color: darkred;
 }
+
+.navbar-nav > li > .dropdown-menu, .dropdown-submenu > .dropdown-menu {
+    border-radius: 0;
+}
