@@ -862,7 +862,7 @@ class RunController extends Controller
 				$errors->type = Error::TYPE_CRITICAL_ERROR;
 				$errors->text = 'На хостинге осталось менее 1GB свободного места';
 				$errors->save();
-			} else {
+			} elseif ($size <= 2) {
 				$errors = new Error();
 				$errors->text = 'На хостинге осталось ' . $size . 'GB свободного места';
 				$errors->type = Error::TYPE_DB;
