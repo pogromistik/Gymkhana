@@ -113,9 +113,9 @@ if ($city->timezone) {
                             </div>
                             <div class="text-right">
 		                        <?php if ($sortBy) { ?>
-			                        <?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+			                        <?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id, 'showByClasses' => true]) ?>
 		                        <?php } else { ?>
-			                        <?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+			                        <?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'showByClasses' => true]) ?>
 		                        <?php } ?>
                             </div>
 							<?= $this->render('_byInternalClasses', ['stage' => $stage, 'participants' => $participantsByInternalClasses]) ?>
@@ -162,3 +162,13 @@ if ($city->timezone) {
 <?php } else { ?>
 	<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
 <?php } ?>
+
+
+<?php
+if ($showByClasses) {
+	$js = <<<EOF
+$('.result-scheme').slideToggle();
+EOF;
+	$this->registerJs($js);
+}
+?>
