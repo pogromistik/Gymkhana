@@ -322,6 +322,11 @@ h2 {
     padding-bottom: 5px;
 }
 
+.detail-news .date {
+    padding-top: 20px;
+    color: #909294;
+}
+
 .pagination {
     color: #4b4e53;
 }

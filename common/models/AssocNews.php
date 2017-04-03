@@ -97,20 +97,42 @@ class AssocNews extends \yii\db\ActiveRecord
 				/** @var Championship $championship */
 				$championship = $model;
 				$news = new AssocNews();
+				$news->title = $championship->title;
 				$news->previewText = 'Анонсирован ' . $championship->title . '.';
 				if ($championship->regionId) {
 					$news->previewText .= ' Регион проведения: ' . $championship->region->title . '.';
 				}
+				$fullText = 'В ' . $championship->year->year . ' пройдёт ' . $championship->title . '.<br>';
 				if ($championship->description) {
-					$news->fullText = $championship->description;
+					$fullText .= $championship->description;
+					$fullText .= '<br>';
 				}
+				$fullText .= 'Обязательное количество этапов для спортсмена: ' . $championship->amountForAthlete;
+				$fullText .= '<br>';
+				$fullText .= 'Количество этапов, по которым подсчитывается итог: ' . $championship->estimatedAmount;
+				if ($championship->requiredOtherRegions) {
+					$fullText .= '<br>';
+					$fullText .= 'Для полноценного участия в чемпионате необходимо хоть раз выступить на этапе в другом городе';
+				}
+				$fullText .= '<br>';
+				$fullText .= 'Диапазон стартовых номеров участников: ' . $championship->maxNumber . '-' . $championship->maxNumber;
+				if ($championship->internalClasses) {
+					$classes = [];
+					foreach ($championship->internalClasses as $class) {
+						$classes[] = $class->title;
+					}
+					$fullText .= '<br>';
+					$fullText .= 'Классы награждения: ' . implode(', ', $classes);
+				}
+				$news->fullText = $fullText;
 				$news->save();
 				break;
 			case self::TEMPLATE_STAGE:
 				/** @var Stage $stage */
 				$stage = $model;
 				$news = new AssocNews();
-				$news->previewText = $stage->title . ' пройдёт в городе ' . $stage->city->title;
+				$news->previewText = $stage->title . ' соревнования "'
+					. $stage->championship->title . '" пройдёт в городе ' . $stage->city->title;
 				if ($stage->location) {
 					$news->previewText .= '.<br>Место проведения этапа: ' . $stage->location;
 				}
@@ -120,7 +142,8 @@ class AssocNews extends \yii\db\ActiveRecord
 				if ($stage->startRegistration) {
 					$news->previewText .= '.<br>Начало регистрации: ' . $stage->startRegistrationHuman;
 				}
-				$news->previewText .='.';
+				$news->previewText .= '.';
+				$news->link = \Yii::$app->urlManager->createUrl(['/competitions/stage', 'id' => $stage->id]);
 				$news->save();
 				break;
 			
