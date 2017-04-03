@@ -173,7 +173,7 @@ class CompetitionsController extends BaseController
 		return $this->render('results', ['by' => $by]);
 	}
 	
-	public function actionStage($id, $sortBy = null)
+	public function actionStage($id, $sortBy = null, $showByClasses = false)
 	{
 		$stage = Stage::findOne($id);
 		if (!$stage) {
@@ -224,7 +224,8 @@ class CompetitionsController extends BaseController
 			'stage'                         => $stage,
 			'participantsByJapan'           => $participantsByJapan,
 			'participantsByInternalClasses' => $participantsByInternalClasses,
-			'sortBy'                        => $sortBy
+			'sortBy'                        => $sortBy,
+			'showByClasses'                 => $showByClasses
 		]);
 	}
 	
