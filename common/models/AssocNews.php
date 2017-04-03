@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\bootstrap\Html;
 
 /**
  * This is the model class for table "assoc_news".
@@ -102,7 +103,7 @@ class AssocNews extends \yii\db\ActiveRecord
 				if ($championship->regionId) {
 					$news->previewText .= ' Регион проведения: ' . $championship->region->title . '.';
 				}
-				$fullText = 'В ' . $championship->year->year . ' пройдёт ' . $championship->title . '.<br>';
+				$fullText = 'В ' . $championship->year->year . ' году пройдёт ' . $championship->title . '.<br>';
 				if ($championship->description) {
 					$fullText .= $championship->description;
 					$fullText .= '<br>';
@@ -115,7 +116,7 @@ class AssocNews extends \yii\db\ActiveRecord
 					$fullText .= 'Для полноценного участия в чемпионате необходимо хоть раз выступить на этапе в другом городе';
 				}
 				$fullText .= '<br>';
-				$fullText .= 'Диапазон стартовых номеров участников: ' . $championship->maxNumber . '-' . $championship->maxNumber;
+				$fullText .= 'Диапазон стартовых номеров участников: ' . $championship->minNumber . '-' . $championship->maxNumber;
 				if ($championship->internalClasses) {
 					$classes = [];
 					foreach ($championship->internalClasses as $class) {
@@ -124,6 +125,9 @@ class AssocNews extends \yii\db\ActiveRecord
 					$fullText .= '<br>';
 					$fullText .= 'Классы награждения: ' . implode(', ', $classes);
 				}
+				$fullText .= '<br>';
+				$fullText .= 'Информация может меняться, чтобы узнать подробнее о чемпионате пройдите по ' .
+					Html::a('ссылке', ['/competitions/championship', 'id' => $championship->id]) . '.';
 				$news->fullText = $fullText;
 				$news->save();
 				break;

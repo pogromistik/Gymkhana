@@ -547,4 +547,18 @@ class CompetitionsController extends BaseController
 			'showAll'      => $showAll
 		]);
 	}
+	
+	public function actionChampionship($id)
+	{
+		$championship = Championship::findOne($id);
+		if (!$championship) {
+			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		$this->pageTitle = $championship->title;
+		$this->description = '';
+		$this->keywords = '';
+		$this->layout = 'full-content';
+		
+		return $this->render('championship', ['championship' => $championship]);
+	}
 }
