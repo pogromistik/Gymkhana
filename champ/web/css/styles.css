@@ -937,3 +937,7 @@ table.results small.red {
 .navbar-nav > li > .dropdown-menu, .dropdown-submenu > .dropdown-menu {
     border-radius: 0;
 }
+
+.change-type a:hover {
+    background: #35a235;
+}
