@@ -120,10 +120,11 @@ class SiteController extends BaseController
 				break;
 			case 'news':
 				$data['page'] = $page;
-				if (!$page->news || !$page->news->isPublish) {
+				$news = $page->news;
+				if (!$news || !$news->isPublish) {
 					throw new NotFoundHttpException();
 				}
-				$data['oldNews'] = News::find()->where(['isPublish' => 1])
+				$data['oldNews'] = News::find()->where(['isPublish' => 1])->andWhere(['not', ['id' => $news->id]])
 					->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->limit(6)->all();
 				break;
 			case 'russia':
