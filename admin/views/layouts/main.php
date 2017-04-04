@@ -207,22 +207,27 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                 <li>
                                     <a href="<?= Url::to(['/competitions/help/cities']) ?>"> Города</a>
                                 </li>
-                                <li>
-                                    <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
-                                        чемпионатов</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/news"
-                                       href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/documents"
-                                       href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/classes"
-                                       href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы спортсменов</a>
-                                </li>
+								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/classes"
+                                           href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы
+                                            спортсменов</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
+                                            чемпионатов</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/news"
+                                           href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
+                                    </li>
+                                    <li>
+                                        <a data-addr="/competitions/documents"
+                                           href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
+                                    </li>
+								<?php } ?>
                                 <li>
                                     <a data-addr="/competitions/athlete"
                                        href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
@@ -236,14 +241,19 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 										<?php } ?>
                                     </ul>
                                 </li>
-                                <li>
-                                    <a data-addr="/competitions/figures"
-                                       href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/notice"
-                                       href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить уведомление</a>
-                                </li>
+								<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/figures"
+                                           href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/notice"
+                                           href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить
+                                            уведомление</a>
+                                    </li>
+								<?php } ?>
                             </ul>
                         </li>
 					<?php } ?>

@@ -161,7 +161,7 @@ class HelpController extends BaseController
 	
 	public function actionDeletePhoto($id, $modelId)
 	{
-		$this->can('competitions');
+		$this->can('projectAdmin');
 		
 		$model = null;
 		switch ($modelId) {
@@ -285,6 +285,8 @@ class HelpController extends BaseController
 	
 	public function actionCreateCity()
 	{
+		$this->can('competitions');
+		
 		$city = new City();
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
@@ -307,6 +309,8 @@ class HelpController extends BaseController
 	
 	public function actionCityUpdate($id)
 	{
+		$this->can('competitions');
+		
 		$city = City::findOne($id);
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
@@ -329,6 +333,8 @@ class HelpController extends BaseController
 	
 	public function actionCreateRegion()
 	{
+		$this->can('competitions');
+		
 		$region = new Region();
 		$error = null;
 		if ($region->load(\Yii::$app->request->post())) {
@@ -351,6 +357,8 @@ class HelpController extends BaseController
 	
 	public function actionCreateCountry()
 	{
+		$this->can('competitions');
+		
 		$country = new Country();
 		$error = null;
 		if ($country->load(\Yii::$app->request->post())) {

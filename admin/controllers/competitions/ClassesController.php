@@ -15,6 +15,12 @@ use yii\filters\VerbFilter;
  */
 class ClassesController extends BaseController
 {
+	public function init()
+	{
+		parent::init();
+		$this->can('globalWorkWithCompetitions');
+	}
+	
 	public function actions()
 	{
 		return [
@@ -48,8 +54,6 @@ class ClassesController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
-		
 		$searchModel = new AthletesClassSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -67,8 +71,6 @@ class ClassesController extends BaseController
 	 */
 	public function actionCreate()
 	{
-		$this->can('competitions');
-		
 		$model = new AthletesClass();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -90,8 +92,6 @@ class ClassesController extends BaseController
 	 */
 	public function actionDelete($id)
 	{
-		$this->can('competitions');
-		
 		$this->findModel($id)->delete();
 		
 		return $this->redirect(['index']);
@@ -108,8 +108,6 @@ class ClassesController extends BaseController
 	 */
 	protected function findModel($id)
 	{
-		$this->can('competitions');
-		
 		if (($model = AthletesClass::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -119,8 +117,6 @@ class ClassesController extends BaseController
 	
 	public function actionChangeStatus($id, $status)
 	{
-		$this->can('competitions');
-		
 		$class = AthletesClass::findOne($id);
 		if (!$class) {
 			return 'Класс не найден';

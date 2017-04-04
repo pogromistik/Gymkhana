@@ -36,7 +36,7 @@ class AdditionalController extends BaseController
 	 */
 	public function actionPoints()
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$searchModel = new PointSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -55,7 +55,7 @@ class AdditionalController extends BaseController
 	 */
 	public function actionCreatePoints()
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$model = new Point();
 		
@@ -78,7 +78,7 @@ class AdditionalController extends BaseController
 	 */
 	public function actionUpdatePoints($id)
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$model = $this->findModel($id);
 		
@@ -101,6 +101,8 @@ class AdditionalController extends BaseController
 	 */
 	public function actionDeletePoints($id)
 	{
+		$this->can('globalWorkWithCompetitions');
+		
 		$this->findModel($id)->delete();
 		
 		return $this->redirect(['points']);
@@ -117,6 +119,8 @@ class AdditionalController extends BaseController
 	 */
 	protected function findModel($id)
 	{
+		$this->can('globalWorkWithCompetitions');
+		
 		if (($model = Point::findOne($id)) !== null) {
 			return $model;
 		} else {
