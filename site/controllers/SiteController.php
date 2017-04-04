@@ -124,7 +124,7 @@ class SiteController extends BaseController
 					throw new NotFoundHttpException();
 				}
 				$data['oldNews'] = Page::find()->where(['layoutId' => 'news'])->andWhere(['not', ['id' => $page->id]])
-					->orderBy(['dateAdded' => SORT_DESC])->limit(6)->all();
+					->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->limit(6)->all();
 				break;
 			case 'russia':
 				$data['cities'] = City::find()->where(['showInRussiaPage' => 1])->orderBy(['title' => SORT_ASC])->all();
