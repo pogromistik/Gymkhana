@@ -6,20 +6,20 @@
 ?>
 
 <div class="show-pk">
-    <table class="table results">
+    <table class="table results results-with-img">
         <thead>
         <tr>
-            <th><p>Класс</p></th>
-            <th><p>Место в классе</p></th>
-            <th><p>№</p></th>
-            <th><p>Участник</p></th>
-            <th><p>Мотоцикл</p></th>
-            <th><p>Попытка</p></th>
-            <th><p>Время</p></th>
-            <th><p>Штраф</p></th>
-            <th><p>Лучшее время</p></th>
-            <th><p>Место вне класса</p></th>
-            <th><p>Рейтинг</p></th>
+            <th><img src="/img/table/class.png"></th>
+            <th><img src="/img/table/placeInClass.png"></th>
+            <th><img src="/img/table/number.png"></th>
+            <th><img src="/img/table/participant.png"></th>
+            <th><img src="/img/table/motorcycle.png"></th>
+            <th><img src="/img/table/attempt.png"></th>
+            <th><img src="/img/table/time.png"></th>
+            <th><img src="/img/table/fine.png"></th>
+            <th><img src="/img/table/bestTime.png"></th>
+            <th><img src="/img/table/place.png"></th>
+            <th><img src="/img/table/percent.png"></th>
         </tr>
         </thead>
         <tbody>
