@@ -24,7 +24,7 @@ return [
 				'security' => \admin\controllers\SecurityController::class
 			],
 			'modelMap'           => [
-				'User' => \dektrium\user\models\User::className()
+				'User' => \common\models\User::className()
 			],
 		],
 		'rbac'     => [
@@ -50,6 +50,13 @@ return [
 				[
 					'class'  => 'yii\log\FileTarget',
 					'levels' => ['error', 'warning'],
+				],
+			],
+		],
+		'view' => [
+			'theme' => [
+				'pathMap' => [
+					'@dektrium/user/views' => '@admin/views/user'
 				],
 			],
 		],
