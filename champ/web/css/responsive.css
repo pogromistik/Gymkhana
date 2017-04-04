@@ -189,4 +189,7 @@
     .athletes .img img {
         max-width: 110px;
     }
+    body {
+        margin-bottom: 90px;
+    }
 }
