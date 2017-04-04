@@ -941,3 +941,11 @@ table.results small.red {
 .change-type a:hover {
     background: #35a235;
 }
+
+.results-with-img thead th {
+    vertical-align: bottom!important;
+}
+
+.table thead img {
+    height: 150px;
+}

@@ -83,6 +83,10 @@
         content: "\2022";
         padding-right: 5px;
     }
+
+    .table thead img {
+        height: 100px;
+    }
 }
 
 @media (max-width: 876px) {
