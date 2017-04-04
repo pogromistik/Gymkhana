@@ -47,6 +47,14 @@
     table.results {
         font-size: 12px;
     }
+
+    .table thead img {
+        height: 130px;
+    }
+
+    .list-nav ul {
+        right: 10px;
+    }
 }
 
 @media (max-width: 991px) {
