@@ -14,6 +14,12 @@ use yii\filters\VerbFilter;
  */
 class NewsController extends BaseController
 {
+	public function init()
+	{
+		parent::init();
+		$this->can('projectAdmin');
+	}
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -36,10 +42,22 @@ class NewsController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
-		
 		$searchModel = new AssocNewsSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if (\Yii::$app->user->can('projectOrganizer')) {
+				$dataProvider->query->andWhere(['or',
+					['creatorUserId' => \Yii::$app->user->id],
+					['canEditRegionId' => \Yii::$app->user->identity->regionId],
+					['canEditRegionId' => null]
+				]);
+			} elseif (Yii::$app->user->can('projectAdmin')) {
+				$dataProvider->query->andWhere(['or',
+					['creatorUserId' => \Yii::$app->user->id],
+					['canEditRegionId' => \Yii::$app->user->identity->regionId]
+				]);
+			}
+		}
 		
 		return $this->render('index', [
 			'searchModel'  => $searchModel,
@@ -55,8 +73,6 @@ class NewsController extends BaseController
 	 */
 	public function actionCreate()
 	{
-		$this->can('competitions');
-		
 		$model = new AssocNews();
 		$model->datePublishHuman = date('d.m.Y', time());
 		
@@ -75,12 +91,11 @@ class NewsController extends BaseController
 	 *
 	 * @param integer $id
 	 * @param bool    $success
+	 *
 	 * @return mixed
 	 */
 	public function actionUpdate($id, $success = false)
 	{
-		$this->can('competitions');
-		
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -98,12 +113,11 @@ class NewsController extends BaseController
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 *
 	 * @param integer $id
+	 *
 	 * @return mixed
 	 */
 	public function actionDelete($id)
 	{
-		$this->can('competitions');
-		
 		$this->findModel($id)->delete();
 		
 		return $this->redirect(['index']);
@@ -114,15 +128,31 @@ class NewsController extends BaseController
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 *
 	 * @param integer $id
+	 *
 	 * @return AssocNews the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
 		if (($model = AssocNews::findOne($id)) !== null) {
+			if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+				if (\Yii::$app->user->can('projectOrganizer')) {
+					if ($model->creatorUserId != \Yii::$app->user->id && $model->canEditRegionId != null
+						&& $model->canEditRegionId != \Yii::$app->user->identity->regionId
+					) {
+						throw new NotFoundHttpException('Новость не найдена.');
+					}
+				} elseif (Yii::$app->user->can('projectAdmin')) {
+					if ($model->creatorUserId != \Yii::$app->user->id
+						&& $model->canEditRegionId != \Yii::$app->user->identity->regionId
+					) {
+						throw new NotFoundHttpException('Новость не найдена.');
+					}
+				}
+			}
 			return $model;
 		} else {
-			throw new NotFoundHttpException('The requested page does not exist.');
+			throw new NotFoundHttpException('Новость не найдена.');
 		}
 	}
 }

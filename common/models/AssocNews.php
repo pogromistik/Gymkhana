@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\UserHelper;
 use Yii;
 use yii\bootstrap\Html;
 
@@ -17,6 +18,7 @@ use yii\bootstrap\Html;
  * @property integer $dateUpdated
  * @property integer $datePublish
  * @property integer $secure
+ * @property integer $canEditRegionId
  */
 class AssocNews extends \yii\db\ActiveRecord
 {
@@ -24,6 +26,7 @@ class AssocNews extends \yii\db\ActiveRecord
 	const TEMPLATE_STAGE = 2;
 	
 	public $datePublishHuman;
+	public $autoCreate = false;
 	
 	/**
 	 * @inheritdoc
@@ -41,7 +44,7 @@ class AssocNews extends \yii\db\ActiveRecord
 		return [
 			[['fullText', 'previewText'], 'string'],
 			[['dateAdded', 'dateUpdated', 'previewText'], 'required'],
-			[['dateAdded', 'dateUpdated', 'datePublish', 'secure'], 'integer'],
+			[['dateAdded', 'dateUpdated', 'datePublish', 'secure', 'canEditRegionId', 'creatorUserId'], 'integer'],
 			[['previewText', 'link', 'title', 'datePublishHuman'], 'string', 'max' => 255],
 			[['secure'], 'default', 'value' => 0]
 		];
@@ -73,6 +76,11 @@ class AssocNews extends \yii\db\ActiveRecord
 			if (!$this->datePublish) {
 				$this->datePublish = time();
 			}
+			$this->creatorUserId = UserHelper::getUserId();
+			if (!$this->autoCreate && $this->creatorUserId != UserHelper::CONSOLE_LOG_USER_ID) {
+				$user = User::findOne($this->creatorUserId);
+				$this->canEditRegionId = $user->regionId;
+			}
 		}
 		$this->dateUpdated = time();
 		
@@ -93,15 +101,17 @@ class AssocNews extends \yii\db\ActiveRecord
 	
 	public static function createStandardNews($template, $model)
 	{
+		$news = new AssocNews();
+		$news->autoCreate = true;
 		switch ($template) {
 			case self::TEMPLATE_CHAMPIONSHIP:
 				/** @var Championship $championship */
 				$championship = $model;
-				$news = new AssocNews();
 				$news->title = $championship->title;
 				$news->previewText = 'Анонсирован ' . $championship->title . '.';
 				if ($championship->regionId) {
 					$news->previewText .= ' Регион проведения: ' . $championship->region->title . '.';
+					$news->canEditRegionId = $championship->regionId;
 				}
 				$fullText = 'В ' . $championship->year->year . ' году пройдёт ' . $championship->title . '.<br>';
 				if ($championship->description) {
@@ -129,12 +139,11 @@ class AssocNews extends \yii\db\ActiveRecord
 				$fullText .= 'Информация может меняться, чтобы узнать подробнее о чемпионате пройдите по ' .
 					Html::a('ссылке', ['/competitions/championship', 'id' => $championship->id]) . '.';
 				$news->fullText = $fullText;
-				$news->save();
 				break;
 			case self::TEMPLATE_STAGE:
 				/** @var Stage $stage */
 				$stage = $model;
-				$news = new AssocNews();
+				$news->canEditRegionId = $stage->regionId;
 				$news->previewText = $stage->title . ' соревнования "'
 					. $stage->championship->title . '" пройдёт в городе ' . $stage->city->title;
 				if ($stage->location) {
@@ -148,10 +157,9 @@ class AssocNews extends \yii\db\ActiveRecord
 				}
 				$news->previewText .= '.';
 				$news->link = \Yii::$app->urlManager->createUrl(['/competitions/stage', 'id' => $stage->id]);
-				$news->save();
 				break;
-			
 		}
+		$news->save();
 		
 		return true;
 	}
