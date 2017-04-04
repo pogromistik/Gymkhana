@@ -123,7 +123,7 @@ class SiteController extends BaseController
 				if (!$page->news || !$page->news->isPublish) {
 					throw new NotFoundHttpException();
 				}
-				$data['oldNews'] = Page::find()->where(['layoutId' => 'news'])->andWhere(['not', ['id' => $page->id]])
+				$data['oldNews'] = News::find()->where(['isPublish' => 1])
 					->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->limit(6)->all();
 				break;
 			case 'russia':

@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \common\models\News   $news
- * @var \common\models\Page[] $oldNews
+ * @var \common\models\News[] $oldNews
  */
 use yii\bootstrap\Html;
 
@@ -53,13 +53,13 @@ $this->registerJsFile('http://vk.com/js/api/openapi.js', ['position' => yii\web\
 <!-- предыдущие новости -->
 <?php if ($oldNews) { ?>
     <div class="row news_list sliphover-active">
-		<?php foreach ($oldNews as $link) { ?>
+		<?php foreach ($oldNews as $oneNews) { ?>
             <div class="col-xs-2 item">
-                <a href="/<?= $link->url ?>">
+                <a href="/<?= $oneNews->page->url ?>">
                     <figure class="images">
-						<?= Html::img(Yii::getAlias('@filesView') . $link->news->previewImage, [
-							'alt'   => $link->title,
-							'title' => $link->title,
+						<?= Html::img(Yii::getAlias('@filesView') . $oneNews->previewImage, [
+							'alt'   => $oneNews->title,
+							'title' => $oneNews->title,
 							'class' => "slip"
 						]) ?>
                     </figure>
