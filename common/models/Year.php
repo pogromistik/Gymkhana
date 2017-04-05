@@ -8,19 +8,19 @@ use Yii;
  * This is the model class for table "years".
  *
  * @property integer $id
- * @property integer  $year
+ * @property integer $year
  * @property integer $status
  */
 class Year extends \yii\db\ActiveRecord
 {
 	const STATUS_ACTIVE = 1;
 	const STATUS_INACTIVE = 0;
-
+	
 	public static $statusesTitle = [
 		self::STATUS_ACTIVE   => 'Активен',
 		self::STATUS_INACTIVE => 'Заблокирован'
 	];
-
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -28,7 +28,7 @@ class Year extends \yii\db\ActiveRecord
 	{
 		return 'Years';
 	}
-
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -39,7 +39,7 @@ class Year extends \yii\db\ActiveRecord
 			[['status', 'year'], 'integer']
 		];
 	}
-
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -55,5 +55,20 @@ class Year extends \yii\db\ActiveRecord
 	public static function getActive()
 	{
 		return self::findAll(['status' => self::STATUS_ACTIVE]);
+	}
+	
+	public static function getCurrent()
+	{
+		$current = date('Y');
+		$year = self::findOne(['year' => $current]);
+		if (!$year) {
+			$year = new Year();
+			$year->year = $current;
+			if (!$year->save()) {
+				return null;
+			}
+		}
+		
+		return $year;
 	}
 }

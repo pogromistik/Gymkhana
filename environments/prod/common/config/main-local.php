@@ -3,8 +3,8 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=gymkhana',
-            'username' => 'gymkhana',
+            'dsn' => 'pgsql:host=localhost;dbname=gymkhana',
+            'username' => 'postgres',
             'password' => 'X2y2B3a1',
             'charset' => 'utf8',
         ],
