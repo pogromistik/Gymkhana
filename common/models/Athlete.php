@@ -369,7 +369,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function createCabinet()
 	{
-		$password = 111111;
+		$password = $this->generatePassword();
 		$this->login = $this->id + 6000;
 		$this->generateAuthKey();
 		$this->setPassword($password);
@@ -379,7 +379,36 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			return false;
 		}
 		
+		if (YII_ENV != 'dev') {
+			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
+				->setTo($this->email)
+				->setFrom('support@gymkhana-cup.ru')
+				->setSubject('Регистрация на сайте gymkhana-cup')
+				->send();
+		}
+		
 		return true;
+	}
+	
+	public function generatePassword()
+	{
+		$arr = array('a','b','c','d','e','f',
+			'g','h','i','j','k','l',
+			'm','n','o','p','q','r',
+			's', 't','u','v','w','x',
+			'y','z', '1','2','3','4',
+			'5','6','7','8','9','0'
+		);
+		
+		// Генерируем пароль
+		$pass = "";
+		for($i = 0; $i < 8; $i++)
+		{
+			// Вычисляем случайный индекс массива
+			$index = rand(0, count($arr) - 1);
+			$pass .= $arr[$index];
+		}
+		return $pass;
 	}
 	
 	public function deleteCabinet()
