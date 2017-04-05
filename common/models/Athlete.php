@@ -383,7 +383,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
 				->setFrom('support@gymkhana-cup.ru')
-				->setSubject('Регистрация на сайте gymkhana-cup')
+				->setSubject('gymkhana-cup: регистрация на сайте')
 				->send();
 		}
 		
