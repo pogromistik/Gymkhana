@@ -36,6 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'link',
             'top',
             'left',
+            [
+                'attribute' => 'regionId',
+                'format' => 'raw',
+                'value' => function (\common\models\City $city) {
+                    return $city->regionId ? $city->region->title : null;
+                }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

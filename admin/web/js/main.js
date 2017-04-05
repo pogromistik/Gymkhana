@@ -64,3 +64,22 @@ $('.removeFile').click(function () {
         });
     }
 });
+
+$(document).ready(function () {
+    //$('li.competitions').addClass('active');
+});
+
+(function() {
+    var current = '/' + window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2];
+    $( ".nav a" ).each(function() {
+        var elem = $(this);
+        if (elem.data('addr') == current) {
+            var ul = elem.closest('ul');
+            if (ul.hasClass('dropdown-menu')) {
+                ul.parent().find('.dropdown-toggle').addClass('active');
+            } else {
+                elem.addClass('active');
+            }
+        }
+    });
+})();
