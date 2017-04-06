@@ -4,4 +4,4 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/developer174/yii run/change-championships-status >> /var/log/cron.log
 0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/developer174/yii run/change-photo-status >> /var/log/cron.log
 0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/developer174/yii run/check-size >> /var/log/cron.log
-0 0 * * * /var/lib/pgsql/9.4/backup.sh >> /var/log/cron_db.log
+0 0 * * * sh /var/lib/pgsql/9.4/backup.sh >> /var/log/cron_db.log
