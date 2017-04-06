@@ -32,7 +32,7 @@ class SiteController extends BaseController
 	public function actionIndex()
 	{
 		$this->layout = 'main-with-img';
-		$this->pageTitle = 'События';
+		$this->pageTitle = 'Мотоджимхана: события';
 		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
 		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, новости мото джимханы, события мото джимханы, новости, события';
 		
