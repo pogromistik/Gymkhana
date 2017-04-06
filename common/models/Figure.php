@@ -83,6 +83,8 @@ class Figure extends \yii\db\ActiveRecord
 		if ($this->bestTimeInRussiaForHuman) {
 			list($min, $secs) = explode(':', $this->bestTimeInRussiaForHuman);
 			$this->bestTimeInRussia = ($min * 60000) + $secs * 1000;
+		} else {
+			$this->bestTimeInRussia = null;
 		}
 		
 		return parent::beforeValidate();
