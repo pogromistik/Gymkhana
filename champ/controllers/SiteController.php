@@ -2,12 +2,15 @@
 namespace champ\controllers;
 
 use champ\models\LoginForm;
+use champ\models\PasswordResetRequestForm;
+use champ\models\ResetPasswordForm;
 use common\models\AssocNews;
 use common\models\Athlete;
 use common\models\DocumentSection;
 use common\models\Feedback;
 use common\models\TmpAthlete;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\base\UserException;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
@@ -164,7 +167,7 @@ class SiteController extends BaseController
 					return 'Для каждого мотоцикла необходимо указать марку и модель';
 				}
 				$motorcycles[] = [
-					'mark' => (string)$mark,
+					'mark'  => (string)$mark,
 					'model' => (string)$models[$i]
 				];
 			}
@@ -196,6 +199,58 @@ class SiteController extends BaseController
 	
 	public function actionAppendMotorcycle($i)
 	{
-		return $this->renderAjax('_append', ['i' => $i+1]);
+		return $this->renderAjax('_append', ['i' => $i + 1]);
+	}
+	
+	public function actionResetPassword()
+	{
+		$this->pageTitle = 'Восстановление пароля';
+		$model = new PasswordResetRequestForm();
+		
+		return $this->render('reset-password', ['model' => $model]);
+	}
+	
+	public function actionSendMailForResetPassword()
+	{
+		$model = new PasswordResetRequestForm();
+		if ($model->load(\Yii::$app->request->post())) {
+			$athlete = Athlete::findOne(['email' => $model->login]);
+			if (!$athlete) {
+				$login = preg_replace('~\D+~', '', $model->login);
+				if ($login == $model->login) {
+					$athlete = Athlete::findOne(['login' => $model->login]);
+				}
+			}
+			if ($athlete && $athlete->hasAccount) {
+				if ($athlete->resetPassword()) {
+					return true;
+				}
+				
+				return 'Возникла ошибка при отправке данных. Попробуйте позже.';
+			}
+			
+			return 'Пользователь не найден. Проверьте правильность введённых данных.';
+		}
+		
+		return 'Возникла ошибка при отправке данных.';
+	}
+	
+	public function actionNewPassword($token)
+	{
+		try {
+			$model = new ResetPasswordForm($token);
+		} catch (InvalidParamException $e) {
+			return $this->goHome();
+		}
+		
+		$this->pageTitle = 'Восстановление пароля';
+		
+		if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+			return $this->redirect(['/profile/info']);
+		}
+		
+		return $this->render('set-new-password', [
+			'model' => $model,
+		]);
 	}
 }

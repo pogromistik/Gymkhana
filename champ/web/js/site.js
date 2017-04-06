@@ -167,3 +167,29 @@ $('.change-result-scheme').click(function (e) {
     e.preventDefault();
     $('.result-scheme').slideToggle();
 });
+
+$(document).on("submit", '#resetPasswordForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+    $('.alert').hide();
+
+    $.ajax({
+        url: "/site/send-mail-for-reset-password",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                form.find('.alert-success').text('На email, указанный в вашем профиле отправлено письмо для восстановления пароля.').show();
+                form.trigger('reset');
+            } else {
+                form.find('.alert-danger').text(result).show();
+            }
+            hideBackDrop();
+        },
+        error: function (error) {
+            alert(error.responseText);
+            hideBackDrop();
+        }
+    });
+});
