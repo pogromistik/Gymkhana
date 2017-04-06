@@ -35,8 +35,8 @@ class CompetitionsController extends BaseController
 	public function actionSchedule()
 	{
 		$this->pageTitle = 'Расписание соревнований';
-		$this->description = 'Расписание соревнований';
-		$this->keywords = 'Расписание соревнований';
+		$this->description = 'Расписание соревнований по мотоджимхане за текущий год';
+		$this->keywords = 'Соревнования, календарь, календарь мотоджимханы, календарь соревнований по мотоджимхане, чемпионаты, чемпионат России';
 		
 		$events = [];
 		$currentYear = Year::getCurrent();
@@ -87,8 +87,8 @@ class CompetitionsController extends BaseController
 	public function actionResults($by = null)
 	{
 		$this->pageTitle = 'Итоги соревнований';
-		$this->description = 'Итоги соревнований';
-		$this->keywords = 'Итоги соревнований';
+		$this->description = 'Результаты соревнований  по мотоджимхане за всё время';
+		$this->keywords = 'Соревнования, чемпионаты, результаты, мотоджимхана результаты, мото джимхана, базовые фигуры';
 		
 		$this->layout = 'main-with-img';
 		$this->background = 'background3.png';
@@ -180,8 +180,8 @@ class CompetitionsController extends BaseController
 			throw new NotFoundHttpException('Этап не найден');
 		}
 		$this->pageTitle = $stage->title;
-		$this->description = '';
-		$this->keywords = '';
+		$this->description = $stage->title;
+		$this->keywords = 'Этапы соревнования, ' . $stage->title;
 		$this->layout = 'full-content';
 		
 		$participantsQuery = Participant::find();
@@ -268,8 +268,8 @@ class CompetitionsController extends BaseController
 		}
 		
 		$this->pageTitle = $figure->title;
-		$this->description = '';
-		$this->keywords = '';
+		$this->description = 'Результаты заездов по фигуре ' . $figure->title;
+		$this->keywords = 'Фигуры мотоджимханы, базовые фигуры, ' . $figure->title;
 		$this->layout = 'full-content';
 		
 		return $this->render('figure', [
@@ -531,12 +531,13 @@ class CompetitionsController extends BaseController
 	
 	public function actionChampionshipResult($championshipId, $showAll = null)
 	{
-		$this->pageTitle = 'Итоги чемпионата';
-		
 		$championship = Championship::findOne($championshipId);
 		if (!$championship) {
 			throw new NotFoundHttpException('Чемпионат не найден');
 		}
+		$this->pageTitle = $championship->title . ': итоги';
+		$this->description = 'Итоги соревнования: ' . $championship->title;
+		
 		$stages = $championship->stages;
 		$results = $championship->getResults($showAll);
 		
@@ -555,8 +556,7 @@ class CompetitionsController extends BaseController
 			throw new NotFoundHttpException('Чемпионат не найден');
 		}
 		$this->pageTitle = $championship->title;
-		$this->description = '';
-		$this->keywords = '';
+		$this->description = 'Информация о соревновании: ' . $championship->title;
 		$this->layout = 'full-content';
 		
 		return $this->render('championship', ['championship' => $championship]);
