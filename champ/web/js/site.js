@@ -131,7 +131,7 @@ $(document).on("submit", '.registrationAthlete', function (e) {
             $('html, body').animate({ scrollTop: $('.modal-footer').offset().top }, 500);
             if (result == true) {
                 form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет' +
-                    'отправлен на указанную почту в течение 24 часов. Если этого не произойдёт - пожалуйста, сообщите нам.').show();
+                    'отправлен на указанную почту в течение 24 часов (если письма нет - проверьте папку спам). Если этого не произойдёт - пожалуйста, сообщите нам.').show();
                 form.trigger('reset');
             } else {
                 form.find('.alert-danger').text(result).show();
