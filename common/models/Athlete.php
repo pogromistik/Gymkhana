@@ -424,4 +424,57 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		
 		return true;
 	}
+	
+	public static function findByPasswordResetToken($token)
+	{
+		if (!static::isPasswordResetTokenValid($token)) {
+			return null;
+		}
+		return static::findOne([
+			'passwordResetToken' => $token,
+			'status' => self::STATUS_ACTIVE,
+		]);
+	}
+	
+	public static function isPasswordResetTokenValid($token)
+	{
+		if (empty($token)) {
+			return false;
+		}
+		$expire = Yii::$app->params['user.passwordResetTokenExpire'];
+		$parts = explode('_', $token);
+		$timestamp = (int) end($parts);
+		return $timestamp + $expire >= time();
+	}
+	
+	public function removePasswordResetToken()
+	{
+		$this->passwordResetToken = null;
+	}
+	
+	public function generatePasswordResetToken()
+	{
+		$this->passwordResetToken = Yii::$app->security->generateRandomString() . '_' . time();
+	}
+	
+	public function resetPassword()
+	{
+		if (!Athlete::isPasswordResetTokenValid($this->passwordResetToken)) {
+			$this->generatePasswordResetToken();
+		}
+		if ($this->save()) {
+			$resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/new-password', 'token' => $this->passwordResetToken]);
+			
+			if (YII_ENV != 'dev') {
+				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
+					->setTo($this->email)
+					->setFrom('support@gymkhana-cup.ru')
+					->setSubject('gymkhana-cup: восстановление пароля')
+					->send();
+			}
+			
+			return true;
+		}
+		return false;
+	}
 }
