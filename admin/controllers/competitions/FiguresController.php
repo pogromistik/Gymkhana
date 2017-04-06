@@ -188,6 +188,7 @@ class FiguresController extends BaseController
 					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
 				}
 				$figure->bestTimeInRussia = $item->resultTime;
+				$figure->bestTimeForHuman = $item->resultTimeForHuman;
 				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				
 				$text = 'Поздравляем! Вы установили новый Российский рекорд для фигуры ' .
@@ -202,6 +203,7 @@ class FiguresController extends BaseController
 				}
 				$figure->bestTime = $item->resultTime;
 				$figure->bestTimeInRussia = $item->resultTime;
+				$figure->bestTimeInRussiaForHuman = $item->resultTimeForHuman;
 				$figure->bestAthlete = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				
