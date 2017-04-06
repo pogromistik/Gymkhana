@@ -292,21 +292,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function afterSave($insert, $changedAttributes)
 	{
-		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']) {
+		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']
+		&& $changedAttributes['athleteClassId'] != $this->athleteClassId) {
+			$old = $changedAttributes['athleteClassId'];
+			$new = $this->athleteClassId;
+			$history = ClassHistory::find()->where(['athleteId' => $this->id])
+				->andWhere(['oldClassId' => $old, 'newClassId' => $new])
+				->orderBy(['date' => SORT_DESC])->one();
+			if (!$history) {
+				ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
+			}
 			if ($this->hasAccount) {
-				$old = $changedAttributes['athleteClassId'];
-				$new = $this->athleteClassId;
-				$history = ClassHistory::find()->where(['athleteId' => $this->id])
-					->andWhere(['oldClassId' => $old, 'newClassId' => $new])
-					->orderBy(['date' => SORT_DESC])->one();
-				if (!$history) {
-					ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
-				}
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
 				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
 				if ($history && (mb_strlen($history->event) <= (253 - mb_strlen($text)))) {
-					$text .= $history->event . '(' . $history->event . ')';
+					$text .= $history->event . ' (' . $history->event . ')';
 				}
 				Notice::add($this->id, $text);
 			}
