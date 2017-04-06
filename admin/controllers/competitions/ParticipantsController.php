@@ -469,7 +469,13 @@ class ParticipantsController extends BaseController
 				. $participant->newAthleteClass->title . '. Понижение класса невозможно';
 		}
 		if ($athlete->athleteClass->percent == $participant->newAthleteClass->percent) {
-			return 'Спортсмену ' . $athlete->getFullName() . ' итак уже присвоен класс C3';
+			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
+			if (!$participant->save()) {
+				
+				return 'Невозможно сохранить изменения для участника';
+			}
+			
+			return true;
 		}
 		
 		if ($athlete->athleteClassId != $participant->newAthleteClassId) {

@@ -357,7 +357,12 @@ class FiguresController extends BaseController
 				. $item->newAthleteClass->title . '. Понижение класса невозможно';
 		}
 		if ($athlete->athleteClassId && $athlete->athleteClass->percent == $item->newAthleteClass->percent) {
-			return 'Спортсмену ' . $item->athlete->getFullName() . ' итак уже присвоен класс C3';
+			$item->newAthleteClassStatus = FigureTime::NEW_CLASS_STATUS_APPROVE;
+			if (!$item->save()) {
+				
+				return 'Невозможно изменить класс спортсмену';
+			}
+			return true;
 		}
 		
 		if ($athlete->athleteClassId != $item->newAthleteClassId) {
