@@ -311,7 +311,6 @@ class Stage extends BaseActiveRecord
 				
 				//Рассчёт класса
 				if ($participant->athleteClassId) {
-					$participant->newAthleteClassId = null;
 					$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
 					
 					/** @var AthletesClass $resultClass */
@@ -319,12 +318,13 @@ class Stage extends BaseActiveRecord
 						->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
 					if ($resultClass && $resultClass->id != $participant->id) {
 						if ($stageClass->percent > $resultClass->percent) {
-							if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent) {
+							if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent
+							&& $stageClass->id != $participant->newAthleteClassId) {
 								$participant->newAthleteClassId = $stageClass->id;
 								$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
 							}
 						} elseif (!$participant->athleteClassId ||
-							$participant->athleteClass->percent > $resultClass->percent
+							$participant->athleteClass->percent > $resultClass->percent && $participant->newAthleteClassId != $resultClass->id
 						) {
 							$participant->newAthleteClassId = $resultClass->id;
 							$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
