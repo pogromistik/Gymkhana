@@ -76,6 +76,8 @@ class Figure extends \yii\db\ActiveRecord
 		if ($this->bestTimeForHuman) {
 			list($min, $secs) = explode(':', $this->bestTimeForHuman);
 			$this->bestTime = ($min * 60000) + $secs * 1000;
+		} else {
+			$this->bestTime = null;
 		}
 		
 		if ($this->bestTimeInRussiaForHuman) {
