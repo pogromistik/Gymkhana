@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<url>
+  <loc>http://gymkhana-cup.ru/</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/site/login</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/documents</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/competitions/schedule</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/competitions/results?by=figure</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/competitions/results?by=russia</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/competitions/results?by=regional</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/athletes/list</loc>
+</url>
+<url>
+  <loc>http://gymkhana-cup.ru/registration</loc>
+</url>
+</urlset>
