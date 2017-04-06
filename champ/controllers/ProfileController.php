@@ -66,7 +66,7 @@ class ProfileController extends AccessController
 	
 	public function actionInfo()
 	{
-		$this->pageTitle = 'Информация';
+		$this->pageTitle = 'Информация о этапах и заявок на участие';
 		
 		$time = time();
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
@@ -393,6 +393,7 @@ class ProfileController extends AccessController
 	public function actionHelp()
 	{
 		$this->pageTitle = 'Справка';
+		
 		return $this->render('help');
 	}
 }
