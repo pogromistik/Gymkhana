@@ -898,8 +898,8 @@ class RunController extends Controller
 	public function actionMailTest()
 	{
 		\Yii::$app->mailer->compose('text', ['text' => 'проверка почты'])
-			->setTo('Lyadetskiy174@gmail.com')
-			->setFrom('support@gymkhana-cup.ru')
+			->setTo('lyadetskaya.ns@gmail.com')
+			->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup.ru: проверка почты')
 			->send();
 	}
