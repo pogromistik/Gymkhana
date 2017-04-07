@@ -894,4 +894,13 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionMailTest()
+	{
+		\Yii::$app->mailer->compose('text', ['text' => 'проверка почты'])
+			->setTo('lyadetskaya.ns@gmail.com')
+			->setFrom('support@gymkhana-cup.ru')
+			->setSubject('gymkhana-cup.ru: проверка почты')
+			->send();
+	}
 }
