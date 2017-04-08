@@ -322,6 +322,10 @@ h2 {
     padding-bottom: 5px;
 }
 
+.news .item .title-with-bg {
+    text-transform: uppercase;
+}
+
 .detail-news .date {
     padding-top: 20px;
     color: #909294;
