@@ -147,7 +147,7 @@ class FigureTime extends BaseActiveRecord
 	
 	public function beforeSave($insert)
 	{
-		if ($this->isNewRecord || isset($this->dirtyAttributes['percent'])) {
+		if ($this->isNewRecord || $this->isAttributeChanged('percent')) {
 			$figure = Figure::findOne($this->figureId);
 			if ($figure->useForClassesCalculate && $this->percent) {
 				//Рассчёт класса
