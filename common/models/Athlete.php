@@ -170,8 +170,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
 			['number', 'integer', 'max' => 9999],
-			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 102400,
-			                      'tooBig'     => 'Размер файла не должен превышать 100KB']
+			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 307200,
+			                      'tooBig'     => 'Размер файла не должен превышать 300KB']
 		];
 	}
 	
@@ -269,7 +269,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function beforeSave($insert)
 	{
 		$file = UploadedFile::getInstance($this, 'photoFile');
-		if ($file && $file->size <= 102400) {
+		if ($file && $file->size <= 307200) {
 			if ($this->photo) {
 				$filePath = Yii::getAlias('@files') . $this->photo;
 				if (file_exists($filePath)) {

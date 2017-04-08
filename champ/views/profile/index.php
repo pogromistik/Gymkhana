@@ -34,7 +34,7 @@ use yii\web\JsExpression;
 		<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
 
         <div class="help-for-athlete">
-            <small>Размер загружаемого изображения не должен превышать 100КБ. Допустимые форматы: png, jpg.
+            <small>Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg.
                 Необходимые пропорции: 3x4 (300x400 pixels)
             </small>
         </div>
