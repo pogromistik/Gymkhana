@@ -236,6 +236,12 @@ class Championship extends BaseActiveRecord
 			}
 			$busyNumbersForAthletes = $query->column();
 			$busyNumbers = array_merge($busyNumbers, $busyNumbersForAthletes);
+			if ($athleteId) {
+				$athlete = Athlete::findOne($athleteId);
+				if ($athlete->regionId == $championship->regionId && !in_array($athlete->number, $numbers)) {
+					$numbers[] = $athlete->number;
+				}
+			}
 		}
 		$tmpBusyNumbers = TmpParticipant::find()->select('number')->where(['stageId' => $stage->id])
 			->andWhere(['status' => TmpParticipant::STATUS_NEW])->asArray()->column();
