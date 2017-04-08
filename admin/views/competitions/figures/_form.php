@@ -20,6 +20,8 @@ use yii\widgets\MaskedInput;
 	    'options' => ['id' => 'newBlock'],
 	    'preset'  => 'basic',
     ]) ?>
+	
+	<?= $form->field($model, 'useForClassesCalculate')->checkbox() ?>
 
     <?= $form->field($model, 'bestTimeForHuman')->widget(MaskedInput::classname(), [
 	    'mask'    => '99:99.99',

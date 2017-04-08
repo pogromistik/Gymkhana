@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  * @property string       $bestAthlete
  * @property integer      $bestTimeInRussia
  * @property string       $bestAthleteInRussia
+ * @property integer      $useForClassesCalculate
  *
  * @property FigureTime[] $results
  */
@@ -41,12 +42,13 @@ class Figure extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title', 'bestTimeForHuman'], 'required'],
+			[['title'], 'required'],
 			[['description', 'bestAthlete', 'bestAthleteInRussia', 'bestTimeForHuman', 'bestTimeInRussiaForHuman'], 'string'],
-			[['bestTime', 'bestTimeInRussia'], 'integer'],
+			[['bestTime', 'bestTimeInRussia', 'useForClassesCalculate'], 'integer'],
 			[['title', 'file', 'picture'], 'string', 'max' => 255],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
-			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
+			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['useForClassesCalculate', 'default', 'value' => 0]
 		];
 	}
 	
@@ -68,6 +70,7 @@ class Figure extends \yii\db\ActiveRecord
 			'bestTimeInRussia'         => 'Лучшее время в России',
 			'bestTimeInRussiaForHuman' => 'Лучшее время в России',
 			'bestAthleteInRussia'      => 'Рекордсмен в России',
+			'useForClassesCalculate'   => 'Использовать для расчета классов'
 		];
 	}
 	
