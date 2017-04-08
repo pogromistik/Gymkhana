@@ -68,7 +68,7 @@ class CompetitionsController extends BaseController
 			}
 			$event = new Event();
 			$event->id = $stage->id;
-			$event->title = $stage->title;
+			$event->title = $stage->title . ' ' . $stage->city->title;
 			$event->allDay = true;
 			$event->backgroundColor = $background;
 			$event->color = $background;
