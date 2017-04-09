@@ -20,6 +20,12 @@ use yii\web\Response;
 
 class ProfileController extends AccessController
 {
+	public function init()
+	{
+		parent::init();
+		$this->layout = 'full-content';
+	}
+	
 	public function actionIndex($success = false)
 	{
 		$this->pageTitle = 'Редактирование профиля';
