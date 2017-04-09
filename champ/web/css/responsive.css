@@ -29,6 +29,9 @@
     .list-nav ul {
         right: 50px;
     }
+    .background-img {
+        width: 30%;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -38,10 +41,6 @@
 
     .detail-news {
         width: 70%;
-    }
-
-    .content {
-        width: 80%;
     }
 
     table.results {
