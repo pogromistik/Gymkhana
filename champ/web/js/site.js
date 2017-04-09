@@ -82,7 +82,7 @@ function initAffixCheck() {
     "use strict";
     var e = $(".header");
     var windowT = $(window);
-    e.affix({offset: {top: 1}}), windowT.width() < 1025 && (windowT.off(".affix"), e.removeData("bs.affix").removeClass("affix affix-top affix-bottom"))
+    e.affix({offset: {top: 1}}), windowT.width() < 768 && (windowT.off(".affix"), e.removeData("bs.affix").removeClass("affix affix-top affix-bottom"))
 }
 
 $(document).ready(function () {
