@@ -190,6 +190,14 @@ class SiteController extends BaseController
 				return 'Необходимо заполнить все поля, кроме номера телефона';
 			}
 			if ($form->save(false)) {
+				if (YII_ENV != 'dev') {
+					\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+						->setTo('nadia__@bk.ru')
+						->setFrom('support@gymkhana-cup.ru')
+						->setSubject('gymkhana-cup: запрос на регистрацию')
+						->send();
+				}
+				
 				return true;
 			}
 			
