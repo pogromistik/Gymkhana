@@ -81,7 +81,7 @@ $this->title = 'Результаты фигур, требующие одобре
 				'format'    => 'raw',
 				'value'     => function (TmpFigureResult $figureResult) {
 					return Editable::widget([
-						'name'          => 'timeForHuman',
+						'name'          => 'fine',
 						'value'         => $figureResult->fine,
 						'url'           => 'update',
 						'type'          => 'text',
