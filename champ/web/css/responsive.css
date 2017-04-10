@@ -188,3 +188,9 @@
         margin-bottom: 90px;
     }
 }
+
+@media (max-width: 370px) {
+    .lk .dropdown-menu {
+        right: -90px !important;
+    }
+}
