@@ -280,7 +280,7 @@ class TmpAthletesController extends BaseController
 		$athlete->firstName = $tmpAthlete->firstName;
 		$athlete->lastName = $tmpAthlete->lastName;
 		$athlete->cityId = $tmpAthlete->cityId;
-		if ($athlete->phone) {
+		if ($tmpAthlete->phone) {
 			$athlete->phone = $tmpAthlete->phone;
 		}
 		$athlete->email = $tmpAthlete->email;
