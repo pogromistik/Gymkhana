@@ -2,12 +2,15 @@
 namespace champ\controllers;
 
 use champ\models\LoginForm;
+use champ\models\PasswordResetRequestForm;
+use champ\models\ResetPasswordForm;
 use common\models\AssocNews;
 use common\models\Athlete;
 use common\models\DocumentSection;
 use common\models\Feedback;
 use common\models\TmpAthlete;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\base\UserException;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
@@ -29,9 +32,9 @@ class SiteController extends BaseController
 	public function actionIndex()
 	{
 		$this->layout = 'main-with-img';
-		$this->pageTitle = 'Ассоциация мото джимханы России';
+		$this->pageTitle = 'Мотоджимхана: события';
 		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
-		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, новости мото джимханы, ассоциация мото джимханы';
+		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, новости мото джимханы, события мото джимханы, новости, события';
 		
 		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
 		$pagination = new Pagination([
@@ -65,7 +68,7 @@ class SiteController extends BaseController
 		$this->pageTitle = 'Документы';
 		$this->description = 'Документы, относящиеся к мото джимхане';
 		$this->keywords = 'регламент соревнований, регламент мото джимхана, правила проведения соревнований, мото джимхана правила, 
-		мото джимхана классы, классы мото джимханы';
+		мото джимхана классы, классы мото джимханы, мото джимхана регламент';
 		
 		$this->layout = 'main-with-img';
 		$this->background = 'background4.png';
@@ -79,6 +82,8 @@ class SiteController extends BaseController
 	
 	public function actionLogin()
 	{
+		$this->pageTitle = 'Вход в личный кабинет';
+		
 		if (!Yii::$app->user->isGuest) {
 			return $this->goHome();
 		}
@@ -164,7 +169,7 @@ class SiteController extends BaseController
 					return 'Для каждого мотоцикла необходимо указать марку и модель';
 				}
 				$motorcycles[] = [
-					'mark' => (string)$mark,
+					'mark'  => (string)$mark,
 					'model' => (string)$models[$i]
 				];
 			}
@@ -178,13 +183,21 @@ class SiteController extends BaseController
 			if (!$form->email) {
 				return 'Необходимо указать email';
 			}
-			if (Athlete::findOne(['email' => $form->email]) || TmpAthlete::findOne(['email' => $form->email])) {
+			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email)]) || TmpAthlete::findOne(['upper("email")' => mb_strtoupper($form->email)])) {
 				return 'Указанный email занят';
 			}
 			if (!$form->validate()) {
 				return 'Необходимо заполнить все поля, кроме номера телефона';
 			}
 			if ($form->save(false)) {
+				if (YII_ENV != 'dev') {
+					\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+						->setTo('nadia__@bk.ru')
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup: запрос на регистрацию')
+						->send();
+				}
+				
 				return true;
 			}
 			
@@ -196,6 +209,58 @@ class SiteController extends BaseController
 	
 	public function actionAppendMotorcycle($i)
 	{
-		return $this->renderAjax('_append', ['i' => $i+1]);
+		return $this->renderAjax('_append', ['i' => $i + 1]);
+	}
+	
+	public function actionResetPassword()
+	{
+		$this->pageTitle = 'Восстановление пароля';
+		$model = new PasswordResetRequestForm();
+		
+		return $this->render('reset-password', ['model' => $model]);
+	}
+	
+	public function actionSendMailForResetPassword()
+	{
+		$model = new PasswordResetRequestForm();
+		if ($model->load(\Yii::$app->request->post())) {
+			$athlete = Athlete::findOne(['email' => $model->login]);
+			if (!$athlete) {
+				$login = preg_replace('~\D+~', '', $model->login);
+				if ($login == $model->login) {
+					$athlete = Athlete::findOne(['login' => $model->login]);
+				}
+			}
+			if ($athlete && $athlete->hasAccount) {
+				if ($athlete->resetPassword()) {
+					return true;
+				}
+				
+				return 'Возникла ошибка при отправке данных. Попробуйте позже.';
+			}
+			
+			return 'Пользователь не найден. Проверьте правильность введённых данных.';
+		}
+		
+		return 'Возникла ошибка при отправке данных.';
+	}
+	
+	public function actionNewPassword($token)
+	{
+		try {
+			$model = new ResetPasswordForm($token);
+		} catch (InvalidParamException $e) {
+			return $this->goHome();
+		}
+		
+		$this->pageTitle = 'Восстановление пароля';
+		
+		if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+			return $this->redirect(['/profile/info']);
+		}
+		
+		return $this->render('set-new-password', [
+			'model' => $model,
+		]);
 	}
 }

@@ -25,6 +25,7 @@ class FiguresController extends AccessController
 	public function actionSendResult()
 	{
 		$this->pageTitle = 'Отправить результат базовой фигуры';
+		$this->pageTitle = 'Форма для отправки своего результата по базовой фигуре';
 		
 		$model = new TmpFigureResult();
 		$model->athleteId = \Yii::$app->user->id;
@@ -56,7 +57,6 @@ class FiguresController extends AccessController
 		$searchModel = new TmpFigureResultSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
-		$this->pageTitle = 'Заявки на добавление результатов базовых фигур';
 		if ($status) {
 			switch ($status) {
 				case TmpFigureResult::STATUS_NEW:
@@ -74,6 +74,8 @@ class FiguresController extends AccessController
 			}
 		}
 		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
+		
+		$this->pageTitle = 'Заявки на добавление результатов базовых фигур';
 		$this->layout = 'full-content';
 		
 		return $this->render('requests', [

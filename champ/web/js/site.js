@@ -82,7 +82,7 @@ function initAffixCheck() {
     "use strict";
     var e = $(".header");
     var windowT = $(window);
-    e.affix({offset: {top: 1}}), windowT.width() < 1025 && (windowT.off(".affix"), e.removeData("bs.affix").removeClass("affix affix-top affix-bottom"))
+    e.affix({offset: {top: 1}}), windowT.width() < 768 && (windowT.off(".affix"), e.removeData("bs.affix").removeClass("affix affix-top affix-bottom"))
 }
 
 $(document).ready(function () {
@@ -130,8 +130,8 @@ $(document).on("submit", '.registrationAthlete', function (e) {
         success: function (result) {
             $('html, body').animate({ scrollTop: $('.modal-footer').offset().top }, 500);
             if (result == true) {
-                form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет' +
-                    'отправлен на указанную почту в течение 24 часов. Если этого не произойдёт - пожалуйста, сообщите нам.').show();
+                form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет ' +
+                    'отправлен на указанную почту в течение 24 часов (если письма нет - проверьте папку спам). Если этого не произойдёт - пожалуйста, сообщите нам.').show();
                 form.trigger('reset');
             } else {
                 form.find('.alert-danger').text(result).show();
@@ -166,4 +166,30 @@ $('.appendMotorcycle').click(function (e) {
 $('.change-result-scheme').click(function (e) {
     e.preventDefault();
     $('.result-scheme').slideToggle();
+});
+
+$(document).on("submit", '#resetPasswordForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+    $('.alert').hide();
+
+    $.ajax({
+        url: "/site/send-mail-for-reset-password",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                form.find('.alert-success').text('На email, указанный в вашем профиле отправлено письмо для восстановления пароля.').show();
+                form.trigger('reset');
+            } else {
+                form.find('.alert-danger').text(result).show();
+            }
+            hideBackDrop();
+        },
+        error: function (error) {
+            alert(error.responseText);
+            hideBackDrop();
+        }
+    });
 });

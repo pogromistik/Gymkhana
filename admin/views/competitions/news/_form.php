@@ -51,7 +51,7 @@ if ($model->previewText) {
 	                                                                                                                                                                                 'id'          => 'smallText']) ?>
 	
 	<?= $form->field($model, 'fullText')->widget(CKEditor::className(), [
-		'preset' => 'advent'
+		'preset' => 'full'
 	]) ?>
 	
 	<?= $form->field($model, 'link')->textInput(['placeholder' => 'сторонняя ссылка, не обязательна']) ?>

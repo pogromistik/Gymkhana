@@ -124,7 +124,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if ($notEmail === $login) {
 			$athlete = static::findOne(['login' => $login, 'status' => self::STATUS_ACTIVE]);
 		} else {
-			$athlete = static::findOne(['email' => $login, 'status' => self::STATUS_ACTIVE]);
+			$athlete = static::findOne(['upper("email")' => mb_strtoupper($login), 'status' => self::STATUS_ACTIVE]);
 		}
 		
 		return $athlete;
@@ -170,8 +170,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
 			['number', 'integer', 'max' => 9999],
-			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 102400,
-			                      'tooBig'     => 'Размер файла не должен превышать 100KB']
+			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 307200,
+			                      'tooBig'     => 'Размер файла не должен превышать 300KB']
 		];
 	}
 	
@@ -258,6 +258,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 			}
 		}
+		$this->email = trim(mb_strtolower($this->email));
 		$this->updatedAt = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
@@ -269,7 +270,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function beforeSave($insert)
 	{
 		$file = UploadedFile::getInstance($this, 'photoFile');
-		if ($file && $file->size <= 102400) {
+		if ($file && $file->size <= 307200) {
 			if ($this->photo) {
 				$filePath = Yii::getAlias('@files') . $this->photo;
 				if (file_exists($filePath)) {
@@ -292,21 +293,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function afterSave($insert, $changedAttributes)
 	{
-		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']) {
+		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']
+		&& $changedAttributes['athleteClassId'] != $this->athleteClassId) {
+			$old = $changedAttributes['athleteClassId'];
+			$new = $this->athleteClassId;
+			$history = ClassHistory::find()->where(['athleteId' => $this->id])
+				->andWhere(['oldClassId' => $old, 'newClassId' => $new])
+				->orderBy(['date' => SORT_DESC])->one();
+			if (!$history) {
+				ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
+			}
 			if ($this->hasAccount) {
-				$old = $changedAttributes['athleteClassId'];
-				$new = $this->athleteClassId;
-				$history = ClassHistory::find()->where(['athleteId' => $this->id])
-					->andWhere(['oldClassId' => $old, 'newClassId' => $new])
-					->orderBy(['date' => SORT_DESC])->one();
-				if (!$history) {
-					ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
-				}
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
 				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
 				if ($history && (mb_strlen($history->event) <= (253 - mb_strlen($text)))) {
-					$text .= $history->event . '(' . $history->event . ')';
+					$text .= $history->event . ' (' . $history->event . ')';
 				}
 				Notice::add($this->id, $text);
 			}
@@ -369,7 +371,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function createCabinet()
 	{
-		$password = 111111;
+		$password = $this->generatePassword();
 		$this->login = $this->id + 6000;
 		$this->generateAuthKey();
 		$this->setPassword($password);
@@ -379,7 +381,36 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			return false;
 		}
 		
+		if (YII_ENV != 'dev') {
+			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
+				->setTo($this->email)
+				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+				->setSubject('gymkhana-cup: регистрация на сайте')
+				->send();
+		}
+		
 		return true;
+	}
+	
+	public function generatePassword()
+	{
+		$arr = array('a','b','c','d','e','f',
+			'g','h','i','j','k','l',
+			'm','n','o','p','q','r',
+			's', 't','u','v','w','x',
+			'y','z', '1','2','3','4',
+			'5','6','7','8','9','0'
+		);
+		
+		// Генерируем пароль
+		$pass = "";
+		for($i = 0; $i < 8; $i++)
+		{
+			// Вычисляем случайный индекс массива
+			$index = rand(0, count($arr) - 1);
+			$pass .= $arr[$index];
+		}
+		return $pass;
 	}
 	
 	public function deleteCabinet()
@@ -394,5 +425,58 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		}
 		
 		return true;
+	}
+	
+	public static function findByPasswordResetToken($token)
+	{
+		if (!static::isPasswordResetTokenValid($token)) {
+			return null;
+		}
+		return static::findOne([
+			'passwordResetToken' => $token,
+			'status' => self::STATUS_ACTIVE,
+		]);
+	}
+	
+	public static function isPasswordResetTokenValid($token)
+	{
+		if (empty($token)) {
+			return false;
+		}
+		$expire = Yii::$app->params['user.passwordResetTokenExpire'];
+		$parts = explode('_', $token);
+		$timestamp = (int) end($parts);
+		return $timestamp + $expire >= time();
+	}
+	
+	public function removePasswordResetToken()
+	{
+		$this->passwordResetToken = null;
+	}
+	
+	public function generatePasswordResetToken()
+	{
+		$this->passwordResetToken = Yii::$app->security->generateRandomString() . '_' . time();
+	}
+	
+	public function resetPassword()
+	{
+		if (!Athlete::isPasswordResetTokenValid($this->passwordResetToken)) {
+			$this->generatePasswordResetToken();
+		}
+		if ($this->save()) {
+			$resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/new-password', 'token' => $this->passwordResetToken]);
+			
+			if (YII_ENV != 'dev') {
+				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
+					->setTo($this->email)
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+					->setSubject('gymkhana-cup: восстановление пароля')
+					->send();
+			}
+			
+			return true;
+		}
+		return false;
 	}
 }

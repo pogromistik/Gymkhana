@@ -82,6 +82,6 @@ class NewsBlock extends \yii\db\ActiveRecord
      */
     public function getNewsSliders()
     {
-        return $this->hasMany(NewsSlider::className(), ['blockId' => 'id']);
+        return $this->hasMany(NewsSlider::className(), ['blockId' => 'id', 'newsId' => 'newsId']);
     }
 }

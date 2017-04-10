@@ -57,6 +57,8 @@ if (!\Yii::$app->user->isGuest) {
 
 <?= $this->render('_modal') ?>
 
+<?= $this->render('_counters') ?>
+
 <?php $this->endBody() ?>
 </body>
 </html>

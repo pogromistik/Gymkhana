@@ -842,7 +842,14 @@ class RunController extends Controller
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
-				mail('nadia__@bk.ru', 'Ошибка на соревновательном сайте', 'Невозможно проверить остаток дискового пространства на хостинге');
+				if (YII_ENV != 'dev') {
+					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
+					\Yii::$app->mailer->compose('text', ['text' => $text])
+						->setTo('nadia__@bk.ru')
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup.ru: ошибка на сайте')
+						->send();
+				}
 				return false;
 			}
 			$string = $output[1];
@@ -852,7 +859,14 @@ class RunController extends Controller
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
-				mail('nadia__@bk.ru', 'Ошибка на соревновательном сайте', 'Невозможно проверить остаток дискового пространства на хостинге');
+				if (YII_ENV != 'dev') {
+					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
+					\Yii::$app->mailer->compose('text', ['text' => $text])
+						->setTo('nadia__@bk.ru')
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup.ru: ошибка на сайте')
+						->send();
+				}
 				return false;
 			}
 			$size = trim($array[2]);
@@ -867,9 +881,26 @@ class RunController extends Controller
 				$errors->text = 'На хостинге осталось ' . $size . 'GB свободного места';
 				$errors->type = Error::TYPE_SIZE;
 				$errors->save();
+				
+				if (YII_ENV != 'dev') {
+					\Yii::$app->mailer->compose('text', ['text' => $errors->text])
+						->setTo('nadia__@bk.ru')
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup.ru: ошибка на сайте')
+						->send();
+				}
 			}
 		}
 		
 		return true;
+	}
+	
+	public function actionMailTest()
+	{
+		\Yii::$app->mailer->compose('text', ['text' => 'проверка почты'])
+			->setTo('nadia__@bk.ru')
+			->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+			->setSubject('gymkhana-cup.ru: проверка почты')
+			->send();
 	}
 }

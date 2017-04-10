@@ -93,6 +93,14 @@ class TmpAthletesController extends BaseController
 			return 'У спортсмена уже есть личный кабинет';
 		}
 		
+		$oldAthlete->email = $tmpAthlete->email;
+		if ($tmpAthlete->phone) {
+			$oldAthlete->phone = $tmpAthlete->phone;
+		}
+		if (!$oldAthlete->save()) {
+			return 'При создании личного кабинета возникла ошибка';
+		}
+		
 		if (!$oldAthlete->createCabinet()) {
 			return 'При создании личного кабинета возникла ошибка';
 		}
@@ -137,6 +145,16 @@ class TmpAthletesController extends BaseController
 		}
 		if ($oldAthlete->hasAccount) {
 			$result['error'] = 'У спортсмена уже есть личный кабинет';
+			
+			return $result;
+		}
+		
+		$oldAthlete->email = $tmpAthlete->email;
+		if ($tmpAthlete->phone) {
+			$oldAthlete->phone = $tmpAthlete->phone;
+		}
+		if (!$oldAthlete->save()) {
+			$result['error'] = 'При создании личного кабинета возникла ошибка';
 			
 			return $result;
 		}
@@ -199,6 +217,14 @@ class TmpAthletesController extends BaseController
 		
 		$motorcycles = \Yii::$app->request->post('motorcycles');
 		if (!$motorcycles) {
+			$oldAthlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->phone) {
+				$oldAthlete->phone = $tmpAthlete->phone;
+			}
+			if (!$oldAthlete->save()) {
+				return 'При создании личного кабинета возникла ошибка';
+			}
+			
 			if (!$oldAthlete->createCabinet()) {
 				return 'При создании личного кабинета возникла ошибка';
 			}
@@ -241,6 +267,17 @@ class TmpAthletesController extends BaseController
 				return 'Возникла ошибка при сохранении мотоцикла';
 			}
 		}
+		
+		$oldAthlete->email = $tmpAthlete->email;
+		if ($tmpAthlete->phone) {
+			$oldAthlete->phone = $tmpAthlete->phone;
+		}
+		if (!$oldAthlete->save()) {
+			$transaction->rollBack();
+			
+			return 'При создании личного кабинета возникла ошибка';
+		}
+		
 		if (!$oldAthlete->createCabinet()) {
 			$transaction->rollBack();
 			
@@ -280,7 +317,7 @@ class TmpAthletesController extends BaseController
 		$athlete->firstName = $tmpAthlete->firstName;
 		$athlete->lastName = $tmpAthlete->lastName;
 		$athlete->cityId = $tmpAthlete->cityId;
-		if ($athlete->phone) {
+		if ($tmpAthlete->phone) {
 			$athlete->phone = $tmpAthlete->phone;
 		}
 		$athlete->email = $tmpAthlete->email;
@@ -318,6 +355,7 @@ class TmpAthletesController extends BaseController
 		}
 		
 		$transaction->commit();
+		
 		return true;
 	}
 	
@@ -367,6 +405,7 @@ class TmpAthletesController extends BaseController
 		
 		$tmp->status = TmpAthlete::STATUS_CANCEL;
 		$tmp->save();
+		
 		return true;
 	}
 }

@@ -14,6 +14,8 @@ class AthletesController extends BaseController
 	public function actionList()
 	{
 		$this->pageTitle = 'Спортсмены';
+		$this->description = 'Спортсмены, хоть раз поучаствовавшие в соревнованиях по мотоджимхане';
+		$this->keywords = 'Мотоджимхана, спортсмены, спорт, список спортсменов, мотоциклисты, рейтинг спортсменов';
 		$this->layout = 'full-content';
 		
 		$searchModel = new AthleteSearch();
@@ -56,6 +58,7 @@ class AthletesController extends BaseController
 		$history = $history->all();
 		
 		$this->pageTitle = 'Спортсмены: ' . $athlete->getFullName();
+		$this->description = $athlete->getFullName() . ', спортсмен мотоджимханы';
 		
 		return $this->render('view', [
 			'athlete'       => $athlete,
