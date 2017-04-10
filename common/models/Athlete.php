@@ -258,6 +258,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 			}
 		}
+		$this->email = trim(mb_strtolower($this->email));
 		$this->updatedAt = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
