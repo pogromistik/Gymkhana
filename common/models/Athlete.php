@@ -383,7 +383,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if (YII_ENV != 'dev') {
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
-				->setFrom('support@gymkhana-cup.ru')
+				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 				->setSubject('gymkhana-cup: регистрация на сайте')
 				->send();
 		}
@@ -469,7 +469,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			if (YII_ENV != 'dev') {
 				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
 					->setTo($this->email)
-					->setFrom('support@gymkhana-cup.ru')
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 					->setSubject('gymkhana-cup: восстановление пароля')
 					->send();
 			}
