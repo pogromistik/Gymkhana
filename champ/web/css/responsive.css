@@ -155,6 +155,9 @@
     .dropdown-menu > li > a {
         color: #4b4e53;
     }
+    .navbar-left .dropdown-menu {
+        background: #fff;
+    }
 }
 
 
