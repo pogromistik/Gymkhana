@@ -38,7 +38,7 @@ $listView = new \yii\widgets\ListView([
 ]); ?>
 <div class="row">
 
-    <div class="col-md-3 sol-sm-6">
+    <div class="col-md-3 col-sm-6 col-xs-12 col-sm-pb-10 input-with-xs-pt">
 		<?=
 		Select2::widget([
 			'model'         => $searchModel,
@@ -56,7 +56,7 @@ $listView = new \yii\widgets\ListView([
 			],
 		])
 		?></div>
-    <div class="col-md-3 sol-sm-6">
+    <div class="col-md-3 col-sm-6 col-xs-12 col-sm-pb-10 input-with-xs-pt">
 		<?= \kartik\widgets\DepDrop::widget([
 			'model'          => $searchModel,
 			'attribute'      => 'regionId',
@@ -93,7 +93,7 @@ $listView = new \yii\widgets\ListView([
 			],
 		])
 		?> */ ?></div>
-    <div class="col-md-3 sol-sm-6">
+    <div class="col-md-3 col-sm-6 col-xs-12 col-sm-pb-10 input-with-xs-pt">
 		<?=
 		Select2::widget([
 			'model'         => $searchModel,
@@ -112,7 +112,7 @@ $listView = new \yii\widgets\ListView([
 		])
 		?>
     </div>
-    <div class="col-md-3 sol-sm-6">
+    <div class="col-md-3 col-sm-6 col-xs-12 col-sm-pb-10 input-with-xs-pt">
 		<?=
 		Select2::widget([
 			'model'         => $searchModel,

@@ -60,7 +60,7 @@ $colspan = count($athletes) + 1;
 
         <h3>Фигуры</h3>
 		<?php if (!$figuresStats) { ?>
-            Нет фигур, которые пробовали проехать все спортсмены
+            <div class="text">Нет фигур, которые пробовали проехать все спортсмены</div>
 		<?php } else { ?>
             <table class="table w-<?= $colspan ?>">
                 <tr>
@@ -119,7 +119,7 @@ $colspan = count($athletes) + 1;
 
         <h3>Этапы</h3>
 		<?php if (!$stagesStats) { ?>
-            Нет этапов, в которых приняли участие оба спортсмена
+            <div class="text">Нет этапов, в которых приняли участие оба спортсмена</div>
 		<?php } else { ?>
             <table class="table w-<?= $colspan ?>">
                 <tr>

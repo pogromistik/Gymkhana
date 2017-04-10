@@ -63,7 +63,7 @@ $time = time();
 		<?= \yii\bootstrap\Html::hiddenInput('yearId', $year ? $year->id : null) ?>
 		<?= \yii\bootstrap\Html::hiddenInput('showAll', $showAll, ['id' => 'showAll']) ?>
         <div class="row">
-            <div class="col-md-12 pb-10">
+            <div class="col-md-12 pb-10-md input-with-sm-pt">
 				<?= Select2::widget([
 					'name'    => 'countryId',
 					'data'    => \common\models\Country::getAll(true),
@@ -73,7 +73,7 @@ $time = time();
 					],
 				]) ?>
             </div>
-            <div class="col-md-6 col-sm-12">
+            <div class="col-md-6 col-sm-12 input-with-sm-pt">
 				<?= \kartik\widgets\DepDrop::widget([
 					'name'           => 'regionIds',
 					'data'           => [],
@@ -113,7 +113,7 @@ $time = time();
  */
 				?>
             </div>
-            <div class="col-md-6 col-sm-12">
+            <div class="col-md-6 col-sm-12 input-with-sm-pt">
 				<?= Select2::widget([
 					'name'          => 'classIds',
 					'data'          => \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()

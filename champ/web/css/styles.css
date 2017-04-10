@@ -84,7 +84,15 @@ ul {
     padding-top: 50px;
 }
 
+.pb-2 {
+    padding-bottom: 2px;
+}
+
 .pb-10 {
+    padding-bottom: 10px;
+}
+
+.pb-10-md {
     padding-bottom: 10px;
 }
 
@@ -932,6 +940,22 @@ a.deletePhoto {
 .compareWithBlock hr {
     border-top: 1px solid #a4a5a9;
     margin-bottom: 10px;
+}
+.compareWithBlock h3, .compareWithBlock .text {
+   padding-left: 6px;
+}
+.compareWithBlock table tr td:first-child {
+    padding-left: 6px !important;
+}
+.compareWithBlock table tr td:last-child {
+    padding-right: 6px !important;
+}
+.compare-results {
+    padding-top: 1px;
+    padding-bottom: 20px;
+}
+.compare-results table:last-child {
+    margin-bottom: 0;
 }
 
 table.results small.red {
