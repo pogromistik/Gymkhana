@@ -24,7 +24,7 @@ class TmpAthletesController extends BaseController
 		return [
 			'update' => [
 				'class'       => EditableAction::className(),
-				'modelClass'  => TmpParticipant::className(),
+				'modelClass'  => TmpAthlete::className(),
 				'forceCreate' => false
 			]
 		];
