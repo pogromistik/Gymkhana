@@ -20,6 +20,12 @@ use yii\web\Response;
 
 class ProfileController extends AccessController
 {
+	public function init()
+	{
+		parent::init();
+		$this->layout = 'full-content';
+	}
+	
 	public function actionIndex($success = false)
 	{
 		$this->pageTitle = 'Редактирование профиля';
@@ -66,7 +72,7 @@ class ProfileController extends AccessController
 	
 	public function actionInfo()
 	{
-		$this->pageTitle = 'Информация';
+		$this->pageTitle = 'Информация о этапах и заявок на участие';
 		
 		$time = time();
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
@@ -393,6 +399,7 @@ class ProfileController extends AccessController
 	public function actionHelp()
 	{
 		$this->pageTitle = 'Справка';
+		
 		return $this->render('help');
 	}
 }

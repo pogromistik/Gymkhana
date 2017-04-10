@@ -135,36 +135,42 @@ class FigureTime extends BaseActiveRecord
 		
 		$this->dateUpdated = time();
 		
-		$bestTime = $this->figure->bestTime;
-		$this->percent = round($this->resultTime / $bestTime * 100, 2);
+		$figure = Figure::findOne($this->figureId);
+		if ($figure->bestTime) {
+			$this->percent = round($this->resultTime / $figure->bestTime * 100, 2);
+		} else {
+			$this->percent = 100;
+		}
 		
 		return parent::beforeValidate();
 	}
 	
 	public function beforeSave($insert)
 	{
-		if ($this->isNewRecord || isset($this->dirtyAttributes['percent'])) {
-			//Рассчёт класса
-			$this->newAthleteClassId = null;
-			$this->newAthleteClassStatus = null;
-			/** @var AthletesClass $newClass */
-			$newClass = AthletesClass::find()->where(['>=', 'percent', $this->percent])
-				->andWhere(['status' => AthletesClass::STATUS_ACTIVE])
-				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
-			if ($newClass && $newClass->id != $this->athleteClassId) {
-				if ($this->athleteClassId) {
-					$oldClass = $this->athleteClass;
-					if ($oldClass->id != $newClass->id && $oldClass->percent > $newClass->percent) {
+		if ($this->isNewRecord || $this->isAttributeChanged('percent')) {
+			$figure = Figure::findOne($this->figureId);
+			if ($figure->useForClassesCalculate && $this->percent) {
+				//Рассчёт класса
+				$this->newAthleteClassId = null;
+				$this->newAthleteClassStatus = null;
+				/** @var AthletesClass $newClass */
+				$newClass = AthletesClass::find()->where(['>=', 'percent', $this->percent])
+					->andWhere(['status' => AthletesClass::STATUS_ACTIVE])
+					->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
+				if ($newClass && $newClass->id != $this->athleteClassId) {
+					if ($this->athleteClassId) {
+						$oldClass = $this->athleteClass;
+						if ($oldClass->id != $newClass->id && $oldClass->percent > $newClass->percent) {
+							$this->newAthleteClassId = $newClass->id;
+							$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_NEED_CHECK;
+						}
+					} else {
 						$this->newAthleteClassId = $newClass->id;
 						$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_NEED_CHECK;
 					}
-				} else {
-					$this->newAthleteClassId = $newClass->id;
-					$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_NEED_CHECK;
 				}
 			}
 			
-			$figure = $this->figure;
 			if (!$figure->bestTime || $this->resultTime < $figure->bestTime) {
 				$this->recordType = self::RECORD_IN_WORLD;
 				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;

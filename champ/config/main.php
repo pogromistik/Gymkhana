@@ -46,6 +46,7 @@ return [
 			'showScriptName'  => false,
 			'rules'           => [
 				'<action>'=>'site/<action>',
+				'user/login'=>'site/login',
 			]
 		],
 		'authManager'  => [

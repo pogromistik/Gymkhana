@@ -29,6 +29,9 @@
     .list-nav ul {
         right: 50px;
     }
+    .background-img {
+        width: 30%;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -40,16 +43,8 @@
         width: 70%;
     }
 
-    .content {
-        width: 80%;
-    }
-
     table.results {
         font-size: 12px;
-    }
-
-    .table thead img {
-        height: 130px;
     }
 
     .list-nav ul {
@@ -58,6 +53,10 @@
 }
 
 @media (max-width: 991px) {
+    .pb-10-md {
+        padding-bottom: 0;
+    }
+
     table.results {
         font-size: 10px;
     }
@@ -95,6 +94,14 @@
     .table thead img {
         height: 100px;
     }
+
+    .input-with-sm-pt {
+        padding-bottom: 4px;
+    }
+
+    .col-sm-pb-10 {
+        padding-bottom: 10px;
+    }
 }
 
 @media (max-width: 876px) {
@@ -113,6 +120,10 @@
 
     .content {
         width: 100%;
+    }
+
+    #compareWith select, #compareWith > .select2, #compareWith > button {
+        margin-bottom: 4px;
     }
 }
 
@@ -160,6 +171,15 @@
     .dropdown-menu > li > a {
         color: #4b4e53;
     }
+    .navbar-left .dropdown-menu {
+        background: #fff;
+    }
+}
+
+@media (max-width: 750px) {
+    .input-with-xs-pt {
+        padding-bottom: 4px;
+    }
 }
 
 
@@ -191,5 +211,14 @@
     }
     body {
         margin-bottom: 90px;
+    }
+}
+
+@media (max-width: 370px) {
+    .lk .dropdown-menu {
+        right: -90px !important;
+    }
+    .modal-notices {
+        right: -60px !important;
     }
 }

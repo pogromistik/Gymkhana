@@ -37,6 +37,7 @@ $this->title = 'Вход в личный кабинет';
                     </div>
                 </div>
 			</div>
+            <?= Html::a('Забыли пароль?', ['/site/reset-password']) ?>
 			
 			<?php ActiveForm::end(); ?>
 		</div>

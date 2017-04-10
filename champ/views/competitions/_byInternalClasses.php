@@ -9,8 +9,8 @@
     <table class="table results">
         <thead>
         <tr>
-            <th><img src="/img/table/placeInClass.png"></th>
             <th><img src="/img/table/class.png"></th>
+            <th><img src="/img/table/placeInClass.png"></th>
             <th><img src="/img/table/number.png"></th>
             <th><img src="/img/table/participant.png"></th>
             <th><img src="/img/table/motorcycle.png"></th>
@@ -39,10 +39,10 @@
 				}
 				?>
                 <tr class="internal-class-<?= $cssClass ?>">
-                    <td rowspan="<?= $stage->countRace ?>">
-						<?= $participant->placeOfClass ?>
-                    </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClassId ? $participant->internalClass->title : '' ?></td>
+                    <td rowspan="<?= $stage->countRace ?>">
+		                <?= $participant->placeOfClass ?>
+                    </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
 						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>

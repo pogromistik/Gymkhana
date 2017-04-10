@@ -54,7 +54,7 @@ $(document).on("submit", '.newRegistration', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            $('#enrollForm').animate({ scrollTop: $('.modal-footer').offset().top }, 500);
+            $('#enrollForm').animate({scrollTop: $('.modal-footer').offset().top}, 500);
             if (result == true) {
                 form.trigger('reset');
                 form.find('.alert-success').text('Вы успешно зарегистрированы на этап.').show();
@@ -75,7 +75,7 @@ $('.freeNumbersList').click(function (e) {
         stageId: id
     }).done(function (data) {
         if (data['success'] == true) {
-            $('#enrollForm').animate({ scrollTop: $('.button').offset().top+100 }, 500);
+            $('#enrollForm').animate({scrollTop: $('.button').offset().top + 100}, 500);
             $('.free-numbers .list').html(data['numbers']);
             $('.free-numbers').show();
         } else {
@@ -151,4 +151,12 @@ $('.deletePhoto').click(function (e) {
         hideBackDrop();
         alert(error.responseText);
     });
+});
+
+$('body').click(function () {
+    if ($('.modal-notices').hasClass('show')) {
+        $('.modal-notices').slideToggle('200', function () {
+            $('.modal-notices').removeClass('show');
+        });
+    }
 });

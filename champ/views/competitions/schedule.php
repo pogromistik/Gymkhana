@@ -49,9 +49,9 @@ use yii\bootstrap\Html;
                     <tr>
                         <td>
                             <div class="row item">
-                                <div class="col-md-2 col-xs-3">
+                                <div class="col-md-2 col-sm-3 col-xs-4">
                                 </div>
-                                <div class="col-md-10 col-xs-9">
+                                <div class="col-md-10 col-sm-9 col-xs-8">
 									<?= Html::a($stage->title . ', ' . $stage->city->title,
 										['/competitions/stage', 'id' => $stage->id]) ?>
                                 </div>
@@ -74,10 +74,10 @@ use yii\bootstrap\Html;
                         <tr>
                             <td>
                                 <div class="row item">
-                                    <div class="col-md-2 col-xs-3">
+                                    <div class="col-md-2 col-sm-3 col-xs-4">
 										<?= date("d.m.Y", $stage->dateOfThe) ?>
                                     </div>
-                                    <div class="col-md-10 col-xs-9">
+                                    <div class="col-md-10 col-sm-9 col-xs-8">
 										<?= Html::a($stage->title . ', ' . $stage->city->title,
 											['/competitions/stage', 'id' => $stage->id]) ?>
                                     </div>
