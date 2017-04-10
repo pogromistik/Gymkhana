@@ -196,4 +196,7 @@
     .lk .dropdown-menu {
         right: -90px !important;
     }
+    .modal-notices {
+        right: -60px !important;
+    }
 }
