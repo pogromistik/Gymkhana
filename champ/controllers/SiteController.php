@@ -183,7 +183,7 @@ class SiteController extends BaseController
 			if (!$form->email) {
 				return 'Необходимо указать email';
 			}
-			if (Athlete::findOne(['email' => $form->email]) || TmpAthlete::findOne(['email' => $form->email])) {
+			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email)]) || TmpAthlete::findOne(['upper("email")' => mb_strtoupper($form->email)])) {
 				return 'Указанный email занят';
 			}
 			if (!$form->validate()) {
