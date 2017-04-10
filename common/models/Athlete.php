@@ -313,7 +313,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				Notice::add($this->id, $text);
 			}
 		}
-		if (isset($changedAttributes['hasAccount']) && $this->hasAccount == 1) {
+		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
 			$link = Url::to(['/profile/help']);
 			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.', $link);
 		}
