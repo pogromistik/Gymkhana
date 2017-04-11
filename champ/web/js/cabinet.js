@@ -152,11 +152,3 @@ $('.deletePhoto').click(function (e) {
         alert(error.responseText);
     });
 });
-
-$('body').click(function () {
-    if ($('.modal-notices').hasClass('show')) {
-        $('.modal-notices').slideToggle('200', function () {
-            $('.modal-notices').removeClass('show');
-        });
-    }
-});
