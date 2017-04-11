@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use common\helpers\UserHelper;
 use common\models\City;
 use common\models\Country;
 use common\models\Motorcycle;
@@ -10,6 +11,7 @@ use Yii;
 use common\models\Athlete;
 use common\models\search\AthleteSearch;
 use admin\controllers\BaseController;
+use yii\base\UserException;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +22,12 @@ use yii\web\Response;
  */
 class AthleteController extends BaseController
 {
+	public function init()
+	{
+		parent::init();
+		$this->can('refereeOfCompetitions');
+	}
+	
 	public function actions()
 	{
 		return [
@@ -38,8 +46,6 @@ class AthleteController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
-		
 		$searchModel = new AthleteSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -58,8 +64,6 @@ class AthleteController extends BaseController
 	 */
 	public function actionView($id)
 	{
-		$this->can('competitions');
-		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -67,8 +71,6 @@ class AthleteController extends BaseController
 	
 	public function actionCreate($errorCity = null, $success = null)
 	{
-		$this->can('competitions');
-		
 		$model = new Athlete();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -84,9 +86,11 @@ class AthleteController extends BaseController
 	
 	public function actionUpdate($id, $success = false)
 	{
-		$this->can('competitions');
-		
 		$model = $this->findModel($id);
+		if (!UserHelper::accessAverage($model->regionId, $model->creatorUserId)) {
+			throw new UserException('Доступ запрещен');
+		}
+		
 		$motorcycle = new Motorcycle();
 		$motorcycle->athleteId = $id;
 		if ($motorcycle->load(Yii::$app->request->post()) && $motorcycle->save()) {

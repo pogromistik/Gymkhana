@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\helpers\UserHelper;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -35,6 +36,7 @@ use yii\web\UploadedFile;
  * @property integer       $regionId
  * @property integer       $photo
  * @property integer       $countryId
+ * @property integer       $creatorUserId
  *
  * @property Motorcycle[]  $motorcycles
  * @property Motorcycle[]  $activeMotorcycles
@@ -161,7 +163,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		return [
 			[['firstName', 'lastName', 'cityId', 'createdAt', 'updatedAt', 'regionId', 'countryId'], 'required'],
 			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status',
-				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId'], 'integer'],
+				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId',
+				'creatorUserId'], 'integer'],
 			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
@@ -257,6 +260,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 					$this->athleteClassId = $class->id;
 				}
 			}
+			$this->creatorUserId = UserHelper::getUserId();
 		}
 		$this->email = trim(mb_strtolower($this->email));
 		$this->updatedAt = time();
@@ -297,7 +301,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function afterSave($insert, $changedAttributes)
 	{
 		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']
-		&& $changedAttributes['athleteClassId'] != $this->athleteClassId) {
+			&& $changedAttributes['athleteClassId'] != $this->athleteClassId
+		) {
 			$old = $changedAttributes['athleteClassId'];
 			$new = $this->athleteClassId;
 			$history = ClassHistory::find()->where(['athleteId' => $this->id])
@@ -397,22 +402,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function generatePassword()
 	{
-		$arr = array('a','b','c','d','e','f',
-			'g','h','i','j','k','l',
-			'm','n','o','p','q','r',
-			's', 't','u','v','w','x',
-			'y','z', '1','2','3','4',
-			'5','6','7','8','9','0'
-		);
+		$arr = ['a', 'b', 'c', 'd', 'e', 'f',
+			'g', 'h', 'i', 'j', 'k', 'l',
+			'm', 'n', 'o', 'p', 'q', 'r',
+			's', 't', 'u', 'v', 'w', 'x',
+			'y', 'z', '1', '2', '3', '4',
+			'5', '6', '7', '8', '9', '0'
+		];
 		
 		// Генерируем пароль
 		$pass = "";
-		for($i = 0; $i < 8; $i++)
-		{
+		for ($i = 0; $i < 8; $i++) {
 			// Вычисляем случайный индекс массива
 			$index = rand(0, count($arr) - 1);
 			$pass .= $arr[$index];
 		}
+		
 		return $pass;
 	}
 	
@@ -435,9 +440,10 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if (!static::isPasswordResetTokenValid($token)) {
 			return null;
 		}
+		
 		return static::findOne([
 			'passwordResetToken' => $token,
-			'status' => self::STATUS_ACTIVE,
+			'status'             => self::STATUS_ACTIVE,
 		]);
 	}
 	
@@ -448,7 +454,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		}
 		$expire = Yii::$app->params['user.passwordResetTokenExpire'];
 		$parts = explode('_', $token);
-		$timestamp = (int) end($parts);
+		$timestamp = (int)end($parts);
+		
 		return $timestamp + $expire >= time();
 	}
 	
@@ -480,6 +487,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			
 			return true;
 		}
+		
 		return false;
 	}
 }

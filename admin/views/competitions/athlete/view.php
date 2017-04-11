@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use dosamigos\editable\Editable;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Athlete */
@@ -23,11 +24,13 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 <div class="athlete-view">
 
     <p>
+        <?php if (\common\helpers\UserHelper::accessAverage($model->regionId, $model->creatorUserId)) { ?>
 		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php } ?>
 		<?php if (!$model->hasAccount) { ?>
 			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
 				['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
-		<?php } else { ?>
+		<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
 			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
 				['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
 		<?php } ?>
@@ -78,6 +81,4 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 			]
 		],
 	]) ?>
-
-
 </div>
