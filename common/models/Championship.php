@@ -31,6 +31,7 @@ use yii\db\Query;
  * @property RegionalGroup   $regionalGroup
  * @property Stage[]         $stages
  * @property InternalClass[] $internalClasses
+ * @property InternalClass[] $activeInternalClasses
  * @property Region          $region
  */
 class Championship extends BaseActiveRecord
@@ -195,6 +196,11 @@ class Championship extends BaseActiveRecord
 	public function getInternalClasses()
 	{
 		return $this->hasMany(InternalClass::className(), ['championshipId' => 'id']);
+	}
+	
+	public function getActiveInternalClasses()
+	{
+		return $this->hasMany(InternalClass::className(), ['championshipId' => 'id'])->andOnCondition(['status' => InternalClass::STATUS_ACTIVE]);
 	}
 	
 	public function getRegion()

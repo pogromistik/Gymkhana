@@ -183,6 +183,12 @@ class ChampionshipsController extends BaseController
 		if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
 			return 'Доступ запрещен';
 		}
+		if ($status == InternalClass::STATUS_INACTIVE) {
+			if (!Participant::findOne(['championshipId' => $class->championshipId, 'internalClassId' => $class->id])) {
+				$class->delete();
+				return true;
+			}
+		}
 		$class->status = $status;
 		if ($class->save()) {
 			return true;
