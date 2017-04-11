@@ -263,6 +263,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
 		$this->regionId = $this->city->regionId;
+		if ($this->phone) {
+			$this->phone = preg_replace('~\D+~', '', $this->phone);
+		}
 		
 		return parent::beforeValidate();
 	}
