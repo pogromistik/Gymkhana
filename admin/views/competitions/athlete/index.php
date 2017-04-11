@@ -121,12 +121,13 @@ $this->title = 'Спортсмены';
 				}
 			],
 			[
-				'format' => 'raw',
-				'value'  => function (\common\models\Athlete $athlete) {
-					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
+				'format'  => 'raw',
+				'value'   => function (\common\models\Athlete $athlete) {
+					return \common\helpers\UserHelper::accessAverage($athlete->regionId, $athlete->creatorUserId) ?
+                        Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
 						'class' => 'btn btn-primary',
 						'title' => 'Редактирование'
-					]);
+					]) : '';
 				}
 			],
 		],
