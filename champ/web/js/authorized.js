@@ -27,10 +27,18 @@ $(document).ready(function () {
     checkNotifications();
 });
 
-$('.closeNotices').click(function () {
+/*$('.closeNotices').click(function () {
     $('.modal-notices').slideToggle('200', function () {
         $('.modal-notices').removeClass('show');
     });
+});*/
+
+$('html').click(function () {
+    if ($('.modal-notices').hasClass('show')) {
+        $('.modal-notices').slideToggle('200', function () {
+            $('.modal-notices').removeClass('show');
+        });
+    }
 });
 
 $('.notices').click(function () {
