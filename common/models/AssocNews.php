@@ -19,6 +19,7 @@ use yii\bootstrap\Html;
  * @property integer $datePublish
  * @property integer $secure
  * @property integer $canEditRegionId
+ * @property integer $creatorUserId
  */
 class AssocNews extends \yii\db\ActiveRecord
 {
