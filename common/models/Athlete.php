@@ -169,7 +169,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			[['passwordResetToken'], 'unique'],
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
-			['number', 'integer', 'max' => 9999],
+			['number', 'integer', 'max' => 999],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 307200,
 			                      'tooBig'     => 'Размер файла не должен превышать 300KB']
 		];
