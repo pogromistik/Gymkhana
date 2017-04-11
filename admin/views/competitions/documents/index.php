@@ -10,9 +10,12 @@ use yii\grid\GridView;
 $this->title = 'Документы';
 ?>
 <div class="assoc-news-index">
-    <p>
-		<?= Html::a('Добавить раздел', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+	<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+        <p>
+			<?= Html::a('Добавить раздел', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+	<?php } ?>
+	
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
@@ -36,19 +39,20 @@ $this->title = 'Документы';
 				}
 			],
 			[
-				'format' => 'raw',
-				'value'  => function (\common\models\DocumentSection $item) {
+				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('globalWorkWithCompetitions'),
+				'value'   => function (\common\models\DocumentSection $item) {
 					if ($item->status) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
 							'class' => 'btn btn-danger',
-                            'title' => 'Заблокировать раздел'
+							'title' => 'Заблокировать раздел'
 						]);
 					} else {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
 							'class' => 'btn btn-success',
 							'title' => 'Разблокировать раздел'
 						]);
-                    }
+					}
 				}
 			]
 		],

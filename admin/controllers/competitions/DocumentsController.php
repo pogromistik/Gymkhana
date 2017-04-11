@@ -35,7 +35,7 @@ class DocumentsController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
+		$this->can('projectAdmin');
 		
 		$searchModel = new DocumentSectionSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -48,7 +48,7 @@ class DocumentsController extends BaseController
 	
 	public function actionCreate()
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$model = new DocumentSection();
 		
@@ -72,7 +72,7 @@ class DocumentsController extends BaseController
 	
 	public function actionUpdate($id, $success = false)
 	{
-		$this->can('competitions');
+		$this->can('projectAdmin');
 		
 		$model = $this->findModel($id);
 		$searchModel = new OverallFileSearch();
@@ -123,7 +123,7 @@ class DocumentsController extends BaseController
 	
 	public function actionRemoveFile($id)
 	{
-		$this->can('competitions');
+		$this->can('projectOrganizer');
 		
 		$file = OverallFile::findOne($id);
 		if (!$file) {
@@ -143,7 +143,7 @@ class DocumentsController extends BaseController
 	
 	public function actionChangeStatus($id)
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$model = $this->findModel($id);
 		if ($model->status) {
