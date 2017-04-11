@@ -39,6 +39,17 @@ $this->title = $championship->title;
             <br>
             Диапазон стартовых номеров участников: <?= $championship->minNumber ?>-<?= $championship->maxNumber ?>.
         </div>
+	    <?php if ($championship->activeInternalClasses) { ?>
+            <div class="pt-10 pb-10">
+			    <?php
+			    $internalClasses = [];
+			    foreach ($championship->activeInternalClasses as $class) {
+				    $internalClasses[] = $class->title;
+			    }
+			    ?>
+                <b>Классы награждения:</b> <?= implode(', ', $internalClasses) ?>
+            </div>
+	    <?php } ?>
     </div>
 
     <div class="col-bg-4 col-lg-3 col-md-2 col-sm-12 list-nav">
