@@ -173,6 +173,12 @@ class ChampionshipsController extends BaseController
 		if (!array_key_exists($status, InternalClass::$statusesTitle)) {
 			return 'Статус не существует';
 		}
+		if ($status == InternalClass::STATUS_INACTIVE) {
+			if (!Participant::findOne(['championshipId' => $class->championshipId, 'internalClassId' => $class->id])) {
+				$class->delete();
+				return true;
+			}
+		}
 		$class->status = $status;
 		if ($class->save()) {
 			return true;
