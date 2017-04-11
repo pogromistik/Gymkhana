@@ -117,9 +117,9 @@ class AssocNews extends \yii\db\ActiveRecord
 				}
 				$fullText .= '<br>';
 				$fullText .= 'Диапазон стартовых номеров участников: ' . $championship->minNumber . '-' . $championship->maxNumber;
-				if ($championship->internalClasses) {
+				if ($championship->activeInternalClasses) {
 					$classes = [];
-					foreach ($championship->internalClasses as $class) {
+					foreach ($championship->activeInternalClasses as $class) {
 						$classes[] = $class->title;
 					}
 					$fullText .= '<br>';
