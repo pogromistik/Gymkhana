@@ -45,7 +45,7 @@ class UserHelper
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			if (!\Yii::$app->user->can('projectOrganizer')) {
 				if (\Yii::$app->user->can('projectAdmin')) {
-					if (\Yii::$app->user->identity->regionId != $regionId) {
+					if (\Yii::$app->user->identity->regionId != $regionId && \Yii::$app->user->id != $creatorUserId) {
 						return false;
 					}
 				}  elseif (\Yii::$app->user->can('refereeOfCompetitions')) {

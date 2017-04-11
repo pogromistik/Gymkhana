@@ -55,17 +55,24 @@ class AthleteController extends BaseController
 		]);
 	}
 	
-	/**
-	 * Displays a single Athlete model.
-	 *
-	 * @param integer $id
-	 *
-	 * @return mixed
-	 */
 	public function actionView($id)
 	{
+		$model = $this->findModel($id);
+		
+		$motorcycle = new Motorcycle();
+		$motorcycle->athleteId = $id;
+		if ($motorcycle->load(Yii::$app->request->post()) && $motorcycle->validate()) {
+			if (!UserHelper::accessAverage($model->regionId, $motorcycle->creatorUserId)) {
+				throw new UserException('Доступ запрещен');
+			}
+			$motorcycle->save(false);
+			
+			return $this->redirect(['view', 'id' => $model->id]);
+		}
+		
 		return $this->render('view', [
-			'model' => $this->findModel($id),
+			'model'      => $model,
+			'motorcycle' => $motorcycle
 		]);
 	}
 	
