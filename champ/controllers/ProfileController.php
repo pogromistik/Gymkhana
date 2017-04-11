@@ -12,6 +12,7 @@ use common\models\Participant;
 use common\models\Stage;
 use common\models\Year;
 use yii\base\UserException;
+use yii\bootstrap\ActiveForm;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -32,6 +33,11 @@ class ProfileController extends AccessController
 		$athlete = Athlete::findOne(\Yii::$app->user->identity->id);
 		if (!$athlete) {
 			throw new NotFoundHttpException('Ошибка! Спортсмен не найден');
+		}
+		
+		if (\Yii::$app->request->isAjax && $athlete->load(\Yii::$app->request->post())) {
+			\Yii::$app->response->format = Response::FORMAT_JSON;
+			return ActiveForm::validate($athlete);
 		}
 		
 		if ($athlete->load(\Yii::$app->request->post()) && $athlete->save()) {
