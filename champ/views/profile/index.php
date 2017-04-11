@@ -32,7 +32,7 @@ use yii\web\JsExpression;
 
         <h3><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h3>
         <div class="athlete-form">
-			<?php $form = ActiveForm::begin(['options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
+			<?php $form = ActiveForm::begin(['enableAjaxValidation' => true, 'options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
 
             <div class="help-for-athlete">
                 <small>Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg.
