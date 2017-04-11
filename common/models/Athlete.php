@@ -39,6 +39,7 @@ use yii\web\UploadedFile;
  * @property integer       $creatorUserId
  *
  * @property Motorcycle[]  $motorcycles
+ * @property Motorcycle[]  $motorcyclesForEdit
  * @property Motorcycle[]  $activeMotorcycles
  * @property AthletesClass $athleteClass
  * @property City          $city
@@ -330,6 +331,26 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function getMotorcycles()
 	{
+		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
+	}
+	
+	public function getMotorcyclesForEdit()
+	{
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if (!\Yii::$app->user->can('projectOrganizer')) {
+				if (\Yii::$app->user->can('projectAdmin')) {
+					if (\Yii::$app->user->identity->regionId != $this->regionId) {
+						return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])
+							->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
+							->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
+					}
+				}  elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
+					return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])
+						->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
+						->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
+				}
+			}
+		}
 		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 	}
 	
