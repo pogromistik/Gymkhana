@@ -52,7 +52,7 @@ use yii\bootstrap\Html;
                                 <div class="col-md-2 col-sm-3 col-xs-4">
                                 </div>
                                 <div class="col-md-10 col-sm-9 col-xs-8">
-									<?= Html::a($stage->title . ', ' . $stage->city->title,
+									<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
 										['/competitions/stage', 'id' => $stage->id]) ?>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@ use yii\bootstrap\Html;
 										<?= date("d.m.Y", $stage->dateOfThe) ?>
                                     </div>
                                     <div class="col-md-10 col-sm-9 col-xs-8">
-										<?= Html::a($stage->title . ', ' . $stage->city->title,
+										<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
 											['/competitions/stage', 'id' => $stage->id]) ?>
                                     </div>
                                 </div>
