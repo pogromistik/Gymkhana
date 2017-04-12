@@ -977,3 +977,7 @@ table.results small.red {
 .table thead img {
     height: 120px;
 }
+
+.enrollForm {
+    display: none;
+}
