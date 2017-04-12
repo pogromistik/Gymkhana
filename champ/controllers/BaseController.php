@@ -1,6 +1,7 @@
 <?php
 namespace champ\controllers;
 
+use common\models\Athlete;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\OverallFile;
@@ -25,5 +26,16 @@ class BaseController extends Controller
 		}
 		
 		return \Yii::$app->response->sendFile(\Yii::getAlias('@files') . '/' . $file->filePath, $file->fileName);
+	}
+	
+	public function init()
+	{
+		parent::init();
+		
+		if(!\Yii::$app->user->isGuest) {
+			$user = Athlete::findOne(\Yii::$app->user->id);
+			$user->lastActivityDate = time();
+			$user->save();
+		}
 	}
 }
