@@ -108,7 +108,13 @@ $this->title = 'Спортсмены';
 				'format'    => 'raw',
 				'filter'    => false,
 				'value'     => function (\common\models\Athlete $athlete) {
-					return $athlete->hasAccount ? 'Да' : 'Нет';
+					$html = $athlete->hasAccount ? 'Да' : 'Нет';
+					if (\Yii::$app->user->can('developer') && $athlete->lastActivityDate) {
+						$html .= '<br>';
+						$html .= '<small class="very">' . date('d.m.y, H:i', $athlete->lastActivityDate) . '</small>';
+					}
+					
+					return $html;
 				}
 			],
 			[
