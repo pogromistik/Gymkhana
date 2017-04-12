@@ -128,7 +128,10 @@ class SiteController extends BaseController
 					->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC])->limit(6)->all();
 				break;
 			case 'russia':
-				$data['cities'] = City::find()->where(['showInRussiaPage' => 1])->orderBy(['title' => SORT_ASC])->all();
+				$data['cities'] = City::find()
+					->where(['showInRussiaPage' => 1])->andWhere(['not', ['link' => null]])
+					->andWhere(['not', ['link' => '']])->orderBy(['title' => SORT_ASC])
+					->all();
 				break;
 			case 'helpProject':
 				/** @var HelpProject $model */

@@ -37,6 +37,7 @@ class ProfileController extends AccessController
 		
 		if (\Yii::$app->request->isAjax && $athlete->load(\Yii::$app->request->post())) {
 			\Yii::$app->response->format = Response::FORMAT_JSON;
+			
 			return ActiveForm::validate($athlete);
 		}
 		
@@ -407,5 +408,21 @@ class ProfileController extends AccessController
 		$this->pageTitle = 'Справка';
 		
 		return $this->render('help');
+	}
+	
+	public function actionStatsByFigure($figureId)
+	{
+		$figure = Figure::findOne($figureId);
+		if (!$figure) {
+			throw new NotFoundHttpException('Фигура не найдена');
+		}
+		$this->pageTitle = 'Результаты по фигуре ' . $figure->title;
+		$figuresResult = FigureTime::find()->where(['figureId' => $figure->id, 'athleteId' => \Yii::$app->user->id])
+			->orderBy(['date' => SORT_DESC])->all();
+		
+		return $this->render('stats-by-figure', [
+			'figure'        => $figure,
+			'figuresResult' => $figuresResult
+		]);
 	}
 }
