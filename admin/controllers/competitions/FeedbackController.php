@@ -13,14 +13,18 @@ use yii\web\NotFoundHttpException;
  */
 class FeedbackController extends BaseController
 {
-    /**
+	public function init()
+	{
+		parent::init();
+		$this->can('projectOrganizer');
+	}
+	
+	/**
      * Lists all Feedback models.
      * @return mixed
      */
     public function actionIndex()
     {
-	    $this->can('competitions');
-	    
         $searchModel = new FeedbackSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -37,8 +41,6 @@ class FeedbackController extends BaseController
      */
     public function actionView($id)
     {
-	    $this->can('competitions');
-	    
 	    $model = $this->findModel($id);
 	    if ($model->isNew) {
 	    	$model->isNew = 0;
@@ -58,7 +60,7 @@ class FeedbackController extends BaseController
      */
     public function actionDelete($id)
     {
-	    $this->can('admin');
+	    $this->can('globalWorkWithCompetitions');
 	    
         $this->findModel($id)->delete();
 
@@ -83,8 +85,6 @@ class FeedbackController extends BaseController
     
     public function actionChangeStatus($id)
     {
-	    $this->can('competitions');
-	    
 	    $model = $this->findModel($id);
 	    $model->isNew = 1;
 	    $model->save();

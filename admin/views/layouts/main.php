@@ -79,13 +79,16 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                             этап <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
                     </li>
 				<?php } ?>
+				
+				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+                    <li>
+						<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
+                        <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
+                                    class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?>
+                        </a>
 
-                <li>
-					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
-                    <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
-                                class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
-
-                </li>
+                    </li>
+				<?php } ?>
 			<?php } ?>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -256,7 +259,8 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 								<?php } ?>
 								<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                                     <li>
-                                        <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление пользователями</a>
+                                        <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление
+                                            пользователями</a>
                                     </li>
 								<?php } ?>
                             </ul>
