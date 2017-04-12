@@ -21,7 +21,9 @@ use yii\bootstrap\Html;
 <div class="figures pt-10">
     <h4>
         Результаты базовых фигур<br>
-        <small>представлены только лучшие результаты</small>
+        <small>Представлены только лучшие результаты. Для просмотра истории по конкретной фигуре, нажмите на
+            её название
+        </small>
     </h4>
 	<?php if (!$figuresResult) { ?>
         Информация отсутствует
@@ -34,7 +36,7 @@ use yii\bootstrap\Html;
 					$result = $data['result'];
 					?>
                     <td><?= $result->dateForHuman ?></td>
-                    <td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
+                    <td><?= Html::a($figure->title, ['/profile/stats-by-figure', 'figureId' => $figure->id]) ?></td>
                     <td>
 						<?= $result->resultTimeForHuman ?>
 						<?php if ($result->fine) { ?>
