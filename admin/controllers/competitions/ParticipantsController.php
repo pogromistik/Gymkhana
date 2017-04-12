@@ -212,6 +212,24 @@ class ParticipantsController extends BaseController
 		echo Json::encode(['output' => '', 'selected' => '']);
 	}
 	
+	public function actionMotorcycleCategoryForParticipants()
+	{
+		$this->can('competitions');
+		
+		if (isset($_POST['depdrop_parents'])) {
+			$parent = $_POST['depdrop_parents'];
+			if ($parent != null) {
+				$participantId = $parent[0];
+				$participant = Participant::findOne($participantId);
+				$out = self::getSubCatList($participant->athleteId);
+				echo Json::encode(['output' => $out, 'selected' => '']);
+				
+				return;
+			}
+		}
+		echo Json::encode(['output' => '', 'selected' => '']);
+	}
+	
 	public function getSubCatList($athleteId)
 	{
 		$this->can('competitions');

@@ -322,3 +322,13 @@ img {
     color: #4b4e53;
     font-weight: bold;
 }
+
+.btn-info-light {
+    color: #6d6d6d;
+    background-color: #cae0ef;
+    border-color: #abdae8;
+}
+
+.btn-info-light:hover {
+    border-color: #99c3cf;
+}
