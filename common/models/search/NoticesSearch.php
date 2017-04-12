@@ -62,7 +62,7 @@ class NoticesSearch extends Notice
 		// grid filtering conditions
 		$query->andFilterWhere([
 			'id'        => $this->id,
-			'userId'    => $this->athleteId,
+			'athleteId' => $this->athleteId,
 			'status'    => $this->status,
 			'dateAdded' => $this->dateAdded,
 		]);
