@@ -155,6 +155,9 @@ class Participant extends BaseActiveRecord
 			}
 			if ($participationInPreviousStages) {
 				$this->number = $participationInPreviousStages->number;
+				if (!$this->athleteClassId && $participationInPreviousStages->athleteClassId) {
+					$this->athleteClassId = $participationInPreviousStages->athleteClassId;
+				}
 			}
 		}
 		
