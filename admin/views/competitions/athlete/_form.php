@@ -19,7 +19,11 @@ if (!$model->countryId) {
 ?>
 
 <div class="athlete-form">
-	<?php $form = ActiveForm::begin(['options' => ['id' => $model->isNewRecord ? 'newAthlete' : 'updateAthlete']]); ?>
+	<?php if ($model->isNewRecord) { ?>
+		<?php $form = ActiveForm::begin(['options' => ['id' => 'newAthlete']]); ?>
+	<?php } else { ?>
+		<?php $form = ActiveForm::begin(['enableAjaxValidation' => true, 'options' => ['id' => 'updateAthlete']]); ?>
+	<?php } ?>
 	
 	<?php if (!$model->isNewRecord && $model->photo) { ?>
         <div class="row">
