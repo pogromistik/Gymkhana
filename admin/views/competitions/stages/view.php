@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="stage-view">
 
     <p>
-		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?php } ?>
 		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
 		<?= Html::a('Установить классы участникам', ['/competitions/participants/set-classes', 'stageId' => $model->id],
 			[
