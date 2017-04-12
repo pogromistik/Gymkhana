@@ -97,6 +97,7 @@ class TmpParticipantController extends BaseController
 		
 		$lastName = mb_strtoupper($lastName, 'UTF-8');
 		$athletes = Athlete::find()->where(['upper("lastName")' => $lastName])->orWhere(['upper("lastName")' => $lastName])->all();
+		
 		return $this->renderAjax('_athletes', ['athletes' => $athletes, 'lastName' => $lastName]);
 	}
 	
@@ -121,6 +122,7 @@ class TmpParticipantController extends BaseController
 			$city = City::findOne($tmpParticipant->cityId);
 			if (!$city) {
 				$transaction->rollBack();
+				
 				return 'Город не найден';
 			}
 		} else {
@@ -130,48 +132,66 @@ class TmpParticipantController extends BaseController
 		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
 		if (!$tmpParticipant->save()) {
 			$transaction->rollBack();
+			
 			return var_dump($tmpParticipant->errors);
 		}
 		
-		$athlete = new Athlete();
-		$athlete->lastName = $tmpParticipant->lastName;
-		$athlete->firstName = $tmpParticipant->firstName;
-		$athlete->cityId = $city->id;
-		$athlete->phone = $tmpParticipant->phone;
-		if (!$athlete->save()) {
+		if (\Yii::$app->mutex->acquire('TmpParticipants-' . $tmpParticipant->id, 10)) {
+			$athlete = new Athlete();
+			$athlete->lastName = $tmpParticipant->lastName;
+			$athlete->firstName = $tmpParticipant->firstName;
+			$athlete->cityId = $city->id;
+			$athlete->phone = $tmpParticipant->phone;
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($athlete->errors);
+			}
+			
+			$motorcycle = new Motorcycle();
+			$motorcycle->athleteId = $athlete->id;
+			$motorcycle->mark = $tmpParticipant->motorcycleMark;
+			$motorcycle->model = $tmpParticipant->motorcycleModel;
+			if (!$motorcycle->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($motorcycle->errors);
+			}
+			
+			$participant = new Participant();
+			$participant->athleteId = $athlete->id;
+			$participant->motorcycleId = $motorcycle->id;
+			if ($tmpParticipant->number) {
+				$participant->number = $tmpParticipant->number;
+			}
+			$participant->stageId = $tmpParticipant->stageId;
+			$participant->championshipId = $tmpParticipant->championshipId;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($participant->errors);
+			}
+			
+			$tmpParticipant->athleteId = $athlete->id;
+			if (!$tmpParticipant->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($tmpParticipant->errors);
+			}
+			
+			$transaction->commit();
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+		} else {
 			$transaction->rollBack();
-			return var_dump($athlete->errors);
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		
-		$motorcycle = new Motorcycle();
-		$motorcycle->athleteId = $athlete->id;
-		$motorcycle->mark = $tmpParticipant->motorcycleMark;
-		$motorcycle->model = $tmpParticipant->motorcycleModel;
-		if (!$motorcycle->save()) {
-			$transaction->rollBack();
-			return var_dump($motorcycle->errors);
-		}
-		
-		$participant = new Participant();
-		$participant->athleteId = $athlete->id;
-		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
-		$participant->stageId = $tmpParticipant->stageId;
-		$participant->championshipId = $tmpParticipant->championshipId;
-		if (!$participant->save()) {
-			$transaction->rollBack();
-			return var_dump($participant->errors);
-		}
-		
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$transaction->commit();
 		return true;
 	}
 	
@@ -191,9 +211,18 @@ class TmpParticipantController extends BaseController
 			}
 		}
 		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		if (!$tmpParticipant->save()) {
-			return var_dump($tmpParticipant->errors);
+		if (\Yii::$app->mutex->acquire('TmpParticipants-' . $tmpParticipant->id, 10)) {
+			$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
+			if (!$tmpParticipant->save()) {
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($tmpParticipant->errors);
+			}
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+		} else {
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		
 		return true;
@@ -246,34 +275,46 @@ class TmpParticipantController extends BaseController
 			return true;
 		}
 		
-		$transaction = \Yii::$app->db->beginTransaction();
-		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$participant = new Participant();
-		$participant->athleteId = $athlete->id;
-		$participant->motorcycleId = $motorcycle->id;
-		$participant->stageId = $tmpParticipant->stageId;
-		$participant->championshipId = $tmpParticipant->championshipId;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		} else {
-			$championship = $tmpParticipant->championship;
-			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
-				$participant->number = $athlete->number;
+		if (\Yii::$app->mutex->acquire('TmpParticipants-' . $tmpParticipant->id, 10)) {
+			$transaction = \Yii::$app->db->beginTransaction();
+			
+			$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
+			$tmpParticipant->athleteId = $athlete->id;
+			if (!$tmpParticipant->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($tmpParticipant->errors);
 			}
-		}
-		if (!$participant->save()) {
-			$transaction->rollBack();
-			return var_dump($participant->errors);
+			
+			$participant = new Participant();
+			$participant->athleteId = $athlete->id;
+			$participant->motorcycleId = $motorcycle->id;
+			$participant->stageId = $tmpParticipant->stageId;
+			$participant->championshipId = $tmpParticipant->championshipId;
+			if ($tmpParticipant->number) {
+				$participant->number = $tmpParticipant->number;
+			} else {
+				$championship = $tmpParticipant->championship;
+				if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+					$participant->number = $athlete->number;
+				}
+			}
+			if (!$participant->save()) {
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				$transaction->rollBack();
+				
+				return var_dump($participant->errors);
+			}
+			
+			$transaction->commit();
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+		} else {
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		
-		$transaction->commit();
 		return true;
 	}
 	
@@ -298,50 +339,66 @@ class TmpParticipantController extends BaseController
 			return 'Спортсмен не найден';
 		}
 		
-		$transaction = \Yii::$app->db->beginTransaction();
-		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$motorcycle = new Motorcycle();
-		$motorcycle->athleteId = $athlete->id;
-		$motorcycle->mark = $tmpParticipant->motorcycleMark;
-		$motorcycle->model = $tmpParticipant->motorcycleModel;
-		if (!$motorcycle->save()) {
-			$transaction->rollBack();
-			return var_dump($motorcycle->errors);
-		}
-		
-		$participant = new Participant();
-		$participant->athleteId = $athlete->id;
-		$participant->motorcycleId = $motorcycle->id;
-		$participant->stageId = $tmpParticipant->stageId;
-		$participant->championshipId = $tmpParticipant->championshipId;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		} else {
-			$athlete = $participant->athlete;
-			$championship = $participant->championship;
-			if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
-				$participant->number = $athlete->number;
+		if (\Yii::$app->mutex->acquire('TmpParticipants-' . $tmpParticipant->id, 10)) {
+			$transaction = \Yii::$app->db->beginTransaction();
+			
+			$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
+			$tmpParticipant->athleteId = $athlete->id;
+			if (!$tmpParticipant->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($tmpParticipant->errors);
 			}
-		}
-		if (!$participant->save()) {
-			$transaction->rollBack();
-			return var_dump($participant->errors);
+			
+			$motorcycle = new Motorcycle();
+			$motorcycle->athleteId = $athlete->id;
+			$motorcycle->mark = $tmpParticipant->motorcycleMark;
+			$motorcycle->model = $tmpParticipant->motorcycleModel;
+			if (!$motorcycle->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($motorcycle->errors);
+			}
+			
+			$participant = new Participant();
+			$participant->athleteId = $athlete->id;
+			$participant->motorcycleId = $motorcycle->id;
+			$participant->stageId = $tmpParticipant->stageId;
+			$participant->championshipId = $tmpParticipant->championshipId;
+			if ($tmpParticipant->number) {
+				$participant->number = $tmpParticipant->number;
+			} else {
+				$athlete = $participant->athlete;
+				$championship = $participant->championship;
+				if ($athlete->number && $championship->regionId && $athlete->city->regionId == $championship->regionId) {
+					$participant->number = $athlete->number;
+				}
+			}
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($participant->errors);
+			}
+			
+			$tmpParticipant->athleteId = $athlete->id;
+			if (!$tmpParticipant->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+				
+				return var_dump($tmpParticipant->errors);
+			}
+			
+			$transaction->commit();
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+		} else {
+			\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$transaction->commit();
 		return true;
 	}
 	
