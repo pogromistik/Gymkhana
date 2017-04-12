@@ -839,3 +839,42 @@ function cityForNewParticipant() {
         }
     });
 }
+
+$(document).on("submit", '#figureTimeForStage', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: "/competitions/stages/check-figure-time",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            hideBackDrop();
+            $('.calculate-class').html(result);
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
+
+$(document).on("submit", '#addFigureTimeForStage', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: "/competitions/stages/add-figure-time",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            hideBackDrop();
+            $('#figureTimeForStage').trigger('reset');
+            $('.calculate-class').html(result);
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});

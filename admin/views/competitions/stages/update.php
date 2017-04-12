@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use common\models\Championship;
+use common\models\Stage;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
@@ -21,6 +22,10 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			'class'   => 'btn btn-default setParticipantsClasses',
 			'data-id' => $model->id
 		]) ?>
+	<?php if ($model->status != Stage::STATUS_CALCULATE_RESULTS && $model->status != Stage::STATUS_PAST) { ?>
+		<?= Html::a('Добавить время по фигурам',
+			['/competitions/stages/add-figures-results', 'stageId' => $model->id], ['class' => 'btn btn-info-light']) ?>
+	<?php } ?>
 	<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
 	<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
 		[
