@@ -58,6 +58,6 @@ class DocumentSection extends \yii\db\ActiveRecord
 	{
 		return $this->hasMany(OverallFile::className(), ['modelId' => 'id'])
 			->andOnCondition(['modelClass' => self::className()])
-			->andOnCondition(['inArchive' => 0])->orderBy(['date' => SORT_DESC]);
+			->andOnCondition(['inArchive' => 0])->orderBy(['sort' => SORT_ASC, 'date' => SORT_DESC]);
 	}
 }
