@@ -3,10 +3,13 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\Championship;
 use common\models\Participant;
 use Yii;
 use common\models\Stage;
 use common\models\search\StageSearch;
+use yii\base\UserException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -14,25 +17,38 @@ use yii\web\NotFoundHttpException;
  */
 class StagesController extends BaseController
 {
-	/**
-	 * Displays a single Stage model.
-	 *
-	 * @param integer $id
-	 *
-	 * @return mixed
-	 */
 	public function actionView($id)
 	{
-		$this->can('competitions');
+		$this->can('refereeOfCompetitions');
+		$model = $this->findModel($id);
+		
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($model->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
 		
 		return $this->render('view', [
-			'model' => $this->findModel($id),
+			'model' => $model,
 		]);
 	}
 	
 	public function actionCreate($championshipId, $errorCity = null, $success = null)
 	{
-		$this->can('competitions');
+		$this->can('projectAdmin');
+		
+		$championship = Championship::findOne($championshipId);
+		if (!$championship) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if ($championship->status == Championship::STATUS_PAST) {
+			throw new UserException('Чемпионат завершен, добавление этапов невозможно');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
 		
 		$model = new Stage();
 		$model->championshipId = $championshipId;
@@ -55,12 +71,18 @@ class StagesController extends BaseController
 	 * @param integer $id
 	 *
 	 * @return mixed
+	 * @throws ForbiddenHttpException
 	 */
 	public function actionUpdate($id)
 	{
-		$this->can('competitions');
+		$this->can('projectAdmin');
 		
 		$model = $this->findModel($id);
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($model->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -79,12 +101,19 @@ class StagesController extends BaseController
 	 *
 	 * @return Stage the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
+	 * @throws ForbiddenHttpException
 	 */
 	protected function findModel($id)
 	{
 		$this->can('competitions');
 		
 		if (($model = Stage::findOne($id)) !== null) {
+			if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+				if ($model->regionId != \Yii::$app->user->identity->regionId) {
+					throw new ForbiddenHttpException('Доступ запрещен');
+				}
+			}
+			
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
@@ -116,6 +145,11 @@ class StagesController extends BaseController
 		}
 		if (!$stage->class) {
 			return 'Не установлен класс соревнований';
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
 		}
 		
 		return $stage->placesCalculate();

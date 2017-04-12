@@ -18,6 +18,7 @@ use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\Json;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -60,6 +61,12 @@ class ParticipantsController extends BaseController
 		$stage = Stage::findOne($stageId);
 		if (!$stage) {
 			throw new NotFoundHttpException('Этап не найден');
+		}
+		
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
 		}
 		
 		$error = null;
@@ -114,6 +121,12 @@ class ParticipantsController extends BaseController
 		if (!$stage) {
 			throw new NotFoundHttpException('Этап не найден');
 		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
+		
 		$query = new Query();
 		$query->from(['a' => Participant::tableName(), 'd' => AthletesClass::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
 		$query->where(['a.stageId' => $stageId]);
@@ -218,6 +231,12 @@ class ParticipantsController extends BaseController
 		$this->can('competitions');
 		
 		$stage = Stage::findOne($stageId);
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
+		
 		$error = false;
 		
 		if (Participant::find()->where(['stageId' => $stage->id])->andWhere(['athleteClassId' => null])->one()) {
@@ -249,6 +268,14 @@ class ParticipantsController extends BaseController
 			$time = new Time();
 		}
 		if ($time->load(\Yii::$app->request->post())) {
+			$stage = Stage::findOne($time->stage);
+			if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+				if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+					$result['error'] = 'Доступ запрещен';
+					return $result;
+				}
+			}
+			
 			if (!$time->timeForHuman) {
 				if ($time->isFail == Time::IS_FAIL_YES) {
 					$time->timeForHuman = Time::FAIL_TIME_FOR_HUMAN;
@@ -284,9 +311,14 @@ class ParticipantsController extends BaseController
 		if (!$participant) {
 			return 'Заявка не найдена';
 		}
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
 		
 		if ($participant->status == Participant::STATUS_ACTIVE) {
-			$stage = $participant->stage;
 			if ($stage->status == Stage::STATUS_PRESENT || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
 				$participant->status = Participant::STATUS_DISQUALIFICATION;
 			} else {
@@ -311,6 +343,12 @@ class ParticipantsController extends BaseController
 		if (!$stage) {
 			return 'Этап не найден';
 		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
+		
 		if ($stage->status == Stage::STATUS_PAST) {
 			return 'Этап завершен, смена первоначальных классов невозможна';
 		} elseif ($stage->status == Stage::STATUS_CALCULATE_RESULTS) {
@@ -376,6 +414,12 @@ class ParticipantsController extends BaseController
 		if (!$participant) {
 			return 'Участник не найден';
 		}
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
 		
 		$result = $this->approveClassForParticipant($participant);
 		if ($result !== true) {
@@ -392,6 +436,12 @@ class ParticipantsController extends BaseController
 		$participant = Participant::findOne($id);
 		if (!$participant) {
 			return 'Участник не найден';
+		}
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
 		}
 		
 		if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {
@@ -415,6 +465,11 @@ class ParticipantsController extends BaseController
 		if (!$stage) {
 			return 'Этап не найден';
 		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
 		
 		/** @var Participant[] $participants */
 		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
@@ -437,6 +492,11 @@ class ParticipantsController extends BaseController
 		if (!$stage) {
 			return 'Этап не найден';
 		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
 		
 		/** @var Participant[] $participants */
 		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
@@ -458,6 +518,13 @@ class ParticipantsController extends BaseController
 	public function approveClassForParticipant(Participant $participant)
 	{
 		$this->can('competitions');
+		
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
 		
 		if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {
 			return 'Запись уже была обработана';
