@@ -109,7 +109,7 @@ class AssocNews extends \yii\db\ActiveRecord
 				/** @var Championship $championship */
 				$championship = $model;
 				$news->title = $championship->title;
-				$news->previewText = 'Анонсирован ' . $championship->title . '.';
+				$news->previewText = 'Анонсирован чемпионат "' . $championship->title . '".';
 				if ($championship->regionId) {
 					$news->previewText .= ' Регион проведения: ' . $championship->region->title . '.';
 					$news->canEditRegionId = $championship->regionId;
