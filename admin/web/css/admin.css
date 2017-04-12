@@ -332,3 +332,7 @@ img {
 .btn-info-light:hover {
     border-color: #99c3cf;
 }
+
+small.very {
+    font-size: 8px;
+}
