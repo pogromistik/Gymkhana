@@ -172,8 +172,15 @@ class AthleteController extends BaseController
 		$result = [
 			'success' => false,
 			'error'   => false,
+			'warning' => false,
 			'data'    => []
 		];
+		if (!$model->validate('number')) {
+			$result['error'] = '<div class="alert alert-danger">Указанный номер занят. Укажите другой или
+ оставьте поле пустым.</div>';
+			
+			return $result;
+		}
 		if (!$oldAthletes) {
 			$model->save();
 			$result['success'] = true;
@@ -190,7 +197,7 @@ class AthleteController extends BaseController
 				return $result;
 			}
 			
-			$result['error'] = true;
+			$result['warning'] = true;
 			$result['data'] = $this->renderAjax('_oldAthletes', ['athletes' => $oldAthletes]);
 			
 			return $result;
