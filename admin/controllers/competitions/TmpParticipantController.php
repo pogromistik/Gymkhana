@@ -7,6 +7,7 @@ use common\models\Athlete;
 use common\models\City;
 use common\models\Motorcycle;
 use common\models\Participant;
+use common\models\Stage;
 use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\TmpParticipant;
@@ -42,6 +43,12 @@ class TmpParticipantController extends BaseController
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TmpParticipant::STATUS_NEW]);
 		
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			$stageIds = Stage::find()->select('id')->where(['regionId' => \Yii::$app->user->identity->regionId])
+				->andWhere(['not', ['status' => Stage::STATUS_PAST]])->asArray()->column();
+			$dataProvider->query->andWhere(['stageId' => $stageIds]);
+		}
+		
 		return $this->render('index', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
@@ -55,7 +62,7 @@ class TmpParticipantController extends BaseController
 	 *
 	 * @return mixed
 	 */
-	public function actionView($id)
+	/*public function actionView($id)
 	{
 		$this->can('competitions');
 		
@@ -63,7 +70,7 @@ class TmpParticipantController extends BaseController
 			'model' => $this->findModel($id),
 		]);
 	}
-	
+	*/
 	/**
 	 * Finds the TmpParticipant model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
@@ -100,6 +107,13 @@ class TmpParticipantController extends BaseController
 		$tmpParticipant = TmpParticipant::findOne($id);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
+		}
+		
+		$stage = $tmpParticipant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещён';
+			}
 		}
 		
 		$transaction = \Yii::$app->db->beginTransaction();
@@ -170,6 +184,13 @@ class TmpParticipantController extends BaseController
 			return 'Запись не найдена';
 		}
 		
+		$stage = $tmpParticipant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещён';
+			}
+		}
+		
 		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
 		if (!$tmpParticipant->save()) {
 			return var_dump($tmpParticipant->errors);
@@ -185,6 +206,13 @@ class TmpParticipantController extends BaseController
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
+		}
+		
+		$stage = $tmpParticipant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещён';
+			}
 		}
 		
 		$athlete = Athlete::findOne($athleteId);
@@ -256,6 +284,13 @@ class TmpParticipantController extends BaseController
 		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
 		if (!$tmpParticipant) {
 			return 'Запись не найдена';
+		}
+		
+		$stage = $tmpParticipant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещён';
+			}
 		}
 		
 		$athlete = Athlete::findOne($athleteId);
