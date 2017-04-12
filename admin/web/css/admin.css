@@ -322,3 +322,7 @@ img {
     color: #4b4e53;
     font-weight: bold;
 }
+
+small.very {
+    font-size: 8px;
+}

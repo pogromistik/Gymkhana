@@ -109,9 +109,9 @@ $this->title = 'Спортсмены';
 				'filter'    => false,
 				'value'     => function (\common\models\Athlete $athlete) {
 					$html = $athlete->hasAccount ? 'Да' : 'Нет';
-					if (\Yii::$app->user->can('developer')) {
+					if (\Yii::$app->user->can('developer') && $athlete->lastActivityDate) {
 						$html .= '<br>';
-						$html .= '<small>' . date('d.m.y, H:i', $athlete->lastActivityDate) . '</small>';
+						$html .= '<small class="very">' . date('d.m.y, H:i', $athlete->lastActivityDate) . '</small>';
 					}
 					
 					return $html;
