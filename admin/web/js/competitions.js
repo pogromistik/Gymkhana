@@ -36,9 +36,14 @@ function newAthlete(data) {
         success: function (result) {
             if (result['success'] == true) {
                 location.href = '/competitions/athlete/update?id=' + result['data'];
+            } else if (result['warning'] == true) {
+                hideBackDrop();
+                $('html, body').animate({ scrollTop: $('.complete').offset().top }, 500);
+                $('.complete').html(result['data']);
             } else {
                 hideBackDrop();
-                $('.complete').html(result['data']);
+                $('html, body').animate({ scrollTop: $('.complete').offset().top }, 500);
+                $('.complete').append(result['error']);
             }
         },
         error: function (result) {
