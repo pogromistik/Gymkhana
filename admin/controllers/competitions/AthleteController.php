@@ -12,6 +12,7 @@ use common\models\Athlete;
 use common\models\search\AthleteSearch;
 use admin\controllers\BaseController;
 use yii\base\UserException;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -102,6 +103,11 @@ class AthleteController extends BaseController
 		$motorcycle->athleteId = $id;
 		if ($motorcycle->load(Yii::$app->request->post()) && $motorcycle->save()) {
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
+		}
+		
+		if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+			\Yii::$app->response->format = Response::FORMAT_JSON;
+			return ActiveForm::validate($model);
 		}
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
