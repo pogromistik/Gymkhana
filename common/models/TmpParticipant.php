@@ -186,4 +186,15 @@ class TmpParticipant extends BaseActiveRecord
 		
 		return $result;
 	}
+	
+	public static function countNewReg()
+	{
+		$result = self::find()->where(['status' => self::STATUS_NEW]);
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			$stageIds = Stage::find()->select('id')->where(['regionId' => \Yii::$app->user->identity->regionId])
+				->andWhere(['not', ['status' => Stage::STATUS_PAST]])->asArray()->column();
+			$result = $result->andWhere(['stageId' => $stageIds]);
+		}
+		return $result->count();
+	}
 }

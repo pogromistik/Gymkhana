@@ -58,22 +58,22 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                     </li>
 				<?php } ?>
 				
-				<?php $countNewFigure = \common\models\TmpFigureResult::find()
-					->where(['isNew' => 1])->count() ?>
-				<?php if ($countNewFigure) { ?>
-                    <li>
-                        <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
-                                    class="fa fa-bullhorn fa-fw"></i> Новые результаты
-                            фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
-                    </li>
+				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+					<?php $countNewFigure = \common\models\TmpFigureResult::find()
+						->where(['isNew' => 1])->count() ?>
+					<?php if ($countNewFigure) { ?>
+                        <li>
+                            <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
+                                        class="fa fa-bullhorn fa-fw"></i> Новые результаты
+                                фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
+                        </li>
+					<?php } ?>
 				<?php } ?>
 				
-				<?php $countNewReg = \common\models\TmpParticipant::find()
-					->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
+				<?php $countNewReg = \common\models\TmpParticipant::countNewReg();
+				?>
 				<?php if ($countNewReg) { ?>
                     <li>
-						<?php $countNewReg = \common\models\TmpParticipant::find()
-							->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
                         <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
                                     class="fa fa-registered fa-fw"></i> Регистрации на
                             этап <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
