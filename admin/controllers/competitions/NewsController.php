@@ -6,6 +6,7 @@ use admin\controllers\BaseController;
 use Yii;
 use common\models\AssocNews;
 use common\models\search\AssocNewsSearch;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -131,6 +132,7 @@ class NewsController extends BaseController
 	 *
 	 * @return AssocNews the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
+	 * @throws ForbiddenHttpException
 	 */
 	protected function findModel($id)
 	{
@@ -140,13 +142,13 @@ class NewsController extends BaseController
 					if ($model->creatorUserId != \Yii::$app->user->id && $model->canEditRegionId != null
 						&& $model->canEditRegionId != \Yii::$app->user->identity->regionId
 					) {
-						throw new NotFoundHttpException('Новость не найдена.');
+						throw new ForbiddenHttpException('Доступ запрещён.');
 					}
 				} elseif (Yii::$app->user->can('projectAdmin')) {
 					if ($model->creatorUserId != \Yii::$app->user->id
 						&& $model->canEditRegionId != \Yii::$app->user->identity->regionId
 					) {
-						throw new NotFoundHttpException('Новость не найдена.');
+						throw new ForbiddenHttpException('Доступ запрещён.');
 					}
 				}
 			}
