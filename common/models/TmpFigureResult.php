@@ -79,7 +79,7 @@ class TmpFigureResult extends BaseActiveRecord
 			'dateForHuman' => 'Дата заезда',
 			'timeForHuman' => 'Время (без учёта штрафных секунд)',
 			'fine'         => 'Штраф',
-			'videoLink'    => 'Ссылка на видео-подтверждение',
+			'videoLink'    => 'Ссылка с подтверждением результата',
 			'isNew'        => 'Is New',
 			'dateAdded'    => 'Дата добавления',
 			'dateUpdated'  => 'Дата редактирования',
