@@ -105,42 +105,51 @@ class TmpFiguresController extends BaseController
 		if (!$tmp->isNew) {
 			return 'Результат уже был обработан';
 		}
-		$figureResult = new FigureTime();
-		$figureResult->athleteId = $tmp->athleteId;
-		$figureResult->motorcycleId = $tmp->motorcycleId;
-		$figureResult->time = $tmp->time;
-		$figureResult->fine = $tmp->fine;
-		$figureResult->figureId = $tmp->figureId;
-		$figureResult->date = $tmp->date;
-		$figureResult->timeForHuman = $tmp->timeForHuman;
-		$figureResult->dateForHuman = $tmp->dateForHuman;
 		
-		$transaction = \Yii::$app->db->beginTransaction();
-		if (!$figureResult->save()) {
-			$transaction->rollBack();
+		if (\Yii::$app->mutex->acquire('TmpFigures-' . $tmp->id, 10)) {
+			$figureResult = new FigureTime();
+			$figureResult->athleteId = $tmp->athleteId;
+			$figureResult->motorcycleId = $tmp->motorcycleId;
+			$figureResult->time = $tmp->time;
+			$figureResult->fine = $tmp->fine;
+			$figureResult->figureId = $tmp->figureId;
+			$figureResult->date = $tmp->date;
+			$figureResult->timeForHuman = $tmp->timeForHuman;
+			$figureResult->dateForHuman = $tmp->dateForHuman;
 			
-			return 'Возникла ошибка при сохранении данных';
-		}
-		
-		$tmp->isNew = 0;
-		$tmp->figureResultId = $figureResult->id;
-		if (!$tmp->save()) {
-			$transaction->rollBack();
+			$transaction = \Yii::$app->db->beginTransaction();
+			if (!$figureResult->save()) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при сохранении данных';
+			}
 			
-			return 'Возникла ошибка при сохранении данных';
+			$tmp->isNew = 0;
+			$tmp->figureResultId = $figureResult->id;
+			if (!$tmp->save()) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при сохранении данных';
+			}
+			
+			$figure = $figureResult->figure;
+			$link = Url::to(['/competitions/figure', 'id' => $figure->id]);
+			$min = str_pad(floor($figureResult->time / 60000), 2, '0', STR_PAD_LEFT);
+			$sec = str_pad(floor(($figureResult->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(($figureResult->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
+			$timeForHuman = $min . ':' . $sec . '.' . $mls;
+			$text = 'Ваш результат ' . $timeForHuman . ' для фигуры ' . $figure->title . ' подтверждён.';
+			
+			Notice::add($tmp->athleteId, $text, $link);
+			
+			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			$transaction->commit();
+		} else {
+			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		
-		$figure = $figureResult->figure;
-		$link = Url::to(['/competitions/figure', 'id' => $figure->id]);
-		$min = str_pad(floor($figureResult->time / 60000), 2, '0', STR_PAD_LEFT);
-		$sec = str_pad(floor(($figureResult->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
-		$mls = str_pad(($figureResult->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
-		$timeForHuman = $min . ':' . $sec . '.' . $mls;
-		$text = 'Ваш результат ' . $timeForHuman . ' для фигуры ' . $figure->title . ' подтверждён.';
-		
-		Notice::add($tmp->athleteId, $text, $link);
-		
-		$transaction->commit();
 		
 		return true;
 	}
@@ -166,17 +175,23 @@ class TmpFiguresController extends BaseController
 			return 'Результат уже был обработан';
 		}
 		
-		$tmp->isNew = 0;
-		$tmp->cancelReason = $text;
-		if (!$tmp->save()) {
-			return 'Возникла ошибка при сохранении данных';
+		if (\Yii::$app->mutex->acquire('TmpFigures-' . $tmp->id, 10)) {
+			$tmp->isNew = 0;
+			$tmp->cancelReason = $text;
+			if (!$tmp->save()) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				return 'Возникла ошибка при сохранении данных';
+			}
+			
+			$figure = $tmp->figure;
+			$link = Url::to(['/figures/requests', 'status' => TmpFigureResult::STATUS_CANCEL]);
+			$text = 'Ваш результат для фигуры ' . $figure->title . ' отклонён. Чтобы узнать подробности, перейдите по ссылке.';
+			
+			Notice::add($tmp->athleteId, $text, $link);
+		} else {
+			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		
-		$figure = $tmp->figure;
-		$link = Url::to(['/figures/requests', 'status' => TmpFigureResult::STATUS_CANCEL]);
-		$text = 'Ваш результат для фигуры ' . $figure->title . ' отклонён. Чтобы узнать подробности, перейдите по ссылке.';
-		
-		Notice::add($tmp->athleteId, $text, $link);
 		
 		return true;
 	}
