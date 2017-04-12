@@ -85,7 +85,8 @@ class DocumentsController extends BaseController
 			if ($file->load(Yii::$app->request->post())) {
 				$file->saveFile($model->id, DocumentSection::className());
 				if ($documentId == 'error saveAs') {
-					throw new Exception('Возникла ошибка при сохранении файла. Проверьте директиву upload_max_filesize');
+					throw new Exception('Возникла ошибка при сохранении файла. Скорее всего вы пытаетесь загрузить слишком 
+					большой объем данных.');
 				}
 			}
 			
