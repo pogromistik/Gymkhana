@@ -54,10 +54,14 @@ $(document).on("submit", '.newRegistration', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            $('#enrollForm').animate({scrollTop: $('.modal-footer').offset().top}, 500);
+            $('body').animate({scrollTop: $('.freeNumbersList').offset().top}, 500);
             if (result == true) {
                 form.trigger('reset');
                 form.find('.alert-success').text('Вы успешно зарегистрированы на этап.').show();
+                $('.enrollForm').slideToggle();
+                $('.enrollForm-success').html('<div class="alert alert-success">' +
+                    'Вы успешно зарегистрированы на этап.</div>');
+                $('#enrollFormHref').show();
             } else {
                 form.find('.alert-danger').text(result).show();
             }
@@ -65,6 +69,13 @@ $(document).on("submit", '.newRegistration', function (e) {
             form.find('.button').show();
         }
     });
+});
+
+$('#enrollFormHref').click(function (e) {
+    e.preventDefault();
+    $('.enrollForm').slideToggle();
+    $('body').animate({scrollTop: $('.enrollForm').offset().top}, 500);
+    $(this).hide();
 });
 
 $('.freeNumbersList').click(function (e) {

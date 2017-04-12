@@ -53,6 +53,10 @@
 }
 
 @media (max-width: 991px) {
+    .nav a {
+        font-size: 12px;
+    }
+
     .pb-10-md {
         padding-bottom: 0;
     }
@@ -125,6 +129,10 @@
     #compareWith select, #compareWith > .select2, #compareWith > button {
         margin-bottom: 4px;
     }
+
+    .nav a {
+        font-size: 10px;
+    }
 }
 
 @media (max-width: 812px) {
@@ -156,6 +164,9 @@
     .athletes h4 {
         font-size: 14px;
     }
+    .nav a {
+        font-size: 9px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -173,6 +184,9 @@
     }
     .navbar-left .dropdown-menu {
         background: #fff;
+    }
+    .nav a {
+        font-size: 10px;
     }
 }
 

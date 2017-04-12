@@ -82,9 +82,13 @@ $championship = $stage->championship;
 				<?php if ($stage->startRegistration && $time >= $stage->startRegistration
 					&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
 				) { ?>
-                    <div class="pt-30">
+                    <div class="pt-30 enroll">
 						<?php if (\Yii::$app->user->isGuest) { ?>
-                            <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollForm">Зарегистрироваться</a>
+                            <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
+                            <div class="enrollForm">
+                                <?= $this->render('_enroll', ['stage' => $stage]) ?>
+                            </div>
+                            <div class="enrollForm-success pt-10"></div>
 						<?php } else { ?>
                             <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
 						<?php } ?>
@@ -168,9 +172,9 @@ $championship = $stage->championship;
         </div>
     </div>
 
-<?php if (\Yii::$app->user->isGuest) { ?>
-	<?= $this->render('_enrollForm', ['stage' => $stage]) ?>
-<?php } else { ?>
+<?php if (\Yii::$app->user->isGuest) {
+    //$this->render('_enrollForm', ['stage' => $stage]);
+} else { ?>
 	<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
 <?php } ?>
 

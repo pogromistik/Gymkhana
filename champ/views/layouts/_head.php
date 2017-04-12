@@ -76,6 +76,9 @@ use yii\helpers\Url;
                         <li>
                             <a href="/athletes/list">Спортсмены</a>
                         </li>
+                        <li>
+                            <a href="http://gymkhana74.ru/russia" target="_blank">Россия</a>
+                        </li>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login">Вход</a>
 							<?php } else { ?>
