@@ -33,6 +33,12 @@ class FiguresController extends BaseController
 		];
 	}
 	
+	public function init()
+	{
+		parent::init();
+		$this->can('projectOrganizer');
+	}
+	
 	/**
 	 * Lists all Figure models.
 	 *
@@ -150,8 +156,6 @@ class FiguresController extends BaseController
 	
 	public function actionApproveClass($id)
 	{
-		$this->can('competitions');
-		
 		$item = FigureTime::findOne($id);
 		if (!$item) {
 			return 'Запись не найдена';
@@ -167,8 +171,6 @@ class FiguresController extends BaseController
 	
 	public function actionApproveRecord($id)
 	{
-		$this->can('competitions');
-		
 		$item = FigureTime::findOne($id);
 		if (!$item) {
 			return 'Запись не найдена';
@@ -231,8 +233,6 @@ class FiguresController extends BaseController
 	
 	public function actionCancelRecord($id)
 	{
-		$this->can('competitions');
-		
 		$item = FigureTime::findOne($id);
 		if (!$item) {
 			return 'Запись не найдена';
@@ -253,8 +253,6 @@ class FiguresController extends BaseController
 	
 	public function actionCancelAllRecords($id)
 	{
-		$this->can('competitions');
-		
 		$figure = Figure::findOne($id);
 		if (!$figure) {
 			return 'Фигура не найдена';
@@ -280,8 +278,6 @@ class FiguresController extends BaseController
 	
 	public function actionCancelClass($id)
 	{
-		$this->can('competitions');
-		
 		$item = FigureTime::findOne($id);
 		if (!$item) {
 			return 'Запись не найдена';
@@ -301,8 +297,6 @@ class FiguresController extends BaseController
 	
 	public function actionApproveAllClasses($id)
 	{
-		$this->can('competitions');
-		
 		$figure = Figure::findOne($id);
 		if (!$figure) {
 			return 'Фигура не найдена';
@@ -324,8 +318,6 @@ class FiguresController extends BaseController
 	
 	public function actionCancelAllClasses($id)
 	{
-		$this->can('competitions');
-		
 		$figure = Figure::findOne($id);
 		if (!$figure) {
 			return 'Фигура не найдена';
