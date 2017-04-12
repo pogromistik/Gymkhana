@@ -30,6 +30,12 @@ class TmpAthletesController extends BaseController
 		];
 	}
 	
+	public function init()
+	{
+		parent::init();
+		$this->can('refereeOfCompetitions');
+	}
+	
 	/**
 	 * Lists all TmpAthlete models.
 	 *
@@ -37,8 +43,6 @@ class TmpAthletesController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
-		
 		$searchModel = new TmpAthletesSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TmpAthlete::STATUS_NEW]);
@@ -60,8 +64,6 @@ class TmpAthletesController extends BaseController
 	 */
 	protected function findModel($id)
 	{
-		$this->can('competitions');
-		
 		if (($model = TmpAthlete::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -71,8 +73,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionRegistrationOldAthlete($tmpId, $athleteId)
 	{
-		$this->can('competitions');
-		
 		$tmpAthlete = TmpAthlete::findOne($tmpId);
 		if (!$tmpAthlete) {
 			return 'Заявка не найдена';
@@ -114,8 +114,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionChangeMotorcycles($tmpId, $athleteId)
 	{
-		$this->can('competitions');
-		
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$result = [
 			'error' => false,
@@ -191,8 +189,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionAddMotorcyclesAndRegistration()
 	{
-		$this->can('competitions');
-		
 		$tmpId = \Yii::$app->request->post('tmpId');
 		$athleteId = \Yii::$app->request->post('athleteId');
 		$tmpAthlete = TmpAthlete::findOne($tmpId);
@@ -295,8 +291,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionRegistrationNewAthlete($id)
 	{
-		$this->can('competitions');
-		
 		$tmpAthlete = TmpAthlete::findOne($id);
 		if (!$tmpAthlete) {
 			return 'Заявка не найдена';
@@ -361,8 +355,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionSaveNewCity()
 	{
-		$this->can('competitions');
-		
 		$id = \Yii::$app->request->post('id');
 		$city = \Yii::$app->request->post('city');
 		if (!$id || !$city) {
@@ -393,8 +385,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionCancel($id)
 	{
-		$this->can('competitions');
-		
 		$tmp = TmpAthlete::findOne($id);
 		if (!$tmp) {
 			return 'Заявка не найдена';
