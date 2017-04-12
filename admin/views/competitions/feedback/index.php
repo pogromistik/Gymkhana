@@ -57,7 +57,7 @@ $this->title = 'Обратная связь';
 			],
 			[
 				'format'  => 'raw',
-				'visible' => \Yii::$app->user->can('admin'),
+				'visible' => \Yii::$app->user->can('globalWorkWithCompetitions'),
 				'value'   => function (\common\models\Feedback $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['delete', 'id' => $item->id], [
 						'class' => 'btn btn-danger',
