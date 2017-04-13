@@ -275,30 +275,6 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		return parent::beforeValidate();
 	}
 	
-	public function beforeSave($insert)
-	{
-		$file = UploadedFile::getInstance($this, 'photoFile');
-		if ($file && $file->size <= 307200) {
-			if ($this->photo) {
-				$filePath = Yii::getAlias('@files') . $this->photo;
-				if (file_exists($filePath)) {
-					unlink($filePath);
-				}
-			}
-			$dir = \Yii::getAlias('@files') . '/' . 'athletes';
-			if (!file_exists($dir)) {
-				mkdir($dir);
-			}
-			$title = uniqid() . '.' . $file->extension;
-			$folder = $dir . '/' . $title;
-			if ($file->saveAs($folder)) {
-				$this->photo = '/athletes/' . $title;
-			}
-		}
-		
-		return parent::beforeSave($insert);
-	}
-	
 	public function afterSave($insert, $changedAttributes)
 	{
 		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']

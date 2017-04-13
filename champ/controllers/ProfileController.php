@@ -18,6 +18,7 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 class ProfileController extends AccessController
 {
@@ -42,6 +43,25 @@ class ProfileController extends AccessController
 		}
 		
 		if ($athlete->load(\Yii::$app->request->post()) && $athlete->save()) {
+			$file = UploadedFile::getInstance($athlete, 'photoFile');
+			if ($file && $file->size <= 307200) {
+				if ($athlete->photo) {
+					$filePath = \Yii::getAlias('@files') . $athlete->photo;
+					if (file_exists($filePath)) {
+						unlink($filePath);
+					}
+				}
+				$dir = \Yii::getAlias('@files') . '/' . 'athletes';
+				if (!file_exists($dir)) {
+					mkdir($dir);
+				}
+				$title = uniqid() . '.' . $file->extension;
+				$folder = $dir . '/' . $title;
+				if ($file->saveAs($folder)) {
+					$athlete->photo = '/athletes/' . $title;
+					$athlete->save(false);
+				}
+			}
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
