@@ -25,7 +25,13 @@ $this->title = 'Города';
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
-			'title',
+			[
+				'attribute' => 'title',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по городу...']) . '
+</div>',
+			],
 			[
 				'attribute' => 'regionId',
 				'format'    => 'raw',
