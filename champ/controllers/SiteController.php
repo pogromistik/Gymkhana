@@ -196,6 +196,11 @@ class SiteController extends BaseController
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')
 						->send();
+					\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+						->setTo('lyadetskaya.ns@yandex.ru')
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup: запрос на регистрацию')
+						->send();
 				}
 				
 				return true;
