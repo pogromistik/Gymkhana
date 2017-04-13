@@ -286,10 +286,11 @@ class ParticipantsController extends BaseController
 			$time = new Time();
 		}
 		if ($time->load(\Yii::$app->request->post())) {
-			$stage = Stage::findOne($time->stage);
+			$stage = Stage::findOne($time->stageId);
 			if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 				if ($stage->regionId != \Yii::$app->user->identity->regionId) {
 					$result['error'] = 'Доступ запрещен';
+					
 					return $result;
 				}
 			}
