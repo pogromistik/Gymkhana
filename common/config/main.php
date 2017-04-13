@@ -13,8 +13,8 @@ return [
 			'transport' => [
 				'class'      => 'Swift_SmtpTransport',
 				'host'       => 'localhost',
-				'username'   => 'support@mg-cup.ru',
-				'password'   => 'A8p3X7j0',
+				'username'   => 'support@gymkhana-cup.ru',
+				'password'   => 'P1l0N6v4',
 				'port'       => '587',
 				'encryption' => 'tls',
 			],

@@ -900,7 +900,7 @@ class RunController extends Controller
 	{
 		\Yii::$app->mailer->compose('text', ['text' => 'проверка почты'])
 			->setTo('nadia__@bk.ru')
-			->setFrom(['support@mg-cup.ru' => 'GymkhanaCup'])
+			->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup.ru: проверка почты')
 			->send();
 	}
