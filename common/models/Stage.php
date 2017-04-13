@@ -282,6 +282,11 @@ class Stage extends BaseActiveRecord
 			
 			return 'Неправильно указан класс соревнований: нет ни одного результата в классе ' . $this->classModel->title;
 		}
+		if (!$best->bestTime || $best->bestTime == 0) {
+			$transaction->rollBack();
+			
+			return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
+		}
 		$referenceTime = floor($best->bestTime / $best->athleteClass->coefficient);
 		$this->referenceTime = $referenceTime;
 		if ($this->status != self::STATUS_CALCULATE_RESULTS && $this->status != Stage::STATUS_PAST) {
