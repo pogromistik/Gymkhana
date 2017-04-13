@@ -35,12 +35,6 @@ class ProfileController extends AccessController
 			throw new NotFoundHttpException('Ошибка! Спортсмен не найден');
 		}
 		
-		if (\Yii::$app->request->isAjax && $athlete->load(\Yii::$app->request->post())) {
-			\Yii::$app->response->format = Response::FORMAT_JSON;
-			
-			return ActiveForm::validate($athlete);
-		}
-		
 		if ($athlete->load(\Yii::$app->request->post()) && $athlete->save()) {
 			return $this->redirect(['index', 'success' => true]);
 		}

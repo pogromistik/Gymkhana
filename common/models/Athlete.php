@@ -274,12 +274,12 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		$file = UploadedFile::getInstance($this, 'photoFile');
 		if ($file && $file->size <= 307200) {
-			if ($this->photo) {
+			/*if ($this->photo) {
 				$filePath = Yii::getAlias('@files') . $this->photo;
 				if (file_exists($filePath)) {
 					unlink($filePath);
 				}
-			}
+			}*/
 			$dir = \Yii::getAlias('@files') . '/' . 'athletes';
 			if (!file_exists($dir)) {
 				mkdir($dir);
