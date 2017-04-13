@@ -8,6 +8,7 @@ use common\models\City;
 use common\models\Country;
 use common\models\Error;
 use common\models\Motorcycle;
+use common\models\Notice;
 use common\models\Region;
 use common\models\Stage;
 use yii\console\Controller;
@@ -902,5 +903,13 @@ class RunController extends Controller
 			->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup.ru: проверка почты')
 			->send();
+	}
+	
+	public function actionSendNotice($athleteId)
+	{
+		$text = 'В сявязи с неполадками на сайте, загрузка фотографий временно не работала. Неисправность устранена, вы можете загрузить фото в своём профиле. 
+		Приносим извинения за доставленные неудобства.';
+		var_dump(Notice::add($athleteId, $text));
+		return true;
 	}
 }
