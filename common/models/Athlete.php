@@ -287,7 +287,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			$title = uniqid() . '.' . $file->extension;
 			$folder = $dir . '/' . $title;
 			if ($file->saveAs($folder)) {
-				$this->photo = 'athletes/' . $title;
+				$this->photo = '/athletes/' . $title;
 			}
 		}
 		
