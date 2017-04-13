@@ -191,7 +191,7 @@ class SiteController extends BaseController
 			}
 			if ($form->save(false)) {
 				if (YII_ENV != 'dev') {
-					\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+					/*\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')
@@ -200,7 +200,7 @@ class SiteController extends BaseController
 						->setTo('lyadetskaya.ns@yandex.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')
-						->send();
+						->send();*/
 				}
 				
 				return true;
