@@ -135,6 +135,7 @@ $listView = new \yii\widgets\ListView([
 <?php $form->end() ?>
 
 <div class="athletes">
+	<?= $listView->renderPager() ?>
     <div class="row">
 		<?php
 		foreach ($dataProvider->models as $index => $model) {
