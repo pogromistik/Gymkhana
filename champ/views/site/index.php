@@ -11,9 +11,6 @@ use yii\bootstrap\Html;
 
 ?>
 <h2>Новости</h2>
-<div class="news-pg text-left">
-	<?= LinkPager::widget(['pagination' => $pagination]) ?>
-</div>
 <div class="z-100">
     <div class="news">
 		<?php foreach ($news as $item) { ?>
