@@ -342,7 +342,8 @@ class TmpAthletesController extends BaseController
 			}
 		}
 		
-		if (!$athlete->createCabinet()) {
+		$result = $athlete->createCabinet();
+		if (!$result) {
 			$transaction->rollBack();
 			
 			return 'Возникла ошибка при создании кабинета';
@@ -356,7 +357,7 @@ class TmpAthletesController extends BaseController
 		
 		$transaction->commit();
 		
-		return true;
+		return $result;
 	}
 	
 	public function actionSaveNewCity()
