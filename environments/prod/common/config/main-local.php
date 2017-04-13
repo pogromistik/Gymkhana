@@ -5,7 +5,7 @@ return [
             'class' => 'yii\db\Connection',
             'dsn' => 'pgsql:host=localhost;dbname=gymkhana',
             'username' => 'postgres',
-            'password' => 'X2y2B3a1',
+            'password' => 'SsZxuMWTNSpXRMz',
             'charset' => 'utf8',
         ],
         'mailer' => [
