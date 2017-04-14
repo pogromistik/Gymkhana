@@ -17,18 +17,14 @@ use yii\filters\VerbFilter;
 class FiguresController extends AccessController
 {
 	
-	/**
-	 * Lists all TmpFigureResult models.
-	 *
-	 * @return mixed
-	 */
-	public function actionSendResult()
+	public function actionSendResult($figureId = null)
 	{
 		$this->pageTitle = 'Отправить результат базовой фигуры';
 		$this->pageTitle = 'Форма для отправки своего результата по базовой фигуре';
 		
 		$model = new TmpFigureResult();
 		$model->athleteId = \Yii::$app->user->id;
+		$model->figureId = $figureId;
 		
 		$athlete = Athlete::findOne(\Yii::$app->user->id);
 		$motorcycles = $athlete->activeMotorcycles;
