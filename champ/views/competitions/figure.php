@@ -56,6 +56,10 @@ $time = time();
                     </div>
 				<?php } ?>
             </div>
+	
+	        <?php if (\Yii::$app->user->isGuest) { ?>
+		        <div class="pb-10">Отправка результатов на сайт доступна только зарегистрированным пользователям</div>
+	        <?php } ?>
 
     <div class="filters">
 		<?= \yii\bootstrap\Html::beginForm('', 'post', ['id' => 'figureFilterForm']) ?>
@@ -140,13 +144,23 @@ $time = time();
             <div class="alert alert-danger" style="display: none"></div>
 
             <div class="results pt-20">
-                <div class="pb-10">
-					<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
-						'/export/export',
-						'modelId' => $figure->id,
-						'type'    => \champ\controllers\ExportController::TYPE_FIGURE,
-						'yearId'  => $year ? $year->id : null
-					]), ['class' => 'btn btn-light']) ?>
+					<div class="row">
+                        <div class="col-sm-6 col-xs-12 pb-10">
+							<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+								'/export/export',
+								'modelId' => $figure->id,
+								'type'    => \champ\controllers\ExportController::TYPE_FIGURE,
+								'yearId'  => $year ? $year->id : null
+							]), ['class' => 'btn btn-light']) ?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12 pb-10 text-right">
+							<?php if (!\Yii::$app->user->isGuest) { ?>
+								<?= \yii\bootstrap\Html::a('Добавить результат', \yii\helpers\Url::to([
+									'/figures/send-result',
+									'figureId' => $figure->id
+								]), ['class' => 'btn btn-dark']) ?>
+                            <?php } ?>
+                        </div>
                 </div>
                 <div class="small text-right">
 					<?php $count = count($results); ?>
