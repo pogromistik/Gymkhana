@@ -991,3 +991,8 @@ table.results small.red {
 .athletes .pagination:first-child, .news-pg .pagination:first-child {
     margin: 0;
 }
+
+.notice hr {
+    padding: 0;
+    margin: 0;
+}

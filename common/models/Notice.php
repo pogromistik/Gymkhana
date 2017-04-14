@@ -15,6 +15,8 @@ use Yii;
  * @property integer $status
  * @property integer $dateAdded
  * @property integer $senderId
+ *
+ * @property Athlete $athlete
  */
 class Notice extends \yii\db\ActiveRecord
 {
@@ -96,5 +98,10 @@ class Notice extends \yii\db\ActiveRecord
 		}
 		
 		return false;
+	}
+	
+	public function getAthlete()
+	{
+		return $this->hasOne(Athlete::className(), ['id' => 'athleteId']);
 	}
 }
