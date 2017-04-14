@@ -191,12 +191,19 @@ class SiteController extends BaseController
 			}
 			if ($form->save(false)) {
 				if (YII_ENV != 'dev') {
-					/*\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+					$text = 'Новый запрос на регистрацию в личном кабинете';
+					$text .= '<br>';
+					$text .= 'Фио: ' . $form->lastName . ' ' . $form->firstName;
+					$text .= '<br>';
+					$text .= 'Город: ' . $form->city;
+					$text .= '<br>';
+					$text .= 'Количество мотоциклов: ' . count($motorcycles);
+					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')
 						->send();
-					\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+					/*\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
 						->setTo('lyadetskaya.ns@yandex.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')
