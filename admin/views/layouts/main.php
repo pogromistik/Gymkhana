@@ -241,7 +241,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                        href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                 </li>
 								<?php if (\Yii::$app->user->can('admin')) { ?>
-                                    <li class="level-2 active">
+                                    <li>
                                         <a href="#"> Уведомления<span
                                                     class="fa arrow"></span></a>
                                         <ul class="nav nav-second-level">
