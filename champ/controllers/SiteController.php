@@ -193,11 +193,11 @@ class SiteController extends BaseController
 				if (YII_ENV != 'dev') {
 					$text = 'Новый запрос на регистрацию в личном кабинете';
 					$text .= '<br>';
-					$text .= 'Фио: ' . $form->lastName . ' ' . $form->firstName;
+					$text .= '<b>Фио: </b>' . $form->lastName . ' ' . $form->firstName;
 					$text .= '<br>';
-					$text .= 'Город: ' . $form->city;
+					$text .= '<b>Город: </b>' . $form->city;
 					$text .= '<br>';
-					$text .= 'Количество мотоциклов: ' . count($motorcycles);
+					$text .= '<b>Количество мотоциклов: </b>' . count($motorcycles);
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
