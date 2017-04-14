@@ -51,6 +51,28 @@ class NoticeController extends BaseController
 		]);
 	}
 	
+	public function actionOne($success = false)
+	{
+		$this->can('admin');
+		
+		$searchModel = new NoticeSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		$model = new Notice();
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['one', 'success' => true]);
+		}
+		
+		return $this->render('one', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+			'success'      => $success,
+			'model'        => $model
+		]);
+	}
+	
 	/**
 	 * Creates a new Notice model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
