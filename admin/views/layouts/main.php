@@ -251,7 +251,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     </li>
 								<?php } ?>
 	                            <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
-                                    <li class="level-2 active">
+                                    <li>
                                         <a href="#"> Уведомления<span
                                                     class="fa arrow"></span></a>
                                         <ul class="nav nav-second-level">
