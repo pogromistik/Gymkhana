@@ -360,10 +360,10 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			return false;
 		}
 		
-		if (mb_strripos($this->email, '@mail.ru')) {
+		/*if (mb_strripos($this->email, '@mail.ru')) {
 			return 'mail.ru заблокировал почту, поэтому отравьте сообщение этому человеку
 				 самостоятельно. Пароль: ' . $password;
-		}
+		}*/
 		if (YII_ENV != 'dev') {
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
