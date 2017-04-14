@@ -36,9 +36,9 @@ $length = 255;
 				]) ?>
             </div>
 		<?php } else { ?>
+			<?php $region = \common\models\Region::findOne(\Yii::$app->user->identity->regionId); ?>
             <label class="control-label" for="regionId">Уведомление будет отправлено всем спортсменам вашего
-                региона (<?php $region = \common\models\Region::findOne(\Yii::$app->user->identity->regionId); ?>
-                <?= $region->title ?>)</label>
+                региона (<?= $region->title ?>)</label>
 		<?php } ?>
     </div>
 	
