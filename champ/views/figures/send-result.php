@@ -56,7 +56,7 @@ use yii\widgets\MaskedInput;
 	
 	<?= $form->field($model, 'videoLink')->textInput(['maxlength' => true]) ?>
 
-    <div class="alert alert-error" style="display: none"></div>
+    <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
 
     <div class="form-group">
