@@ -69,6 +69,7 @@ $length = 255;
 				}
 			],
 			'text',
+            'link',
 			[
 				'attribute' => 'dateAdded',
 				'format'    => 'raw',
