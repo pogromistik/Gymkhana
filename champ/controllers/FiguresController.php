@@ -45,11 +45,22 @@ class FiguresController extends AccessController
 	{
 		$model = new TmpFigureResult();
 		
-		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-			return true;
+		if ($model->load(\Yii::$app->request->post())) {
+			if ($model->save()) {
+				return true;
+			}
+			if (!$model->date) {
+				return 'Укажите дату заезда';
+			}
+			if (!$model->time) {
+				return 'Укажите время заезда';
+			}
+			if (!$model->videoLink) {
+				return 'Дабавте ссылку для подтверждения результата';
+			}
 		}
 		
-		return 'Необходимо заполнить все поля';
+		return 'Возникла ошибка при отправке данных';
 	}
 	
 	public function actionRequests($status = null)
