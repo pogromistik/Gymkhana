@@ -97,6 +97,9 @@ class TmpAthletesController extends BaseController
 		if ($tmpAthlete->phone) {
 			$oldAthlete->phone = $tmpAthlete->phone;
 		}
+		if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+			$oldAthlete->cityId = $tmpAthlete->cityId;
+		}
 		if (!$oldAthlete->save()) {
 			return 'При создании личного кабинета возникла ошибка';
 		}
@@ -152,6 +155,9 @@ class TmpAthletesController extends BaseController
 		$oldAthlete->email = $tmpAthlete->email;
 		if ($tmpAthlete->phone) {
 			$oldAthlete->phone = $tmpAthlete->phone;
+		}
+		if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+			$oldAthlete->cityId = $tmpAthlete->cityId;
 		}
 		if (!$oldAthlete->save()) {
 			$result['error'] = 'При создании личного кабинета возникла ошибка';
@@ -271,6 +277,9 @@ class TmpAthletesController extends BaseController
 		$oldAthlete->email = $tmpAthlete->email;
 		if ($tmpAthlete->phone) {
 			$oldAthlete->phone = $tmpAthlete->phone;
+		}
+		if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+			$oldAthlete->cityId = $tmpAthlete->cityId;
 		}
 		if (!$oldAthlete->save()) {
 			$transaction->rollBack();
