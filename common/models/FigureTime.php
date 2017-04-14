@@ -25,6 +25,7 @@ use Yii;
  * @property integer       $resultTime
  * @property integer       $recordType
  * @property integer       $recordStatus
+ * @property integer       $recordInMoment
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -74,7 +75,7 @@ class FigureTime extends BaseActiveRecord
 				'percent', 'timeForHuman', 'dateAdded', 'dateUpdated', 'resultTime'], 'required'],
 			[['figureId', 'athleteId', 'motorcycleId', 'yearId', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'date', 'time', 'fine', 'dateAdded',
-				'dateUpdated', 'resultTime', 'recordType', 'recordStatus'], 'integer'],
+				'dateUpdated', 'resultTime', 'recordType', 'recordStatus', 'recordInMoment'], 'integer'],
 			[['dateForHuman', 'timeForHuman'], 'string'],
 			[['percent'], 'number'],
 			[['fine'], 'default', 'value' => 0]
@@ -104,7 +105,8 @@ class FigureTime extends BaseActiveRecord
 			'dateAdded'             => 'Дата добавления',
 			'dateUpdated'           => 'Дата редактирования',
 			'resultTime'            => 'Итоговое время',
-			'resultTimeForHuman'    => 'Итоговое время'
+			'resultTimeForHuman'    => 'Итоговое время',
+			'recordInMoment'        => 'Эталонное время на тот момент'
 		];
 	}
 	
@@ -138,6 +140,9 @@ class FigureTime extends BaseActiveRecord
 		$figure = Figure::findOne($this->figureId);
 		if ($figure->bestTime) {
 			$this->percent = round($this->resultTime / $figure->bestTime * 100, 2);
+			if ($this->isNewRecord) {
+				$this->recordInMoment = $figure->bestTime;
+			}
 		} else {
 			$this->percent = 100;
 		}
