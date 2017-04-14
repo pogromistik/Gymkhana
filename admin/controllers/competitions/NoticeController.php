@@ -53,9 +53,9 @@ class NoticeController extends BaseController
 	
 	public function actionOne($success = false)
 	{
-		$this->can('admin');
+		$this->can('globalWorkWithCompetitions');
 		
-		$searchModel = new NoticeSearch();
+		$searchModel = new NoticesSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
 		

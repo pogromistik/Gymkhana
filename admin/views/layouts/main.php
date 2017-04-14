@@ -250,7 +250,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                            href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                     </li>
 								<?php } ?>
-	                            <?php if (\Yii::$app->user->can('admin')) { ?>
+	                            <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li class="level-2 active">
                                         <a href="#"> Уведомления<span
                                                     class="fa arrow"></span></a>
