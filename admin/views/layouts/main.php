@@ -257,7 +257,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                             уведомление</a>
                                     </li>
 								<?php } ?>
-								<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>
                                         <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление
                                             пользователями</a>
