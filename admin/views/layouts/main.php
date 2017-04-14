@@ -240,10 +240,28 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     <a data-addr="/competitions/figures"
                                        href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                 </li>
-                                <li>
-                                    <a data-addr="/competitions/notice"
-                                       href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить уведомление</a>
-                                </li>
+								<?php if (\Yii::$app->user->can('admin')) { ?>
+                                    <li class="level-2 active">
+                                        <a href="#"> Уведомления<span
+                                                    class="fa arrow"></span></a>
+                                        <ul class="nav nav-second-level">
+                                            <li>
+                                                <a data-addr="/competitions/notice/"
+                                                   href="<?= Url::to(['/competitions/notice/index']) ?>"> Регионам</a>
+                                            </li>
+                                            <li>
+                                                <a href="<?= Url::to(['/competitions/notice/one']) ?>">
+                                                    Человеку</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+								<?php } else { ?>
+                                    <li>
+                                        <a data-addr="/competitions/notice"
+                                           href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить
+                                            уведомление</a>
+                                    </li>
+								<?php } ?>
                             </ul>
                         </li>
 					<?php } ?>
