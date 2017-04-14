@@ -25,7 +25,7 @@ class UsersController extends BaseController
 	public function init()
 	{
 		parent::init();
-		$this->can('projectOrganizer');
+		$this->can('projectAdmin');
 	}
 	
 	public function actionIndex()
