@@ -49,7 +49,7 @@ class FiguresController extends AccessController
 			return true;
 		}
 		
-		return 'Возникла ошибка при отправке данных';
+		return 'Необходимо заполнить все поля';
 	}
 	
 	public function actionRequests($status = null)
