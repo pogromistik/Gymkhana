@@ -937,23 +937,29 @@ a.deletePhoto {
 .compareWithBlock .result {
     background: #fff;
 }
+
 .compareWithBlock hr {
     border-top: 1px solid #a4a5a9;
     margin-bottom: 10px;
 }
+
 .compareWithBlock h3, .compareWithBlock .text {
-   padding-left: 6px;
+    padding-left: 6px;
 }
+
 .compareWithBlock table tr td:first-child {
     padding-left: 6px !important;
 }
+
 .compareWithBlock table tr td:last-child {
     padding-right: 6px !important;
 }
+
 .compare-results {
     padding-top: 1px;
     padding-bottom: 20px;
 }
+
 .compare-results table:last-child {
     margin-bottom: 0;
 }
@@ -971,7 +977,7 @@ table.results small.red {
 }
 
 .results-with-img thead th {
-    vertical-align: bottom!important;
+    vertical-align: bottom !important;
 }
 
 .table thead img {
@@ -980,4 +986,13 @@ table.results small.red {
 
 .enrollForm {
     display: none;
+}
+
+.athletes .pagination:first-child, .news-pg .pagination:first-child {
+    margin: 0;
+}
+
+.notice hr {
+    padding: 0;
+    margin: 0;
 }
