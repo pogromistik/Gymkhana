@@ -1,3 +1,2 @@
 User-agent: *
-Disallow:
-Host: gymkhana-cup.ru
+Disallow: /
