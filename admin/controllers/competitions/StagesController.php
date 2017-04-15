@@ -46,7 +46,7 @@ class StagesController extends BaseController
 		
 		$championship = Championship::findOne($championshipId);
 		if (!$championship) {
-			throw new NotFoundHttpException('Этап не найден');
+			throw new NotFoundHttpException('Чемпионат не найден');
 		}
 		/*if ($championship->status == Championship::STATUS_PAST) {
 			throw new UserException('Чемпионат завершен, добавление этапов невозможно');
