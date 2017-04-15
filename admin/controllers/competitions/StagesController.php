@@ -48,9 +48,9 @@ class StagesController extends BaseController
 		if (!$championship) {
 			throw new NotFoundHttpException('Этап не найден');
 		}
-		if ($championship->status == Championship::STATUS_PAST) {
+		/*if ($championship->status == Championship::STATUS_PAST) {
 			throw new UserException('Чемпионат завершен, добавление этапов невозможно');
-		}
+		}*/
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
 				throw new ForbiddenHttpException('Доступ запрещен');
