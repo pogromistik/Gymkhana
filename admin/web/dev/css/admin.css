@@ -1,0 +1,338 @@
+html,
+body {
+    height: 100%;
+}
+
+.wrap {
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
+
+.wrap > .container {
+    padding: 70px 15px 20px;
+}
+
+.footer {
+    height: 60px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    padding-left: 5px;
+}
+
+a.asc:after {
+    content: /*"\e113"*/ "\e151";
+}
+
+a.desc:after {
+    content: /*"\e114"*/ "\e152";
+}
+
+.sort-numerical a.asc:after {
+    content: "\e153";
+}
+
+.sort-numerical a.desc:after {
+    content: "\e154";
+}
+
+.sort-ordinal a.asc:after {
+    content: "\e155";
+}
+
+.sort-ordinal a.desc:after {
+    content: "\e156";
+}
+
+.grid-view td {
+    white-space: nowrap;
+}
+
+.grid-view .filters input,
+.grid-view .filters select {
+    min-width: 50px;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+/* align the logout "link" (button in form) of the navbar */
+.nav > li > form {
+    padding: 8px;
+}
+
+@media (max-width: 768px) {
+    .nav li > form {
+        padding: 3px;
+    }
+}
+
+.nav > li > form > button:hover {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.picture-preview img {
+    max-width: 300px;
+}
+
+.previewImg {
+    max-width: 100px;
+}
+
+.navbar-default {
+    background: #242423;
+}
+
+.navbar-default.sidebar ul li {
+    background: #242423;
+    color: #fff;
+}
+
+.navbar-default.sidebar ul li a {
+    color: #fff;
+}
+
+#wrapper {
+    background: #242423;
+}
+
+.navbar-default.sidebar ul li a.active, .navbar-default.sidebar ul li a:hover {
+    color: #fff;
+    background: #56a025;
+}
+
+.navbar-default ul.navbar-right li.dropdown, .navbar-default ul.navbar-right li a:hover {
+    background: #56a025;
+    color: #fff;
+}
+
+.navbar-default ul.navbar-right li a {
+    color: #fff;
+}
+
+.dropdown-user {
+    padding: 0;
+}
+
+.table img {
+    max-width: 30%;
+}
+
+.fun-img img {
+    width: 100%;
+}
+
+.navbar-default.sidebar ul li.competitions > a {
+    color: #337ab7;
+    background: #464644;
+    font-weight: bold;
+}
+
+.none-block {
+    display: none;
+}
+
+.input-with-description .text {
+    background: #f1f1f1;
+    margin-bottom: 2px;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
+
+.pt-20 {
+    padding-top: 20px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.pt-40 {
+    padding-top: 40px;
+}
+
+.pt-50 {
+    padding-top: 50px;
+}
+
+.pb-10 {
+    padding-bottom: 10px;
+}
+
+.pb-20 {
+    padding-bottom: 20px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.pb-40 {
+    padding-bottom: 40px;
+}
+
+.pb-50 {
+    padding-bottom: 50px;
+}
+
+.raceTimeForm .form-group {
+    margin-bottom: 0;
+}
+
+.results td, .results th {
+    vertical-align: middle !important;
+    border-collapse: collapse;
+    border: 1px solid #dddddd;
+}
+
+.results {
+    border-top: 1px solid #dddddd;
+}
+
+.bs-callout {
+    margin: 20px 0;
+    padding: 20px;
+    border-left: 3px solid #eee;
+}
+
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.bs-callout-info h4 {
+    color: #f0ad4e;
+}
+
+.bs-callout-info {
+    color: #2c6e88;
+    background-color: #d9e9f7;
+    border-color: #64a7ec;
+}
+
+.registrationAthlete, .addMotorcycleAndRegistration {
+    font-size: 12px;
+    padding: 2px 5px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.newClass .btn {
+    font-size: 12px;
+    padding: 3px 6px;
+}
+
+.grid-view td {
+    white-space: normal;
+}
+
+.color-green {
+    color: #56a025;
+}
+
+.color-red {
+    color: #b8081f;
+}
+
+.collapse .panel-green a {
+    color: #fff;
+}
+
+.result-line {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #56a025;
+}
+
+.danger .modal-header {
+    background: #fddcdc;
+}
+
+.editable-input, .editable-input input {
+    width: 100% !important;
+    max-width: 500px !important;
+}
+
+.level-2 ul {
+    padding-left: 15px;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #56a025;
+}
+
+.bg-blue {
+    background: #73afe8;
+    color: #fff;
+    font-weight: bold;
+}
+
+.bg-green {
+    background: #5def76;
+    color: #4b4e53;
+    font-weight: bold;
+}
+
+.btn-info-light {
+    color: #6d6d6d;
+    background-color: #cae0ef;
+    border-color: #abdae8;
+}
+
+.btn-info-light:hover {
+    border-color: #99c3cf;
+}
+
+small.very {
+    font-size: 8px;
+}
