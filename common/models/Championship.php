@@ -26,6 +26,7 @@ use yii\db\Query;
  * @property integer         $amountForAthlete
  * @property integer         $requiredOtherRegions
  * @property integer         $estimatedAmount
+ * @property integer         $useCheScheme
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -103,7 +104,8 @@ class Championship extends BaseActiveRecord
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
 				'dateAdded', 'dateUpdated', 'regionId',
-				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount',
+				'useCheScheme'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
@@ -113,8 +115,21 @@ class Championship extends BaseActiveRecord
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
 			['maxNumber', 'default', 'value' => 99],
-			[['requiredOtherRegions'], 'default', 'value' => 0]
+			[['requiredOtherRegions', 'useCheScheme'], 'default', 'value' => 0],
+			['useCheScheme', 'validateClasses']
 		];
+	}
+	
+	public function validateClasses($attribute, $params)
+	{
+		if (!$this->hasErrors() && $this->useCheScheme) {
+			$classes = $this->getInternalClasses()->count();
+			$classesWithoutScheme = $this->getInternalClasses()->andWhere(['not', ['cheId' => null]])->count();
+			if ($classes != $classesWithoutScheme) {
+				$this->addError($attribute, 'Вы не можете использовать эту схему, т.к. у вас созданы классы, 
+				не относящиеся к ней.');
+			}
+		}
 	}
 	
 	/**
@@ -137,7 +152,8 @@ class Championship extends BaseActiveRecord
 			'maxNumber'            => 'Максимальный номер участника',
 			'amountForAthlete'     => 'Обязательное количество этапов для спортсмена',
 			'requiredOtherRegions' => 'Необходимо хоть раз выступить в другом городе',
-			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог'
+			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог',
+			'useCheScheme'         => 'Использовать Челябинскую схему для награждения'
 		];
 	}
 	
@@ -175,6 +191,30 @@ class Championship extends BaseActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_CHAMPIONSHIP, $this);
+		}
+		if (array_key_exists('useCheScheme', $changedAttributes)) {
+			if ($this->useCheScheme) {
+				$oldIds = $this->getInternalClasses()->select('cheId')->andWhere(['not', ['cheId' => null]])->asArray()->column();
+				if ($oldIds) {
+					$cheItems = CheScheme::find()->where(['not', ['id' => $oldIds]])->all();
+				} else {
+					$cheItems = CheScheme::find()->all();
+				}
+				/** @var CheScheme $item */
+				foreach ($cheItems as $item) {
+					$class = new InternalClass();
+					$class->title = $item->title;
+					$class->championshipId = $this->id;
+					$class->description = $item->description;
+					$class->cheId = $item->id;
+					$class->save();
+				}
+			} else {
+				$oldIds = $this->getInternalClasses()->select('id')->asArray()->column();
+				if (!Participant::findOne(['championshipId' => $this->id, 'internalClassId' => $oldIds])) {
+					InternalClass::deleteAll(['id' => $oldIds]);
+				}
+			}
 		}
 	}
 	

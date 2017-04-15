@@ -14,7 +14,7 @@ use kartik\widgets\Select2;
 
 <div class="championship-form">
 	
-	<?php $form = ActiveForm::begin(); ?>
+	<?php $form = ActiveForm::begin(['enableAjaxValidation' => !$model->isNewRecord]); ?>
 	
 	<?php if ($model->groupId == Championship::GROUPS_REGIONAL) { ?>
 		<?= $form->field($model, 'regionGroupId',
@@ -74,6 +74,10 @@ use kartik\widgets\Select2;
 	<?= $form->field($model, 'amountForAthlete')->textInput(['placeholder' => 'обязательное поле']) ?>
 	<?= $form->field($model, 'estimatedAmount')->textInput(['placeholder' => 'обязательное поле']) ?>
 	<?= $form->field($model, 'requiredOtherRegions')->checkbox() ?>
+	<?= $form->field($model, 'useCheScheme',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+'.Html::a('Нажмите, чтобы узнать подробнее о схеме', ['/competitions/help/che-scheme'], ['target' => '_blank']).'
+</div>{input}</div>'])->checkbox() ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
