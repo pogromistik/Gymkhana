@@ -416,10 +416,17 @@ class CompetitionsController extends BaseController
 			return 'Регистрация на этап завершилась.';
 		}
 		
-		$old = Participant::findOne(['athleteId' => $form->athleteId, 'motorcycleId' => $form->motorcycleId,
-		                             'stageId'   => $form->stageId]);
 		$championship = $stage->championship;
 		$athlete = Athlete::findOne($form->athleteId);
+		if ($championship->isClosed) {
+			$regions = $championship->getRegionsFor(false, true);
+			if ($regions && !in_array($athlete->regionId, $regions)) {
+				return 'Чемпионат закрыт для вашего региона.';
+			}
+		}
+		
+		$old = Participant::findOne(['athleteId' => $form->athleteId, 'motorcycleId' => $form->motorcycleId,
+		                             'stageId'   => $form->stageId]);
 		if ($old) {
 			if ($old->status == Participant::STATUS_DISQUALIFICATION) {
 				return 'Вы были дисквалифицированы. Повторная регистрация невозможна';
@@ -497,6 +504,22 @@ class CompetitionsController extends BaseController
 		
 		if (!$form->city && !$form->cityId) {
 			return 'Необходимо указать город';
+		}
+		
+		$championship = $stage->championship;
+		if ($championship->isClosed) {
+			$regionId = null;
+			if ($form->cityId) {
+				$city = City::findOne($form->cityId);
+				$regionId = $city->regionId;
+			}
+			if (!$regionId) {
+				return 'Чемпионат закрыт для вашего города';
+			}
+			$regions = $championship->getRegionsFor(false, true);
+			if ($regions && !in_array($regionId, $regions)) {
+				return 'Чемпионат закрыт для вашего региона.';
+			}
 		}
 		
 		if (\Yii::$app->mutex->acquire('setNumber' . $stage->id, 10)) {

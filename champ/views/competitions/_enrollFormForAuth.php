@@ -19,6 +19,7 @@ $championship = $stage->championship;
 			<?php $form = ActiveForm::begin(['options' => ['class' => 'newRegistration',
 			                                               'data-action' => 'add-authorized-registration']]) ?>
             <div class="modal-body">
+                <div class="alerts no-scroll"></div>
                 <div class="alert alert-danger" style="display: none"></div>
                 <div class="alert alert-success" style="display: none"></div>
 				<?= $form->field($participant, 'stageId')->hiddenInput()->label(false)->error(false) ?>
