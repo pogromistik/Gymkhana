@@ -57,9 +57,9 @@ $championship = $stage->championship;
                         Классы награждения: <?= $internalClassesTitle ?>
                     </div>
 				<?php } ?>
-                
+
                 <div class="pb-10">
-                    <?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
+					<?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
                 </div>
 				
 				<?php if ($stage->referenceTime) { ?>
@@ -86,11 +86,16 @@ $championship = $stage->championship;
 						<?php if (\Yii::$app->user->isGuest) { ?>
                             <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
                             <div class="enrollForm">
-                                <?= $this->render('_enroll', ['stage' => $stage]) ?>
+								<?= $this->render('_enroll', ['stage' => $stage]) ?>
                             </div>
                             <div class="enrollForm-success pt-10"></div>
 						<?php } else { ?>
-                            <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
+							<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
+                                <a href="#" class="btn btn-dark" data-toggle="modal"
+                                   data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
+							<?php } else { ?>
+                                Чемпионат закрыт для вашего города, регистрация невозможна.
+							<?php } ?>
 						<?php } ?>
                     </div>
 				<?php } ?>
@@ -173,7 +178,7 @@ $championship = $stage->championship;
     </div>
 
 <?php if (\Yii::$app->user->isGuest) {
-    //$this->render('_enrollForm', ['stage' => $stage]);
+	//$this->render('_enrollForm', ['stage' => $stage]);
 } else { ?>
 	<?= $this->render('_enrollFormForAuth', ['stage' => $stage]) ?>
 <?php } ?>

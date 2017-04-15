@@ -105,6 +105,7 @@ $championship = $stage->championship;
 				<?= $form->field($participant, 'number')->textInput(['placeholder' => 'номер участника'])->label(false) ?>
                 <a href="#" class="freeNumbersList" data-id = "<?= $stage->id ?>">Посмотреть список свободных номеров</a>
 			</div>
+            <div class="alerts"></div>
             <div class="alert alert-danger" style="display: none"></div>
             <div class="alert alert-success" style="display: none"></div>
 			<div class="modal-footer">

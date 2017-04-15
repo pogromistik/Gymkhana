@@ -49,12 +49,16 @@ $(document).on("submit", '.newRegistration', function (e) {
     form.find('.form-text').text('Пожалуйста, подождите...');
     form.find('.button').hide();
     form.find('.alert').hide();
+
     $.ajax({
         url: "/competitions/" + action,
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            $('body').animate({scrollTop: $('.freeNumbersList').offset().top}, 500);
+            if ($('.alerts').hasClass('no-scroll')) {
+            } else {
+                $('body').animate({scrollTop: $('.alerts').offset().top}, 500);
+            }
             if (result == true) {
                 form.trigger('reset');
                 form.find('.alert-success').text('Вы успешно зарегистрированы на этап.').show();

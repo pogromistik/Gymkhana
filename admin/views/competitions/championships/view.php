@@ -53,6 +53,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'dateUpdated',
 				'value'     => date("d.m.Y, H:i", $model->dateUpdated)
 			],
+			[
+				'attribute' => 'onlyRegions',
+				'value'     => $model->getRegionsFor(true),
+				'visible'   => $model->isClosed
+			],
 		],
 	]) ?>
 
