@@ -15,9 +15,9 @@ $this->title = 'Челябинская схема для награждения'
         <li>
             <b>Класс "<?= $item->title ?>":</b> <?= $item->description ?>,
 			<?php if ($prev) { ?>
-			(<?= $prev ?>% - <?= $item->percent == 1000 ? '...' :  $item->percent ?>% включительно)
+			(от <?= $prev ?>% - <?= $item->percent == 1000 ? '...' : 'до' . $item->percent ?>%)
 			<?php } else { ?>
-                (<?= $item->percent ?>% включительно)
+                (до <?= $item->percent ?>%)
 			<?php } ?>
         </li>
 		<?php
