@@ -12,6 +12,7 @@ use Yii;
  * @property string  $description
  * @property integer $championshipId
  * @property integer $status
+ * @property integer $cheId
  */
 class InternalClass extends \yii\db\ActiveRecord
 {
@@ -39,7 +40,7 @@ class InternalClass extends \yii\db\ActiveRecord
 		return [
 			[['title', 'championshipId'], 'required'],
 			[['description'], 'string'],
-			[['championshipId', 'status'], 'integer'],
+			[['championshipId', 'status', 'cheId'], 'integer'],
 			['status', 'default', 'value' => 1],
 			[['title'], 'string', 'max' => 255],
 		];
@@ -55,7 +56,8 @@ class InternalClass extends \yii\db\ActiveRecord
 			'title'          => 'Название',
 			'description'    => 'Описание',
 			'championshipId' => 'Чемпионат',
-			'status'         => 'Статус'
+			'status'         => 'Статус',
+			'cheId'          => 'Идентификатор класса из Челябинской схемы'
 		];
 	}
 	

@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\components\BaseActiveRecord;
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "participants".
@@ -140,6 +141,14 @@ class Participant extends BaseActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 			$this->athleteClassId = $this->athlete->athleteClassId;
+			
+			if ($this->championship->useCheScheme && !$this->internalClassId) {
+				$internalClass = $this->internalClassWithScheme($this->athleteClassId);
+				if ($internalClass) {
+					$this->internalClassId = $internalClass;
+				}
+			}
+			
 			/** @var Participant $participationInPreviousStages */
 			$participationInPreviousStages = Participant::find()
 				->where(['championshipId' => $this->championshipId])->andWhere(['not', ['stageId' => $this->stageId]])
@@ -162,6 +171,21 @@ class Participant extends BaseActiveRecord
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function internalClassWithScheme($classId)
+	{
+		$athleteClass = AthletesClass::findOne($classId);
+		$resultClass = InternalClass::find()
+			->select('a.*')
+			->from(['a' => InternalClass::tableName(), 'b' => CheScheme::tableName()])
+			->where(new Expression('"a"."cheId" = "b"."id"'))
+			->andWhere(['championshipId' => $this->championshipId])
+			->andWhere(['>', 'b.percent', $athleteClass->percent])
+			->orderBy(['b.percent' => SORT_ASC, 'b.title' => SORT_DESC])
+			->one();
+		
+		return $resultClass->id;
 	}
 	
 	public function afterFind()

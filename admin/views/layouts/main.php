@@ -216,6 +216,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                            href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы
                                             спортсменов</a>
                                     </li>
+									<?php if (\Yii::$app->user->can('developer')) { ?>
+                                        <li>
+                                            <a data-addr="/competitions/classes"
+                                               href="<?= Url::to(['/competitions/additional/che-scheme']) ?>"> Классы
+                                                награждения</a>
+                                        </li>
+									<?php } ?>
                                     <li>
                                         <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
                                             чемпионатов</a>
@@ -250,7 +257,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                            href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
                                     </li>
 								<?php } ?>
-	                            <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li>
                                         <a href="#"> Уведомления<span
                                                     class="fa arrow"></span></a>
@@ -265,13 +272,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                             </li>
                                         </ul>
                                     </li>
-	                            <?php } elseif (\Yii::$app->user->can('projectAdmin')) { ?>
+								<?php } elseif (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>
                                         <a data-addr="/competitions/notice"
                                            href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить
                                             уведомление</a>
                                     </li>
-	                            <?php } ?>
+								<?php } ?>
 								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>
                                         <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление
