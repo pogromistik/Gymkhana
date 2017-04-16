@@ -26,6 +26,8 @@ use yii\db\Query;
  * @property integer         $amountForAthlete
  * @property integer         $requiredOtherRegions
  * @property integer         $estimatedAmount
+ * @property integer         $isClosed
+ * @property string          $onlyRegions
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -103,7 +105,8 @@ class Championship extends BaseActiveRecord
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
 				'dateAdded', 'dateUpdated', 'regionId',
-				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount',
+				'isClosed'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
@@ -113,7 +116,8 @@ class Championship extends BaseActiveRecord
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
 			['maxNumber', 'default', 'value' => 99],
-			[['requiredOtherRegions'], 'default', 'value' => 0]
+			[['requiredOtherRegions', 'isClosed'], 'default', 'value' => 0],
+			[['onlyRegions'], 'safe']
 		];
 	}
 	
@@ -137,7 +141,9 @@ class Championship extends BaseActiveRecord
 			'maxNumber'            => 'Максимальный номер участника',
 			'amountForAthlete'     => 'Обязательное количество этапов для спортсмена',
 			'requiredOtherRegions' => 'Необходимо хоть раз выступить в другом городе',
-			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог'
+			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог',
+			'isClosed'             => 'Закрытый чемпионат',
+			'onlyRegions'          => 'Регионы, которые могут принимать участие'
 		];
 	}
 	
@@ -161,6 +167,10 @@ class Championship extends BaseActiveRecord
 			}
 		}
 		
+		if (!$this->isClosed) {
+			$this->onlyRegions = null;
+		}
+		
 		if ($this->minNumber > $this->maxNumber) {
 			$max = $this->minNumber;
 			$this->minNumber = $this->maxNumber;
@@ -168,6 +178,23 @@ class Championship extends BaseActiveRecord
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function beforeSave($insert)
+	{
+		if ($this->onlyRegions) {
+			$this->onlyRegions = json_encode($this->onlyRegions);
+		}
+		
+		return parent::beforeSave($insert);
+	}
+	
+	public function afterFind()
+	{
+		parent::afterFind();
+		if ($this->onlyRegions) {
+			$this->onlyRegions = json_decode($this->onlyRegions, true);
+		}
 	}
 	
 	public function afterSave($insert, $changedAttributes)
@@ -355,5 +382,51 @@ class Championship extends BaseActiveRecord
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @return null|Region[]
+	 */
+	public function getRegionsFor($asString = false, $asArray = false)
+	{
+		if (!$this->onlyRegions) {
+			return null;
+		}
+		
+		if (!is_array($this->onlyRegions)) {
+			$this->onlyRegions = json_decode($this->onlyRegions, true);
+		}
+		
+		if ($asArray) {
+			return Region::find()->select('id')->where(['id' => $this->onlyRegions])->asArray()->column();
+		}
+		
+		$result = Region::findAll($this->onlyRegions);
+		if (!$result) {
+			return null;
+		}
+		if ($asString) {
+			$regions = [];
+			foreach ($result as $region) {
+				$regions[] = $region->title;
+			}
+			
+			return implode(', ', $regions);
+		}
+		
+		return $result;
+	}
+	
+	public function checkAccessForRegion($regionId)
+	{
+		if (!$this->isClosed || !$this->onlyRegions) {
+			return true;
+		}
+		$regions = $this->getRegionsFor(false, true);
+		if (!$regions) {
+			return true;
+		}
+		
+		return in_array($regionId, $regions);
 	}
 }

@@ -19,6 +19,11 @@ $this->title = $championship->title;
                 Регион проведения: <?= $championship->region->title ?>
             </div>
 		<?php } ?>
+        <?php if ($championship->onlyRegions && $championship->isClosed) { ?>
+            <div class="pb-10">
+                Регионы, допускающиеся к участию: <?= $championship->getRegionsFor(true) ?>
+            </div>
+        <?php } ?>
 		<?php if ($championship->description) { ?>
             <div class="pt-20">
 				<?= $championship->description ?>
