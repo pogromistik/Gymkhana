@@ -883,3 +883,7 @@ $(document).on("submit", '#addFigureTimeForStage', function (e) {
         }
     });
 });
+
+$('#isClosedChamp').click(function () {
+   $('#regionsForChamp').slideToggle();
+});

@@ -10,6 +10,7 @@ use kartik\widgets\Select2;
 /* @var $this yii\web\View */
 /* @var $model Championship */
 /* @var $form yii\widgets\ActiveForm */
+$country = \common\models\Country::getRussia();
 ?>
 
 <div class="championship-form">
@@ -35,6 +36,25 @@ use kartik\widgets\Select2;
 	
 	<?= $form->field($model, 'yearId')->dropDownList(ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year')) ?>
 	
+    <?= $form->field($model, 'isClosed')->checkbox(['id' => 'isClosedChamp']) ?>
+    
+    <div id="regionsForChamp" style="display: <?= $model->isClosed ? 'block' : 'none'?>">
+	    <?= $form->field($model, 'onlyRegions',
+		    ['inputTemplate' => '<div class="input-with-description"><div class="text">
+Если все этапы чемпионата будут проходить в одном регионе - укажите его.
+</div>{input}</div>'])->widget(Select2::classname(), [
+		    'name'          => 'kv-type-01',
+		    'data'          => \common\models\Region::getAll(true, $country->id),
+		    'options'       => [
+			    'placeholder' => 'Выберите регион...',
+		    ],
+		    'pluginOptions' => [
+			    'allowClear' => true,
+                'multiple' => true
+		    ],
+	    ]) ?>
+    </div>
+    
 	<?= $form->field($model, 'status')->dropDownList(Championship::$statusesTitle) ?>
 	
 	<?= $form->field($model, 'groupId')->hiddenInput()->label(false)->error(false) ?>
@@ -45,7 +65,7 @@ use kartik\widgets\Select2;
 Если все этапы чемпионата будут проходить в одном регионе - укажите его.
 </div>{input}</div>'])->widget(Select2::classname(), [
 			'name'          => 'kv-type-01',
-			'data'          => \common\models\Region::getAll(true),
+			'data'          => \common\models\Region::getAll(true, $country->id),
 			'options'       => [
 				'placeholder' => 'Выберите регион...',
 			],

@@ -109,7 +109,12 @@ class AssocNews extends \yii\db\ActiveRecord
 				/** @var Championship $championship */
 				$championship = $model;
 				$news->title = $championship->title;
-				$news->previewText = 'Анонсирован чемпионат "' . $championship->title . '".';
+				if ($championship->isClosed) {
+					$news->previewText = 'Анонсирован закрытый чемпионат "' . $championship->title . '".';
+				} else {
+					$news->previewText = 'Анонсирован чемпионат "' . $championship->title . '".';
+				}
+				
 				if ($championship->regionId) {
 					$news->previewText .= ' Регион проведения: ' . $championship->region->title . '.';
 					$news->canEditRegionId = $championship->regionId;
@@ -118,6 +123,10 @@ class AssocNews extends \yii\db\ActiveRecord
 				if ($championship->description) {
 					$fullText .= $championship->description;
 					$fullText .= '<br>';
+				}
+				$regionsFor = $championship->getRegionsFor(true);
+				if ($regionsFor && $championship->isClosed) {
+					$fullText .= 'Регионы, допускающиеся к участию: ' . $regionsFor . '<br><br>';
 				}
 				$fullText .= 'Обязательное количество этапов для спортсмена: ' . $championship->amountForAthlete;
 				$fullText .= '<br>';

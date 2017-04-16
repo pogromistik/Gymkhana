@@ -27,7 +27,7 @@ $championship = $stage->championship;
             </div>
 			
 			<?= $form->field($participant, 'stageId')->hiddenInput()->label(false)->error(false) ?>
-			<?= $form->field($participant, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
+			<?= $form->field($participant, 'championshipId')->hiddenInput(['id' => 'championshipId'])->label(false)->error(false) ?>
 
             <h4 class="text-center">Укажите информацию о себе</h4>
 			<?= $form->field($participant, 'lastName')->textInput(['placeholder' => 'Ваша фамилия']) ?>
@@ -66,7 +66,7 @@ $championship = $stage->championship;
 								'ajax'               => [
 									'url'      => $url,
 									'dataType' => 'json',
-									'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+									'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val(), championshipId: $("#championshipId").val()}; }')
 								],
 								'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
 								'templateResult'     => new JsExpression('function(city) { return city.text; }'),
@@ -81,9 +81,15 @@ $championship = $stage->championship;
 						]
 					]); ?>
                 </div>
-                <div class="small">
-                    <a href="#" class="list" id="cityNotFound">Нажмите, если вашего города нет в списке</a>
-                </div>
+				<?php if (!$championship->isClosed) { ?>
+                    <div class="small">
+                        <a href="#" class="list" id="cityNotFound">Нажмите, если вашего города нет в списке</a>
+                    </div>
+				<?php } else { ?>
+                    <div class="small">
+                        Для регистрации доступны только города областей: <?= $championship->getRegionsFor(true) ?>
+                    </div>
+				<?php } ?>
                 <div id="city-text" class="inactive">
 					<?= $form->field($participant, 'city')->textInput(['placeholder' => 'Введите Ваш город и регион', 'id' => 'city-text-input']) ?>
                 </div>
@@ -93,6 +99,8 @@ $championship = $stage->championship;
             <h4 class="text-center">Укажите мотоцикл, на котором будете участвовать</h4>
 			<?= $form->field($participant, 'motorcycleMark')->textInput(['placeholder' => 'Марка, напр. kawasaki']) ?>
 			<?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
+
+            <div class="alerts"></div>
 
             <h4 class="text-center">Желаемый номер</h4>
             <div class="help-for-athlete">
