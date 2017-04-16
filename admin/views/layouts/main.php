@@ -251,11 +251,28 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     </li>
 								<?php } ?>
 								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-                                    <li>
-                                        <a data-addr="/competitions/notice"
-                                           href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить
-                                            уведомление</a>
-                                    </li>
+									<?php if (\Yii::$app->user->can('developer')) { ?>
+                                        <li>
+                                            <a href="#"> Уведомления<span
+                                                        class="fa arrow"></span></a>
+                                            <ul class="nav nav-second-level">
+                                                <li>
+                                                    <a data-addr="/competitions/notice/"
+                                                       href="<?= Url::to(['/competitions/notice/index']) ?>"> Регионам</a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?= Url::to(['/competitions/notice/one']) ?>">
+                                                        Человеку</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+									<?php } else { ?>
+                                        <li>
+                                            <a data-addr="/competitions/notice"
+                                               href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить
+                                                уведомление</a>
+                                        </li>
+									<?php } ?>
 								<?php } ?>
 								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>

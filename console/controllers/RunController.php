@@ -7,6 +7,7 @@ use common\models\Championship;
 use common\models\City;
 use common\models\Country;
 use common\models\Error;
+use common\models\FigureTime;
 use common\models\Motorcycle;
 use common\models\Notice;
 use common\models\Region;
@@ -851,6 +852,7 @@ class RunController extends Controller
 						->setSubject('gymkhana-cup.ru: ошибка на сайте')
 						->send();
 				}
+				
 				return false;
 			}
 			$string = $output[1];
@@ -868,6 +870,7 @@ class RunController extends Controller
 						->setSubject('gymkhana-cup.ru: ошибка на сайте')
 						->send();
 				}
+				
 				return false;
 			}
 			$size = trim($array[2]);
@@ -907,9 +910,23 @@ class RunController extends Controller
 	
 	public function actionSendNotice($athleteId)
 	{
-		$text = 'В сявязи с неполадками на сайте, загрузка фотографий временно не работала. Неисправность устранена, вы можете загрузить фото в своём профиле. 
-		Приносим извинения за доставленные неудобства.';
+		$text = 'У вас необычный случай с результатом GP 8 – ваш рейтинг находится на границе классов. В связи с этим, вопрос о вашем переводе в новый класс вынесен на рассмотрение. Как только решение будет принято, вам придёт уведомление о присвоении нового класса.';
 		var_dump(Notice::add($athleteId, $text));
+		
+		return true;
+	}
+	
+	public function actionAddRecordTimes()
+	{
+		$results = FigureTime::find()->where(['>', 'percent', 100])->all();
+		/** @var FigureTime $result */
+		foreach ($results as $result) {
+			$figure = $result->figure;
+			$result->recordInMoment = $figure->bestTime;
+			$result->save(false);
+		}
+		echo 'Update ' . count($results) . ' records' . PHP_EOL;
+		
 		return true;
 	}
 }

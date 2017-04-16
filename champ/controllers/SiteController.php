@@ -183,7 +183,9 @@ class SiteController extends BaseController
 			if (!$form->email) {
 				return 'Необходимо указать email';
 			}
-			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email)]) || TmpAthlete::findOne(['upper("email")' => mb_strtoupper($form->email)])) {
+			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email)])
+				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
+			->andWhere(['not', ['status' => TmpAthlete::STATUS_CANCEL]])->one()) {
 				return 'Указанный email занят';
 			}
 			if (!$form->validate()) {
@@ -191,11 +193,23 @@ class SiteController extends BaseController
 			}
 			if ($form->save(false)) {
 				if (YII_ENV != 'dev') {
-					\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+					$text = 'Новый запрос на регистрацию в личном кабинете';
+					$text .= '<br>';
+					$text .= '<b>Фио: </b>' . $form->lastName . ' ' . $form->firstName;
+					$text .= '<br>';
+					$text .= '<b>Город: </b>' . $form->city;
+					$text .= '<br>';
+					$text .= '<b>Количество мотоциклов: </b>' . count($motorcycles);
+					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')
 						->send();
+					/*\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
+						->setTo('lyadetskaya.ns@yandex.ru')
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup: запрос на регистрацию')
+						->send();*/
 				}
 				
 				return true;

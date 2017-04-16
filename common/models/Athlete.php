@@ -267,7 +267,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		$this->updatedAt = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
-		$this->regionId = $this->city->regionId;
+		$city = City::findOne($this->cityId);
+		$this->regionId = $city->regionId;
 		if ($this->phone) {
 			$this->phone = preg_replace('~\D+~', '', $this->phone);
 		}
@@ -386,6 +387,10 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			return false;
 		}
 		
+		/*if (mb_strripos($this->email, '@mail.ru')) {
+			return 'mail.ru заблокировал почту, поэтому отравьте сообщение этому человеку
+				 самостоятельно. Пароль: ' . $password;
+		}*/
 		if (YII_ENV != 'dev') {
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)

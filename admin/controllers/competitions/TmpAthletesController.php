@@ -98,6 +98,9 @@ class TmpAthletesController extends BaseController
 			if ($tmpAthlete->phone) {
 				$oldAthlete->phone = $tmpAthlete->phone;
 			}
+			if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+				$oldAthlete->cityId = $tmpAthlete->cityId;
+			}
 			if (!$oldAthlete->save()) {
 				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
 				
@@ -162,6 +165,9 @@ class TmpAthletesController extends BaseController
 			$oldAthlete->email = $tmpAthlete->email;
 			if ($tmpAthlete->phone) {
 				$oldAthlete->phone = $tmpAthlete->phone;
+			}
+			if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+				$oldAthlete->cityId = $tmpAthlete->cityId;
 			}
 			if (!$oldAthlete->save()) {
 				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
@@ -298,6 +304,9 @@ class TmpAthletesController extends BaseController
 			if ($tmpAthlete->phone) {
 				$oldAthlete->phone = $tmpAthlete->phone;
 			}
+			if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+				$oldAthlete->cityId = $tmpAthlete->cityId;
+			}
 			if (!$oldAthlete->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
@@ -377,7 +386,8 @@ class TmpAthletesController extends BaseController
 				}
 			}
 			
-			if (!$athlete->createCabinet()) {
+			$result = $athlete->createCabinet();
+			if (!$result) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
 				
@@ -398,7 +408,7 @@ class TmpAthletesController extends BaseController
 			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		
-		return true;
+		return $result;
 	}
 	
 	public function actionSaveNewCity()

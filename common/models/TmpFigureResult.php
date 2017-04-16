@@ -56,7 +56,7 @@ class TmpFigureResult extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['athleteId', 'motorcycleId', 'figureId', 'date', 'time', 'videoLink', 'dateAdded', 'dateUpdated'], 'required'],
+			[['athleteId', 'motorcycleId', 'figureId', 'dateForHuman', 'timeForHuman', 'videoLink', 'dateAdded', 'dateUpdated'], 'required'],
 			[['athleteId', 'motorcycleId', 'figureId', 'date', 'time', 'fine', 'isNew', 'dateAdded', 'dateUpdated', 'figureResultId'], 'integer'],
 			[['videoLink', 'cancelReason'], 'string', 'max' => 255],
 			[['dateForHuman', 'timeForHuman'], 'string'],
