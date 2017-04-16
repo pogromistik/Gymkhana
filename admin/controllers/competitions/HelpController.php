@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use common\models\Athlete;
+use common\models\CheScheme;
 use common\models\City;
 use admin\controllers\BaseController;
 use common\models\Country;
@@ -378,5 +379,12 @@ class HelpController extends BaseController
 		}
 		
 		return $this->render('create-country', ['country' => $country, 'error' => $error]);
+	}
+	
+	public function actionCheScheme()
+	{
+		$items = CheScheme::find()->orderBy('percent')->all();
+		
+		return $this->render('che-scheme', ['items' => $items]);
 	}
 }

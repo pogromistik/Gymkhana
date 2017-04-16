@@ -13,8 +13,14 @@ $this->title = 'Редактировать чемпионат: ' . $model->title
 $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$model->groupId], 'url' => ['index', 'groupId' => $model->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Редактирование';
+
+$stages = $model->stages;
 ?>
 <div class="championship-update">
+    
+    <?php if (!$stages) { ?>
+        <div class="alert alert-danger">Даже если у вас одноэтапный чемпионат, необходимо всё равно создать этап.</div>
+    <?php } ?>
 	
     <?php if ($success) { ?>
         <div class="alert alert-success">
@@ -43,7 +49,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			    'model' => $model,
 		    ]) ?>
             <h3>Этапы чемпионата</h3>
-            <?php foreach ($model->stages as $stage) { ?>
+            <?php foreach ($stages as $stage) { ?>
                 <div class="item">
                     <?= Html::a($stage->title, ['/competitions/stages/view', 'id' => $stage->id]) ?>
                 </div>

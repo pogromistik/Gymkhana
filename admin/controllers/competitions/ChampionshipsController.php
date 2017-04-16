@@ -11,8 +11,10 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Championship;
 use common\models\search\ChampionshipSearch;
+use yii\bootstrap\ActiveForm;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * ChampionshipsController implements the CRUD actions for Championship model.
@@ -101,6 +103,12 @@ class ChampionshipsController extends BaseController
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions') && $model->regionId
 			&& $model->regionId != \Yii::$app->user->identity->regionId) {
 			throw new ForbiddenHttpException('Доступ запрещён');
+		}
+		
+		if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+			\Yii::$app->response->format = Response::FORMAT_JSON;
+			
+			return ActiveForm::validate($model);
 		}
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {

@@ -3,6 +3,8 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\CheScheme;
+use common\models\search\CheSchemeSearch;
 use Yii;
 use common\models\Point;
 use common\models\search\PointSearch;
@@ -125,6 +127,30 @@ class AdditionalController extends BaseController
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+	
+	public function actionCheScheme()
+	{
+		$this->can('developer');
+		$searchModel = new CheSchemeSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		return $this->render('che-scheme', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionCreateClass()
+	{
+		$model = new CheScheme();
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['che-scheme']);
+		} else {
+			return $this->render('create-class', [
+				'model' => $model,
+			]);
 		}
 	}
 }
