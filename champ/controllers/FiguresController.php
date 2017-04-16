@@ -17,18 +17,14 @@ use yii\filters\VerbFilter;
 class FiguresController extends AccessController
 {
 	
-	/**
-	 * Lists all TmpFigureResult models.
-	 *
-	 * @return mixed
-	 */
-	public function actionSendResult()
+	public function actionSendResult($figureId = null)
 	{
 		$this->pageTitle = 'Отправить результат базовой фигуры';
 		$this->pageTitle = 'Форма для отправки своего результата по базовой фигуре';
 		
 		$model = new TmpFigureResult();
 		$model->athleteId = \Yii::$app->user->id;
+		$model->figureId = $figureId;
 		
 		$athlete = Athlete::findOne(\Yii::$app->user->id);
 		$motorcycles = $athlete->activeMotorcycles;
@@ -45,8 +41,19 @@ class FiguresController extends AccessController
 	{
 		$model = new TmpFigureResult();
 		
-		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-			return true;
+		if ($model->load(\Yii::$app->request->post())) {
+			if ($model->save()) {
+				return true;
+			}
+			if (!$model->date) {
+				return 'Укажите дату заезда';
+			}
+			if (!$model->time) {
+				return 'Укажите время заезда';
+			}
+			if (!$model->videoLink) {
+				return 'Дабавте ссылку для подтверждения результата';
+			}
 		}
 		
 		return 'Возникла ошибка при отправке данных';
