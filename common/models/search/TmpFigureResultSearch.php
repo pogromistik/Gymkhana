@@ -49,6 +49,7 @@ class TmpFigureResultSearch extends TmpFigureResult
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => ['defaultOrder' => ['dateAdded' => SORT_ASC]]
 		]);
 		
 		$this->load($params);

@@ -9,6 +9,11 @@ use yii\widgets\LinkPager;
  */
 ?>
     <h2>Базовые фигуры</h2>
+
+    <?php if (!\Yii::$app->user->isGuest) { ?>
+        <?= Html::a('Добавить свой результат', ['/figures/send-result'], ['class' => 'btn btn-dark']) ?>
+    <?php } ?>
+
     <div class="list">
         <div class="item">
             <div class="toggle">

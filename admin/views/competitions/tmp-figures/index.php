@@ -47,7 +47,18 @@ $this->title = 'Результаты фигур, требующие одобре
 				'attribute' => 'dateForHuman',
 				'format'    => 'raw',
 				'value'     => function (TmpFigureResult $figureResult) {
-					return $figureResult->dateForHuman;
+					return Editable::widget([
+						'name'          => 'dateForHuman',
+						'value'         => $figureResult->dateForHuman,
+						'url'           => 'update',
+						'type'          => 'text',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $figureResult->id,
+							'value'     => $figureResult->dateForHuman,
+							'placement' => 'right',
+						]
+					]);
 				}
 			],
 			[

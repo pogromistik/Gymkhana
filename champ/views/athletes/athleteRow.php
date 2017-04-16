@@ -31,7 +31,7 @@ if ($athlete->athleteClassId) {
 				<h4><?= $athlete->getFullName() ?></h4>
 				<?= $athlete->city->title ?>
 				<h5>мотоциклы:</h5>
-				<?php $motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all();
+				<?php $motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->limit(2)->all();
 				if (count($motorcycles) == 1) {
 					$motorcycle = reset($motorcycles);
 					
