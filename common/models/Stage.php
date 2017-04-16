@@ -319,7 +319,7 @@ class Stage extends BaseActiveRecord
 					$stageClass = $participant->stage->class ? $participant->stage->classModel : null;
 					
 					/** @var AthletesClass $resultClass */
-					$resultClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
+					$resultClass = AthletesClass::find()->where(['>', 'percent', $participant->percent])
 						->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
 					if ($resultClass && $resultClass->id != $participant->id) {
 						if ($stageClass->percent > $resultClass->percent) {
@@ -340,7 +340,7 @@ class Stage extends BaseActiveRecord
 					$offset = AthletesClass::find()->where(['<=', 'percent', $stageClass->percent])
 						->andWhere(['!=', 'id', $stageClass->id])->count()-1;
 	
-					$newClass = AthletesClass::find()->where(['>=', 'percent', $participant->percent])
+					$newClass = AthletesClass::find()->where(['>', 'percent', $participant->percent])
 						->orderBy(['percent' => SORT_ASC])->one();
 					if ($newClass) {
 						if ($participant->id == 19) {

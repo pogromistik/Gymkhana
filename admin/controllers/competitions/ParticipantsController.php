@@ -344,7 +344,7 @@ class ParticipantsController extends BaseController
 				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])->distinct()->asArray()->column();
 			$class = null;
 			while ($classIds) {
-				$percent = AthletesClass::find()->select('id')->where(['id' => $classIds])->min('"percent"');
+				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
 				$presumablyClass = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
 				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])
 						->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3
