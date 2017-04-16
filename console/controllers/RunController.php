@@ -3,15 +3,27 @@
 namespace console\controllers;
 
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\Championship;
+use common\models\CheScheme;
 use common\models\City;
+use common\models\ClassHistory;
 use common\models\Country;
 use common\models\Error;
+use common\models\Figure;
 use common\models\FigureTime;
+use common\models\InternalClass;
 use common\models\Motorcycle;
 use common\models\Notice;
+use common\models\Participant;
 use common\models\Region;
+use common\models\RegionalGroup;
 use common\models\Stage;
+use common\models\Time;
+use common\models\TmpAthlete;
+use common\models\TmpFigureResult;
+use common\models\TmpParticipant;
+use common\models\Year;
 use yii\console\Controller;
 use yii\db\Expression;
 use yii\db\Query;
@@ -928,5 +940,108 @@ class RunController extends Controller
 		echo 'Update ' . count($results) . ' records' . PHP_EOL;
 		
 		return true;
+	}
+	
+	public function actionIndices()
+	{
+		$transaction = \Yii::$app->db->beginTransaction();
+		
+		$this->createIndex('Athlete_firstName', Athlete::tableName(), 'firstName');
+		$this->createIndex('Athlete_lastName', Athlete::tableName(), 'lastName');
+		$this->createIndex('Athlete_email', Athlete::tableName(), 'email');
+		$this->createIndex('Athlete_number', Athlete::tableName(), 'number');
+		$this->createForeign('Athlete_cityId', Athlete::tableName(), 'cityId', City::tableName(), 'id');
+		$this->createForeign('Athlete_athleteClassId', Athlete::tableName(), 'athleteClassId', AthletesClass::tableName(), 'id');
+		$this->createForeign('Athlete_regionId', Athlete::tableName(), 'regionId', Region::tableName(), 'id');
+		$this->createForeign('Athlete_countryId', Athlete::tableName(), 'countryId', Country::tableName(), 'id');
+		
+		$this->createIndex('Championship_isClosed', Championship::tableName(), 'isClosed');
+		$this->createIndex('Championship_useCheScheme', Championship::tableName(), 'useCheScheme');
+		$this->createForeign('Championship_yearId', Championship::tableName(), 'yearId', Year::tableName(), 'id');
+		$this->createForeign('Championship_regionId', Championship::tableName(), 'regionId', Region::tableName(), 'id');
+		$this->createForeign('Championship_regionGroupId', Championship::tableName(), 'regionGroupId', RegionalGroup::tableName(), 'id');
+		
+		$this->createIndex('CheScheme_percent', CheScheme::tableName(), 'percent');
+		
+		$this->createForeign('City_countryId', City::tableName(), 'countryId', Country::tableName(), 'id');
+		
+		$this->createForeign('ClassHistory_athleteId', ClassHistory::tableName(), 'athleteId', Athlete::tableName(), 'id');
+		$this->createForeign('ClassHistory_motorcycleId', ClassHistory::tableName(), 'motorcycleId', Motorcycle::tableName(), 'id');
+		$this->createForeign('ClassHistory_oldClassId', ClassHistory::tableName(), 'oldClassId', AthletesClass::tableName(), 'id');
+		$this->createForeign('ClassHistory_newClassId', ClassHistory::tableName(), 'newClassId', AthletesClass::tableName(), 'id');
+		
+		$this->createIndex('Country_title', Country::tableName(), 'title');
+		
+		$this->createForeign('FigureTime_figureId', FigureTime::tableName(), 'figureId', Figure::tableName(), 'id');
+		$this->createForeign('FigureTime_athleteId', FigureTime::tableName(), 'athleteId', Athlete::tableName(), 'id');
+		$this->createForeign('FigureTime_motorcycleId', FigureTime::tableName(), 'motorcycleId', Motorcycle::tableName(), 'id');
+		$this->createForeign('FigureTime_athleteClassId', FigureTime::tableName(), 'athleteClassId', AthletesClass::tableName(), 'id');
+		$this->createForeign('FigureTime_newAthleteClassId', FigureTime::tableName(), 'newAthleteClassId', AthletesClass::tableName(), 'id');
+		
+		$this->createIndex('Figure_useForClassesCalculate', Figure::tableName(), 'useForClassesCalculate');
+		
+		$this->createForeign('InternalClass_championshipId', InternalClass::tableName(), 'championshipId', Championship::tableName(), 'id');
+		
+		$this->createIndex('Motorcycle_mark', Motorcycle::tableName(), 'mark');
+		$this->createIndex('Motorcycle_model', Motorcycle::tableName(), 'model');
+		$this->createForeign('Motorcycle_athleteId', Motorcycle::tableName(), 'athleteId', Athlete::tableName(), 'id');
+		$this->createForeign('Motorcycle_internalClassId', Motorcycle::tableName(), 'internalClassId', InternalClass::tableName(), 'id');
+		
+		$this->createIndex('Notice_status', Notice::tableName(), 'status');
+		$this->createForeign('Notice_athleteId', Notice::tableName(), 'athleteId', Athlete::tableName(), 'id');
+		
+		$this->createIndex('Participant_percent', Participant::tableName(), 'percent');
+		$this->createIndex('Participant_points', Participant::tableName(), 'points');
+		$this->createForeign('Participant_championshipId', Participant::tableName(), 'championshipId', Championship::tableName(), 'id');
+		$this->createForeign('Participant_stageId', Participant::tableName(), 'stageId', Stage::tableName(), 'id');
+		$this->createForeign('Participant_athleteId', Participant::tableName(), 'athleteId', Athlete::tableName(), 'id');
+		$this->createForeign('Participant_motorcycleId', Participant::tableName(), 'motorcycleId', Motorcycle::tableName(), 'id');
+		$this->createForeign('Participant_internalClassId', Participant::tableName(), 'internalClassId', InternalClass::tableName(), 'id');
+		$this->createForeign('Participant_athleteClassId', Participant::tableName(), 'athleteClassId', AthletesClass::tableName(), 'id');
+		$this->createForeign('Participant_newAthleteClassId', Participant::tableName(), 'newAthleteClassId', AthletesClass::tableName(), 'id');
+		
+		$this->createForeign('Region_countryId', Region::tableName(), 'countryId', Country::tableName(), 'id');
+		
+		$this->createIndex('Stage_startRegistration', Stage::tableName(), 'startRegistration');
+		$this->createIndex('Stage_endRegistration', Stage::tableName(), 'endRegistration');
+		$this->createForeign('Stage_championshipId', Stage::tableName(), 'championshipId', Championship::tableName(), 'id');
+		$this->createForeign('Stage_cityId', Stage::tableName(), 'cityId', City::tableName(), 'id');
+		$this->createForeign('Stage_class', Stage::tableName(), 'class', AthletesClass::tableName(), 'id');
+		$this->createForeign('Stage_regionId', Stage::tableName(), 'regionId', Region::tableName(), 'id');
+		$this->createForeign('Stage_countryId', Stage::tableName(), 'countryId', Country::tableName(), 'id');
+		
+		$this->createForeign('Time_participantId', Time::tableName(), 'participantId', Participant::tableName(), 'id');
+		$this->createForeign('Time_regionId', Time::tableName(), 'stageId', Stage::tableName(), 'id');
+		
+		$this->createIndex('TmpAthlete_status', TmpAthlete::tableName(), 'status');
+		$this->createIndex('TmpFigureResult_isNew', TmpFigureResult::tableName(), 'isNew');
+		$this->createIndex('TmpParticipant_status', TmpParticipant::tableName(), 'status');
+		
+		$transaction->commit();
+		
+	}
+	
+	private function createIndex($name, $table, $column)
+	{
+		$command = \Yii::$app->db->createCommand();
+		$command->createIndex($name, $table, $column);
+		
+		try {
+			$command->execute();
+		} catch (\Throwable $ex) {
+			var_dump($ex->getMessage());
+		}
+	}
+	
+	private function createForeign($name, $table, $column, $refTable, $refColumn)
+	{
+		$command = \Yii::$app->db->createCommand();
+		$command->addForeignKey($name, $table, $column, $refTable, $refColumn);
+		
+		try {
+			$command->execute();
+		} catch (\Throwable $ex) {
+			var_dump($ex->getMessage());
+		}
 	}
 }
