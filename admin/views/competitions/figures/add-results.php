@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 
 <div class="alert alert-info">
     После добавления результатов зайдите на
-    <?= \yii\bootstrap\Html::a('страницу фигуры', ['update', 'id' => $figure->id], ['target' => '_blank']) ?>
+	<?= \yii\bootstrap\Html::a('страницу фигуры', ['update', 'id' => $figure->id], ['target' => '_blank']) ?>
     и в случае необходимости подтвердите новые классы и рекорды.
 </div>
 
@@ -81,7 +81,8 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 			'mask'    => '99:99.99',
 			'options' => [
 				'id'    => 'setTime',
-				'class' => 'form-control'
+				'class' => 'form-control',
+				'type'  => 'tel'
 			]
 		])->label(false) ?>
     </div>
