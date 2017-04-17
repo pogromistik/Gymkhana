@@ -20,12 +20,13 @@ $this->params['breadcrumbs'][] = 'Заезды';
 $attempt = 0;
 ?>
 
-<div class="alert alert-info">
-    Формат времени: минуты:секунды.миллисекунды. Необходимо обязательно указывать все 6 цифр.<br>
-    В случае незачета всё равно укажите время, за которое человек проехал трассу. Если времени нет - оставьте поле пустым или введите
-    время не меньше, чем 59:59.99.<br>
-    Если штрафа нет - введите 0 или оставьте поле пустым.
-</div>
+    <div class="alert alert-info">
+        Формат времени: минуты:секунды.миллисекунды. Необходимо обязательно указывать все 6 цифр.<br>
+        В случае незачета всё равно укажите время, за которое человек проехал трассу. Если времени нет - оставьте поле
+        пустым или введите
+        время не меньше, чем 59:59.99.<br>
+        Если штрафа нет - введите 0 или оставьте поле пустым.
+    </div>
 
 <?php if ($error) { ?>
     <div class="alert alert-danger">
@@ -71,8 +72,8 @@ $attempt = 0;
         <div class="row">
 			<?= $form->field($timeModel, 'stageId')->hiddenInput()->label(false)->error(false) ?>
 			<?= $form->field($timeModel, 'participantId')->hiddenInput()->label(false)->error(false) ?>
-	        <?= $form->field($timeModel, 'id')->hiddenInput(['class' => 'timeId'])->label(false)->error(false) ?>
-	        <?= $form->field($timeModel, 'attemptNumber')->hiddenInput(['value' => $attempt])->label(false)->error(false) ?>
+			<?= $form->field($timeModel, 'id')->hiddenInput(['class' => 'timeId'])->label(false)->error(false) ?>
+			<?= $form->field($timeModel, 'attemptNumber')->hiddenInput(['value' => $attempt])->label(false)->error(false) ?>
             <div class="col-sm-1"><?= $participant->number ?></div>
             <div class="col-sm-3"><?= $participant->athlete->getFullName() ?></div>
             <div class="col-sm-3"><?= $participant->motorcycle->getFullTitle() ?></div>
@@ -81,7 +82,8 @@ $attempt = 0;
 					'mask'    => '99:99.99',
 					'options' => [
 						'id'    => 'timeForHuman' . $participant->id . '-' . $attempt,
-						'class' => 'form-control'
+						'class' => 'form-control',
+						'type'  => 'tel'
 					]
 				])->label(false) ?>
             </div>
