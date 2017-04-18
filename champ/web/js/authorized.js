@@ -43,9 +43,7 @@ $('html').click(function () {
 
 $('.notices').click(function () {
     if ($('.modal-notices').hasClass('show')) {
-        $('.modal-notices').slideToggle(200, function () {
-            $('.modal-notices').removeClass('show');
-        });
+        return true;
     } else {
         $.get('/notices/find-new-notices').done(function (data) {
             $('.modal-notices .text').html(data);

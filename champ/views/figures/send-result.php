@@ -48,7 +48,8 @@ use yii\widgets\MaskedInput;
 		'mask'    => '99:99.99',
 		'options' => [
 			'id'    => 'setTime',
-			'class' => 'form-control'
+			'class' => 'form-control',
+			'type'  => 'tel'
 		]
 	]) ?>
 	
