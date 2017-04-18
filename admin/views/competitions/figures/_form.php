@@ -11,37 +11,39 @@ use yii\widgets\MaskedInput;
 ?>
 
 <div class="figure-form">
-
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'description')->widget(CKEditor::className(), [
-	    'options' => ['id' => 'newBlock'],
-	    'preset'  => 'basic',
-    ]) ?>
+	
+	<?php $form = ActiveForm::begin(); ?>
+	
+	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+		'options' => ['id' => 'newBlock'],
+		'preset'  => 'basic',
+	]) ?>
 	
 	<?= $form->field($model, 'useForClassesCalculate')->checkbox() ?>
-
-    <?= $form->field($model, 'bestTimeForHuman')->widget(MaskedInput::classname(), [
-	    'mask'    => '99:99.99',
-	    'options' => [
-		    'id'    => 'bestTimeForHuman' . $model->id,
-		    'class' => 'form-control'
-	    ]
-    ]) ?>
-
-    <?= $form->field($model, 'bestAthlete')->textarea(['rows' => 3]) ?>
-
-    <?= $form->field($model, 'bestTimeInRussiaForHuman')->widget(MaskedInput::classname(), [
-	    'mask'    => '99:99.99',
-	    'options' => [
-		    'id'    => 'bestTimeInRussia' . $model->id,
-		    'class' => 'form-control'
-	    ]
-    ]) ?>
-
-    <?= $form->field($model, 'bestAthleteInRussia')->textarea(['rows' => 3]) ?>
+	
+	<?= $form->field($model, 'bestTimeForHuman')->widget(MaskedInput::classname(), [
+		'mask'    => '99:99.99',
+		'options' => [
+			'id'    => 'bestTimeForHuman' . $model->id,
+			'class' => 'form-control',
+			'type'  => 'tel'
+		]
+	]) ?>
+	
+	<?= $form->field($model, 'bestAthlete')->textarea(['rows' => 3]) ?>
+	
+	<?= $form->field($model, 'bestTimeInRussiaForHuman')->widget(MaskedInput::classname(), [
+		'mask'    => '99:99.99',
+		'options' => [
+			'id'    => 'bestTimeInRussia' . $model->id,
+			'class' => 'form-control',
+			'type'  => 'tel'
+		]
+	]) ?>
+	
+	<?= $form->field($model, 'bestAthleteInRussia')->textarea(['rows' => 3]) ?>
 	
 	<?php if ($model->picture) { ?>
         <div class="row">
@@ -65,9 +67,9 @@ use yii\widgets\MaskedInput;
 	<?php } ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
-
-    <?php ActiveForm::end(); ?>
+	
+	<?php ActiveForm::end(); ?>
 
 </div>
