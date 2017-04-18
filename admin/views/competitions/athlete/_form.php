@@ -99,19 +99,21 @@ if (!$model->countryId) {
 	
 	<?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 	
-	<?php
-	$startClass = \common\models\AthletesClass::getStartClass();
-	$text = '';
-	if ($startClass) {
-		$text = 'По умолчанию будет установлен класс ' . $startClass->title;
-	}
-	?>
-	<?= $form->field($model, 'athleteClassId',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">
+	<?php if (Yii::$app->user->can('projectAdmin')) { ?>
+		<?php
+		$startClass = \common\models\AthletesClass::getStartClass();
+		$text = '';
+		if ($startClass) {
+			$text = 'По умолчанию будет установлен класс ' . $startClass->title;
+		}
+		?>
+		<?= $form->field($model, 'athleteClassId',
+			['inputTemplate' => '<div class="input-with-description"><div class="text">
  ' . $text . '
 </div>{input}</div>'])->dropDownList(\yii\helpers\ArrayHelper::map(
-		\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
-	), ['prompt' => 'Укажите класс спортсмена']) ?>
+			\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
+		), ['prompt' => 'Укажите класс спортсмена']) ?>
+	<?php } ?>
 	
 	<?= $form->field($model, 'number')->textInput() ?>
 

@@ -339,7 +339,8 @@ class ParticipantsController extends BaseController
 		
 		if ($participant->status == Participant::STATUS_ACTIVE) {
 			if ($stage->status == Stage::STATUS_PRESENT || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
-				$participant->status = Participant::STATUS_DISQUALIFICATION;
+				//$participant->status = Participant::STATUS_DISQUALIFICATION;
+				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
 			} else {
 				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
 			}

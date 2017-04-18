@@ -10,6 +10,7 @@ use common\models\AthletesClass;
 /* @var $this yii\web\View */
 /* @var $model common\models\Participant */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $championship \common\models\Championship */
 ?>
 
 <div class="participant-form">
@@ -33,19 +34,27 @@ use common\models\AthletesClass;
 	
 	<?= $form->field($model, 'motorcycleId')->widget(\kartik\widgets\DepDrop::className(), [
 		'options'       => ['id' => 'motorcycle-id'],
-        'data' => ArrayHelper::map(\common\models\Motorcycle::findAll(['athleteId' => $model->athleteId]), 'id', function (\common\models\Motorcycle $item) {
-	        return $item->mark . ' ' . $item->model;
-        }),
+		'data'          => ArrayHelper::map(\common\models\Motorcycle::findAll(['athleteId' => $model->athleteId]), 'id', function (\common\models\Motorcycle $item) {
+			return $item->mark . ' ' . $item->model;
+		}),
 		'pluginOptions' => [
 			'depends'     => ['athlete-id'],
 			'placeholder' => 'Выберите мотоцикл...',
 			'url'         => \yii\helpers\Url::to('/competitions/participants/motorcycle-category')
 		]
 	]) ?>
-	
-	<?= $form->field($model, 'internalClassId')->dropDownList(
-		ArrayHelper::map(InternalClass::getActiveClasses($model->championshipId), 'id', 'title'),
-		['prompt' => 'Выберите класс награждения']) ?>
+	<?php if ($championship->useCheScheme) { ?>
+        <div class="input-with-description">
+            <div class="text">
+                Вы используете стандартную схему для награждения, поэтому класс награждения будет установлен
+                автоматически
+            </div>
+        </div>
+	<?php } else { ?>
+		<?= $form->field($model, 'internalClassId')->dropDownList(
+			ArrayHelper::map(InternalClass::getActiveClasses($model->championshipId), 'id', 'title'),
+			['prompt' => 'Выберите класс награждения']) ?>
+	<?php } ?>
 	
 	<?= $form->field($model, 'number')->textInput() ?>
 	
