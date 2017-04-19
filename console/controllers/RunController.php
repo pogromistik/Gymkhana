@@ -1011,14 +1011,13 @@ class RunController extends Controller
 		$this->createForeign('Stage_countryId', Stage::tableName(), 'countryId', Country::tableName(), 'id');
 		
 		$this->createForeign('Time_participantId', Time::tableName(), 'participantId', Participant::tableName(), 'id');
-		$this->createForeign('Time_regionId', Time::tableName(), 'stageId', Stage::tableName(), 'id');
+		$this->createForeign('Time_stageId', Time::tableName(), 'stageId', Stage::tableName(), 'id');
 		
 		$this->createIndex('TmpAthlete_status', TmpAthlete::tableName(), 'status');
 		$this->createIndex('TmpFigureResult_isNew', TmpFigureResult::tableName(), 'isNew');
 		$this->createIndex('TmpParticipant_status', TmpParticipant::tableName(), 'status');
 		
 		$transaction->commit();
-		
 	}
 	
 	private function createIndex($name, $table, $column)
