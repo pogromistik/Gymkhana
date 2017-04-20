@@ -95,6 +95,7 @@ class News extends \yii\db\ActiveRecord
 		if ($this->isPublish) {
 			$this->datePublish = time();
 		}
+		$this->dateUpdated = time();
 		
 		return parent::beforeValidate();
 	}
