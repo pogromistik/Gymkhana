@@ -39,7 +39,7 @@ class News extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['title', 'dateCreated', 'datePublish', 'dateUpdated', 'isPublish'], 'required'],
+			[['title', 'dateCreated', 'dateUpdated', 'isPublish'], 'required'],
 			[['dateCreated', 'datePublish', 'dateUpdated', 'isPublish', 'pageId', 'secure'], 'integer'],
 			[['previewText'], 'string'],
 			[['title', 'previewImage'], 'string', 'max' => 255],
