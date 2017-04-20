@@ -80,6 +80,10 @@ class News extends \yii\db\ActiveRecord
 			$this->pageId = $page->id;
 		}
 		
+		if (in_array('isPublish', $this->dirtyAttributes) && $this->isPublish && !$this->datePublish) {
+			$this->datePublish = time();
+		}
+		
 		return parent::beforeSave($insert);
 	}
 	
@@ -91,7 +95,6 @@ class News extends \yii\db\ActiveRecord
 		if ($this->isPublish) {
 			$this->datePublish = time();
 		}
-		$this->dateUpdated = time();
 		
 		return parent::beforeValidate();
 	}
