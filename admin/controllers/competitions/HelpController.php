@@ -260,6 +260,9 @@ class HelpController extends BaseController
 				$query->andWhere(['"Cities"."countryId"' => $countryId]);
 			}
 			$query->limit(50);
+			$query->orderBy('CASE WHEN upper("Cities"."title") LIKE \''.$title.'\' THEN 0
+			 WHEN upper("Cities"."title") LIKE \''.$title.'%\' THEN 1
+			WHEN upper("Cities"."title") LIKE \'%'.$title.'%\' THEN 2 ELSE 3 END');
 			$command = $query->createCommand();
 			$data = $command->queryAll();
 			$out['results'] = array_values($data);

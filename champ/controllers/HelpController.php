@@ -72,13 +72,17 @@ class HelpController extends Controller
 		$out = ['results' => ['id' => '', 'text' => '']];
 		if (!is_null($title)) {
 			$query = new Query();
+			$title = mb_strtoupper($title, 'UTF-8');
 			$query->select('"Cities"."id", ("Cities"."title" || \' (\' || "Regions"."title" || \')\') AS text')
 				->from([City::tableName(), Region::tableName()])
-				->where(['like', 'upper("Cities"."title")', mb_strtoupper($title, 'UTF-8')])
+				->where(['like', 'upper("Cities"."title")', $title])
 				->andWhere(new Expression('"Regions"."id" = "Cities"."regionId"'));
 			if ($countryId) {
 				$query->andWhere(['"Cities"."countryId"' => $countryId]);
 			}
+			$query->orderBy('CASE WHEN upper("Cities"."title") LIKE \''.$title.'\' THEN 0
+			 WHEN upper("Cities"."title") LIKE \''.$title.'%\' THEN 1
+			WHEN upper("Cities"."title") LIKE \'%'.$title.'%\' THEN 2 ELSE 3 END');
 			$query->limit(50);
 			$command = $query->createCommand();
 			$data = $command->queryAll();
