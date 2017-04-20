@@ -87,7 +87,7 @@ class HelpController extends Controller
 					$query->andWhere(['"Regions"."id"' => $regionIds]);
 				}
 			}
-			$query->limit(20);
+			$query->limit(50);
 			$command = $query->createCommand();
 			$data = $command->queryAll();
 			$out['results'] = array_values($data);
