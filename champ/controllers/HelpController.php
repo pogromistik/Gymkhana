@@ -88,7 +88,6 @@ class HelpController extends Controller
 					$query->andWhere(['"Regions"."id"' => $regionIds]);
 				}
 			}
-			$query->limit(20);
 			$query->orderBy('CASE WHEN upper("Cities"."title") LIKE \''.$title.'\' THEN 0
 			 WHEN upper("Cities"."title") LIKE \''.$title.'%\' THEN 1
 			WHEN upper("Cities"."title") LIKE \'%'.$title.'%\' THEN 2 ELSE 3 END');
