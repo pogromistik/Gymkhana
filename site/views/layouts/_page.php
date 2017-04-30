@@ -66,6 +66,9 @@ use common\models\MenuItem;
 									<?= $item->title ? $item->title : $item->page->title ?></a>
                             </li>
 						<?php } ?>
+                        <li>
+                            <a href="http://gymkhana-cup.ru/" target="_blank">gymkhana cup</a>
+                        </li>
                     </ul>
                 </div>
             </nav>
