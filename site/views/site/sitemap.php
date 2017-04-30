@@ -8,6 +8,9 @@ use yii\bootstrap\Html;
 
 <div id="content" class="container small-height">
     <ul>
+        <li>
+            <a href="http://gymkhana-cup.ru/" target="_blank">GYMKHANA CUP</a>
+        </li>
 		<?php foreach ($data['map'] as $layout => $info) { ?>
             <li>
 				<?= Html::a($info['title'], $info['url']) ?>
