@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	<?php if (!$model->hasAccount) { ?>
 		<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
 			['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
-	<?php } else { ?>
+	<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
 		<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
 			['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
 	<?php } ?>

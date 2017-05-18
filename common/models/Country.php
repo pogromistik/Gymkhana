@@ -77,4 +77,9 @@ class Country extends \yii\db\ActiveRecord
 	{
 		return $this->hasMany(City::className(), ['countryId' => 'id'])->orderBy(['title' => SORT_ASC]);
 	}
+	
+	public static function getRussia()
+	{
+		return self::findOne(['title' => 'Россия']);
+	}
 }

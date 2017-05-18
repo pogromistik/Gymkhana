@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\helpers\UserHelper;
 use Yii;
 
 /**
@@ -16,6 +17,8 @@ use Yii;
  * @property integer $dateAdded
  * @property integer $dateUpdated
  * @property integer $status
+ * @property integer $creatorUserId
+ *
  * @property Athlete $athlete
  */
 class Motorcycle extends BaseActiveRecord
@@ -70,6 +73,7 @@ class Motorcycle extends BaseActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
+			$this->creatorUserId = UserHelper::getUserId();
 		}
 		$this->model = trim($this->model);
 		$this->mark = trim($this->mark);

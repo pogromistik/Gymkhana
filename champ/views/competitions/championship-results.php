@@ -14,6 +14,11 @@ $this->title = 'Результаты: ' . $championship->title;
     ? 'итоги' : 'предварительные итоги' ?></h3>
 
 <div class="about">
+	<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
+        <div>
+            Регионы, допускающиеся к участию: <?= $championship->getRegionsFor(true) ?>
+        </div>
+	<?php } ?>
     Количество этапов, необходимое для участия в чемпионате: <?= $championship->amountForAthlete ?>
     <br>
     Необходимое количество этапов в других регионах:

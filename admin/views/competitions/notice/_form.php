@@ -15,25 +15,31 @@ $length = 255;
 	<?php $form = ActiveForm::begin(); ?>
 
     <div class="form-group field-regionId">
-        <label class="control-label" for="regionId">Регионы, всем спортсменам которых будут отправлены
-            уведомления</label>
-        <div class="input-with-description">
-            <div class="text">
-                Если вы хотите отправить уведомление вообще всем спортсменам - оставьте поле пустым.
+		<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+            <label class="control-label" for="regionId">Регионы, всем спортсменам которых будут отправлены
+                уведомления</label>
+            <div class="input-with-description">
+                <div class="text">
+                    Если вы хотите отправить уведомление вообще всем спортсменам - оставьте поле пустым.
+                </div>
+				<?= Select2::widget([
+					'name'          => 'regionIds',
+					'data'          => \common\models\Region::getAll(true),
+					'options'       => [
+						'placeholder' => 'Выберите регионы...',
+						'multiple'    => true
+					],
+					'pluginOptions' => [
+						'tags'            => true,
+						'tokenSeparators' => [',', ' '],
+					],
+				]) ?>
             </div>
-			<?= Select2::widget([
-				'name'          => 'regionIds',
-				'data'          => \common\models\Region::getAll(true),
-				'options'       => [
-					'placeholder' => 'Выберите регионы...',
-					'multiple' => true
-				],
-				'pluginOptions' => [
-					'tags' => true,
-					'tokenSeparators' => [',', ' '],
-				],
-			]) ?>
-        </div>
+		<?php } else { ?>
+			<?php $region = \common\models\Region::findOne(\Yii::$app->user->identity->regionId); ?>
+            <label class="control-label" for="regionId">Уведомление будет отправлено всем спортсменам вашего
+                региона (<?= $region->title ?>)</label>
+		<?php } ?>
     </div>
 	
 	<?= $form->field($model, 'text',

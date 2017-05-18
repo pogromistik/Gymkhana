@@ -46,6 +46,8 @@ class FigureTime extends BaseActiveRecord
 	public $resultTimeForHuman;
 	public $dateForHuman;
 	
+	public $needClassCalculate = true;
+	
 	const RECORD_IN_RUSSIA = 1;
 	const RECORD_IN_WORLD = 2;
 	public static $recordsTitle = [
@@ -114,7 +116,8 @@ class FigureTime extends BaseActiveRecord
 	{
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
-			$this->athleteClassId = $this->athlete->athleteClassId;
+			$athlete = Athlete::findOne($this->athleteId);
+			$this->athleteClassId = $athlete->athleteClassId;
 		}
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
@@ -154,7 +157,7 @@ class FigureTime extends BaseActiveRecord
 	{
 		if ($this->isNewRecord || $this->isAttributeChanged('percent')) {
 			$figure = Figure::findOne($this->figureId);
-			if ($figure->useForClassesCalculate && $this->percent) {
+			if ($figure->useForClassesCalculate && $this->percent && $this->needClassCalculate) {
 				//Рассчёт класса
 				$this->newAthleteClassId = null;
 				$this->newAthleteClassStatus = null;

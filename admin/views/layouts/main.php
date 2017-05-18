@@ -58,34 +58,37 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                     </li>
 				<?php } ?>
 				
-				<?php $countNewFigure = \common\models\TmpFigureResult::find()
-					->where(['isNew' => 1])->count() ?>
-				<?php if ($countNewFigure) { ?>
-                    <li>
-                        <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
-                                    class="fa fa-bullhorn fa-fw"></i> Новые результаты
-                            фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
-                    </li>
+				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+					<?php $countNewFigure = \common\models\TmpFigureResult::find()
+						->where(['isNew' => 1])->count() ?>
+					<?php if ($countNewFigure) { ?>
+                        <li>
+                            <a href="<?= Url::to(['/competitions/tmp-figures/index']) ?>"><i
+                                        class="fa fa-bullhorn fa-fw"></i> Новые результаты
+                                фигур <?= $countNewFigure ? '(' . $countNewFigure . ')' : '' ?></a>
+                        </li>
+					<?php } ?>
 				<?php } ?>
 				
-				<?php $countNewReg = \common\models\TmpParticipant::find()
-					->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
+				<?php $countNewReg = \common\models\TmpParticipant::countNewReg();
+				?>
 				<?php if ($countNewReg) { ?>
                     <li>
-						<?php $countNewReg = \common\models\TmpParticipant::find()
-							->where(['status' => \common\models\TmpParticipant::STATUS_NEW])->count() ?>
                         <a href="<?= Url::to(['/competitions/tmp-participant/index']) ?>"><i
                                     class="fa fa-registered fa-fw"></i> Регистрации на
                             этап <?= $countNewReg ? '(' . $countNewReg . ')' : '' ?></a>
                     </li>
 				<?php } ?>
+				
+				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+                    <li>
+						<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
+                        <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
+                                    class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?>
+                        </a>
 
-                <li>
-					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
-                    <a href="<?= Url::to(['/competitions/feedback/index']) ?>"><i
-                                class="fa fa-bell fa-fw"></i> Обратная связь <?= $count ? '(' . $count . ')' : '' ?></a>
-
-                </li>
+                    </li>
+				<?php } ?>
 			<?php } ?>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -207,22 +210,34 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                 <li>
                                     <a href="<?= Url::to(['/competitions/help/cities']) ?>"> Города</a>
                                 </li>
-                                <li>
-                                    <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
-                                        чемпионатов</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/news"
-                                       href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/documents"
-                                       href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
-                                </li>
-                                <li>
-                                    <a data-addr="/competitions/classes"
-                                       href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы спортсменов</a>
-                                </li>
+								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/classes"
+                                           href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы
+                                            спортсменов</a>
+                                    </li>
+									<?php if (\Yii::$app->user->can('developer')) { ?>
+                                        <li>
+                                            <a data-addr="/competitions/classes"
+                                               href="<?= Url::to(['/competitions/additional/che-scheme']) ?>"> Классы
+                                                награждения</a>
+                                        </li>
+									<?php } ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
+                                            чемпионатов</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/news"
+                                           href="<?= Url::to(['/competitions/news/index']) ?>"> Новости</a>
+                                    </li>
+                                    <li>
+                                        <a data-addr="/competitions/documents"
+                                           href="<?= Url::to(['/competitions/documents/index']) ?>"> Документы</a>
+                                    </li>
+								<?php } ?>
                                 <li>
                                     <a data-addr="/competitions/athlete"
                                        href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
@@ -236,11 +251,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 										<?php } ?>
                                     </ul>
                                 </li>
-                                <li>
-                                    <a data-addr="/competitions/figures"
-                                       href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
-                                </li>
-								<?php if (\Yii::$app->user->can('admin')) { ?>
+								<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+                                    <li>
+                                        <a data-addr="/competitions/figures"
+                                           href="<?= Url::to(['/competitions/figures/index']) ?>"> Фигуры</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li>
                                         <a href="#"> Уведомления<span
                                                     class="fa arrow"></span></a>
@@ -255,11 +272,17 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                             </li>
                                         </ul>
                                     </li>
-								<?php } else { ?>
+								<?php } elseif (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>
                                         <a data-addr="/competitions/notice"
                                            href="<?= Url::to(['/competitions/notice/index']) ?>"> Отправить
                                             уведомление</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление
+                                            пользователями</a>
                                     </li>
 								<?php } ?>
                             </ul>

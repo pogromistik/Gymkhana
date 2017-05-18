@@ -3,6 +3,8 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\CheScheme;
+use common\models\search\CheSchemeSearch;
 use Yii;
 use common\models\Point;
 use common\models\search\PointSearch;
@@ -36,7 +38,7 @@ class AdditionalController extends BaseController
 	 */
 	public function actionPoints()
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$searchModel = new PointSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -55,7 +57,7 @@ class AdditionalController extends BaseController
 	 */
 	public function actionCreatePoints()
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$model = new Point();
 		
@@ -78,7 +80,7 @@ class AdditionalController extends BaseController
 	 */
 	public function actionUpdatePoints($id)
 	{
-		$this->can('competitions');
+		$this->can('globalWorkWithCompetitions');
 		
 		$model = $this->findModel($id);
 		
@@ -101,6 +103,8 @@ class AdditionalController extends BaseController
 	 */
 	public function actionDeletePoints($id)
 	{
+		$this->can('globalWorkWithCompetitions');
+		
 		$this->findModel($id)->delete();
 		
 		return $this->redirect(['points']);
@@ -117,10 +121,36 @@ class AdditionalController extends BaseController
 	 */
 	protected function findModel($id)
 	{
+		$this->can('globalWorkWithCompetitions');
+		
 		if (($model = Point::findOne($id)) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+	
+	public function actionCheScheme()
+	{
+		$this->can('developer');
+		$searchModel = new CheSchemeSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		return $this->render('che-scheme', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionCreateClass()
+	{
+		$model = new CheScheme();
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['che-scheme']);
+		} else {
+			return $this->render('create-class', [
+				'model' => $model,
+			]);
 		}
 	}
 }

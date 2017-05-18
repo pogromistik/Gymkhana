@@ -33,6 +33,12 @@ class TmpFiguresController extends BaseController
 		];
 	}
 	
+	public function init()
+	{
+		parent::init();
+		$this->can('projectOrganizer');
+	}
+	
 	/**
 	 * Lists all TmpParticipant models.
 	 *
@@ -40,7 +46,6 @@ class TmpFiguresController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
 		$searchModel = new TmpFigureResultSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['isNew' => 1]);
@@ -60,7 +65,6 @@ class TmpFiguresController extends BaseController
 	 */
 	public function actionView($id)
 	{
-		$this->can('competitions');
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
@@ -77,7 +81,6 @@ class TmpFiguresController extends BaseController
 	 */
 	protected function findModel($id)
 	{
-		$this->can('competitions');
 		if (($model = TmpParticipant::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -87,234 +90,14 @@ class TmpFiguresController extends BaseController
 	
 	public function actionFindAthletes($lastName)
 	{
-		$this->can('competitions');
 		$lastName = mb_strtoupper($lastName, 'UTF-8');
 		$athletes = Athlete::find()->where(['upper("lastName")' => $lastName])->orWhere(['upper("lastName")' => $lastName])->all();
 		
 		return $this->renderAjax('_athletes', ['athletes' => $athletes, 'lastName' => $lastName]);
 	}
 	
-	public function actionAddAndRegistration($id)
-	{
-		$this->can('competitions');
-		$tmpParticipant = TmpParticipant::findOne($id);
-		if (!$tmpParticipant) {
-			return 'Запись не найдена';
-		}
-		
-		$transaction = \Yii::$app->db->beginTransaction();
-		if ($tmpParticipant->cityId) {
-			$city = City::findOne($tmpParticipant->cityId);
-			if (!$city) {
-				$transaction->rollBack();
-				
-				return 'Город не найден';
-			}
-		} else {
-			$city = City::findOne(['upper("title")' => mb_strtoupper($tmpParticipant->city, 'UTF-8')]);
-			if (!$city) {
-				$transaction->rollBack();
-				
-				return 'Город отсутствует в системе';
-			}
-		}
-		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$athlete = new Athlete();
-		$athlete->lastName = $tmpParticipant->lastName;
-		$athlete->firstName = $tmpParticipant->firstName;
-		$athlete->cityId = $city->id;
-		$athlete->phone = $tmpParticipant->phone;
-		if (!$athlete->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($athlete->errors);
-		}
-		
-		$motorcycle = new Motorcycle();
-		$motorcycle->athleteId = $athlete->id;
-		$motorcycle->mark = $tmpParticipant->motorcycleMark;
-		$motorcycle->model = $tmpParticipant->motorcycleModel;
-		if (!$motorcycle->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($motorcycle->errors);
-		}
-		
-		$participant = new Participant();
-		$participant->athleteId = $athlete->id;
-		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
-		$participant->stageId = $tmpParticipant->stageId;
-		$participant->championshipId = $tmpParticipant->championshipId;
-		if (!$participant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($participant->errors);
-		}
-		
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$transaction->commit();
-		
-		return true;
-	}
-	
-	public function actionCancel($id)
-	{
-		$this->can('competitions');
-		
-		$tmpParticipant = TmpParticipant::findOne($id);
-		if (!$tmpParticipant) {
-			return 'Запись не найдена';
-		}
-		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		if (!$tmpParticipant->save()) {
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		return true;
-	}
-	
-	public function actionRegistration($tmpParticipantId, $athleteId, $motorcycleId)
-	{
-		$this->can('competitions');
-		
-		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
-		if (!$tmpParticipant) {
-			return 'Запись не найдена';
-		}
-		
-		$athlete = Athlete::findOne($athleteId);
-		if (!$athlete) {
-			return 'Спортсмен не найден';
-		}
-		
-		$motorcycle = Motorcycle::findOne(['id' => $motorcycleId, 'athleteId' => $athleteId]);
-		if (!$motorcycle) {
-			return 'Мотоцикл не найден';
-		}
-		
-		$old = Participant::find()->where(['stageId' => $tmpParticipant->stageId])
-			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->all();
-		if ($old) {
-			return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
-		}
-		
-		$transaction = \Yii::$app->db->beginTransaction();
-		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$participant = new Participant();
-		$participant->athleteId = $athlete->id;
-		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
-		$participant->stageId = $tmpParticipant->stageId;
-		$participant->championshipId = $tmpParticipant->championshipId;
-		if (!$participant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($participant->errors);
-		}
-		
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$transaction->commit();
-		
-		return true;
-	}
-	
-	public function actionAddMotorcycleAndRegistration($tmpParticipantId, $athleteId)
-	{
-		$this->can('competitions');
-		
-		$tmpParticipant = TmpParticipant::findOne($tmpParticipantId);
-		if (!$tmpParticipant) {
-			return 'Запись не найдена';
-		}
-		
-		$athlete = Athlete::findOne($athleteId);
-		if (!$athlete) {
-			return 'Спортсмен не найден';
-		}
-		
-		$transaction = \Yii::$app->db->beginTransaction();
-		
-		$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$motorcycle = new Motorcycle();
-		$motorcycle->athleteId = $athlete->id;
-		$motorcycle->mark = $tmpParticipant->motorcycleMark;
-		$motorcycle->model = $tmpParticipant->motorcycleModel;
-		if (!$motorcycle->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($motorcycle->errors);
-		}
-		
-		$participant = new Participant();
-		$participant->athleteId = $athlete->id;
-		$participant->motorcycleId = $motorcycle->id;
-		if ($tmpParticipant->number) {
-			$participant->number = $tmpParticipant->number;
-		}
-		$participant->stageId = $tmpParticipant->stageId;
-		$participant->championshipId = $tmpParticipant->championshipId;
-		if (!$participant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($participant->errors);
-		}
-		
-		$tmpParticipant->athleteId = $athlete->id;
-		if (!$tmpParticipant->save()) {
-			$transaction->rollBack();
-			
-			return var_dump($tmpParticipant->errors);
-		}
-		
-		$transaction->commit();
-		
-		return true;
-	}
-	
 	public function actionApprove($id)
 	{
-		$this->can('competitions');
-		
 		$tmp = TmpFigureResult::findOne($id);
 		if (!$tmp) {
 			return 'Результат не найден';
@@ -322,50 +105,57 @@ class TmpFiguresController extends BaseController
 		if (!$tmp->isNew) {
 			return 'Результат уже был обработан';
 		}
-		$figureResult = new FigureTime();
-		$figureResult->athleteId = $tmp->athleteId;
-		$figureResult->motorcycleId = $tmp->motorcycleId;
-		$figureResult->time = $tmp->time;
-		$figureResult->fine = $tmp->fine;
-		$figureResult->figureId = $tmp->figureId;
-		$figureResult->date = $tmp->date;
-		$figureResult->timeForHuman = $tmp->timeForHuman;
-		$figureResult->dateForHuman = $tmp->dateForHuman;
 		
-		$transaction = \Yii::$app->db->beginTransaction();
-		if (!$figureResult->save()) {
-			$transaction->rollBack();
+		if (\Yii::$app->mutex->acquire('TmpFigures-' . $tmp->id, 10)) {
+			$figureResult = new FigureTime();
+			$figureResult->athleteId = $tmp->athleteId;
+			$figureResult->motorcycleId = $tmp->motorcycleId;
+			$figureResult->time = $tmp->time;
+			$figureResult->fine = $tmp->fine;
+			$figureResult->figureId = $tmp->figureId;
+			$figureResult->date = $tmp->date;
+			$figureResult->timeForHuman = $tmp->timeForHuman;
+			$figureResult->dateForHuman = $tmp->dateForHuman;
 			
-			return 'Возникла ошибка при сохранении данных';
-		}
-		
-		$tmp->isNew = 0;
-		$tmp->figureResultId = $figureResult->id;
-		if (!$tmp->save()) {
-			$transaction->rollBack();
+			$transaction = \Yii::$app->db->beginTransaction();
+			if (!$figureResult->save()) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при сохранении данных';
+			}
 			
-			return 'Возникла ошибка при сохранении данных';
+			$tmp->isNew = 0;
+			$tmp->figureResultId = $figureResult->id;
+			if (!$tmp->save()) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при сохранении данных';
+			}
+			
+			$figure = $figureResult->figure;
+			$link = Url::to(['/competitions/figure', 'id' => $figure->id]);
+			$min = str_pad(floor($figureResult->time / 60000), 2, '0', STR_PAD_LEFT);
+			$sec = str_pad(floor(($figureResult->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(($figureResult->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
+			$timeForHuman = $min . ':' . $sec . '.' . $mls;
+			$text = 'Ваш результат ' . $timeForHuman . ' для фигуры ' . $figure->title . ' подтверждён.';
+			
+			Notice::add($tmp->athleteId, $text, $link);
+			
+			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			$transaction->commit();
+		} else {
+			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		
-		$figure = $figureResult->figure;
-		$link = Url::to(['/competitions/figure', 'id' => $figure->id]);
-		$min = str_pad(floor($figureResult->time / 60000), 2, '0', STR_PAD_LEFT);
-		$sec = str_pad(floor(($figureResult->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
-		$mls = str_pad(($figureResult->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
-		$timeForHuman = $min . ':' . $sec . '.' . $mls;
-		$text = 'Ваш результат ' . $timeForHuman . ' для фигуры ' . $figure->title . ' подтверждён.';
-		
-		Notice::add($tmp->athleteId, $text, $link);
-		
-		$transaction->commit();
 		
 		return true;
 	}
 	
 	public function actionCancelResult()
 	{
-		$this->can('competitions');
-		
 		$id = \Yii::$app->request->post('id');
 		if (!$id) {
 			return 'Результат не найден';
@@ -385,17 +175,23 @@ class TmpFiguresController extends BaseController
 			return 'Результат уже был обработан';
 		}
 		
-		$tmp->isNew = 0;
-		$tmp->cancelReason = $text;
-		if (!$tmp->save()) {
-			return 'Возникла ошибка при сохранении данных';
+		if (\Yii::$app->mutex->acquire('TmpFigures-' . $tmp->id, 10)) {
+			$tmp->isNew = 0;
+			$tmp->cancelReason = $text;
+			if (!$tmp->save()) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				return 'Возникла ошибка при сохранении данных';
+			}
+			
+			$figure = $tmp->figure;
+			$link = Url::to(['/figures/requests', 'status' => TmpFigureResult::STATUS_CANCEL]);
+			$text = 'Ваш результат для фигуры ' . $figure->title . ' отклонён. Чтобы узнать подробности, перейдите по ссылке.';
+			
+			Notice::add($tmp->athleteId, $text, $link);
+		} else {
+			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		
-		$figure = $tmp->figure;
-		$link = Url::to(['/figures/requests', 'status' => TmpFigureResult::STATUS_CANCEL]);
-		$text = 'Ваш результат для фигуры ' . $figure->title . ' отклонён. Чтобы узнать подробности, перейдите по ссылке.';
-		
-		Notice::add($tmp->athleteId, $text, $link);
 		
 		return true;
 	}

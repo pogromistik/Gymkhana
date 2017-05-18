@@ -36,4 +36,25 @@ class UserHelper
 			return self::CONSOLE_LOG_USER_ID;
 		}
 	}
+	
+	/*
+	 * Доступ: организаторы редактируют всё, админы - внутри региона, судьи - только если сами создали
+	 */
+	public static function accessAverage($regionId, $creatorUserId)
+	{
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if (!\Yii::$app->user->can('projectOrganizer')) {
+				if (\Yii::$app->user->can('projectAdmin')) {
+					if (\Yii::$app->user->identity->regionId != $regionId && \Yii::$app->user->id != $creatorUserId) {
+						return false;
+					}
+				}  elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
+					if (\Yii::$app->user->id != $creatorUserId) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
 }

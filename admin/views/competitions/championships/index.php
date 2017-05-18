@@ -14,11 +14,15 @@ use common\models\Year;
  */
 
 $this->title = Championship::$groupsTitle[$groupId];
+
+$view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 ?>
 <div class="championship-index">
-    <p>
-		<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId], ['class' => 'btn btn-success']) ?>
-    </p>
+	<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+        <p>
+			<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId], ['class' => 'btn btn-success']) ?>
+        </p>
+	<?php } ?>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
@@ -57,7 +61,7 @@ $this->title = Championship::$groupsTitle[$groupId];
 			[
 				'format' => 'raw',
 				'label'  => 'Этапы',
-				'value'  => function (Championship $championship) {
+				'value'  => function (Championship $championship) use ($view) {
 					$html = '';
 					$stages = $championship->stages;
 					if ($stages) {
@@ -67,7 +71,7 @@ $this->title = Championship::$groupsTitle[$groupId];
 							if ($stage->dateOfThe) {
 								$title .= ', ' . $stage->dateOfTheHuman;
 							}
-							$html .= '<li>' . Html::a($title, ['/competitions/stages/update', 'id' => $stage->id],
+							$html .= '<li>' . Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id],
 									['target' => '_blank']) . '</li>';
 						}
 						$html .= '</ul>';
@@ -77,8 +81,9 @@ $this->title = Championship::$groupsTitle[$groupId];
 				}
 			],
 			[
-				'format' => 'raw',
-				'value'  => function (Championship $championship) {
+				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('projectAdmin'),
+				'value'   => function (Championship $championship) {
 					return Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $championship->id], [
 						'class' => 'btn btn-default'
 					]);
@@ -94,8 +99,9 @@ $this->title = Championship::$groupsTitle[$groupId];
 				}
 			],
 			[
-				'format' => 'raw',
-				'value'  => function (Championship $championship) {
+				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('projectAdmin'),
+				'value'   => function (Championship $championship) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $championship->id], [
 						'class' => 'btn btn-primary',
 						'title' => 'Редактирование'

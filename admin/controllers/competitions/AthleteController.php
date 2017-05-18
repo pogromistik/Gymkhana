@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use common\helpers\UserHelper;
 use common\models\City;
 use common\models\Country;
 use common\models\Motorcycle;
@@ -10,6 +11,8 @@ use Yii;
 use common\models\Athlete;
 use common\models\search\AthleteSearch;
 use admin\controllers\BaseController;
+use yii\base\UserException;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +23,12 @@ use yii\web\Response;
  */
 class AthleteController extends BaseController
 {
+	public function init()
+	{
+		parent::init();
+		$this->can('refereeOfCompetitions');
+	}
+	
 	public function actions()
 	{
 		return [
@@ -38,8 +47,6 @@ class AthleteController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
-		
 		$searchModel = new AthleteSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -49,26 +56,29 @@ class AthleteController extends BaseController
 		]);
 	}
 	
-	/**
-	 * Displays a single Athlete model.
-	 *
-	 * @param integer $id
-	 *
-	 * @return mixed
-	 */
 	public function actionView($id)
 	{
-		$this->can('competitions');
+		$model = $this->findModel($id);
+		
+		$motorcycle = new Motorcycle();
+		$motorcycle->athleteId = $id;
+		if ($motorcycle->load(Yii::$app->request->post()) && $motorcycle->validate()) {
+			if (!UserHelper::accessAverage($model->regionId, $motorcycle->creatorUserId)) {
+				throw new UserException('Доступ запрещен');
+			}
+			$motorcycle->save(false);
+			
+			return $this->redirect(['view', 'id' => $model->id]);
+		}
 		
 		return $this->render('view', [
-			'model' => $this->findModel($id),
+			'model'      => $model,
+			'motorcycle' => $motorcycle
 		]);
 	}
 	
 	public function actionCreate($errorCity = null, $success = null)
 	{
-		$this->can('competitions');
-		
 		$model = new Athlete();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -84,13 +94,20 @@ class AthleteController extends BaseController
 	
 	public function actionUpdate($id, $success = false)
 	{
-		$this->can('competitions');
-		
 		$model = $this->findModel($id);
+		if (!UserHelper::accessAverage($model->regionId, $model->creatorUserId)) {
+			throw new UserException('Доступ запрещен');
+		}
+		
 		$motorcycle = new Motorcycle();
 		$motorcycle->athleteId = $id;
 		if ($motorcycle->load(Yii::$app->request->post()) && $motorcycle->save()) {
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
+		}
+		
+		if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+			\Yii::$app->response->format = Response::FORMAT_JSON;
+			return ActiveForm::validate($model);
 		}
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -161,8 +178,15 @@ class AthleteController extends BaseController
 		$result = [
 			'success' => false,
 			'error'   => false,
+			'warning' => false,
 			'data'    => []
 		];
+		if (!$model->validate('number')) {
+			$result['error'] = '<div class="alert alert-danger">Указанный номер занят. Укажите другой или
+ оставьте поле пустым.</div>';
+			
+			return $result;
+		}
 		if (!$oldAthletes) {
 			$model->save();
 			$result['success'] = true;
@@ -179,7 +203,7 @@ class AthleteController extends BaseController
 				return $result;
 			}
 			
-			$result['error'] = true;
+			$result['warning'] = true;
 			$result['data'] = $this->renderAjax('_oldAthletes', ['athletes' => $oldAthletes]);
 			
 			return $result;
@@ -210,7 +234,7 @@ class AthleteController extends BaseController
 	
 	public function actionDeleteCabinet($athleteId)
 	{
-		$this->can('competitions');
+		$this->can('projectOrganizer');
 		
 		$athlete = Athlete::findOne($athleteId);
 		if (!$athlete) {

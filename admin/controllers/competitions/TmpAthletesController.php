@@ -30,6 +30,12 @@ class TmpAthletesController extends BaseController
 		];
 	}
 	
+	public function init()
+	{
+		parent::init();
+		$this->can('refereeOfCompetitions');
+	}
+	
 	/**
 	 * Lists all TmpAthlete models.
 	 *
@@ -37,8 +43,6 @@ class TmpAthletesController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->can('competitions');
-		
 		$searchModel = new TmpAthletesSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TmpAthlete::STATUS_NEW]);
@@ -60,8 +64,6 @@ class TmpAthletesController extends BaseController
 	 */
 	protected function findModel($id)
 	{
-		$this->can('competitions');
-		
 		if (($model = TmpAthlete::findOne($id)) !== null) {
 			return $model;
 		} else {
@@ -71,8 +73,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionRegistrationOldAthlete($tmpId, $athleteId)
 	{
-		$this->can('competitions');
-		
 		$tmpAthlete = TmpAthlete::findOne($tmpId);
 		if (!$tmpAthlete) {
 			return 'Заявка не найдена';
@@ -93,32 +93,41 @@ class TmpAthletesController extends BaseController
 			return 'У спортсмена уже есть личный кабинет';
 		}
 		
-		$oldAthlete->email = $tmpAthlete->email;
-		if ($tmpAthlete->phone) {
-			$oldAthlete->phone = $tmpAthlete->phone;
+		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
+			$oldAthlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->phone) {
+				$oldAthlete->phone = $tmpAthlete->phone;
+			}
+			if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+				$oldAthlete->cityId = $tmpAthlete->cityId;
+			}
+			if (!$oldAthlete->save()) {
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
+				return 'При создании личного кабинета возникла ошибка';
+			}
+			
+			if (!$oldAthlete->createCabinet()) {
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
+				return 'При создании личного кабинета возникла ошибка';
+			}
+			
+			$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
+			$tmpAthlete->athleteId = $oldAthlete->id;
+			$tmpAthlete->save();
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+		} else {
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
-			$oldAthlete->cityId = $tmpAthlete->cityId;
-		}
-		if (!$oldAthlete->save()) {
-			return 'При создании личного кабинета возникла ошибка';
-		}
-		
-		if (!$oldAthlete->createCabinet()) {
-			return 'При создании личного кабинета возникла ошибка';
-		}
-		
-		$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
-		$tmpAthlete->athleteId = $oldAthlete->id;
-		$tmpAthlete->save();
 		
 		return true;
 	}
 	
 	public function actionChangeMotorcycles($tmpId, $athleteId)
 	{
-		$this->can('competitions');
-		
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$result = [
 			'error' => false,
@@ -152,53 +161,61 @@ class TmpAthletesController extends BaseController
 			return $result;
 		}
 		
-		$oldAthlete->email = $tmpAthlete->email;
-		if ($tmpAthlete->phone) {
-			$oldAthlete->phone = $tmpAthlete->phone;
-		}
-		if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
-			$oldAthlete->cityId = $tmpAthlete->cityId;
-		}
-		if (!$oldAthlete->save()) {
-			$result['error'] = 'При создании личного кабинета возникла ошибка';
-			
-			return $result;
-		}
-		
-		$notFoundMotorcycles = [];
-		$i = 0;
-		foreach ($tmpAthlete->getMotorcycles() as $motorcycle) {
-			$has = $oldAthlete->getMotorcycles()
-				->andWhere(['or',
-					['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
-					['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
-				])->one();
-			if (!$has) {
-				$notFoundMotorcycles[$i] = $motorcycle['mark'] . ' ' . $motorcycle['model'];
+		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
+			$oldAthlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->phone) {
+				$oldAthlete->phone = $tmpAthlete->phone;
 			}
-			$i++;
-		}
-		
-		if (!$notFoundMotorcycles) {
-			$result['error'] = 'В информации о спортсмене произошли изменения. Пожалуйста, перезагрузите страницу и, если 
-			кабинет спортсмену ещё не создан - попробуйте снова';
+			if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+				$oldAthlete->cityId = $tmpAthlete->cityId;
+			}
+			if (!$oldAthlete->save()) {
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				$result['error'] = 'При создании личного кабинета возникла ошибка';
+				
+				return $result;
+			}
 			
-			return $result;
+			$notFoundMotorcycles = [];
+			$i = 0;
+			foreach ($tmpAthlete->getMotorcycles() as $motorcycle) {
+				$has = $oldAthlete->getMotorcycles()
+					->andWhere(['or',
+						['and', ['upper("mark")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
+						['and', ['upper("model")' => mb_strtoupper($motorcycle['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($motorcycle['model'], 'UTF-8')]],
+					])->one();
+				if (!$has) {
+					$notFoundMotorcycles[$i] = $motorcycle['mark'] . ' ' . $motorcycle['model'];
+				}
+				$i++;
+			}
+			
+			if (!$notFoundMotorcycles) {
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				$result['error'] = 'В информации о спортсмене произошли изменения. Пожалуйста, перезагрузите страницу и, если 
+			кабинет спортсмену ещё не создан - попробуйте снова';
+				
+				return $result;
+			}
+			
+			$result['page'] = $this->renderAjax('_change', [
+				'tmpAthlete'          => $tmpAthlete,
+				'oldAthlete'          => $oldAthlete,
+				'notFoundMotorcycles' => $notFoundMotorcycles
+			]);
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+		} else {
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+			
+			$result['error'] = 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		
-		$result['page'] = $this->renderAjax('_change', [
-			'tmpAthlete'          => $tmpAthlete,
-			'oldAthlete'          => $oldAthlete,
-			'notFoundMotorcycles' => $notFoundMotorcycles
-		]);
 		
 		return $result;
 	}
 	
 	public function actionAddMotorcyclesAndRegistration()
 	{
-		$this->can('competitions');
-		
 		$tmpId = \Yii::$app->request->post('tmpId');
 		$athleteId = \Yii::$app->request->post('athleteId');
 		$tmpAthlete = TmpAthlete::findOne($tmpId);
@@ -221,17 +238,86 @@ class TmpAthletesController extends BaseController
 			return 'У спортсмена уже есть личный кабинет';
 		}
 		
-		$motorcycles = \Yii::$app->request->post('motorcycles');
-		if (!$motorcycles) {
+		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
+			$motorcycles = \Yii::$app->request->post('motorcycles');
+			if (!$motorcycles) {
+				$oldAthlete->email = $tmpAthlete->email;
+				if ($tmpAthlete->phone) {
+					$oldAthlete->phone = $tmpAthlete->phone;
+				}
+				if (!$oldAthlete->save()) {
+					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+					
+					return 'При создании личного кабинета возникла ошибка';
+				}
+				
+				if (!$oldAthlete->createCabinet()) {
+					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+					
+					return 'При создании личного кабинета возникла ошибка';
+				}
+				
+				$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
+				$tmpAthlete->athleteId = $oldAthlete->id;
+				$tmpAthlete->save();
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
+				return true;
+			}
+			
+			$allMotorcycles = $tmpAthlete->getMotorcycles();
+			$transaction = \Yii::$app->db->beginTransaction();
+			foreach ($motorcycles as $id) {
+				if (!isset($allMotorcycles[$id])) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+					
+					return 'Выбранный мотоцикл не найден';
+				}
+				$data = $allMotorcycles[$id];
+				/** @var Motorcycle $old */
+				$old = $oldAthlete->getMotorcycles()
+					->andWhere(['or',
+						['and', ['upper("mark")' => mb_strtoupper($data['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($data['model'], 'UTF-8')]],
+						['and', ['upper("model")' => mb_strtoupper($data['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($data['model'], 'UTF-8')]],
+					])->one();
+				if ($old) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+					
+					return 'Мотоцикл ' . $old->getFullTitle() . ' уже есть в личном кабинете спортсмена';
+				}
+				
+				$new = new Motorcycle();
+				$new->athleteId = $oldAthlete->id;
+				$new->mark = $data['mark'];
+				$new->model = $data['model'];
+				if (!$new->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+					
+					return 'Возникла ошибка при сохранении мотоцикла';
+				}
+			}
+			
 			$oldAthlete->email = $tmpAthlete->email;
 			if ($tmpAthlete->phone) {
 				$oldAthlete->phone = $tmpAthlete->phone;
 			}
+			if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
+				$oldAthlete->cityId = $tmpAthlete->cityId;
+			}
 			if (!$oldAthlete->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
 				return 'При создании личного кабинета возникла ошибка';
 			}
 			
 			if (!$oldAthlete->createCabinet()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
 				return 'При создании личного кабинета возникла ошибка';
 			}
 			
@@ -239,73 +325,19 @@ class TmpAthletesController extends BaseController
 			$tmpAthlete->athleteId = $oldAthlete->id;
 			$tmpAthlete->save();
 			
-			return true;
-		}
-		
-		$allMotorcycles = $tmpAthlete->getMotorcycles();
-		$transaction = \Yii::$app->db->beginTransaction();
-		foreach ($motorcycles as $id) {
-			if (!isset($allMotorcycles[$id])) {
-				$transaction->rollBack();
-				
-				return 'Выбранный мотоцикл не найден';
-			}
-			$data = $allMotorcycles[$id];
-			/** @var Motorcycle $old */
-			$old = $oldAthlete->getMotorcycles()
-				->andWhere(['or',
-					['and', ['upper("mark")' => mb_strtoupper($data['mark'], 'UTF-8')], ['upper("model")' => mb_strtoupper($data['model'], 'UTF-8')]],
-					['and', ['upper("model")' => mb_strtoupper($data['mark'], 'UTF-8')], ['upper("mark")' => mb_strtoupper($data['model'], 'UTF-8')]],
-				])->one();
-			if ($old) {
-				$transaction->rollBack();
-				
-				return 'Мотоцикл ' . $old->getFullTitle() . ' уже есть в личном кабинете спортсмена';
-			}
+			$transaction->commit();
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+		} else {
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
 			
-			$new = new Motorcycle();
-			$new->athleteId = $oldAthlete->id;
-			$new->mark = $data['mark'];
-			$new->model = $data['model'];
-			if (!$new->save()) {
-				$transaction->rollBack();
-				
-				return 'Возникла ошибка при сохранении мотоцикла';
-			}
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		
-		$oldAthlete->email = $tmpAthlete->email;
-		if ($tmpAthlete->phone) {
-			$oldAthlete->phone = $tmpAthlete->phone;
-		}
-		if ($tmpAthlete->cityId && $tmpAthlete->cityId != $oldAthlete->cityId) {
-			$oldAthlete->cityId = $tmpAthlete->cityId;
-		}
-		if (!$oldAthlete->save()) {
-			$transaction->rollBack();
-			
-			return 'При создании личного кабинета возникла ошибка';
-		}
-		
-		if (!$oldAthlete->createCabinet()) {
-			$transaction->rollBack();
-			
-			return 'При создании личного кабинета возникла ошибка';
-		}
-		
-		$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
-		$tmpAthlete->athleteId = $oldAthlete->id;
-		$tmpAthlete->save();
-		
-		$transaction->commit();
 		
 		return true;
 	}
 	
 	public function actionRegistrationNewAthlete($id)
 	{
-		$this->can('competitions');
-		
 		$tmpAthlete = TmpAthlete::findOne($id);
 		if (!$tmpAthlete) {
 			return 'Заявка не найдена';
@@ -322,57 +354,65 @@ class TmpAthletesController extends BaseController
 			return 'Необходимо выбрать город из списка';
 		}
 		
-		$athlete = new Athlete();
-		$athlete->firstName = $tmpAthlete->firstName;
-		$athlete->lastName = $tmpAthlete->lastName;
-		$athlete->cityId = $tmpAthlete->cityId;
-		if ($tmpAthlete->phone) {
-			$athlete->phone = $tmpAthlete->phone;
-		}
-		$athlete->email = $tmpAthlete->email;
-		$athlete->countryId = $tmpAthlete->countryId;
-		$transaction = \Yii::$app->db->beginTransaction();
-		if (!$athlete->save()) {
-			$transaction->rollBack();
-			
-			return 'Возникла ошибка при создании спортсмена';
-		}
-		
-		$motorcycles = $tmpAthlete->getMotorcycles();
-		foreach ($motorcycles as $motorcycle) {
-			$new = new Motorcycle();
-			$new->mark = $motorcycle['mark'];
-			$new->model = $motorcycle['model'];
-			$new->athleteId = $athlete->id;
-			if (!$new->save()) {
-				$transaction->rollBack();
-				
-				return 'Возникла ошибка при добавлении мотоцикла';
+		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
+			$athlete = new Athlete();
+			$athlete->firstName = $tmpAthlete->firstName;
+			$athlete->lastName = $tmpAthlete->lastName;
+			$athlete->cityId = $tmpAthlete->cityId;
+			if ($tmpAthlete->phone) {
+				$athlete->phone = $tmpAthlete->phone;
 			}
-		}
-		
-		$result = $athlete->createCabinet();
-		if (!$result) {
-			$transaction->rollBack();
+			$athlete->email = $tmpAthlete->email;
+			$athlete->countryId = $tmpAthlete->countryId;
+			$transaction = \Yii::$app->db->beginTransaction();
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
+				return 'Возникла ошибка при создании спортсмена';
+			}
 			
-			return 'Возникла ошибка при создании кабинета';
+			$motorcycles = $tmpAthlete->getMotorcycles();
+			foreach ($motorcycles as $motorcycle) {
+				$new = new Motorcycle();
+				$new->mark = $motorcycle['mark'];
+				$new->model = $motorcycle['model'];
+				$new->athleteId = $athlete->id;
+				if (!$new->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+					
+					return 'Возникла ошибка при добавлении мотоцикла';
+				}
+			}
+			
+			$result = $athlete->createCabinet();
+			if (!$result) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+				
+				return 'Возникла ошибка при создании кабинета';
+			}
+			
+			$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
+			$tmpAthlete->athleteId = $athlete->id;
+			if (!$tmpAthlete->save()) {
+				$transaction->rollBack();
+			}
+			
+			$transaction->commit();
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+		} else {
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
-		
-		$tmpAthlete->status = TmpAthlete::STATUS_ACCEPT;
-		$tmpAthlete->athleteId = $athlete->id;
-		if (!$tmpAthlete->save()) {
-			$transaction->rollBack();
-		}
-		
-		$transaction->commit();
 		
 		return $result;
 	}
 	
 	public function actionSaveNewCity()
 	{
-		$this->can('competitions');
-		
 		$id = \Yii::$app->request->post('id');
 		$city = \Yii::$app->request->post('city');
 		if (!$id || !$city) {
@@ -403,8 +443,6 @@ class TmpAthletesController extends BaseController
 	
 	public function actionCancel($id)
 	{
-		$this->can('competitions');
-		
 		$tmp = TmpAthlete::findOne($id);
 		if (!$tmp) {
 			return 'Заявка не найдена';
@@ -413,9 +451,16 @@ class TmpAthletesController extends BaseController
 			return 'Заявка была обработана ранее';
 		}
 		
-		$tmp->status = TmpAthlete::STATUS_CANCEL;
-		$tmp->save();
-		
-		return true;
+		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmp->id, 10)) {
+			$tmp->status = TmpAthlete::STATUS_CANCEL;
+			$tmp->save();
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmp->id);
+			
+			return true;
+		} else {
+			\Yii::$app->mutex->release('TmpAthletes-' . $tmp->id);
+			
+			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
+		}
 	}
 }

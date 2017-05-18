@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use common\helpers\UserHelper;
 use common\models\City;
 use common\models\Motorcycle;
 use dosamigos\editable\EditableAction;
@@ -24,6 +25,9 @@ class MotorcyclesController extends BaseController
 		
 		$motorcycle = $this->findModel($id);
 		if ($motorcycle->status) {
+			if (!UserHelper::accessAverage($motorcycle->athlete->regionId, $motorcycle->creatorUserId)) {
+				return 'У вас недостаточно прав для совершения данного действия';
+			}
 			$motorcycle->status = Motorcycle::STATUS_INACTIVE;
 		} else {
 			$motorcycle->status = Motorcycle::STATUS_ACTIVE;

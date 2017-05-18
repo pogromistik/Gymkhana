@@ -26,6 +26,9 @@ use yii\db\Query;
  * @property integer         $amountForAthlete
  * @property integer         $requiredOtherRegions
  * @property integer         $estimatedAmount
+ * @property integer         $isClosed
+ * @property string          $onlyRegions
+ * @property integer         $useCheScheme
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -103,7 +106,8 @@ class Championship extends BaseActiveRecord
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
 				'dateAdded', 'dateUpdated', 'regionId',
-				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount',
+				'isClosed', 'useCheScheme'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
@@ -113,8 +117,22 @@ class Championship extends BaseActiveRecord
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
 			['maxNumber', 'default', 'value' => 99],
-			[['requiredOtherRegions'], 'default', 'value' => 0]
+			[['requiredOtherRegions', 'isClosed', 'useCheScheme'], 'default', 'value' => 0],
+			[['onlyRegions'], 'safe'],
+			['useCheScheme', 'validateClasses']
 		];
+	}
+	
+	public function validateClasses($attribute, $params)
+	{
+		if (!$this->hasErrors() && $this->useCheScheme) {
+			$classes = $this->getInternalClasses()->count();
+			$classesWithoutScheme = $this->getInternalClasses()->andWhere(['not', ['cheId' => null]])->count();
+			if ($classes != $classesWithoutScheme) {
+				$this->addError($attribute, 'Вы не можете использовать эту схему, т.к. у вас созданы классы, 
+				не относящиеся к ней.');
+			}
+		}
 	}
 	
 	/**
@@ -137,7 +155,10 @@ class Championship extends BaseActiveRecord
 			'maxNumber'            => 'Максимальный номер участника',
 			'amountForAthlete'     => 'Обязательное количество этапов для спортсмена',
 			'requiredOtherRegions' => 'Необходимо хоть раз выступить в другом городе',
-			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог'
+			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог',
+			'isClosed'             => 'Закрытый чемпионат',
+			'onlyRegions'          => 'Регионы, которые могут принимать участие',
+			'useCheScheme'         => 'Использовать Челябинскую схему для награждения'
 		];
 	}
 	
@@ -161,6 +182,10 @@ class Championship extends BaseActiveRecord
 			}
 		}
 		
+		if (!$this->isClosed) {
+			$this->onlyRegions = null;
+		}
+		
 		if ($this->minNumber > $this->maxNumber) {
 			$max = $this->minNumber;
 			$this->minNumber = $this->maxNumber;
@@ -170,11 +195,52 @@ class Championship extends BaseActiveRecord
 		return parent::beforeValidate();
 	}
 	
+	public function beforeSave($insert)
+	{
+		if ($this->onlyRegions) {
+			$this->onlyRegions = json_encode($this->onlyRegions);
+		}
+		
+		return parent::beforeSave($insert);
+	}
+	
+	public function afterFind()
+	{
+		parent::afterFind();
+		if ($this->onlyRegions) {
+			$this->onlyRegions = json_decode($this->onlyRegions, true);
+		}
+	}
+	
 	public function afterSave($insert, $changedAttributes)
 	{
 		parent::afterSave($insert, $changedAttributes);
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_CHAMPIONSHIP, $this);
+		}
+		if (array_key_exists('useCheScheme', $changedAttributes)) {
+			if ($this->useCheScheme) {
+				$oldIds = $this->getInternalClasses()->select('cheId')->andWhere(['not', ['cheId' => null]])->asArray()->column();
+				if ($oldIds) {
+					$cheItems = CheScheme::find()->where(['not', ['id' => $oldIds]])->all();
+				} else {
+					$cheItems = CheScheme::find()->all();
+				}
+				/** @var CheScheme $item */
+				foreach ($cheItems as $item) {
+					$class = new InternalClass();
+					$class->title = $item->title;
+					$class->championshipId = $this->id;
+					$class->description = $item->description;
+					$class->cheId = $item->id;
+					$class->save();
+				}
+			} else {
+				$oldIds = $this->getInternalClasses()->select('id')->asArray()->column();
+				if (!Participant::findOne(['championshipId' => $this->id, 'internalClassId' => $oldIds])) {
+					InternalClass::deleteAll(['id' => $oldIds]);
+				}
+			}
 		}
 	}
 	
@@ -355,5 +421,51 @@ class Championship extends BaseActiveRecord
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @return null|Region[]
+	 */
+	public function getRegionsFor($asString = false, $asArray = false)
+	{
+		if (!$this->onlyRegions) {
+			return null;
+		}
+		
+		if (!is_array($this->onlyRegions)) {
+			$this->onlyRegions = json_decode($this->onlyRegions, true);
+		}
+		
+		if ($asArray) {
+			return Region::find()->select('id')->where(['id' => $this->onlyRegions])->asArray()->column();
+		}
+		
+		$result = Region::findAll($this->onlyRegions);
+		if (!$result) {
+			return null;
+		}
+		if ($asString) {
+			$regions = [];
+			foreach ($result as $region) {
+				$regions[] = $region->title;
+			}
+			
+			return implode(', ', $regions);
+		}
+		
+		return $result;
+	}
+	
+	public function checkAccessForRegion($regionId)
+	{
+		if (!$this->isClosed || !$this->onlyRegions) {
+			return true;
+		}
+		$regions = $this->getRegionsFor(false, true);
+		if (!$regions) {
+			return true;
+		}
+		
+		return in_array($regionId, $regions);
 	}
 }

@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use common\models\Athlete;
+use common\models\CheScheme;
 use common\models\City;
 use admin\controllers\BaseController;
 use common\models\Country;
@@ -161,7 +162,7 @@ class HelpController extends BaseController
 	
 	public function actionDeletePhoto($id, $modelId)
 	{
-		$this->can('competitions');
+		$this->can('projectAdmin');
 		
 		$model = null;
 		switch ($modelId) {
@@ -289,6 +290,8 @@ class HelpController extends BaseController
 	
 	public function actionCreateCity()
 	{
+		$this->can('competitions');
+		
 		$city = new City();
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
@@ -311,6 +314,8 @@ class HelpController extends BaseController
 	
 	public function actionCityUpdate($id)
 	{
+		$this->can('competitions');
+		
 		$city = City::findOne($id);
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
@@ -333,6 +338,8 @@ class HelpController extends BaseController
 	
 	public function actionCreateRegion()
 	{
+		$this->can('competitions');
+		
 		$region = new Region();
 		$error = null;
 		if ($region->load(\Yii::$app->request->post())) {
@@ -355,6 +362,8 @@ class HelpController extends BaseController
 	
 	public function actionCreateCountry()
 	{
+		$this->can('competitions');
+		
 		$country = new Country();
 		$error = null;
 		if ($country->load(\Yii::$app->request->post())) {
@@ -374,5 +383,12 @@ class HelpController extends BaseController
 		}
 		
 		return $this->render('create-country', ['country' => $country, 'error' => $error]);
+	}
+	
+	public function actionCheScheme()
+	{
+		$items = CheScheme::find()->orderBy('percent')->all();
+		
+		return $this->render('che-scheme', ['items' => $items]);
 	}
 }

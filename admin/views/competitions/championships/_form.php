@@ -10,11 +10,12 @@ use kartik\widgets\Select2;
 /* @var $this yii\web\View */
 /* @var $model Championship */
 /* @var $form yii\widgets\ActiveForm */
+$country = \common\models\Country::getRussia();
 ?>
 
 <div class="championship-form">
 	
-	<?php $form = ActiveForm::begin(); ?>
+	<?php $form = ActiveForm::begin(['enableAjaxValidation' => !$model->isNewRecord]); ?>
 	
 	<?php if ($model->groupId == Championship::GROUPS_REGIONAL) { ?>
 		<?= $form->field($model, 'regionGroupId',
@@ -35,6 +36,25 @@ use kartik\widgets\Select2;
 	
 	<?= $form->field($model, 'yearId')->dropDownList(ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year')) ?>
 	
+    <?= $form->field($model, 'isClosed')->checkbox(['id' => 'isClosedChamp']) ?>
+    
+    <div id="regionsForChamp" style="display: <?= $model->isClosed ? 'block' : 'none'?>">
+	    <?= $form->field($model, 'onlyRegions',
+		    ['inputTemplate' => '<div class="input-with-description"><div class="text">
+Если все этапы чемпионата будут проходить в одном регионе - укажите его.
+</div>{input}</div>'])->widget(Select2::classname(), [
+		    'name'          => 'kv-type-01',
+		    'data'          => \common\models\Region::getAll(true, $country->id),
+		    'options'       => [
+			    'placeholder' => 'Выберите регион...',
+		    ],
+		    'pluginOptions' => [
+			    'allowClear' => true,
+                'multiple' => true
+		    ],
+	    ]) ?>
+    </div>
+    
 	<?= $form->field($model, 'status')->dropDownList(Championship::$statusesTitle) ?>
 	
 	<?= $form->field($model, 'groupId')->hiddenInput()->label(false)->error(false) ?>
@@ -45,7 +65,7 @@ use kartik\widgets\Select2;
 Если все этапы чемпионата будут проходить в одном регионе - укажите его.
 </div>{input}</div>'])->widget(Select2::classname(), [
 			'name'          => 'kv-type-01',
-			'data'          => \common\models\Region::getAll(true),
+			'data'          => \common\models\Region::getAll(true, $country->id),
 			'options'       => [
 				'placeholder' => 'Выберите регион...',
 			],
@@ -74,6 +94,10 @@ use kartik\widgets\Select2;
 	<?= $form->field($model, 'amountForAthlete')->textInput(['placeholder' => 'обязательное поле']) ?>
 	<?= $form->field($model, 'estimatedAmount')->textInput(['placeholder' => 'обязательное поле']) ?>
 	<?= $form->field($model, 'requiredOtherRegions')->checkbox() ?>
+	<?= $form->field($model, 'useCheScheme',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+'.Html::a('Нажмите, чтобы узнать подробнее о схеме', ['/competitions/help/che-scheme'], ['target' => '_blank']).'
+</div>{input}</div>'])->checkbox() ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -3,6 +3,7 @@
 namespace champ\controllers;
 
 
+use common\models\Championship;
 use common\models\City;
 use common\models\Country;
 use common\models\Region;
@@ -67,7 +68,7 @@ class HelpController extends Controller
 		return $result;
 	}
 	
-	public function actionCityList($title = null, $id = null, $countryId = null) {
+	public function actionCityList($title = null, $id = null, $countryId = null, $championshipId = null) {
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$out = ['results' => ['id' => '', 'text' => '']];
 		if (!is_null($title)) {
@@ -79,6 +80,13 @@ class HelpController extends Controller
 				->andWhere(new Expression('"Regions"."id" = "Cities"."regionId"'));
 			if ($countryId) {
 				$query->andWhere(['"Cities"."countryId"' => $countryId]);
+			}
+			if ($championshipId) {
+				$championship = Championship::findOne($championshipId);
+				if ($championship->isClosed && $championship->onlyRegions) {
+					$regionIds = $championship->getRegionsFor(false, true);
+					$query->andWhere(['"Regions"."id"' => $regionIds]);
+				}
 			}
 			$query->orderBy('CASE WHEN upper("Cities"."title") LIKE \''.$title.'\' THEN 0
 			 WHEN upper("Cities"."title") LIKE \''.$title.'%\' THEN 1

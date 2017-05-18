@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel common\models\search\AssocNewsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Новости ассоциации';
+$this->title = 'Новости';
 ?>
 <div class="assoc-news-index">
     <p>
