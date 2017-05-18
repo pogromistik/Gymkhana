@@ -16,7 +16,9 @@ $document = new \common\models\OverallFile();
 	
 	<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 	
+    <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'заголовок']) ?>
+    <?php } ?>
 	
 	<?= $form->field($document, 'files[]')->fileInput(['multiple' => true]) ?>
 	

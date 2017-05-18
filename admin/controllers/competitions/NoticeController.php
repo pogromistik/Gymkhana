@@ -6,7 +6,7 @@ use admin\controllers\BaseController;
 use common\models\Athlete;
 use Yii;
 use common\models\Notice;
-use common\models\search\NoticeSearch;
+use common\models\search\NoticesSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -39,11 +39,11 @@ class NoticeController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$searchModel = new NoticeSearch();
+		$searchModel = new NoticesSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		$dataProvider->query->select('text');
+		$dataProvider->query->select(['text', 'dateAdded']);
 		$dataProvider->query->andWhere(['>', 'senderId', 0]);
-		$dataProvider->query->distinct();
+		$dataProvider->query->distinct('text');
 		
 		return $this->render('index', [
 			'searchModel'  => $searchModel,
@@ -53,9 +53,9 @@ class NoticeController extends BaseController
 	
 	public function actionOne($success = false)
 	{
-		$this->can('admin');
+		$this->can('globalWorkWithCompetitions');
 		
-		$searchModel = new NoticeSearch();
+		$searchModel = new NoticesSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
 		
@@ -86,7 +86,11 @@ class NoticeController extends BaseController
 		$model = new Notice();
 		
 		if ($model->load(Yii::$app->request->post())) {
-			$regionIds = \Yii::$app->request->post('regionIds');
+			if (\Yii::$app->user->can('projectOrganizer')) {
+				$regionIds = \Yii::$app->request->post('regionIds');
+			} else {
+				$regionIds = [\Yii::$app->user->identity->regionId];
+			}
 			$athleteIds = Athlete::find()->select('id')->where(['hasAccount' => 1]);
 			if ($regionIds) {
 				$athleteIds = $athleteIds->andWhere(['regionId' => $regionIds]);

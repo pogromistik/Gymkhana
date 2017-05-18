@@ -177,7 +177,7 @@ class Stage extends BaseActiveRecord
 		} else {
 			$this->endRegistration = null;
 		}
-		$this->regionId = $this->city->regionId;
+		$this->regionId = $city->regionId;
 		
 		return parent::beforeValidate();
 	}

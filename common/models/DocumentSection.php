@@ -51,13 +51,14 @@ class DocumentSection extends \yii\db\ActiveRecord
 	
 	public function getFiles()
 	{
-		return $this->hasMany(OverallFile::className(), ['modelId' => 'id'])->andOnCondition(['modelClass' => self::className()]);
+		return $this->hasMany(OverallFile::className(), ['modelId' => 'id'])
+			->andOnCondition(['modelClass' => self::className()])->orderBy(['sort' => SORT_ASC, 'date' => SORT_DESC]);
 	}
 	
 	public function getActualFiles()
 	{
 		return $this->hasMany(OverallFile::className(), ['modelId' => 'id'])
 			->andOnCondition(['modelClass' => self::className()])
-			->andOnCondition(['inArchive' => 0])->orderBy(['date' => SORT_DESC]);
+			->andOnCondition(['inArchive' => 0])->orderBy(['sort' => SORT_ASC, 'date' => SORT_DESC]);
 	}
 }

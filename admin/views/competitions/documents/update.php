@@ -40,18 +40,19 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 ' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
 </div>',
 				'value'     => function (\common\models\OverallFile $item) {
-					return Editable::widget([
-						'name'          => 'title',
-						'value'         => $item->title,
-						'url'           => '/competitions/documents/update-file',
-						'type'          => 'text',
-						'mode'          => 'inline',
-						'clientOptions' => [
-							'pk'        => $item->id,
-							'value'     => $item->title,
-							'placement' => 'right',
-						]
-					]);
+					return Yii::$app->user->can('projectOrganizer') ?
+						Editable::widget([
+							'name'          => 'title',
+							'value'         => $item->title,
+							'url'           => '/competitions/documents/update-file',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $item->id,
+								'value'     => $item->title,
+								'placement' => 'right',
+							]
+						]) : $item->title;
 				}
 			],
 			
@@ -60,34 +61,37 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 				'format'    => 'raw',
 				'filter'    => '<div class="input-group">
   <span class="input-group-addon"><i class="fa fa-search"></i></span>
-' . Html::activeInput('text', $searchModel, 'fileName', ['class' => 'form-control',
+' . Html::activeInput('text', $searchModel, 'fileName', ['class'       => 'form-control',
 				                                         'placeholder' => 'Поиск по имени файла...']) . '
 </div>',
 				'value'     => function (\common\models\OverallFile $item) {
-					return Editable::widget([
-						'name'          => 'fileName',
-						'value'         => $item->fileName,
-						'url'           => '/competitions/documents/update-file',
-						'type'          => 'text',
-						'mode'          => 'inline',
-						'clientOptions' => [
-							'pk'        => $item->id,
-							'value'     => $item->fileName,
-							'placement' => 'right',
-							'text' => [
-								'width' => '500px'
+					return Yii::$app->user->can('projectOrganizer') ?
+						Editable::widget([
+							'name'          => 'fileName',
+							'value'         => $item->fileName,
+							'url'           => '/competitions/documents/update-file',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $item->id,
+								'value'     => $item->fileName,
+								'placement' => 'right',
+								'text'      => [
+									'width' => '500px'
+								],
+								'width'     => '500px'
 							],
-							'width' => '500px'
-						],
-						'options' => [
-							'width' => '500px'
-						]
-					]);
+							'options'       => [
+								'width' => '500px'
+							]
+						])
+						: $item->fileName;
 				}
 			],
 			
 			[
 				'attribute' => 'sort',
+				'visible'   => Yii::$app->user->can('projectOrganizer'),
 				'format'    => 'raw',
 				'filter'    => false,
 				'value'     => function (\common\models\OverallFile $item) {
@@ -116,8 +120,9 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			],
 			
 			[
-				'format' => 'raw',
-				'value'  => function (\common\models\OverallFile $item) {
+				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('projectOrganizer'),
+				'value'   => function (\common\models\OverallFile $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['remove-file', 'id' => $item->id], [
 						'class'   => 'btn btn-danger removeOverallFile',
 						'data-id' => $item->id
