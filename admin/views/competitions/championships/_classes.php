@@ -79,10 +79,6 @@ $newClass->championshipId = $model->id;
 								'data-id'     => $class->id,
 								'data-status' => \common\models\InternalClass::STATUS_INACTIVE,
 								'title'       => 'Удалить',
-								'data'        => [
-									'confirm' => 'Уверены, что хотите заблокировать этот класс?',
-									'method'  => 'post',
-								]
 							]);
 						} else {
 							echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
