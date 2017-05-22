@@ -86,6 +86,8 @@ class TmpAthlete extends BaseActiveRecord
 				$this->cityId = null;
 			}
 		}
+		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
+		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
 		$this->dateUpdated = time();
 		if ($this->phone) {
 			$this->phone = preg_replace('~\D+~', '', $this->phone);

@@ -36,14 +36,9 @@ function newAthlete(data) {
         success: function (result) {
             if (result['success'] == true) {
                 location.href = '/competitions/athlete/update?id=' + result['data'];
-            } else if (result['warning'] == true) {
-                hideBackDrop();
-                $('html, body').animate({ scrollTop: $('.complete').offset().top }, 500);
-                $('.complete').html(result['data']);
             } else {
                 hideBackDrop();
-                $('html, body').animate({ scrollTop: $('.complete').offset().top }, 500);
-                $('.complete').append(result['error']);
+                $('.complete').html(result['data']);
             }
         },
         error: function (result) {
@@ -844,46 +839,3 @@ function cityForNewParticipant() {
         }
     });
 }
-
-$(document).on("submit", '#figureTimeForStage', function (e) {
-    e.preventDefault();
-    showBackDrop();
-    var form = $(this);
-    $.ajax({
-        url: "/competitions/stages/check-figure-time",
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            hideBackDrop();
-            $('.calculate-class').html(result);
-        },
-        error: function (result) {
-            hideBackDrop();
-            alert(result);
-        }
-    });
-});
-
-$(document).on("submit", '#addFigureTimeForStage', function (e) {
-    e.preventDefault();
-    showBackDrop();
-    var form = $(this);
-    $.ajax({
-        url: "/competitions/stages/add-figure-time",
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            hideBackDrop();
-            $('#figureTimeForStage').trigger('reset');
-            $('.calculate-class').html(result);
-        },
-        error: function (result) {
-            hideBackDrop();
-            alert(result);
-        }
-    });
-});
-
-$('#isClosedChamp').click(function () {
-   $('#regionsForChamp').slideToggle();
-});

@@ -49,7 +49,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ' . Html::activeInput('text', $searchModel, 'athleteId', ['class' => 'form-control', 'placeholder' => 'Введите фамилию ИЛИ имя...']) . '
 </div>',
 				'value'     => function (\common\models\Participant $item) {
-					return $item->athlete->getFullName();
+					$athlete = $item->athlete;
+					return Html::a($athlete->getFullName() . ', ' . $athlete->city->title, ['/competitions/athlete/view', 'id' => $item->athleteId]);
 				}
 			],
 			[
