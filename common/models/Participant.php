@@ -185,8 +185,15 @@ class Participant extends BaseActiveRecord
 			->orderBy(['b.percent' => SORT_ASC, 'b.title' => SORT_DESC])
 			->one();
 		if (!$resultClass) {
-			$resultClass = InternalClass::find()->where(['championshipId' => $this->championshipId])->orderBy(['percent' => SORT_DESC])->one();
-		}
+			$athleteClass = AthletesClass::findOne($classId);
+			$resultClass = InternalClass::find()
+				->select('a.*')
+				->from(['a' => InternalClass::tableName(), 'b' => CheScheme::tableName()])
+				->where(new Expression('"a"."cheId" = "b"."id"'))
+				->andWhere(['championshipId' => $this->championshipId])
+				->andWhere(['=', 'b.percent', $athleteClass->percent])
+				->orderBy(['b.percent' => SORT_ASC, 'b.title' => SORT_DESC])
+				->one();}
 		
 		return $resultClass->id;
 	}
