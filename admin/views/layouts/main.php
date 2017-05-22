@@ -218,7 +218,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     </li>
 									<?php if (\Yii::$app->user->can('developer')) { ?>
                                         <li>
-                                            <a data-addr="/competitions/classes"
+                                            <a data-addr="/competitions/additional"
                                                href="<?= Url::to(['/competitions/additional/che-scheme']) ?>"> Классы
                                                 награждения</a>
                                         </li>

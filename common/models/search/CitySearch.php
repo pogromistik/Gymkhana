@@ -50,6 +50,7 @@ class CitySearch extends City
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => ['defaultOrder' => SORT_ASC]
 		]);
 		
 		$this->load($params);
