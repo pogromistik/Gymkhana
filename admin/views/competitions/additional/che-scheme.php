@@ -31,22 +31,7 @@ $this->title = 'Классы награждения: Челябинская сх
 						'title' => 'Редактировать'
 					]);
 				}
-			],
-			
-			[
-				'format' => 'raw',
-				'value'  => function (\common\models\CheScheme $item) {
-					return Html::a('<span class="fa fa-remove"></span>', ['delete-class', 'id' => $item->id], [
-						'class' => 'btn btn-danger',
-						'title' => 'Удалить',
-						'data'  => [
-							'confirm' => 'Уверены, что хотите полностью удалить эту запись?'
-						]
-					]);
-				}
-			],
-			
-			['class' => 'yii\grid\ActionColumn'],
+			]
 		],
 	]); ?>
 </div>
