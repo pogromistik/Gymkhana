@@ -184,6 +184,9 @@ class Participant extends BaseActiveRecord
 			->andWhere(['>', 'b.percent', $athleteClass->percent])
 			->orderBy(['b.percent' => SORT_ASC, 'b.title' => SORT_DESC])
 			->one();
+		if (!$resultClass) {
+			$resultClass = InternalClass::find()->where(['championshipId' => $this->championshipId])->orderBy(['percent' => SORT_DESC])->one();
+		}
 		
 		return $resultClass->id;
 	}
