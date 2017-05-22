@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
-0 * * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana-cup/yii run/change-stages-status >> /var/log/cron.log
-0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana-cup/yii run/change-championships-status >> /var/log/cron.log
-0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana-cup/yii run/change-photo-status >> /var/log/cron.log
-0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana-cup/yii run/check-size >> /var/log/cron.log
+0 * * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana74/yii run/change-stages-status >> /var/log/cron.log
+0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana74/yii run/change-championships-status >> /var/log/cron.log
+0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana74/yii run/change-photo-status >> /var/log/cron.log
+0 0 * * * /opt/php55/bin/php /var/www/www-root/data/www/gymkhana74/yii run/check-size >> /var/log/cron.log
 0 0 * * * sh /var/lib/pgsql/9.4/backup.sh >> /var/log/cron_db.log
