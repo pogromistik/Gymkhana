@@ -11,6 +11,7 @@ $newClass = new \common\models\InternalClass();
 $newClass->championshipId = $model->id;
 ?>
 
+<?php if (!$model->useCheScheme) { ?>
 <?php $form = ActiveForm::begin(['action' => '/competitions/championships/add-class', 'options' => ['id' => 'ajaxForm']]); ?>
 <?= $form->field($newClass, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
 <br>
@@ -28,61 +29,70 @@ $newClass->championshipId = $model->id;
     </div>
 </div>
 <?php ActiveForm::end(); ?>
+<?php } ?>
 
 <?php if ($internalClasses = $model->internalClasses) { ?>
-    <table class="table">
-		<?php foreach ($internalClasses as $class) { ?>
-            <tr>
-                <td><?= Editable::widget([
-		                'name'          => 'title',
-		                'value'         => $class->title,
-		                'url'           => 'update-class',
-		                'type'          => 'text',
-		                'mode'          => 'inline',
-		                'clientOptions' => [
-			                'pk'        => $class->id,
-			                'value'     => $class->title,
-			                'placement' => 'right',
-		                ]
-	                ]) ?></td>
-                <td><?= Editable::widget([
-		                'name'          => 'description',
-		                'value'         => $class->description,
-		                'url'           => 'update-class',
-		                'type'          => 'text',
-		                'mode'          => 'inline',
-		                'clientOptions' => [
-			                'pk'        => $class->id,
-			                'value'     => $class->description,
-			                'placement' => 'right',
-		                ]
-	                ]) ?></td>
-                <td>
-					<?php
-					if ($class->status) {
-						echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
-							'class' => 'btn btn-danger change-status',
-                            'data-action' => '/competitions/championships/change-class-status',
-                            'data-id' => $class->id,
-                            'data-status' => \common\models\InternalClass::STATUS_INACTIVE,
-							'title' => 'Удалить',
-							'data'  => [
-								'confirm' => 'Уверены, что хотите заблокировать этот класс?',
-								'method'  => 'post',
+	<?php if ($model->useCheScheme) { ?>
+        <h4>Вы используете <?= Html::a('Челябинскую схему', ['/competitions/help/che-scheme'], ['target' => '_blank']) ?> для награждения</h4>
+        <table class="table">
+			<?php foreach ($internalClasses as $class) { ?>
+                <tr>
+                    <td><?= $class->title ?></td>
+                    <td><?= $class->description ?></td>
+                </tr>
+			<?php } ?>
+        </table>
+	<?php } else { ?>
+        <table class="table">
+			<?php foreach ($internalClasses as $class) { ?>
+                <tr>
+                    <td><?= Editable::widget([
+							'name'          => 'title',
+							'value'         => $class->title,
+							'url'           => 'update-class',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $class->id,
+								'value'     => $class->title,
+								'placement' => 'right',
 							]
-						]);
-					} else {
-						echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
-							'class' => 'btn btn-success change-status',
-							'title' => 'Вернуть',
-							'data-action' => '/competitions/championships/change-class-status',
-							'data-id' => $class->id,
-							'data-status' => \common\models\InternalClass::STATUS_ACTIVE,
-						]);
-					}
-					?>
-                </td>
-            </tr>
-		<?php } ?>
-    </table>
+						]) ?></td>
+                    <td><?= Editable::widget([
+							'name'          => 'description',
+							'value'         => $class->description,
+							'url'           => 'update-class',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $class->id,
+								'value'     => $class->description,
+								'placement' => 'right',
+							]
+						]) ?></td>
+                    <td>
+						<?php
+						if ($class->status) {
+							echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
+								'class'       => 'btn btn-danger change-status',
+								'data-action' => '/competitions/championships/change-class-status',
+								'data-id'     => $class->id,
+								'data-status' => \common\models\InternalClass::STATUS_INACTIVE,
+								'title'       => 'Удалить',
+							]);
+						} else {
+							echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
+								'class'       => 'btn btn-success change-status',
+								'title'       => 'Вернуть',
+								'data-action' => '/competitions/championships/change-class-status',
+								'data-id'     => $class->id,
+								'data-status' => \common\models\InternalClass::STATUS_ACTIVE,
+							]);
+						}
+						?>
+                    </td>
+                </tr>
+			<?php } ?>
+        </table>
+	<?php } ?>
 <?php } ?>

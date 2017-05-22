@@ -344,6 +344,7 @@ use yii\bootstrap\Html;
                                     <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
                                 </a>
 							<?php } ?>
+                            <a href="http://gymkhana-cup.ru/" target="_blank"><li>GYMKHANA CUP</li></a>
                         </ul>
                     </div>
                 </div>
@@ -417,6 +418,7 @@ use yii\bootstrap\Html;
                                 <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
                             </a>
 						<?php } ?>
+                        <a href="http://gymkhana-cup.ru/" target="_blank"><li>GYMKHANA CUP</li></a>
                         <a href="/photogallery">
                             <li>Фотогалерея</li>
                         </a>

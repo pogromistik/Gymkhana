@@ -25,7 +25,7 @@ $this->title = 'Редактирование блока ' . $block->id . ' дл�
 
 <?= $form->field($block, 'text')->widget(CKEditor::className(), [
 	'options' => ['id' => 'newBlock'],
-	'preset'  => 'advent',
+	'preset'  => 'full',
 
 ]) ?>
 

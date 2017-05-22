@@ -10,8 +10,15 @@ use common\models\Championship;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$model->groupId], 'url' => ['index', 'groupId' => $model->groupId]];
 $this->params['breadcrumbs'][] = $this->title;
+
+$stages = $model->stages;
 ?>
 <div class="championship-view">
+	
+	<?php if (!$stages) { ?>
+        <div class="alert alert-danger">Даже если у вас одноэтапный чемпионат, необходимо всё равно создать этап.</div>
+	<?php } ?>
+    
     <p>
 		<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
 			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -53,6 +60,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'dateUpdated',
 				'value'     => date("d.m.Y, H:i", $model->dateUpdated)
 			],
+			[
+				'attribute' => 'onlyRegions',
+				'value'     => $model->getRegionsFor(true),
+				'visible'   => $model->isClosed
+			],
 		],
 	]) ?>
 
@@ -69,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </tr>
         </thead>
 		<?php $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view'; ?>
-		<?php foreach ($model->stages as $stage) { ?>
+		<?php foreach ($stages as $stage) { ?>
             <tr>
                 <td><?= Html::a($stage->title, ['/competitions/stages/' . $view, 'id' => $stage->id]) ?></td>
                 <td><?= $stage->dateOfTheHuman ?></td>

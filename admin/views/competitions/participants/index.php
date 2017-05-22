@@ -23,7 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?= $this->render('_form', [
-	'model' => $participant,
+	'model'        => $participant,
+	'championship' => $championship
 ]) ?>
 
 <?php if ($error) { ?>
@@ -31,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php } ?>
 
 <?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
-    ['class' => 'btn btn-info']) ?>
+	['class' => 'btn btn-info']) ?>
 
 <div class="participant-index">
 	<?= GridView::widget([
@@ -59,14 +60,14 @@ $this->params['breadcrumbs'][] = $this->title;
 					return $item->motorcycle->getFullTitle();
 				}
 			],
-            [
-                'attribute' => 'athleteClassId',
-                'format'    => 'raw',
-                'filter'    => false,
-                'value'     => function (\common\models\Participant $item) {
-	                return $item->athleteClassId ? $item->athleteClass->title : '';
-                }
-            ],
+			[
+				'attribute' => 'athleteClassId',
+				'format'    => 'raw',
+				'filter'    => false,
+				'value'     => function (\common\models\Participant $item) {
+					return $item->athleteClassId ? $item->athleteClass->title : '';
+				}
+			],
 			[
 				'attribute' => 'internalClassId',
 				'format'    => 'raw',

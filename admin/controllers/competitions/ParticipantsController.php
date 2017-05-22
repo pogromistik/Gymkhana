@@ -339,7 +339,8 @@ class ParticipantsController extends BaseController
 		
 		if ($participant->status == Participant::STATUS_ACTIVE) {
 			if ($stage->status == Stage::STATUS_PRESENT || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
-				$participant->status = Participant::STATUS_DISQUALIFICATION;
+				//$participant->status = Participant::STATUS_DISQUALIFICATION;
+				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
 			} else {
 				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
 			}
@@ -383,7 +384,7 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		
+		$championship = $stage->championship;
 		$participants = Participant::findAll(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE]);
 		foreach ($participants as $participant) {
 			$athlete = $participant->athlete;
@@ -391,6 +392,12 @@ class ParticipantsController extends BaseController
 				return 'Необходимо сначала установить класс для спортсмена ' . $athlete->getFullName();
 			}
 			$participant->athleteClassId = $athlete->athleteClassId;
+			if ($championship->useCheScheme) {
+				$internalClass = $participant->internalClassWithScheme($participant->athleteClassId);
+				if ($internalClass) {
+					$participant->internalClassId = $internalClass;
+				}
+			}
 			if (!$participant->save()) {
 				return 'Не удалось установить класс участнику ' . $athlete->getFullName();
 			}

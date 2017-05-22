@@ -234,7 +234,7 @@ class AthleteController extends BaseController
 	
 	public function actionDeleteCabinet($athleteId)
 	{
-		$this->can('competitions');
+		$this->can('projectOrganizer');
 		
 		$athlete = Athlete::findOne($athleteId);
 		if (!$athlete) {
