@@ -9,7 +9,7 @@ use yii\bootstrap\Html;
  * @var \common\models\AthletesClass[]  $classes
  */
 
-$this->title = 'Рассчёт эталонного времени трассы';
+$this->title = 'Расчёт эталонного времени трассы';
 ?>
 
 <div class="alert alert-info">
@@ -35,7 +35,7 @@ $this->title = 'Рассчёт эталонного времени трассы'
 			$classes, 'id', 'title'
 		)) ?></div>
     <div class="col-sm-2">
-        <label>&nbsp;</label>
+        <label>&nbsp;</label><br>
 		<?= Html::submitButton('Рассчитать эталонное время', ['class' => 'btn btn-primary']) ?>
     </div>
 </div>
