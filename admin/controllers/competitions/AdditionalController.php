@@ -144,11 +144,30 @@ class AdditionalController extends BaseController
 	
 	public function actionCreateClass()
 	{
+		$this->can('developer');
+		
 		$model = new CheScheme();
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['che-scheme']);
 		} else {
 			return $this->render('create-class', [
+				'model' => $model,
+			]);
+		}
+	}
+	
+	public function actionUpdateClass($id)
+	{
+		$this->can('developer');
+		
+		$model = CheScheme::findOne($id);
+		if (!$model) {
+			throw new NotFoundHttpException('Класс не найден');
+		}
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['che-scheme']);
+		} else {
+			return $this->render('update-class', [
 				'model' => $model,
 			]);
 		}

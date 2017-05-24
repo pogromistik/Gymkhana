@@ -340,3 +340,8 @@ small.very {
 .is-delivery-2 {
     background: #dff0d8!important;
 }
+
+.calculate-result {
+    background: #e4e4e4;
+    padding: 10px 20px;
+}

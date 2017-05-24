@@ -2,7 +2,10 @@
 
 namespace admin\controllers\competitions;
 
+use admin\models\ReferenceTimeForm;
+use admin\models\ResultTimeForm;
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\CheScheme;
 use common\models\City;
 use admin\controllers\BaseController;
@@ -387,8 +390,33 @@ class HelpController extends BaseController
 	
 	public function actionCheScheme()
 	{
+		$this->can('competitions');
 		$items = CheScheme::find()->orderBy('percent')->all();
 		
 		return $this->render('che-scheme', ['items' => $items]);
+	}
+	
+	public function actionTimeCalculate()
+	{
+		$this->can('competitions');
+		$model = new ReferenceTimeForm();
+		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+			$model->calculate();
+		}
+		
+		return $this->render('time-calculate', ['model' => $model, 'classes' => $classes]);
+	}
+	
+	public function actionResultCalculate()
+	{
+		$this->can('competitions');
+		$model = new ResultTimeForm();
+		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+			$model->calculate();
+		}
+		
+		return $this->render('result-calculate', ['model' => $model, 'classes' => $classes]);
 	}
 }

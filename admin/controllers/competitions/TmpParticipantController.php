@@ -141,6 +141,8 @@ class TmpParticipantController extends BaseController
 			$athlete->lastName = $tmpParticipant->lastName;
 			$athlete->firstName = $tmpParticipant->firstName;
 			$athlete->cityId = $city->id;
+			$athlete->countryId = $city->countryId;
+			$athlete->regionId = $city->regionId;
 			$athlete->phone = $tmpParticipant->phone;
 			if (!$athlete->save()) {
 				$transaction->rollBack();

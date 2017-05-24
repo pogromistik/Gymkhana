@@ -42,12 +42,14 @@ $this->registerJsFile('http://vk.com/js/api/openapi.js', ['position' => yii\web\
                 <div class="p-text light-color">
 					<?= $block->text ?>
                 </div>
-                <div class="text-right">
-                    <?= date("d.m.Y", $news->datePublish) ?>
-                </div>
             </div>
         </div>
 	<?php } ?>
+    <div class="container">
+        <div class="text-right">
+            <?= date("d.m.Y", $news->datePublish) ?>
+        </div>
+    </div>
 </div>
 
 <!-- предыдущие новости -->
