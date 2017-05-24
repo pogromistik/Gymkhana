@@ -210,6 +210,14 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                 <li>
                                     <a href="<?= Url::to(['/competitions/help/cities']) ?>"> Города</a>
                                 </li>
+                                <li class="level-2">
+                                    <a href="#"> Калькулятор<span
+                                                class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li><a href="<?= Url::to(['/competitions/help/time-calculate']) ?>"> Эталонное время</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/help/result-calculate']) ?>"> Результат спортсмена</a></li>
+                                    </ul>
+                                </li>
 								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li>
                                         <a data-addr="/competitions/classes"

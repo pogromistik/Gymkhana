@@ -17,6 +17,8 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
+<?php if ($stage->referenceTime) { ?><h4>Эталонное время: <?= $stage->referenceTimeHuman ?></h4><?php } ?>
+
 <?php if ($newClasses) { ?>
     <div class="text-right newClass">
         <div class="pb-10">
