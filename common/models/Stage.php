@@ -229,7 +229,7 @@ class Stage extends BaseActiveRecord
 		if ($this->referenceTime) {
 			$min = str_pad(floor($this->referenceTime / 60000), 2, '0', STR_PAD_LEFT);
 			$sec = str_pad(floor(($this->referenceTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
-			$mls = str_pad(floor(($this->referenceTime - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
+			$mls = str_pad(round(($this->referenceTime - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
 			$this->referenceTimeHuman = $min . ':' . $sec . '.' . $mls;
 		}
 	}
@@ -287,7 +287,7 @@ class Stage extends BaseActiveRecord
 			
 			return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
 		}
-		$referenceTime = floor($best->bestTime / $best->athleteClass->coefficient);
+		$referenceTime = round($best->bestTime / $best->athleteClass->coefficient);
 		$this->referenceTime = $referenceTime;
 		if ($this->status != self::STATUS_CALCULATE_RESULTS && $this->status != Stage::STATUS_PAST) {
 			$this->status = self::STATUS_CALCULATE_RESULTS;
