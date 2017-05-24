@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use admin\models\ReferenceTimeForm;
+use admin\models\ResultTimeForm;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\CheScheme;
@@ -410,5 +411,12 @@ class HelpController extends BaseController
 	public function actionResultCalculate()
 	{
 		$this->can('competitions');
+		$model = new ResultTimeForm();
+		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+			$model->calculate();
+		}
+		
+		return $this->render('result-calculate', ['model' => $model, 'classes' => $classes]);
 	}
 }
