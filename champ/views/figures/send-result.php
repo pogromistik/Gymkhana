@@ -59,7 +59,7 @@ use yii\widgets\MaskedInput;
  принимаются результаты, для которых есть видео заезда или запись в группе <a href="https://vk.com/motogymkhana_ru" target="_blank">vk.com/motogymkhana_ru</a>
 </div>{input}</div>'])->textInput(['maxlength' => true]) ?>
 
-    <div class="alert alert-error" style="display: none"></div>
+    <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
 
     <div class="form-group">
