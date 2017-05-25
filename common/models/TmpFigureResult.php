@@ -96,6 +96,10 @@ class TmpFigureResult extends BaseActiveRecord
 		
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
+			if ($min >= 5 && (round($secs) == $secs)) {
+				$secs = $min . '.' . $secs;
+				$min = 0;
+			}
 			$this->time = ($min * 60000) + $secs * 1000;
 		}
 		
