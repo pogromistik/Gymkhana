@@ -48,7 +48,7 @@ $championship = $stage->championship;
 				<?php } ?>
 				<?php if ($stage->documentId) { ?>
                     <div class="regulations">
-						<?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
+						Регламент: <?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
                     </div>
 				<?php } ?>
 				
