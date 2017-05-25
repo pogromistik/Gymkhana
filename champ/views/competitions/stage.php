@@ -117,12 +117,24 @@ $championship = $stage->championship;
                                     <a href="#" class="change-result-scheme">Посмотреть результаты по классам
                                         награждений</a>
                                 </div>
-                                <div class="text-right">
-									<?php if ($sortBy) { ?>
-										<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
-									<?php } else { ?>
-										<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
-									<?php } ?>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="show-pk">
+                                            Количество участников: <?= count($participantsByInternalClasses) ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-right">
+			                                <?php if ($sortBy) { ?>
+				                                <?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+			                                <?php } else { ?>
+				                                <?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+			                                <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 show-mobile text-right">
+                                        Количество участников: <?= count($participantsByJapan) ?>
+                                    </div>
                                 </div>
 								<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
                             </div>
@@ -131,22 +143,46 @@ $championship = $stage->championship;
                                     <a href="#" class="change-result-scheme">Посмотреть результаты по японской
                                         схеме</a>
                                 </div>
-                                <div class="text-right">
-									<?php if ($sortBy) { ?>
-										<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id, 'showByClasses' => true]) ?>
-									<?php } else { ?>
-										<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'showByClasses' => true]) ?>
-									<?php } ?>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="show-pk">
+                                            Количество участников: <?= count($participantsByInternalClasses) ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-right">
+											<?php if ($sortBy) { ?>
+												<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id, 'showByClasses' => true]) ?>
+											<?php } else { ?>
+												<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'showByClasses' => true]) ?>
+											<?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 show-mobile text-right">
+                                        Количество участников: <?= count($participantsByJapan) ?>
+                                    </div>
                                 </div>
 								<?= $this->render('_byInternalClasses', ['stage' => $stage, 'participants' => $participantsByInternalClasses]) ?>
                             </div>
 						<?php } else { ?>
-                            <div class="text-right">
-								<?php if ($sortBy) { ?>
-									<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
-								<?php } else { ?>
-									<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
-								<?php } ?>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="show-pk">
+                                        Количество участников: <?= count($participantsByJapan) ?>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-right">
+										<?php if ($sortBy) { ?>
+											<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+										<?php } else { ?>
+											<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+										<?php } ?>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 show-mobile text-right">
+                                    Количество участников: <?= count($participantsByJapan) ?>
+                                </div>
                             </div>
 							<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
 						<?php } ?>
