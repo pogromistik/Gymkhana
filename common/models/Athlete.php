@@ -293,8 +293,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
 				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
-				if ($history && (mb_strlen($history->event) <= (253 - mb_strlen($text)))) {
-					$text .= $history->event . ' (' . $history->event . ')';
+				if ($history && (mb_strlen($history->event) <= (252 - mb_strlen($text)))) {
+					$text .= ' (' . $history->event . ')';
 				}
 				Notice::add($this->id, $text);
 			}
