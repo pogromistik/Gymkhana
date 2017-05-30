@@ -35,9 +35,11 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	]) ?>
 
     <h3>Мотоциклы</h3>
-	<?= $this->render('_motorcycle-form', [
-		'motorcycle' => $motorcycle,
-	]) ?>
+    <div id="motorcycles">
+		<?= $this->render('_motorcycle-form', [
+			'motorcycle' => $motorcycle,
+		]) ?>
+    </div>
 	<?php if ($motorcycles = $model->motorcycles) { ?>
         <table class="table">
             <thead>

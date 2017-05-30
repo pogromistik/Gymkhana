@@ -35,7 +35,7 @@ function newAthlete(data) {
         data: data,
         success: function (result) {
             if (result['success'] == true) {
-                location.href = '/competitions/athlete/update?id=' + result['data'];
+                location.href = '/competitions/athlete/update?id=' + result['data'] + '#motorcycles';
             } else {
                 hideBackDrop();
                 $('.complete').html(result['data']);

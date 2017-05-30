@@ -115,7 +115,9 @@ if (!$model->countryId) {
 		), ['prompt' => 'Укажите класс спортсмена']) ?>
 	<?php } ?>
 	
-	<?= $form->field($model, 'number')->textInput() ?>
+	<?php if (Yii::$app->user->can('projectAdmin')) { ?>
+		<?= $form->field($model, 'number')->textInput() ?>
+	<?php } ?>
 
     <div class="form-group complete">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
