@@ -172,8 +172,9 @@ class AthleteController extends BaseController
 		$model->load(\Yii::$app->request->post());
 		$oldAthletes = Athlete::find()->where([
 			'or',
-			['firstName' => $model->firstName, 'lastName' => $model->lastName],
-			['firstName' => $model->lastName, 'lastName' => $model->firstName]
+			['upper("firstName")' => mb_strtoupper($model->firstName, 'UTF-8'),
+			 'upper("lastName")' => mb_strtoupper($model->lastName, 'UTF-8')],
+			['upper("firstName")' => mb_strtoupper($model->lastName, 'UTF-8'), 'upper("lastName")' => mb_strtoupper($model->firstName, 'UTF-8')]
 		])->all();
 		$result = [
 			'success' => false,
