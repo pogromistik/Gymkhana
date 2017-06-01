@@ -141,8 +141,12 @@
 			foreach ($participants as $participant) {
 				$athlete = $participant->athlete;
 				$times = $participant->times;
+				$cssClass = -1;
+				if ($participant->internalClassId) {
+					$cssClass = $participant->internalClassId % 10;
+				}
 				?>
-                <tr>
+                <tr class="internal-class-<?= $cssClass ?>">
                     <td><?= $participant->place ?> / <?= $participant->placeOfClass ?></td>
                     <td>
 						<?php if ($participant->number) { ?>
