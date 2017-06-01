@@ -58,6 +58,7 @@ use yii\bootstrap\Html;
 						?>
                         <td><?= $result->dateForHuman ?></td>
                         <td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
+                        <td class="show-pk"><?= $result->motorcycle->getFullTitle() ?></td>
                         <td>
 							<?= $result->resultTimeForHuman ?>
 							<?php if ($result->fine) { ?>
@@ -69,6 +70,9 @@ use yii\bootstrap\Html;
 									'alt'   => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!'
 								]) ?>
 							<?php } ?>
+							<div class="show-mobile">
+							<small><?= $result->motorcycle->getFullTitle() ?></small>
+							</div>
                         </td>
                         <td><?= $result->percent ?>%</td>
                     </tr>
