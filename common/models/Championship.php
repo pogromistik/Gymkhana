@@ -293,6 +293,7 @@ class Championship extends BaseActiveRecord
 			$busyNumbers = $busyNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
 		$busyNumbers = $busyNumbers->asArray()->column();
+		$addOldNumber = null;
 		if ($championship->regionId && $stage->status != Stage::STATUS_PAST) {
 			$query = new Query();
 			$query->from([Athlete::tableName(), City::tableName(), Region::tableName()]);
@@ -313,6 +314,14 @@ class Championship extends BaseActiveRecord
 				if ($athlete->regionId == $championship->regionId && !in_array($athlete->number, $numbers)) {
 					$numbers[] = $athlete->number;
 				}
+				//если участник уже принимал участие в этапе - он может зарегистрироваться под этим же номером
+				$prevStages = Participant::find()->where(['championshipId' => $championship->id])
+					->andWhere(['athleteId' => $athleteId])
+					->andWhere(['status' => Participant::STATUS_ACTIVE])
+					->one();
+				if ($prevStages) {
+					$addOldNumber = $prevStages->number;
+				}
 			}
 		}
 		$tmpBusyNumbers = TmpParticipant::find()->select('number')->where(['stageId' => $stage->id])
@@ -331,6 +340,10 @@ class Championship extends BaseActiveRecord
 			if (in_array($number, $busyNumbers)) {
 				unset($numbers[$i]);
 			}
+		}
+		
+		if ($addOldNumber) {
+			$numbers[] = $addOldNumber;
 		}
 		
 		return $numbers;
