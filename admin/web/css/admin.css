@@ -345,3 +345,7 @@ small.very {
     background: #e4e4e4;
     padding: 10px 20px;
 }
+
+.inactive-participant {
+    background: #efe2e2!important;
+}

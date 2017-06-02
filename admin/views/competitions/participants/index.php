@@ -38,6 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
+		'rowOptions' => function (\common\models\Participant $item) {
+	    return ['class' => ($item->status === \common\models\Participant::STATUS_ACTIVE) ? 'active-participant' : 'inactive-participant'];
+	},
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
