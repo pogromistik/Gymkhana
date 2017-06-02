@@ -111,6 +111,13 @@ class ProfileController extends AccessController
 			$participants = Participant::find()->where(['stageId' => $stageIds])
 				->andWhere(['athleteId' => \Yii::$app->user->id])
 				->orderBy(['status' => SORT_ASC, 'dateAdded' => SORT_ASC])->all();
+		} else {
+			$stageIds = Stage::find()->select('id')->where(['>=', 'dateOfThe', $time])->andWhere(['status' => Stage::STATUS_END_REGISTRATION])->asArray()->column();
+			if ($stageIds) {
+				$participants = Participant::find()->where(['stageId' => $stageIds])
+					->andWhere(['athleteId' => \Yii::$app->user->id])
+					->orderBy(['status' => SORT_ASC, 'dateAdded' => SORT_ASC])->all();
+			}
 		}
 		
 		return $this->render('info', [
@@ -402,7 +409,12 @@ class ProfileController extends AccessController
 			return 'Вы участвуете в этапе. Изменение данных невозможно';
 		}
 		
-		if (in_array($participant->stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
+		$stage = $participant->stage;
+		if ($stage->dateOfThe < time()) {
+			return 'В день соревнований изменение данных невозможно';
+		}
+
+		if (in_array($stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
 			return 'Этап начался, изменение данных невозможно';
 		}
 		

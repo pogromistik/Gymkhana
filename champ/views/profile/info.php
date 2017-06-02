@@ -36,8 +36,8 @@ use yii\bootstrap\Html;
                         <div class="col-md-9 col-xs-6">
                             <div class="row">
                                 <div class="col-md-4 col-sm-12"><?= $participant->motorcycle->getFullTitle() ?></div>
-                                <div class="col-md-4 col-sm-12"><?= $participant->championship->title ?></div>
-                                <div class="col-md-4 col-sm-12"><?= $participant->stage->title ?></div>
+                                <div class="col-md-4 col-sm-12"><?= Html::a($participant->championship->title, ['/competitions/championship', 'id' => $participant->championship->id]) ?></div>
+                                <div class="col-md-4 col-sm-12"><?= Html::a($participant->stage->title, ['/competitions/stage', 'id' => $participant->stage->id]) ?></div>
                             </div>
                         </div>
                         <div class="col-md-3 col-xs-6">
