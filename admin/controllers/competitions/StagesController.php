@@ -179,7 +179,7 @@ class StagesController extends BaseController
 		}
 		
 		$participants = $stage->activeParticipants;
-		$figures = Figure::findAll(['useForClassesCalculate' => 1]);
+		$figures = Figure::find()->where(['useForClassesCalculate' => 1])->orderBy(['title' => SORT_ASC])->all();
 		
 		$figureTime = new FigureTimeForStage();
 		$figureTime->stageId = $stage->id;
