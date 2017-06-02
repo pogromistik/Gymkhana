@@ -21,15 +21,15 @@ $this->params['breadcrumbs'][] = $this->title;
 			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 		<?php } ?>
 		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
-		<?= Html::a('Установить классы участникам', ['/competitions/participants/set-classes', 'stageId' => $model->id],
-			[
-				'class'   => 'btn btn-default setParticipantsClasses',
-				'data-id' => $model->id
-			]) ?>
         <?php if ($model->status != Stage::STATUS_CALCULATE_RESULTS && $model->status != Stage::STATUS_PAST) { ?>
 			<?= Html::a('Добавить время по фигурам',
                 ['/competitions/stages/add-figures-results', 'stageId' => $model->id], ['class' => 'btn btn-info-light']) ?>
 		<?php } ?>
+		<?= Html::a('Установить классы участникам', ['/competitions/participants/set-classes', 'stageId' => $model->id],
+			[
+				'class'   => 'btn btn-danger setParticipantsClasses',
+				'data-id' => $model->id
+			]) ?>
 		<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
 		<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
 			[
