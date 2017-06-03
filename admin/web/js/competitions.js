@@ -703,6 +703,32 @@ $('.deletePhoto').click(function (e) {
     });
 });
 
+$(document).on("submit", '#figureTimeForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    var figureId = form.data('id');
+    var date = form.data('date');
+    $.ajax({
+        url: '/competitions/figures/add-time',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.href = '/competitions/figures/add-results?figureId=' + figureId +
+                    '&date=' + date + '&success=true';
+            } else {
+                hideBackDrop();
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result);
+        }
+    });
+});
+
 function BootboxError(text) {
     bootbox.dialog({
         locale: 'ru',
