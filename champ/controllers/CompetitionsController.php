@@ -250,7 +250,7 @@ class CompetitionsController extends BaseController
 			$results = $results
 				->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 			if (!$showAll) {
-				$results = $results->limit(30);
+				$results = $results;
 			}
 			$results = $results->all();
 		} else {
@@ -262,7 +262,7 @@ class CompetitionsController extends BaseController
 			$results->andWhere(new Expression('"Athletes"."id"="athleteId"'));
 			$results->orderBy(['a."resultTime"' => SORT_ASC]);
 			if (!$showAll) {
-				$results = $results->limit(30);
+				$results = $results;
 			}
 			$results = $results->all();
 		}
