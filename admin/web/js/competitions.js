@@ -703,32 +703,6 @@ $('.deletePhoto').click(function (e) {
     });
 });
 
-$(document).on("submit", '#figureTimeForm', function (e) {
-    e.preventDefault();
-    showBackDrop();
-    var form = $(this);
-    var figureId = form.data('id');
-    var date = form.data('date');
-    $.ajax({
-        url: '/competitions/figures/add-time',
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            if (result == true) {
-                location.href = '/competitions/figures/add-results?figureId=' + figureId +
-                    '&date=' + date + '&success=true';
-            } else {
-                hideBackDrop();
-                BootboxError(result);
-            }
-        },
-        error: function (result) {
-            hideBackDrop();
-            BootboxError(result);
-        }
-    });
-});
-
 function BootboxError(text) {
     bootbox.dialog({
         locale: 'ru',
@@ -865,3 +839,42 @@ function cityForNewParticipant() {
         }
     });
 }
+
+$(document).on("submit", '#figureTimeForStage', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: "/competitions/stages/check-figure-time",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            hideBackDrop();
+            $('.calculate-class').html(result);
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
+
+$(document).on("submit", '#addFigureTimeForStage', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: "/competitions/stages/add-figure-time",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            hideBackDrop();
+            $('#figureTimeForStage').trigger('reset');
+            $('.calculate-class').html(result);
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
