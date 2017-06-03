@@ -337,7 +337,7 @@ class StagesController extends BaseController
 					if (!$newTime->save()) {
 						$transaction->rollBack();
 						
-						return $newTime->errors;
+						return var_dump($newTime->errors);
 					}
 					
 					if ($correctNewClass) {
@@ -345,14 +345,14 @@ class StagesController extends BaseController
 						if (!$athlete->save()) {
 							$transaction->rollBack();
 							
-							return $athlete->errors;
+							return var_dump($athlete->errors);
 						}
 						
 						$participant->athleteClassId = $newTime->newAthleteClassId;
 						if (!$participant->save(false)) {
 							$transaction->rollBack();
 							
-							return $athlete->errors;
+							return var_dump($participant->errors);
 						}
 						
 						$history = ClassHistory::create($athlete->id, $newTime->motorcycleId,
