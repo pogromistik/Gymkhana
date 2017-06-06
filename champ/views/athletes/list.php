@@ -136,6 +136,7 @@ $listView = new \yii\widgets\ListView([
 
 <div class="athletes">
 	<?= $listView->renderPager() ?>
+	<div class="text-right">Всего спортсменов: <?= $dataProvider->query->count() ?></div>
     <div class="row">
 		<?php
 		foreach ($dataProvider->models as $index => $model) {
