@@ -67,6 +67,11 @@ $championship = $stage->championship;
                         Эталонное время трассы: <?= $stage->referenceTimeHuman ?>
                     </div>
 				<?php } ?>
+				<?php if ($stage->class) { ?>
+                    <div>
+                        Класс соревнования: <?= $stage->classModel->title ?>
+                    </div>
+				<?php } ?>
 				
 				<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
                     <div class="track-photo">
