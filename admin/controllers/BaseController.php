@@ -29,7 +29,7 @@ class BaseController extends Controller
 		if (\Yii::$app->user->isGuest) {
 			$this->redirect(['/user/login']);
 			\Yii::$app->end();
-		} elseif (\Yii::$app->user->identity->blocked_at) {
+		} elseif (\Yii::$app->user->identity->isBlocked) {
 			\Yii::$app->getUser()->logout();
 			return $this->goHome();
 		}
