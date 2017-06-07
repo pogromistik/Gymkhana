@@ -996,3 +996,7 @@ table.results small.red {
     padding: 0;
     margin: 0;
 }
+
+.results .table .fa-youtube {
+    font-size: 18px;
+}
