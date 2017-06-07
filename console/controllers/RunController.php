@@ -1043,4 +1043,40 @@ class RunController extends Controller
 			var_dump($ex->getMessage());
 		}
 	}
+	
+	public function actionAddVideoLinks()
+	{
+		/** @var TmpFigureResult[] $tmp */
+		$tmp = TmpFigureResult::find()->where(['isNew' => 0])->andWhere(['not', ['videoLink' => null]])->all();
+		$count = 0;
+		foreach ($tmp as $tmpItem) {
+			$needAdd = false;
+			if (mb_strstr($tmpItem->videoLink, 'http://', 'UTF-8') !== false
+				|| mb_strstr($tmpItem->videoLink, 'https://', 'UTF-8') !== false) {
+				if (mb_strstr($tmpItem->videoLink, 'http://vk.', 'UTF-8') !== false
+					|| mb_strstr($tmpItem->videoLink, 'https://vk.', 'UTF-8') !== false) {
+					if (mb_strstr($tmpItem->videoLink, 'video', 'UTF-8') !== false) {
+						$needAdd = true;
+					}
+				} else {
+					$needAdd = true;
+				}
+			}
+			if ($needAdd) {
+				$figureResult = FigureTime::findOne(['id' => $tmpItem->figureResultId]);
+				if ($figureResult) {
+					$figureResult->videoLink = $tmpItem->videoLink;
+					if (!$figureResult->save()) {
+						var_dump($figureResult->errors);
+						
+						return false;
+					}
+					$count++;
+				}
+			}
+		}
+		
+		echo 'update ' . $count . ' items';
+		return true;
+	}
 }
