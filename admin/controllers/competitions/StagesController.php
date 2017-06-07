@@ -341,6 +341,15 @@ class StagesController extends BaseController
 					}
 					
 					if ($correctNewClass) {
+						$history = ClassHistory::create($athlete->id, $newTime->motorcycleId,
+							$oldClassId, $newTime->newAthleteClassId, $figure->title,
+							$newTime->resultTime, $figure->bestTime, $newTime->percent);
+						if (!$history) {
+							$transaction->rollBack();
+							
+							return var_dump($history->errors);
+						}
+						
 						$athlete->athleteClassId = $newTime->newAthleteClassId;
 						if (!$athlete->save()) {
 							$transaction->rollBack();
@@ -353,15 +362,6 @@ class StagesController extends BaseController
 							$transaction->rollBack();
 							
 							return var_dump($participant->errors);
-						}
-						
-						$history = ClassHistory::create($athlete->id, $newTime->motorcycleId,
-							$oldClassId, $newTime->newAthleteClassId, $figure->title,
-							$newTime->resultTime, $figure->bestTime, $newTime->percent);
-						if (!$history) {
-							$transaction->rollBack();
-							
-							return var_dump($history->errors);
 						}
 					}
 					$transaction->commit();

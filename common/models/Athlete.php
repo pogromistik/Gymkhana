@@ -182,39 +182,42 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function validateNumber($attribute, $params)
 	{
 		if (!$this->hasErrors()) {
-			$regionId = $this->city->regionId;
-			$query = new Query();
-			$query->from([self::tableName(), City::tableName(), Region::tableName()]);
-			$query->where(['Regions."id"' => $regionId]);
-			$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
-			$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
-			$query->andWhere(['Athletes."number"' => $this->number]);
-			$query->andWhere(['not', ['Athletes."id"' => $this->id]]);
-			if ($query->one()) {
-				$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
-			} else {
+			if ($this->isNewRecord || (isset($this->dirtyAttributes['number']) &&
+					$this->getOldAttributes()["number"] != $this->number)) {
+				$regionId = $this->city->regionId;
 				$query = new Query();
-				$query->from(['a' => Stage::tableName(), 'b' => Championship::tableName()]);
-				$query->select('a.id');
-				$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
-				$query->andWhere(['not', ['b.regionId' => null]]);
-				$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
-				$stageIds = $query->column();
-				if ($stageIds) {
-					/** @var Participant $busy */
-					$busy = Participant::find()->where(['stageId' => $stageIds])->andWhere(['not', ['athleteId' => $this->id]])
-						->andWhere(['number' => $this->number])->one();
-					if (!$busy) {
-						$busy = TmpParticipant::find()->where(['stageId' => $stageIds])
-							->andWhere(['number' => $this->number])->andWhere(['status' => TmpParticipant::STATUS_NEW])
-							->one();
-					}
-					if ($busy) {
-						$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
+				$query->from([self::tableName(), City::tableName(), Region::tableName()]);
+				$query->where(['Regions."id"' => $regionId]);
+				$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
+				$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
+				$query->andWhere(['Athletes."number"' => $this->number]);
+				$query->andWhere(['not', ['Athletes."id"' => $this->id]]);
+				if ($query->one()) {
+					$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
+				} else {
+					$query = new Query();
+					$query->from(['a' => Stage::tableName(), 'b' => Championship::tableName()]);
+					$query->select('a.id');
+					$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
+					$query->andWhere(['not', ['b.regionId' => null]]);
+					$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
+					$stageIds = $query->column();
+					if ($stageIds) {
+						/** @var Participant $busy */
+						$busy = Participant::find()->where(['stageId' => $stageIds])->andWhere(['not', ['athleteId' => $this->id]])
+							->andWhere(['number' => $this->number])->one();
+						if (!$busy) {
+							$busy = TmpParticipant::find()->where(['stageId' => $stageIds])
+								->andWhere(['number' => $this->number])->andWhere(['status' => TmpParticipant::STATUS_NEW])
+								->one();
+						}
+						if ($busy) {
+							$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
 						"' . $busy->stage->title . '" 
 						чемпионата "' . $busy->championship->title . '"');
-					} else {
-						
+						} else {
+							
+						}
 					}
 				}
 			}
