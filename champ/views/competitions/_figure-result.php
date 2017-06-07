@@ -98,6 +98,12 @@
 							<?php } ?>
                             <br>
                             <span class="green"><?= $item->resultTimeForHuman ?></span>
+	                        <?php if ($item->videoLink) { ?>
+                                <br>
+                                <a href="<?= $item->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
                         </td>
                         <td>
 							<?= $item->percent ?>%
