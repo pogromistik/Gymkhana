@@ -82,6 +82,7 @@
                                     <br>
 									<?= $item->athleteClass->title ?>
 								<?php } ?>
+                                <?= $item->dateForHuman ?>
                             </small>
                         </td>
                         <td>
