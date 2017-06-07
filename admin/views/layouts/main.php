@@ -214,8 +214,10 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     <a href="#"> Калькулятор<span
                                                 class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
-                                        <li><a href="<?= Url::to(['/competitions/help/time-calculate']) ?>"> Эталонное время</a></li>
-                                        <li><a href="<?= Url::to(['/competitions/help/result-calculate']) ?>"> Результат спортсмена</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/help/time-calculate']) ?>"> Эталонное
+                                                время</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/help/result-calculate']) ?>"> Результат
+                                                спортсмена</a></li>
                                     </ul>
                                 </li>
 								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
@@ -291,6 +293,20 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     <li>
                                         <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление
                                             пользователями</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+                                    <li class="level-2">
+                                        <a href="#"> Обработанные заявки<span
+                                                    class="fa arrow"></span></a>
+                                        <ul class="nav nav-second-level">
+                                            <li><a href="<?= Url::to(['/competitions/additional/l-k-requests']) ?>">
+                                                    Личный кабинет</a></li>
+                                            <li><a href="<?= Url::to(['/competitions/additional/figures-requests']) ?>">
+                                                    Базовые фигуры</a></li>
+                                            <li><a href="<?= Url::to(['/competitions/additional/stages-requests']) ?>">
+                                                    Заявки на этап</a></li>
+                                        </ul>
                                     </li>
 								<?php } ?>
                             </ul>
