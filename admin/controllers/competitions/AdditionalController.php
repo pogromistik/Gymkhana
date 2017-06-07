@@ -183,7 +183,7 @@ class AdditionalController extends BaseController
 		$searchModel = new TmpAthletesSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['not', ['status' => TmpAthlete::STATUS_NEW]]);
-		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
 		
 		return $this->render('l-k-requests', [
 			'searchModel'  => $searchModel,
@@ -197,7 +197,7 @@ class AdditionalController extends BaseController
 		$searchModel = new TmpFigureResultSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['isNew' => 1]);
-		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
 		
 		return $this->render('figures-requests', [
 			'searchModel'  => $searchModel,
@@ -211,7 +211,7 @@ class AdditionalController extends BaseController
 		$searchModel = new TmpParticipantSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['not', ['status' => TmpAthlete::STATUS_NEW]]);
-		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
 		
 		return $this->render('stages-requests', [
 			'searchModel'  => $searchModel,
