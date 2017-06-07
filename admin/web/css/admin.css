@@ -349,3 +349,7 @@ small.very {
 .inactive-participant {
     background: #efe2e2!important;
 }
+
+tr.gray {
+    background: #e2e2e2!important;
+}

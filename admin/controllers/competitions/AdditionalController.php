@@ -5,6 +5,10 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\CheScheme;
 use common\models\search\CheSchemeSearch;
+use common\models\search\TmpAthletesSearch;
+use common\models\search\TmpFigureResultSearch;
+use common\models\search\TmpParticipantSearch;
+use common\models\TmpAthlete;
 use Yii;
 use common\models\Point;
 use common\models\search\PointSearch;
@@ -171,5 +175,47 @@ class AdditionalController extends BaseController
 				'model' => $model,
 			]);
 		}
+	}
+	
+	public function actionLKRequests()
+	{
+		$this->can('globalWorkWithCompetitions');
+		$searchModel = new TmpAthletesSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['not', ['status' => TmpAthlete::STATUS_NEW]]);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('l-k-requests', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionFiguresRequests()
+	{
+		$this->can('globalWorkWithCompetitions');
+		$searchModel = new TmpFigureResultSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['isNew' => 1]);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('figures-requests', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionStagesRequests()
+	{
+		$this->can('globalWorkWithCompetitions');
+		$searchModel = new TmpParticipantSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['not', ['status' => TmpAthlete::STATUS_NEW]]);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('stages-requests', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
 	}
 }
