@@ -43,6 +43,11 @@
 			                    'alt'   => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!'
 		                    ]) ?>
 	                    <?php } ?>
+                        <?php if ($item->videoLink) { ?>
+                            <a href="<?= $item->videoLink ?>" target="_blank">
+                                <i class="fa fa-youtube"></i>
+                            </a>
+                        <?php } ?>
                     </td>
                     <td><?= $item->percent ?>%</td>
                     <td><?= ($item->newAthleteClassId &&
