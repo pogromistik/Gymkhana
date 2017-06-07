@@ -196,7 +196,7 @@ class AdditionalController extends BaseController
 		$this->can('globalWorkWithCompetitions');
 		$searchModel = new TmpFigureResultSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		$dataProvider->query->andWhere(['isNew' => 1]);
+		$dataProvider->query->andWhere(['isNew' => 0]);
 		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
 		
 		return $this->render('figures-requests', [
