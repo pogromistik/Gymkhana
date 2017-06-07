@@ -26,6 +26,7 @@ use Yii;
  * @property integer       $recordType
  * @property integer       $recordStatus
  * @property integer       $recordInMoment
+ * @property string        $videoLink
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -78,10 +79,21 @@ class FigureTime extends BaseActiveRecord
 			[['figureId', 'athleteId', 'motorcycleId', 'yearId', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'date', 'time', 'fine', 'dateAdded',
 				'dateUpdated', 'resultTime', 'recordType', 'recordStatus', 'recordInMoment'], 'integer'],
-			[['dateForHuman', 'timeForHuman'], 'string'],
+			[['dateForHuman', 'timeForHuman', 'videoLink'], 'string'],
 			[['percent'], 'number'],
-			[['fine'], 'default', 'value' => 0]
+			[['fine'], 'default', 'value' => 0],
+			['videoLink', 'validateVideoLink']
 		];
+	}
+	
+	public function validateVideoLink($attribute, $params)
+	{
+		if (!$this->hasErrors() && $this->videoLink) {
+			if (mb_strstr($this->videoLink, 'http://', 'UTF-8') === false
+				&& mb_strstr($this->videoLink, 'https://', 'UTF-8') === false) {
+				$this->addError($attribute, 'Ссылка на видео должна содержать http:// или https://');
+			}
+		}
 	}
 	
 	/**
@@ -108,7 +120,8 @@ class FigureTime extends BaseActiveRecord
 			'dateUpdated'           => 'Дата редактирования',
 			'resultTime'            => 'Итоговое время',
 			'resultTimeForHuman'    => 'Итоговое время',
-			'recordInMoment'        => 'Эталонное время на тот момент'
+			'recordInMoment'        => 'Эталонное время на тот момент',
+			'videoLink'             => 'Видео'
 		];
 	}
 	

@@ -148,9 +148,14 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				]),
 				'value'     => function (\common\models\FigureTime $item) {
 					$athlete = $item->athlete;
-					
-					return $athlete->getFullName() . ', ' . $athlete->city->title . '<br>'
+					$html = $athlete->getFullName() . ', ' . $athlete->city->title . '<br>'
 						. $item->motorcycle->getFullTitle();
+					if ($item->videoLink) {
+					    $html .= '<br>';
+					    $html .= '<a href="'.$item->videoLink.'" target="_blank">Видео заезда</a>';
+                    }
+					
+					return $html;
 				}
 			],
 			[
