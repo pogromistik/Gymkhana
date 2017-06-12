@@ -8,6 +8,7 @@ use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Motorcycle;
+use common\models\Notice;
 use common\models\Stage;
 use common\models\Time;
 use dosamigos\editable\EditableAction;
@@ -342,6 +343,21 @@ class ParticipantsController extends BaseController
 				->andWhere(['stageId' => $stage->id])->count();
 			if ($stage->participantsLimit <= $count) {
 				return 'На этап уже зарегистрировано максимальное количество (' . $count . ') человек. Дальнейшая регистрация запрещена.';
+			}
+		} elseif ($status === Participant::STATUS_CANCEL_ADMINISTRATION) {
+			$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
+			Notice::add($participant->athleteId, $text);
+			$athlete = $participant->athlete;
+			if (YII_ENV != 'dev' && $athlete->email) {
+				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата 
+				"' . $stage->championship->title . '" на мотоцикле '
+					. $participant->motorcycle->getFullTitle() . ' отклонена. Для уточнения подробностей можете связаться с 
+					организатором соревнования.';
+				\Yii::$app->mailer->compose('text', ['text' => $text])
+					->setTo($athlete->email)
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+					->setSubject('gymkhana-cup: регистрация на сайте')
+					->send();
 			}
 		}
 		$participant->status = $status;
