@@ -24,6 +24,7 @@ use Yii;
  * @property integer      $status
  * @property integer      $athleteId
  * @property integer      $countryId
+ * @property string       $email
  *
  * @property City         $cityModel
  * @property Athlete      $athlete
@@ -55,7 +56,7 @@ class TmpParticipant extends BaseActiveRecord
 			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
 				'dateAdded', 'dateUpdated'], 'required'],
 			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
-			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone'], 'string', 'max' => 255],
+			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone', 'email'], 'string', 'max' => 255],
 		];
 	}
 	
@@ -80,7 +81,8 @@ class TmpParticipant extends BaseActiveRecord
 			'dateUpdated'     => 'Дата редактирования',
 			'status'          => 'Статус',
 			'athleteId'       => 'Спортсмен',
-			'countryId'       => 'Страна'
+			'countryId'       => 'Страна',
+			'email'           => 'Email'
 		];
 	}
 	
@@ -92,6 +94,9 @@ class TmpParticipant extends BaseActiveRecord
 				$this->city = $this->cityModel->title;
 			} elseif ($this->city && $this->cityId) {
 				$this->cityId = null;
+			}
+			if ($this->email) {
+				$this->email = trim(mb_strtolower($this->email));
 			}
 		}
 		$this->dateUpdated = time();
@@ -195,6 +200,7 @@ class TmpParticipant extends BaseActiveRecord
 				->andWhere(['not', ['status' => Stage::STATUS_PAST]])->asArray()->column();
 			$result = $result->andWhere(['stageId' => $stageIds]);
 		}
+		
 		return $result->count();
 	}
 }

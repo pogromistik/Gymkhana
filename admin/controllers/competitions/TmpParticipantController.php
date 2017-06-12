@@ -144,6 +144,9 @@ class TmpParticipantController extends BaseController
 			$athlete->countryId = $city->countryId;
 			$athlete->regionId = $city->regionId;
 			$athlete->phone = $tmpParticipant->phone;
+			if ($tmpParticipant->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($tmpParticipant->email, 'UTF-8')])) {
+				$athlete->email = $tmpParticipant->email;
+			}
 			if (!$athlete->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
