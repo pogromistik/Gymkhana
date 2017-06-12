@@ -79,7 +79,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 					$html = '';
 					if (!$participant->cityId) {
 						$html = '<br>';
-						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewParticipant']);
+						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewParticipant'.$participant->id]);
 						$html .= Html::hiddenInput('id', $participant->id);
 						$html .= Select2::widget([
 							'name'          => 'city',
@@ -99,7 +99,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 							],
 							'pluginEvents'  => [
 								'change' => 'function(e){
-				cityForNewParticipant();
+				cityForNewParticipant('.$participant->id.');
 			}',
 							],
 						]);

@@ -800,12 +800,12 @@ $(document).on("submit", '.addMotorcycleAndRegistration', function (e) {
     });
 });
 
-function cityForNewAthlete() {
+function cityForNewAthlete(id) {
     showBackDrop();
     $.ajax({
         url: '/competitions/tmp-athletes/save-new-city',
         type: "POST",
-        data: $('#cityForNewAthlete').serialize(),
+        data: $('#cityForNewAthlete'+id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
@@ -821,12 +821,12 @@ function cityForNewAthlete() {
     });
 }
 
-function cityForNewParticipant() {
+function cityForNewParticipant(id) {
     showBackDrop();
     $.ajax({
         url: '/competitions/tmp-participant/save-new-city',
         type: "POST",
-        data: $('#cityForNewParticipant').serialize(),
+        data: $('#cityForNewParticipant'+id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
