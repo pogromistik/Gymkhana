@@ -422,6 +422,10 @@ class ProfileController extends AccessController
 			return 'Вы были дисквалифицированы. Изменение данных невозможно';
 		}
 		
+		if ($participant->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
+			return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
+		}
+		
 		if ($participant->status == Participant::STATUS_ACTIVE) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
 		} else {
