@@ -38,9 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
-		'rowOptions' => function (\common\models\Participant $item) {
-	    return ['class' => ($item->status === \common\models\Participant::STATUS_ACTIVE) ? 'active-participant' : 'inactive-participant'];
-	},
+		'rowOptions'   => function (\common\models\Participant $item) {
+			return ['class' => ($item->status === \common\models\Participant::STATUS_ACTIVE) ? 'active-participant' :
+				($item->status === \common\models\Participant::STATUS_NEED_CLARIFICATION ? 'need-clarification-participant' : 'inactive-participant')];
+		},
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
@@ -53,6 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>',
 				'value'     => function (\common\models\Participant $item) {
 					$athlete = $item->athlete;
+					
 					return Html::a($athlete->getFullName() . ', ' . $athlete->city->title, ['/competitions/athlete/view', 'id' => $item->athleteId]);
 				}
 			],
@@ -142,17 +144,31 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value'   => function (\common\models\Participant $item) {
 					if ($item->status == \common\models\Participant::STATUS_ACTIVE) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-							'class'   => 'btn btn-danger changeParticipantStatus',
-							'title'   => 'Отменить заявку',
-							'data-id' => $item->id
+							'class'       => 'btn btn-danger changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
+							'title'       => 'Отменить заявку',
+							'data-id'     => $item->id
 						]);
-					} else {
+					} elseif ($item->status !== \common\models\Participant::STATUS_NEED_CLARIFICATION) {
 						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
-							'class'   => 'btn btn-success changeParticipantStatus',
-							'data-id' => $item->id,
-							'title'   => 'Возобновить заявку'
+							'class'       => 'btn btn-success changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_ACTIVE,
+							'data-id'     => $item->id,
+							'title'       => 'Возобновить заявку'
 						]);
 					}
+					
+					return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
+						'class'       => 'btn btn-danger changeParticipantStatus',
+						'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
+						'title'       => 'Отменить заявку',
+						'data-id'     => $item->id
+					]) . ' ' . Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
+							'class'       => 'btn btn-success changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_ACTIVE,
+							'data-id'     => $item->id,
+							'title'       => 'Подтвердить заявку'
+						]);
 				}
 			]
 		],

@@ -350,6 +350,10 @@ small.very {
     background: #efe2e2!important;
 }
 
+.need-clarification-participant {
+    background: #fffdba!important;
+}
+
 tr.gray {
     background: #e2e2e2!important;
 }

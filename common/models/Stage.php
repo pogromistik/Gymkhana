@@ -30,6 +30,7 @@ use yii\web\UploadedFile;
  * @property integer       $trackPhotoStatus
  * @property integer       $countryId
  * @property integer       $documentId
+ * @property integer       $participantsLimit
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -106,12 +107,14 @@ class Stage extends BaseActiveRecord
 				'regionId',
 				'trackPhotoStatus',
 				'countryId',
-				'documentId'
+				'documentId',
+				'participantsLimit'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			['description', 'string'],
 			[['countRace'], 'integer', 'max' => 5],
 			[['countRace'], 'integer', 'min' => 1],
+			[['participantsLimit'], 'integer', 'min' => 3],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
 		];
@@ -146,7 +149,8 @@ class Stage extends BaseActiveRecord
 			'photoFile'              => 'Фото трассы',
 			'trackPhotoStatus'       => 'Опубликовать трассу',
 			'countryId'              => 'Страна',
-			'documentId'             => 'Регламент'
+			'documentId'             => 'Регламент',
+			'participantsLimit'      => 'Допустимое количество участников'
 		];
 	}
 	
@@ -324,7 +328,8 @@ class Stage extends BaseActiveRecord
 					if ($resultClass && $resultClass->id != $participant->id) {
 						if ($stageClass->percent > $resultClass->percent) {
 							if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent
-							&& $stageClass->id != $participant->newAthleteClassId) {
+								&& $stageClass->id != $participant->newAthleteClassId
+							) {
 								$participant->newAthleteClassId = $stageClass->id;
 								$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
 							}

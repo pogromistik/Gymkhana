@@ -1000,3 +1000,18 @@ table.results small.red {
 .results .table .fa-youtube {
     font-size: 18px;
 }
+
+.result-needClarificationParticipant, .internal-class-needClarificationParticipant {
+    background: #dcdcdc;
+    color: #7c7d7d;
+}
+
+.result-needClarificationParticipant a, .internal-class-needClarificationParticipant a {
+    color: #7c7d7d!important;
+}
+
+.warning {
+    border: 1px solid #e47221;
+    padding: 5px;
+    margin-bottom: 5px;
+}
