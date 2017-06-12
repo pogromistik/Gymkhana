@@ -322,7 +322,7 @@ class ParticipantsController extends BaseController
 		return $result;
 	}
 	
-	public function actionChangeStatus($id)
+	public function actionChangeStatus($id, $status)
 	{
 		$this->can('competitions');
 		
@@ -337,16 +337,14 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		if ($participant->status == Participant::STATUS_ACTIVE) {
-			if ($stage->status == Stage::STATUS_PRESENT || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
-				//$participant->status = Participant::STATUS_DISQUALIFICATION;
-				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
-			} else {
-				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
+		if ($status == Participant::STATUS_ACTIVE && $participant->status != Participant::STATUS_ACTIVE && $stage->participantsLimit > 0) {
+			$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
+				->andWhere(['stageId' => $stage->id])->count();
+			if ($stage->participantsLimit <= $count) {
+				return 'На этап уже зарегистрировано максимальное количество (' . $count . ') человек. Дальнейшая регистрация запрещена.';
 			}
-		} else {
-			$participant->status = Participant::STATUS_ACTIVE;
 		}
+		$participant->status = $status;
 		
 		if ($participant->save()) {
 			return true;

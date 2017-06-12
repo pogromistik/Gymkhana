@@ -88,6 +88,11 @@ $championship = $stage->championship;
 					&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
 				) { ?>
                     <div class="pt-30 enroll">
+	                    <?php if ($stage->participantsLimit > 0) { ?>
+                            <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению организатора соревнований. В
+                            этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки, требующие
+                            подтверждения организатора, выделены на сайте серым цветом.</div>
+	                    <?php } ?>
 						<?php if (\Yii::$app->user->isGuest) { ?>
                             <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
                             <div class="enrollForm">

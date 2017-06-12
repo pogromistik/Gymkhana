@@ -288,8 +288,10 @@ $('.changeParticipantStatus').click(function (e) {
     showBackDrop();
     var elem = $(this);
     var id = elem.data('id');
+    var status = elem.data('status');
     $.get('/competitions/participants/change-status', {
-        id: id
+        id: id,
+        status: status
     }).done(function (data) {
         if (data == true) {
             location.reload(true);

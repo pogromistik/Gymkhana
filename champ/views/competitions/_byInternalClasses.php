@@ -34,8 +34,12 @@
 					$first = reset($times);
 				}
 				$cssClass = -1;
-				if ($participant->internalClassId) {
-					$cssClass = $participant->internalClassId % 10;
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+				    $cssClass = 'needClarificationParticipant';
+                } else {
+					if ($participant->internalClassId) {
+						$cssClass = $participant->internalClassId % 10;
+					}
 				}
 				?>
                 <tr class="internal-class-<?= $cssClass ?>">
@@ -142,8 +146,12 @@
 				$athlete = $participant->athlete;
 				$times = $participant->times;
 				$cssClass = -1;
-				if ($participant->internalClassId) {
-					$cssClass = $participant->internalClassId % 10;
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->internalClassId) {
+						$cssClass = $participant->internalClassId % 10;
+					}
 				}
 				?>
                 <tr class="internal-class-<?= $cssClass ?>">

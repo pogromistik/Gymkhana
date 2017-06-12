@@ -189,10 +189,15 @@ class CompetitionsController extends BaseController
 		$participantsQuery->from(['b' => Participant::tableName(), 'c' => AthletesClass::tableName()]);
 		$participantsQuery->where(['b.stageId' => $stage->id]);
 		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
-		$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+		if ($stage->participantsLimit > 0) {
+			$participantsQuery->andWhere(['b.status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
+		} else {
+			$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+		}
 		if ($sortBy) {
 			$participantsByJapan = $participantsQuery
 				->orderBy([
+					'b."status"'   => SORT_DESC,
 					'b."bestTime"' => SORT_ASC,
 					'b."sort"'     => SORT_ASC,
 					'b."id"'       => SORT_ASC
@@ -201,6 +206,7 @@ class CompetitionsController extends BaseController
 		} else {
 			$participantsByJapan = $participantsQuery
 				->orderBy([
+					'b."status"'   => SORT_DESC,
 					'c."percent"'  => SORT_ASC,
 					'b."bestTime"' => SORT_ASC,
 					'b."sort"'     => SORT_ASC,
@@ -211,8 +217,13 @@ class CompetitionsController extends BaseController
 		
 		$participantsByInternalClasses = [];
 		if ($stage->championship->internalClasses) {
-			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])
-				->andWhere(['status' => Participant::STATUS_ACTIVE]);
+			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id]);
+			if ($stage->participantsLimit > 0) {
+				$participantsByInternalClasses = $participantsByInternalClasses
+					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
+			}else {
+				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => Participant::STATUS_ACTIVE]);
+			}
 			if ($sortBy) {
 				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
 			} else {

@@ -34,10 +34,14 @@
 				}
 				$cssClass = 'default';
 				$participantClass = null;
-				if ($participant->athleteClassId) {
-					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->athleteClassId) {
+						$participantClass = $participant->athleteClass;
+						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+						}
 					}
 				}
 				?>
@@ -147,10 +151,14 @@
 				
 				$cssClass = 'default';
 				$participantClass = null;
-				if ($participant->athleteClassId) {
-					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->athleteClassId) {
+						$participantClass = $participant->athleteClass;
+						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+						}
 					}
 				}
 				?>

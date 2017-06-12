@@ -76,6 +76,12 @@ use common\models\Country;
 	
 	<?= $form->field($model, 'countRace')->textInput(['maxlength' => true]) ?>
 	
+	<?= $form->field($model, 'participantsLimit',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Если ограничения по количеству участников нет - оставьте поле пустым.
+</div>{input}</div>'])
+		->textInput() ?>
+	
 	<?= $form->field($model, 'dateOfTheHuman')->widget(DatePicker::classname(), [
 		'options'       => ['placeholder' => 'Введите дату проведения соревнований'],
 		'removeButton'  => false,
