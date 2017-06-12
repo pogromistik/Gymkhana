@@ -551,7 +551,7 @@ class CompetitionsController extends BaseController
 			if (!$form->validate()) {
 				return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
 			}
-			if ($form->save()) {
+			if ($form->save(false)) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
 				
 				return true;
