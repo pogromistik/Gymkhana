@@ -338,16 +338,24 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
+		$athlete = $participant->athlete;
 		if ($status == Participant::STATUS_ACTIVE && $participant->status != Participant::STATUS_ACTIVE && $stage->participantsLimit > 0) {
 			$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
 				->andWhere(['stageId' => $stage->id])->count();
 			if ($stage->participantsLimit <= $count) {
 				return 'На этап уже зарегистрировано максимальное количество (' . $count . ') человек. Дальнейшая регистрация запрещена.';
 			}
-		} elseif ($status === Participant::STATUS_CANCEL_ADMINISTRATION) {
-			$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
-			Notice::add($participant->athleteId, $text);
-			$athlete = $participant->athlete;
+			if ($athlete->hasAccount) {
+				$text = 'Ваша заявка на этап "' . $stage->title
+					. '" чемпионата "' . $stage->championship->title . '" подтверждена';
+				Notice::add($participant->athleteId, $text);
+			}
+		} elseif ($status == Participant::STATUS_CANCEL_ADMINISTRATION && $stage->participantsLimit > 0
+		&& $participant->status != Participant::STATUS_CANCEL_ADMINISTRATION) {
+			if ($athlete->hasAccount) {
+				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
+				Notice::add($participant->athleteId, $text);
+			}
 			if (YII_ENV != 'dev' && $athlete->email) {
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата 
 				"' . $stage->championship->title . '" на мотоцикле '
