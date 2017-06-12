@@ -29,11 +29,11 @@ class BaseController extends Controller
 		if (\Yii::$app->user->isGuest) {
 			$this->redirect(['/user/login']);
 			\Yii::$app->end();
-		}/* elseif (\Yii::$app->user->identity->isBlocked) {
+		} elseif (\Yii::$app->user->identity->isBlocked) {
 			\Yii::$app->getUser()->logout();
 			\Yii::$app->getSession()->setFlash('error', 'Ваш аккаунт заблокирован');
 			return $this->goHome();
-		}*/
+		}
 	}
 
 	public function actionUploadPictures($type, $modelName)
