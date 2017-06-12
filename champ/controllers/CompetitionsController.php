@@ -431,6 +431,9 @@ class CompetitionsController extends BaseController
 			if ($old->status == Participant::STATUS_DISQUALIFICATION) {
 				return 'Вы были дисквалифицированы. Повторная регистрация невозможна';
 			}
+			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
+				return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
+			}
 			if ($old->status != Participant::STATUS_ACTIVE) {
 				if ($old->number != $form->number) {
 					if ($form->number) {
