@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
+<h3>Список участников</h3>
 <?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
 	['class' => 'btn btn-info']) ?>
 
