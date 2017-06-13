@@ -20,8 +20,7 @@ class ParticipantSearch extends Participant
 	public function rules()
 	{
 		return [
-			[['id', 'championshipId', 'stageId', 'motorcycleId', 'internalClassId', 'athleteClassId', 'bestTime', 'place', 'number', 'sort', 'dateAdded', 'status'], 'integer'],
-			[['athleteId'], 'safe']
+			[['athleteId', 'id', 'championshipId', 'stageId', 'motorcycleId', 'internalClassId', 'athleteClassId', 'bestTime', 'place', 'number', 'sort', 'dateAdded', 'status'], 'integer'],
 		];
 	}
 	
@@ -49,7 +48,7 @@ class ParticipantSearch extends Participant
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-			'sort' => ['defaultOrder' => ['status' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC]]
+			'sort'  => ['defaultOrder' => ['status' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC]]
 		]);
 		
 		$this->load($params);
@@ -59,7 +58,6 @@ class ParticipantSearch extends Participant
 			// $query->where('0=1');
 			return $dataProvider;
 		}
-		
 		// grid filtering conditions
 		$query->andFilterWhere([
 			'id'              => $this->id,
@@ -74,16 +72,8 @@ class ParticipantSearch extends Participant
 			'sort'            => $this->sort,
 			'dateAdded'       => $this->dateAdded,
 			'status'          => $this->status,
+			'athleteId'       => $this->athleteId
 		]);
-		
-		if ($this->athleteId) {
-			$athleteIds = Athlete::find()->select('id')->where(['upper("firstName")' => mb_strtoupper($this->athleteId, 'UTF-8')])
-				->orWhere(['upper("lastName")' => mb_strtoupper($this->athleteId, 'UTF-8')])->asArray()->column();
-			if (!$athleteIds) {
-				$query->andFilterWhere(['athleteId' => 0]);
-			}
-			$query->andFilterWhere(['athleteId' => $athleteIds]);
-		}
 		
 		return $dataProvider;
 	}

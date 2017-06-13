@@ -18,6 +18,7 @@ use common\models\search\ParticipantSearch;
 use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -76,6 +77,17 @@ class ParticipantsController extends BaseController
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['stageId' => $stageId]);
 		
+		$forSearch = Participant::find()->from(['a' => Participant::tableName(), 'b' => Athlete::tableName()])
+			->select(['a."athleteId"', '(b."lastName" || \' \' || b."firstName") as "name"'])
+			->where(new Expression('"a"."athleteId" = "b"."id"'))
+			->andWhere(['stageId' => $stageId])
+			->orderBy(['name' => SORT_ASC])
+			->distinct()
+			->asArray()->all();
+		if ($forSearch) {
+			$forSearch = ArrayHelper::map($forSearch, 'athleteId', 'name');
+		}
+		
 		$participant = new Participant();
 		$participant->stageId = $stage->id;
 		$participant->championshipId = $stage->championshipId;
@@ -110,7 +122,8 @@ class ParticipantsController extends BaseController
 			'dataProvider' => $dataProvider,
 			'stage'        => $stage,
 			'participant'  => $participant,
-			'error'        => $error
+			'error'        => $error,
+			'forSearch'    => $forSearch
 		]);
 	}
 	
@@ -351,7 +364,8 @@ class ParticipantsController extends BaseController
 				Notice::add($participant->athleteId, $text);
 			}
 		} elseif ($status == Participant::STATUS_CANCEL_ADMINISTRATION && $stage->participantsLimit > 0
-		&& $participant->status != Participant::STATUS_CANCEL_ADMINISTRATION) {
+			&& $participant->status != Participant::STATUS_CANCEL_ADMINISTRATION
+		) {
 			if ($athlete->hasAccount) {
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
 				Notice::add($participant->athleteId, $text);

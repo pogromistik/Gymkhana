@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use dosamigos\editable\Editable;
 use common\models\Championship;
+use kartik\widgets\Select2;
 
 /**
  * @var \common\models\Participant              $participant
@@ -12,6 +13,7 @@ use common\models\Championship;
  * @var \common\models\search\ParticipantSearch $searchModel
  * @var \yii\web\View                           $this
  * @var string                                  $error
+ * @var array                                   $forSearch
  */
 
 $this->title = 'Участники';
@@ -35,8 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	['class' => 'btn btn-info']) ?>
 
 <div class="small">
-    <div class="color-div need-clarification-participant"></div> - заявки, требующие модерации;
-    <div class="color-div inactive-participant"></div> - отклоненные заявки.
+    <div class="color-div need-clarification-participant"></div>
+    - заявки, требующие модерации;
+    <div class="color-div inactive-participant"></div>
+    - отклоненные заявки.
 </div>
 
 <div class="participant-index">
@@ -53,10 +57,18 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'athleteId',
 				'format'    => 'raw',
-				'filter'    => '<div class="input-group">
-  <span class="input-group-addon"><i class="fa fa-search"></i></span>
-' . Html::activeInput('text', $searchModel, 'athleteId', ['class' => 'form-control', 'placeholder' => 'Введите фамилию ИЛИ имя...']) . '
-</div>',
+				'filter'    => Select2::widget([
+					'model'         => $searchModel,
+					'attribute'     => 'athleteId',
+					'data'          => $forSearch,
+					'theme'         => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
+					'options'       => [
+						'placeholder' => 'Укажите фамилию или имя...',
+					]
+				]),
 				'value'     => function (\common\models\Participant $item) {
 					$athlete = $item->athlete;
 					
@@ -164,11 +176,11 @@ $this->params['breadcrumbs'][] = $this->title;
 					}
 					
 					return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-						'class'       => 'btn btn-danger changeParticipantStatus',
-						'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
-						'title'       => 'Отменить заявку',
-						'data-id'     => $item->id
-					]) . ' ' . Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
+							'class'       => 'btn btn-danger changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
+							'title'       => 'Отменить заявку',
+							'data-id'     => $item->id
+						]) . ' ' . Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
 							'class'       => 'btn btn-success changeParticipantStatus',
 							'data-status' => \common\models\Participant::STATUS_ACTIVE,
 							'data-id'     => $item->id,
