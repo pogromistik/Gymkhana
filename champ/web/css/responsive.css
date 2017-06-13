@@ -28,6 +28,7 @@
     }
     .list-nav ul {
         right: 50px;
+        max-width: 25%;
     }
     .background-img {
         width: 30%;
@@ -49,6 +50,8 @@
 
     .list-nav ul {
         right: 10px;
+        font-size: 12px;
+        max-width: 20%;
     }
 }
 
@@ -87,6 +90,7 @@
     .list-nav ul {
         padding-left: 15px;
         position: static;
+        max-width: 100%;
     }
 
     .list-nav ul li:before {
