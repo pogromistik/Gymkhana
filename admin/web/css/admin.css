@@ -357,3 +357,9 @@ small.very {
 tr.gray {
     background: #e2e2e2!important;
 }
+
+.color-div {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+}
