@@ -90,7 +90,7 @@ $this->title = 'Заявки на регистрацию в личном каб�
 					$motorcycles = $athlete->getMotorcycles();
 					$titles = [];
 					foreach ($motorcycles as $motorcycle) {
-						$titles[] = $motorcycle['mark'] . ' ' . $motorcycle['model'];
+						$titles[] = $motorcycle['mark'] . ' ' . $motorcycle['model'] . ' (' . $motorcycle['cbm'] . ' cm<sup>3</sup>)';
 					}
 					
 					return implode('<br>', $titles);

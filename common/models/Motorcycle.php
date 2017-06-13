@@ -18,6 +18,7 @@ use Yii;
  * @property integer $dateUpdated
  * @property integer $status
  * @property integer $creatorUserId
+ * @property integer $cbm
  *
  * @property Athlete $athlete
  */
@@ -46,8 +47,8 @@ class Motorcycle extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['athleteId', 'mark', 'model', 'dateAdded', 'dateUpdated'], 'required'],
-			[['athleteId', 'internalClassId', 'dateAdded', 'dateUpdated', 'status'], 'integer'],
+			[['athleteId', 'mark', 'model', 'dateAdded', 'dateUpdated', 'cbm'], 'required'],
+			[['athleteId', 'internalClassId', 'dateAdded', 'dateUpdated', 'status', 'cbm'], 'integer'],
 			[['mark', 'model'], 'string', 'max' => 255],
 		];
 	}
@@ -66,6 +67,7 @@ class Motorcycle extends BaseActiveRecord
 			'dateAdded'       => 'Добавлен',
 			'dateUpdated'     => 'Обновлен',
 			'status'          => 'Статус',
+			'cbm'             => 'Объём'
 		];
 	}
 	

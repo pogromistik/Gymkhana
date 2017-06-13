@@ -131,7 +131,18 @@ $this->title = 'Заявки на участие, требующие одобр�
 								'value'     => $participant->motorcycleModel,
 								'placement' => 'right',
 							]
-						]);
+						]) . ' (' . Editable::widget([
+							'name'          => 'motorcycleCbm',
+							'value'         => $participant->motorcycleCbm,
+							'url'           => 'update',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $participant->id,
+								'value'     => $participant->motorcycleCbm,
+								'placement' => 'right',
+							]
+						]) . ' cm<sup>3</sup>)';
 					
 					return $result;
 				}

@@ -151,26 +151,31 @@ class SiteController extends BaseController
 		if ($form->load(\Yii::$app->request->post())) {
 			$marks = \Yii::$app->request->post('mark');
 			$models = \Yii::$app->request->post('model');
+			$cbms = \Yii::$app->request->post('cbm');
 			if (!$marks) {
 				return 'Необходимо указать марку мотоцикла';
 			}
 			if (!$models) {
 				return 'Необходимо указать модель мотоцикла';
 			}
+			if (!$cbms) {
+				return 'Необходимо указать объём мотоцикла';
+			}
 			if (count($marks) != count($models)) {
 				return 'Для каждого мотоцикла необходимо указать марку и модель';
 			}
 			$motorcycles = [];
 			foreach ($marks as $i => $mark) {
-				if (!$mark && !$models[$i]) {
+				if (!$mark && !$models[$i] && !$cbms[$i]) {
 					continue;
 				}
-				if (!$mark || !$models[$i]) {
-					return 'Для каждого мотоцикла необходимо указать марку и модель';
+				if (!$mark || !$models[$i] || !$cbms[$i]) {
+					return 'Для каждого мотоцикла необходимо указать марку, модель и объём';
 				}
 				$motorcycles[] = [
 					'mark'  => (string)$mark,
-					'model' => (string)$models[$i]
+					'model' => (string)$models[$i],
+					'cbm' => (int)trim($cbms[$i])
 				];
 			}
 			if (!$motorcycles) {

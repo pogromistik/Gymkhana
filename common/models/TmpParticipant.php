@@ -17,6 +17,7 @@ use Yii;
  * @property integer      $cityId
  * @property string       $motorcycleMark
  * @property string       $motorcycleModel
+ * @property integer      $motorcycleCbm
  * @property string       $phone
  * @property integer      $number
  * @property integer      $dateAdded
@@ -54,8 +55,8 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		return [
 			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
-				'dateAdded', 'dateUpdated'], 'required'],
-			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
+				'dateAdded', 'dateUpdated', 'motorcycleCbm'], 'required'],
+			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId', 'motorcycleCbm'], 'integer'],
 			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone', 'email'], 'string', 'max' => 255],
 		];
 	}
@@ -82,7 +83,8 @@ class TmpParticipant extends BaseActiveRecord
 			'status'          => 'Статус',
 			'athleteId'       => 'Спортсмен',
 			'countryId'       => 'Страна',
-			'email'           => 'Email'
+			'email'           => 'Email',
+			'motorcycleCbm'   => 'Объём'
 		];
 	}
 	

@@ -95,6 +95,7 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
         <tr>
             <th>Марка</th>
             <th>Модель</th>
+            <th>Объём</th>
             <th>Статус</th>
             <th></th>
         </tr>
@@ -118,18 +119,32 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 						]); ?>
                     </td>
                     <td>
-						<?= Editable::widget([
-							'name'          => 'model',
-							'value'         => $motorcycleInfo->model,
-							'url'           => 'update-motorcycle',
-							'type'          => 'text',
-							'mode'          => 'inline',
-							'clientOptions' => [
-								'pk'        => $motorcycleInfo->id,
-								'value'     => $motorcycleInfo->model,
-								'placement' => 'right',
-							]
-						]); ?>
+		                <?= Editable::widget([
+			                'name'          => 'model',
+			                'value'         => $motorcycleInfo->model,
+			                'url'           => 'update-motorcycle',
+			                'type'          => 'text',
+			                'mode'          => 'inline',
+			                'clientOptions' => [
+				                'pk'        => $motorcycleInfo->id,
+				                'value'     => $motorcycleInfo->model,
+				                'placement' => 'right',
+			                ]
+		                ]); ?>
+                    </td>
+                    <td>
+		                <?= Editable::widget([
+			                'name'          => 'cbm',
+			                'value'         => $motorcycleInfo->cbm,
+			                'url'           => 'update-motorcycle',
+			                'type'          => 'text',
+			                'mode'          => 'inline',
+			                'clientOptions' => [
+				                'pk'        => $motorcycleInfo->id,
+				                'value'     => $motorcycleInfo->cbm,
+				                'placement' => 'right',
+			                ]
+		                ]); ?>
                     </td>
                     <td>
 						<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
@@ -158,7 +173,10 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 						<?= $motorcycleInfo->mark ?>
                     </td>
                     <td>
-						<?= $motorcycleInfo->model ?>
+		                <?= $motorcycleInfo->model ?>
+                    </td>
+                    <td>
+		                <?= $motorcycleInfo->cbm ?>
                     </td>
                     <td>
 						<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>

@@ -549,7 +549,7 @@ class CompetitionsController extends BaseController
 				}
 			}
 			if (!$form->validate()) {
-				return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
+				return 'Необходимо указать имя, фамилию, город, марку, модель и объём мотоцикла.';
 			}
 			if ($form->save(false)) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);

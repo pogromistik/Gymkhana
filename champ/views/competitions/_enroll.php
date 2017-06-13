@@ -99,7 +99,8 @@ $championship = $stage->championship;
 
             <h4 class="text-center">Укажите мотоцикл, на котором будете участвовать</h4>
 			<?= $form->field($participant, 'motorcycleMark')->textInput(['placeholder' => 'Марка, напр. kawasaki']) ?>
-			<?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
+	        <?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
+	        <?= $form->field($participant, 'motorcycleCbm')->textInput(['placeholder' => 'Объём']) ?>
 
             <div class="alerts"></div>
 
