@@ -34,6 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
 	['class' => 'btn btn-info']) ?>
 
+<div class="small">
+    <div class="color-div need-clarification-participant"></div> - заявки, требующие модерации;
+    <div class="color-div inactive-participant"></div> - отклоненные заявки.
+</div>
+
 <div class="participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
