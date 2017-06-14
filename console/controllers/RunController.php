@@ -1079,4 +1079,39 @@ class RunController extends Controller
 		echo 'update ' . $count . ' items';
 		return true;
 	}
+	
+	public function actionTestConfirmMail()
+	{
+		$championship = Championship::findOne(15);
+		$stage = Stage::findOne(19);
+		$participant = Participant::findOne(110);
+		$tmpParticipant = TmpParticipant::findOne(22);
+		$this->sendConfirmEmail($championship, $stage, $participant);
+		$this->sendConfirmEmail($championship, $stage, null, $tmpParticipant);
+	}
+	
+	private function sendConfirmEmail(Championship $championship, Stage $stage, Participant $participant = null, TmpParticipant $tmpParticipant = null)
+	{
+		$email = null;
+		if ($tmpParticipant && $tmpParticipant->email) {
+			$email = $tmpParticipant->email;
+		} elseif ($participant) {
+			$athlete = $participant->athlete;
+			$email = $athlete->email;
+		}
+		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '', 'UTF-8')) {
+			\Yii::$app->mailer->compose('confirm-request', [
+				'championship'   => $championship,
+				'stage'          => $stage,
+				'tmpParticipant' => $tmpParticipant,
+				'participant'    => $participant
+			])
+				->setTo('lyadetskaya.ns@yandex.ru')
+				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+				->setSubject('gymkhana-cup: предварительная регистрация на этап')
+				->send();
+		}
+		
+		return true;
+	}
 }
