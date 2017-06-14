@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use common\models\Athlete;
@@ -122,10 +123,11 @@ class CompetitionsController extends BaseController
 					$results = [];
 					foreach ($championships as $championship) {
 						$results[$championship->yearId] = [
-							'year'   => $championship->year->year,
-							'stages' => $championship->stages,
-							'status' => $championship->status,
-							'id'     => $championship->id
+							'year'        => $championship->year->year,
+							'stages'      => $championship->stages,
+							'status'      => $championship->status,
+							'id'          => $championship->id,
+							'showResults' => $championship->showResults
 						];
 					}
 					if (isset($results)) {
@@ -157,7 +159,8 @@ class CompetitionsController extends BaseController
 							'stages' => Stage::find()->where(['championshipId' => $item['id']])
 								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
 							'status' => $item['status'],
-							'id'     => $item['id']
+							'id'     => $item['id'],
+							'showResults' => $item['showResults']
 						];
 						
 						if (isset($results)) {

@@ -48,7 +48,7 @@ $championship = $stage->championship;
 				<?php } ?>
 				<?php if ($stage->documentId) { ?>
                     <div class="regulations">
-						Регламент: <?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
+                        Регламент: <?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
                     </div>
 				<?php } ?>
 				
@@ -135,11 +135,11 @@ $championship = $stage->championship;
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="text-right">
-			                                <?php if ($sortBy) { ?>
-				                                <?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
-			                                <?php } else { ?>
-				                                <?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
-			                                <?php } ?>
+											<?php if ($sortBy) { ?>
+												<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+											<?php } else { ?>
+												<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+											<?php } ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
@@ -213,9 +213,11 @@ $championship = $stage->championship;
 							<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
                         </li>
 					<?php } ?>
-                    <li>
-						<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $stage->championshipId]) ?>
-                    </li>
+					<?php if ($championship->showResults) { ?>
+                        <li>
+							<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $stage->championshipId]) ?>
+                        </li>
+					<?php } ?>
                 </ul>
 				<?php
 			}
