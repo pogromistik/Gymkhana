@@ -9,9 +9,12 @@
  */
 $this->title = 'Результаты: ' . $championship->title;
 ?>
-
+<?php if ($championship->showResults) { ?>
 <h3><?= $championship->title ?>: <?= ($championship->status == \common\models\Championship::STATUS_PAST)
     ? 'итоги' : 'предварительные итоги' ?></h3>
+<?php } else { ?>
+    <h3><?= $championship->title ?></h3>
+<?php } ?>
 
 <div class="about">
 	<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
