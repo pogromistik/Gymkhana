@@ -1099,7 +1099,7 @@ class RunController extends Controller
 			$athlete = $participant->athlete;
 			$email = $athlete->email;
 		}
-		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '@', null 'UTF-8')) {
+		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '@', null, 'UTF-8')) {
 			\Yii::$app->mailer->compose('confirm-request', [
 				'championship'   => $championship,
 				'stage'          => $stage,
