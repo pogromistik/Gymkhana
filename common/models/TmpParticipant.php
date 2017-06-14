@@ -54,7 +54,7 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		return [
 			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
-				'dateAdded', 'dateUpdated'], 'required'],
+				'dateAdded', 'dateUpdated', 'email'], 'required'],
 			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
 			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone', 'email'], 'string', 'max' => 255],
 		];
