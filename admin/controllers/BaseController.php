@@ -1,6 +1,7 @@
 <?php
 namespace admin\controllers;
 
+use common\helpers\UserHelper;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use Yii;
@@ -13,10 +14,18 @@ class BaseController extends Controller
 	public $pageTitle = '';
 	public $keywords = '';
 	public $url = '';
-
+	
 	public function can($role)
 	{
 		if (!\Yii::$app->user->can($role)) {
+			throw new ForbiddenHttpException('Доступ запрещён');
+		}
+		return true;
+	}
+	
+	public function canRegion($region)
+	{
+		if (!UserHelper::fromRegion($region)) {
 			throw new ForbiddenHttpException('Доступ запрещён');
 		}
 		return true;
