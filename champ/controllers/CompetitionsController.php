@@ -155,11 +155,11 @@ class CompetitionsController extends BaseController
 							];
 						}
 						$results[$item['regionGroupId']]['years'][$item['yearId']] = [
-							'year'   => $item['year'],
-							'stages' => Stage::find()->where(['championshipId' => $item['id']])
+							'year'        => $item['year'],
+							'stages'      => Stage::find()->where(['championshipId' => $item['id']])
 								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
-							'status' => $item['status'],
-							'id'     => $item['id'],
+							'status'      => $item['status'],
+							'id'          => $item['id'],
 							'showResults' => $item['showResults']
 						];
 						
@@ -224,7 +224,7 @@ class CompetitionsController extends BaseController
 			if ($stage->participantsLimit > 0) {
 				$participantsByInternalClasses = $participantsByInternalClasses
 					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
-			}else {
+			} else {
 				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => Participant::STATUS_ACTIVE]);
 			}
 			if ($sortBy) {
@@ -488,6 +488,7 @@ class CompetitionsController extends BaseController
 			\Yii::$app->mutex->release('setNumber' . $stage->id);
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				$this->sendConfirmEmail($championship, $stage, $form);
 				
 				return true;
 			} else {
@@ -556,6 +557,7 @@ class CompetitionsController extends BaseController
 			}
 			if ($form->save(false)) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				$this->sendConfirmEmail($championship, $stage, null, $form);
 				
 				return true;
 			} else {
@@ -567,6 +569,33 @@ class CompetitionsController extends BaseController
 		\Yii::$app->mutex->release('setNumber' . $stage->id);
 		
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
+	}
+	
+	private function sendConfirmEmail(Championship $championship, Stage $stage, Participant $participant = null, TmpParticipant $tmpParticipant = null)
+	{
+		$email = null;
+		if ($tmpParticipant && $tmpParticipant->email) {
+			$email = $tmpParticipant->email;
+		} elseif ($participant) {
+			$athlete = $participant->athlete;
+			$email = $athlete->email;
+		}
+		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '', 'UTF-8')) {
+			if (YII_ENV != 'dev') {
+				\Yii::$app->mailer->compose('confirm-request', [
+					'championship'   => $championship,
+					'stage'          => $stage,
+					'tmpParticipant' => $tmpParticipant,
+					'participant'    => $participant
+				])
+					->setTo($email)
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+					->setSubject('gymkhana-cup: предварительная регистрация на этап')
+					->send();
+			}
+		}
+		
+		return true;
 	}
 	
 	public function actionChampionshipResult($championshipId, $showAll = null)

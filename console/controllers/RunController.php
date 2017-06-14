@@ -1082,10 +1082,10 @@ class RunController extends Controller
 	
 	public function actionTestConfirmMail()
 	{
-		$championship = Championship::findOne(15);
-		$stage = Stage::findOne(19);
-		$participant = Participant::findOne(110);
-		$tmpParticipant = TmpParticipant::findOne(22);
+		$championship = Championship::findOne(1);
+		$stage = Stage::findOne(1);
+		$participant = Participant::findOne(9);;
+		$tmpParticipant = TmpParticipant::findOne(8);
 		$this->sendConfirmEmail($championship, $stage, $participant);
 		$this->sendConfirmEmail($championship, $stage, null, $tmpParticipant);
 	}
