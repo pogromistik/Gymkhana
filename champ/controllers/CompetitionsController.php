@@ -564,6 +564,9 @@ class CompetitionsController extends BaseController
 		if (!$championship) {
 			throw new NotFoundHttpException('Чемпионат не найден');
 		}
+		if (!$championship->showResults) {
+			throw new UserException('Для данного чемпионата не ведётся подсчёт итогов');
+		}
 		$this->pageTitle = $championship->title . ': итоги';
 		$this->description = 'Итоги соревнования: ' . $championship->title;
 		
