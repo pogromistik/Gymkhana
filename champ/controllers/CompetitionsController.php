@@ -234,12 +234,20 @@ class CompetitionsController extends BaseController
 			}
 		}
 		
+		$tmpParticipants = null;
+		if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION
+		|| $stage->status == Stage::STATUS_END_REGISTRATION) {
+			$tmpParticipants = TmpParticipant::find()->where(['status' => TmpParticipant::STATUS_NEW])
+				->andWhere(['stageId' => $stage->id])->all();
+		}
+		
 		return $this->render('stage', [
 			'stage'                         => $stage,
 			'participantsByJapan'           => $participantsByJapan,
 			'participantsByInternalClasses' => $participantsByInternalClasses,
 			'sortBy'                        => $sortBy,
-			'showByClasses'                 => $showByClasses
+			'showByClasses'                 => $showByClasses,
+			'tmpParticipants'               => $tmpParticipants
 		]);
 	}
 	
