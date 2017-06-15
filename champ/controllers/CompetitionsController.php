@@ -236,12 +236,20 @@ class CompetitionsController extends BaseController
 			}
 		}
 		
+		$tmpParticipants = null;
+		if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION
+		|| $stage->status == Stage::STATUS_END_REGISTRATION) {
+			$tmpParticipants = TmpParticipant::find()->where(['status' => TmpParticipant::STATUS_NEW])
+				->andWhere(['stageId' => $stage->id])->all();
+		}
+		
 		return $this->render('stage', [
 			'stage'                         => $stage,
 			'participantsByJapan'           => $participantsByJapan,
 			'participantsByInternalClasses' => $participantsByInternalClasses,
 			'sortBy'                        => $sortBy,
-			'showByClasses'                 => $showByClasses
+			'showByClasses'                 => $showByClasses,
+			'tmpParticipants'               => $tmpParticipants
 		]);
 	}
 	
@@ -450,7 +458,7 @@ class CompetitionsController extends BaseController
 			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
 				return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
 			}
-			if ($old->status != Participant::STATUS_ACTIVE) {
+			if ($old->status == Participant::STATUS_CANCEL_ATHLETE) {
 				if ($old->number != $form->number) {
 					if ($form->number) {
 						$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
@@ -462,7 +470,7 @@ class CompetitionsController extends BaseController
 						$old->number = $athlete->number;
 					}
 				}
-				$old->status = Participant::STATUS_ACTIVE;
+				$old->status = Participant::STATUS_NEED_CLARIFICATION;
 				if ($old->save()) {
 					return true;
 				}

@@ -1,7 +1,8 @@
 <?php
 /**
- * @var \common\models\Stage         $stage
- * @var \common\models\Participant[] $participants
+ * @var \common\models\Stage            $stage
+ * @var \common\models\Participant[]    $participants
+ * @var \common\models\TmpParticipant[] $tmpParticipants
  */
 ?>
 
@@ -58,11 +59,11 @@
 					<?php if ($first) { ?>
                         <td>1.</td>
                         <td>
-	                        <?php if ($first->isFail) { ?>
+							<?php if ($first->isFail) { ?>
                                 <strike><?= $first->timeForHuman ?></strike>
-	                        <?php } else { ?>
-		                        <?= $first->timeForHuman ?>
-	                        <?php } ?>
+							<?php } else { ?>
+								<?= $first->timeForHuman ?>
+							<?php } ?>
                         </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
@@ -73,9 +74,9 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
-                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
-                         (<?= $participant->newAthleteClass->title ?>)
-                    <?php } ?>
+						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+						<?php } ?>
                     </td>
                 </tr>
 				<?php
@@ -106,7 +107,7 @@
 				}
 				?>
 			<?php }
-		} else { ?>
+		} elseif (!$tmpParticipants) { ?>
             <tr>
                 <td rowspan="<?= $stage->countRace ?>"></td>
                 <td rowspan="<?= $stage->countRace ?>"></td>
@@ -131,7 +132,38 @@
                 </tr>
 				<?php
 			}
-		} ?>
+		}
+		if ($tmpParticipants) {
+			foreach ($tmpParticipants as $tmpParticipant) { ?>
+                <tr class="result-needClarificationParticipant">
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->number ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?>
+                        <br>
+						<?= $tmpParticipant->city ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></td>
+                    <td>1.</td>
+                    <td></td>
+                    <td></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>">%</td>
+                </tr>
+				<?php
+				$attempt = 1;
+				while ($attempt++ < $stage->countRace) {
+					?>
+                    <tr class="result-needClarificationParticipant">
+                        <td><?= $attempt ?>.</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+					<?php
+				} ?>
+			<?php }
+		}
+		?>
         </tbody>
     </table>
 </div>
@@ -190,10 +222,10 @@
 						<?php foreach ($times as $time) { ?>
 							<?php if ($time->isFail) { ?>
                                 <strike>
-	                                <?= $time->timeForHuman ?>
-	                                <?php if ($time->fine) { ?>
+									<?= $time->timeForHuman ?>
+									<?php if ($time->fine) { ?>
                                         <span class="red"> +<?= $time->fine ?></span>
-	                                <?php } ?>
+									<?php } ?>
                                 </strike>
 							<?php } else { ?>
 								<?= $time->timeForHuman ?>
@@ -209,13 +241,28 @@
 						<?php } ?>
                     </td>
                     <td><?= $participant->percent ?>%
-	                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
                             (<?= $participant->newAthleteClass->title ?>)
-	                    <?php } ?>
+						<?php } ?>
                     </td>
                 </tr>
 			<?php }
 		} ?>
+		<?php if ($tmpParticipants) {
+			foreach ($tmpParticipants as $tmpParticipant) {
+				?>
+                <tr class="result-needClarificationParticipant">
+                    <th></th>
+                    <th><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
+						<?= $tmpParticipant->city ?><br>
+						<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+				<?php
+			}
+		}
+		?>
         </tbody>
     </table>
 </div>
