@@ -40,8 +40,8 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
     <thead>
     <tr>
         <th>Место вне класса</th>
-        <th>Класс спортсмена</th>
-        <th>Место в классе спортсмена</th>
+        <th>Группа</th>
+        <th>Место в группе</th>
         <th>№</th>
         <th>Участник</th>
         <th>Мотоцикл</th>
