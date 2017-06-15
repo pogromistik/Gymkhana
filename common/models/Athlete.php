@@ -183,7 +183,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		if (!$this->hasErrors()) {
 			if ($this->isNewRecord || (isset($this->dirtyAttributes['number']) &&
-					$this->getOldAttributes()["number"] != $this->number)) {
+					$this->getOldAttributes()["number"] != $this->number)
+			) {
 				$regionId = $this->city->regionId;
 				$query = new Query();
 				$query->from([self::tableName(), City::tableName(), Region::tableName()]);
@@ -304,6 +305,12 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 				Notice::add($this->id, $text);
 			}
+			$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
+				->andWhere(['status' => [Stage::STATUS_START_REGISTRATION, Stage::STATUS_END_REGISTRATION, Stage::STATUS_UPCOMING]])
+				->asArray()->column();
+			if ($stageIds) {
+				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);
+			}
 		}
 		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
 			$link = Url::to(['/profile/help']);
@@ -327,13 +334,14 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 							->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
 							->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 					}
-				}  elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
+				} elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
 					return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])
 						->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
 						->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 				}
 			}
 		}
+		
 		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 	}
 	
