@@ -3,11 +3,12 @@ use common\models\Stage;
 use yii\bootstrap\Html;
 
 /**
- * @var \yii\web\View                $this
- * @var \common\models\Stage         $stage
- * @var \common\models\Participant[] $participantsByJapan
- * @var \common\models\Participant[] $participantsByInternalClasses
- * @var integer                      $sortBy
+ * @var \yii\web\View                   $this
+ * @var \common\models\Stage            $stage
+ * @var \common\models\Participant[]    $participantsByJapan
+ * @var \common\models\Participant[]    $participantsByInternalClasses
+ * @var integer                         $sortBy
+ * @var \common\models\TmpParticipant[] $tmpParticipants
  */
 $time = time();
 $city = $stage->city;
@@ -88,11 +89,14 @@ $championship = $stage->championship;
 					&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
 				) { ?>
                     <div class="pt-30 enroll">
-	                    <?php if ($stage->participantsLimit > 0) { ?>
-                            <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению организатора соревнований. В
-                            этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки, требующие
-                            подтверждения организатора, выделены на сайте серым цветом.</div>
-	                    <?php } ?>
+						<?php if ($stage->participantsLimit > 0) { ?>
+                            <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению
+                                организатора соревнований. В
+                                этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки,
+                                требующие
+                                подтверждения организатора, выделены на сайте серым цветом.
+                            </div>
+						<?php } ?>
 						<?php if (\Yii::$app->user->isGuest) { ?>
                             <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
                             <div class="enrollForm">
@@ -146,7 +150,11 @@ $championship = $stage->championship;
                                         Количество участников: <?= count($participantsByJapan) ?>
                                     </div>
                                 </div>
-								<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
+								<?= $this->render('_byJapan', [
+								        'stage' => $stage,
+                                        'participants' => $participantsByJapan,
+								        'tmpParticipants' => $tmpParticipants
+                                ]) ?>
                             </div>
                             <div class="result-scheme">
                                 <div class="change-type">
@@ -172,7 +180,11 @@ $championship = $stage->championship;
                                         Количество участников: <?= count($participantsByJapan) ?>
                                     </div>
                                 </div>
-								<?= $this->render('_byInternalClasses', ['stage' => $stage, 'participants' => $participantsByInternalClasses]) ?>
+								<?= $this->render('_byInternalClasses', [
+									'stage'           => $stage,
+									'participants'    => $participantsByInternalClasses,
+									'tmpParticipants' => $tmpParticipants
+								]) ?>
                             </div>
 						<?php } else { ?>
                             <div class="row">
@@ -194,7 +206,11 @@ $championship = $stage->championship;
                                     Количество участников: <?= count($participantsByJapan) ?>
                                 </div>
                             </div>
-							<?= $this->render('_byJapan', ['stage' => $stage, 'participants' => $participantsByJapan]) ?>
+							<?= $this->render('_byJapan', [
+								'stage'           => $stage,
+								'participants'    => $participantsByJapan,
+								'tmpParticipants' => $tmpParticipants
+							]) ?>
 						<?php } ?>
                     </div>
 				<?php } ?>

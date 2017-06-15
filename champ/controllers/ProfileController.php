@@ -189,9 +189,11 @@ class ProfileController extends AccessController
 				$percent = $athlete->athleteClass->percent;
 				if ($bestPercentOfClass > $percent) {
 					$bestClass = $athlete->athleteClassId;
+					$bestPercentOfClass = $percent;
 				}
 			}
 		}
+		
 		if ($bestClass) {
 			if ($me->athleteClassId == $bestClass) {
 				$bestClassIds[] = $me->id;
@@ -225,7 +227,7 @@ class ProfileController extends AccessController
 					if ($hisResult) {
 						$hisResults[$athleteId] = $hisResult;
 						if ($hisResult->resultTime < $bestTime) {
-							$bestTime = $hisResult;
+							$bestTime = $hisResult->resultTime;
 							$bestId = $athleteId;
 						}
 					}
@@ -426,10 +428,10 @@ class ProfileController extends AccessController
 			return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
 		}
 		
-		if ($participant->status == Participant::STATUS_ACTIVE) {
+		if ($participant->status == Participant::STATUS_ACTIVE || $participant->status == Participant::STATUS_NEED_CLARIFICATION) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
 		} else {
-			$participant->status = Participant::STATUS_ACTIVE;
+			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
 		}
 		
 		if (!$participant->save()) {
