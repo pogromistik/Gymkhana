@@ -350,6 +350,20 @@ small.very {
     background: #efe2e2!important;
 }
 
+.inactive-participant2 {
+    background: #dbdfef !important;
+}
+
+.need-clarification-participant {
+    background: #fffdba!important;
+}
+
 tr.gray {
     background: #e2e2e2!important;
+}
+
+.color-div {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
 }

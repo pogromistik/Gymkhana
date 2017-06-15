@@ -200,6 +200,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 					$query->select('a.id');
 					$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
 					$query->andWhere(['not', ['b.regionId' => null]]);
+					if ($this->regionId) {
+						$query->andWhere(['b.regionId' => $this->regionId]);
+					}
 					$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
 					$stageIds = $query->column();
 					if ($stageIds) {
@@ -381,6 +384,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function createCabinet()
 	{
 		$password = $this->generatePassword();
+		if (YII_ENV == 'dev') {
+			$password = '111111';
+		}
 		$this->login = $this->id + 6000;
 		$this->generateAuthKey();
 		$this->setPassword($password);

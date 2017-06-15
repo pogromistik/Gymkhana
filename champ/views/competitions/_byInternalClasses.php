@@ -34,8 +34,12 @@
 					$first = reset($times);
 				}
 				$cssClass = -1;
-				if ($participant->internalClassId) {
-					$cssClass = $participant->internalClassId % 10;
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+				    $cssClass = 'needClarificationParticipant';
+                } else {
+					if ($participant->internalClassId) {
+						$cssClass = $participant->internalClassId % 10;
+					}
 				}
 				?>
                 <tr class="internal-class-<?= $cssClass ?>">
@@ -65,7 +69,11 @@
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
+	                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+	                    <?php } ?>
+                    </td>
                 </tr>
 				<?php
 				$attempt = 1;
@@ -142,8 +150,12 @@
 				$athlete = $participant->athlete;
 				$times = $participant->times;
 				$cssClass = -1;
-				if ($participant->internalClassId) {
-					$cssClass = $participant->internalClassId % 10;
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->internalClassId) {
+						$cssClass = $participant->internalClassId % 10;
+					}
 				}
 				?>
                 <tr class="internal-class-<?= $cssClass ?>">
@@ -188,7 +200,11 @@
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
                     </td>
-                    <td><?= $participant->percent ?>%</td>
+                    <td><?= $participant->percent ?>%
+	                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+	                    <?php } ?>
+                    </td>
                 </tr>
 			<?php }
 		} ?>

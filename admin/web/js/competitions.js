@@ -288,8 +288,10 @@ $('.changeParticipantStatus').click(function (e) {
     showBackDrop();
     var elem = $(this);
     var id = elem.data('id');
+    var status = elem.data('status');
     $.get('/competitions/participants/change-status', {
-        id: id
+        id: id,
+        status: status
     }).done(function (data) {
         if (data == true) {
             location.reload(true);
@@ -798,12 +800,12 @@ $(document).on("submit", '.addMotorcycleAndRegistration', function (e) {
     });
 });
 
-function cityForNewAthlete() {
+function cityForNewAthlete(id) {
     showBackDrop();
     $.ajax({
         url: '/competitions/tmp-athletes/save-new-city',
         type: "POST",
-        data: $('#cityForNewAthlete').serialize(),
+        data: $('#cityForNewAthlete'+id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
@@ -819,12 +821,12 @@ function cityForNewAthlete() {
     });
 }
 
-function cityForNewParticipant() {
+function cityForNewParticipant(id) {
     showBackDrop();
     $.ajax({
         url: '/competitions/tmp-participant/save-new-city',
         type: "POST",
-        data: $('#cityForNewParticipant').serialize(),
+        data: $('#cityForNewParticipant'+id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
