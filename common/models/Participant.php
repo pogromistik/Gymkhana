@@ -45,6 +45,9 @@ class Participant extends BaseActiveRecord
 	
 	public $humanBestTime;
 	
+	public $resultClass;
+	public $n;
+	
 	const STATUS_NEED_CLARIFICATION = 0;
 	const STATUS_ACTIVE = 1;
 	const STATUS_DISQUALIFICATION = 2;

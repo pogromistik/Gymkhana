@@ -20,6 +20,7 @@ use common\models\Stage;
 use common\models\Year;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -400,7 +401,12 @@ class HelpController extends BaseController
 	public function actionMoscowPointsScheme()
 	{
 		$this->can('competitions');
-		$items = MoscowPoint::find()->orderBy(['class' => SORT_ASC, 'place' => SORT_ASC])->all();
+		$points = (new Query())->select('*')
+			->from(['a' => MoscowPoint::tableName(), 'b' => AthletesClass::tableName()])
+			->where(new Expression('"a"."class" = "b"."id"'))
+			->orderBy(['b."percent"' => SORT_ASC, 'b."title"' => SORT_ASC, 'a."place"' => SORT_ASC])->all();
+		$items = ArrayHelper::map($points,
+			'place', 'point', 'title');
 		
 		return $this->render('moscow-point-scheme', ['items' => $items]);
 	}

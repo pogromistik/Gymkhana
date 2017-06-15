@@ -360,8 +360,8 @@ class Championship extends BaseActiveRecord
 					];
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
-					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
-					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['stages'][$stage->id] = $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+					$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
 					$results[$participant->athleteId]['countStages'] += 1;
 					if (!$results[$participant->athleteId]['cityId']) {
 						$results[$participant->athleteId]['cityId'] = $stage->cityId;

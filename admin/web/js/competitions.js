@@ -605,6 +605,24 @@ $('.stageCalcResult').click(function (e) {
     }
 });
 
+$('.accruePoints').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите начислить баллы участникам? Лучше это делать после того, как переходы спортсмена в новую группу были подтверждены")) {
+        var id = $(this).data('id');
+        $.get('/competitions/stages/accrue-points', {
+            stageId: id
+        }).done(function (data) {
+            if (data == true) {
+                location.href = '/competitions/stages/result?stageId=' + id;
+            } else {
+                BootboxError(data);
+            }
+        }).fail(function (error) {
+            BootboxError(error.responseText);
+        });
+    }
+});
+
 $('.createCabinet').click(function (e) {
     e.preventDefault();
     if (confirm("Уверены, что хотите создать кабинет этому спортсмену?")) {
