@@ -13,12 +13,12 @@ class AppAsset extends AssetBundle
 	public $basePath = '@webroot';
 	public $baseUrl = '@web';
 	public $css = [
-		'css/cup.css',
+		'css/admin.css',
 		'css/font-awesome.min.css'
 	];
 	public $js = [
 		'js/main.js',
-		'js/cup.js'
+		'js/competitions.js'
 	];
 	public $depends = [
 		'yii\web\YiiAsset',
