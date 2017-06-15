@@ -69,7 +69,11 @@
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
+	                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+	                    <?php } ?>
+                    </td>
                 </tr>
 				<?php
 				$attempt = 1;
@@ -196,7 +200,11 @@
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
                     </td>
-                    <td><?= $participant->percent ?>%</td>
+                    <td><?= $participant->percent ?>%
+	                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+	                    <?php } ?>
+                    </td>
                 </tr>
 			<?php }
 		} ?>
