@@ -429,7 +429,7 @@ class ProfileController extends AccessController
 		if ($participant->status == Participant::STATUS_ACTIVE) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
 		} else {
-			$participant->status = Participant::STATUS_ACTIVE;
+			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
 		}
 		
 		if (!$participant->save()) {
