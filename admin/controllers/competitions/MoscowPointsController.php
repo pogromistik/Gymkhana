@@ -14,7 +14,13 @@ use yii\filters\VerbFilter;
  */
 class MoscowPointsController extends BaseController
 {
-    /**
+	public function init()
+	{
+		parent::init();
+		$this->canRegion('Московская область');
+	}
+	
+	/**
      * @inheritdoc
      */
     public function behaviors()

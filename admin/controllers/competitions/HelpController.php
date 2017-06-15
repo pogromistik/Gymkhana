@@ -12,6 +12,7 @@ use admin\controllers\BaseController;
 use common\models\Country;
 use common\models\Figure;
 use common\models\HelpModel;
+use common\models\MoscowPoint;
 use common\models\Region;
 use common\models\search\CitySearch;
 use common\models\search\YearSearch;
@@ -394,6 +395,14 @@ class HelpController extends BaseController
 		$items = CheScheme::find()->orderBy('percent')->all();
 		
 		return $this->render('che-scheme', ['items' => $items]);
+	}
+	
+	public function actionMoscowPointsScheme()
+	{
+		$this->can('competitions');
+		$items = MoscowPoint::find()->orderBy(['class' => SORT_ASC, 'place' => SORT_ASC])->all();
+		
+		return $this->render('moscow-point-scheme', ['items' => $items]);
 	}
 	
 	public function actionTimeCalculate()

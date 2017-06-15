@@ -28,6 +28,7 @@ use yii\db\Expression;
  * @property integer       $newAthleteClassStatus
  * @property integer       $placeOfAthleteClass
  * @property integer       $points
+ * @property integer       $pointsByMoscow
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -94,7 +95,8 @@ class Participant extends BaseActiveRecord
 				'newAthleteClassId',
 				'newAthleteClassStatus',
 				'placeOfAthleteClass',
-				'points'
+				'points',
+				'pointsByMoscow'
 			], 'integer'],
 			['number', 'validateNumber']
 		];
@@ -133,7 +135,8 @@ class Participant extends BaseActiveRecord
 			'status'              => 'Статус',
 			'percent'             => 'Рейтинг',
 			'newAthleteClassId'   => 'Класс по итогам проведенного этапа',
-			'points'              => 'Баллы за этап'
+			'points'              => 'Баллы за этап',
+			'pointsByMoscow'      => 'Баллы за этап по Московской схеме'
 		];
 	}
 	

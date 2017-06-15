@@ -96,9 +96,13 @@ $country = \common\models\Country::getRussia();
 	<?= $form->field($model, 'requiredOtherRegions')->checkbox() ?>
 	<?= $form->field($model, 'useCheScheme',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">
-'.Html::a('Нажмите, чтобы узнать подробнее о схеме', ['/competitions/help/che-scheme'], ['target' => '_blank']).'
+'.Html::a('Нажмите, чтобы узнать подробнее о Челябинской схеме награждения', ['/competitions/help/che-scheme'], ['target' => '_blank']).'
 </div>{input}</div>'])->checkbox() ?>
 	<?= $form->field($model, 'showResults')->checkbox() ?>
+	<?= $form->field($model, 'useMoscowPoints',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+'.Html::a('Нажмите, чтобы узнать подробнее о Московской схеме баллов', ['/competitions/help/moscow-points-scheme'], ['target' => '_blank']).'
+</div>{input}</div>'])->checkbox() ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
