@@ -379,7 +379,7 @@ class ParticipantsController extends BaseController
 				\Yii::$app->mailer->compose('text', ['text' => $text])
 					->setTo($athlete->email)
 					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-					->setSubject('gymkhana-cup: регистрация на сайте')
+					->setSubject('gymkhana-cup: регистрация на этап отклонена')
 					->send();
 			}
 		}
