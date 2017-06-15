@@ -47,6 +47,8 @@ $this->params['breadcrumbs'][] = $this->title;
     - заявки, требующие модерации;
     <div class="color-div inactive-participant"></div>
     - отклоненные заявки.
+    <div class="color-div inactive-participant2"></div>
+    - заявки, отмененные участником.
 </div>
 
 <div class="participant-index">
@@ -54,9 +56,16 @@ $this->params['breadcrumbs'][] = $this->title;
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
 		'rowOptions'   => function (\common\models\Participant $item) {
-			return ['class' => ($item->status === \common\models\Participant::STATUS_ACTIVE) ? 'active-participant' :
-				($item->status === \common\models\Participant::STATUS_NEED_CLARIFICATION ? 'need-clarification-participant' : 'inactive-participant')];
-		},
+	        if ($item->status === \common\models\Participant::STATUS_ACTIVE) {
+	            return ['class' => 'active-participant'];
+            } elseif ($item->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+		        return ['class' => 'need-clarification-participant'];
+            } elseif ($item->status === \common\models\Participant::STATUS_CANCEL_ATHLETE) {
+		        return ['class' => 'inactive-participant2'];
+	        } else {
+	            return ['class' => 'inactive-participant'];
+            }
+        },
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
