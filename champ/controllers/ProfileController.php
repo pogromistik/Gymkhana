@@ -189,9 +189,11 @@ class ProfileController extends AccessController
 				$percent = $athlete->athleteClass->percent;
 				if ($bestPercentOfClass > $percent) {
 					$bestClass = $athlete->athleteClassId;
+					$bestPercentOfClass = $percent;
 				}
 			}
 		}
+		
 		if ($bestClass) {
 			if ($me->athleteClassId == $bestClass) {
 				$bestClassIds[] = $me->id;
