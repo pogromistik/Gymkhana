@@ -8,6 +8,7 @@ use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
@@ -19,6 +20,7 @@ use yii\base\UserException;
 use yii\data\Pagination;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -632,5 +634,20 @@ class CompetitionsController extends BaseController
 		$this->layout = 'full-content';
 		
 		return $this->render('championship', ['championship' => $championship]);
+	}
+	
+	public function actionMoscowScheme()
+	{
+		$this->pageTitle = 'Московская схема начисления баллов';
+		$this->description = 'Схема начисления баллов за этап в Москве';
+		
+		$points = (new Query())->select('*')
+			->from(['a' => MoscowPoint::tableName(), 'b' => AthletesClass::tableName()])
+			->where(new Expression('"a"."class" = "b"."id"'))
+			->orderBy(['b."percent"' => SORT_ASC, 'b."title"' => SORT_ASC, 'a."place"' => SORT_ASC])->all();
+		$items = ArrayHelper::map($points,
+			'place', 'point', 'title');
+		
+		return $this->render('moscow-scheme', ['items' => $items]);
 	}
 }

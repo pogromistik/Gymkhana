@@ -381,6 +381,43 @@ class Stage extends BaseActiveRecord
 		return true;
 	}
 	
+	public function calculatePoints()
+	{
+		/** @var Participant[] $participants */
+		$participants = $this->getActiveParticipants()
+			->select(['*', '(CASE WHEN "newAthleteClassStatus"=2 THEN "newAthleteClassId" ELSE "athleteClassId" END) as "resultClass"',
+'row_number() over (partition BY CASE WHEN "newAthleteClassId" IS NOT NULL AND "newAthleteClassStatus"='.Participant::NEW_CLASS_STATUS_APPROVE.' THEN "newAthleteClassId" ELSE "athleteClassId" END
+order by "percent" asc) n'])
+			->all();
+		$points = ArrayHelper::map(MoscowPoint::find()->all(), 'place', 'point', 'class');
+		/** @var AthletesClass $bestClass */
+		$bestClass = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->one();
+		foreach ($participants as $participant) {
+			if (!$participant->resultClass) {
+				continue;
+			}
+			if (!isset($points[$participant->resultClass])) {
+				continue;
+			}
+			$places = $points[$participant->resultClass];
+			if (!isset($places[$participant->n])) {
+				if (!$participant->newAthleteClassId || $participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_APPROVE) {
+					continue;
+				}
+				if ($bestClass && $participant->resultClass == $bestClass->id) {
+					continue;
+				}
+				$participant->pointsByMoscow = min($places);
+			} else {
+				$participant->pointsByMoscow = $places[$participant->n];
+			}
+			if (!$participant->save()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public function getDocument()
 	{
 		return $this->hasOne(OverallFile::className(), ['id' => 'documentId']);

@@ -33,6 +33,13 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 			'data-id' => $model->id
 		]) ?>
 	<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
+	<?php if ($championship->useMoscowPoints) { ?>
+		<?= Html::a('Начислить баллы', ['/competitions/stages/accrue-points', 'stageId' => $model->id],
+			[
+				'class'       => 'btn btn-default accruePoints',
+				'data-id'     => $model->id
+			]) ?>
+	<?php } ?>
 	
 	<?= $this->render('_form', [
 		'model' => $model,

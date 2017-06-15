@@ -10,12 +10,14 @@ use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Year;
 use Yii;
 use common\models\Stage;
 use common\models\search\StageSearch;
 use yii\base\UserException;
+use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -374,5 +376,25 @@ class StagesController extends BaseController
 		$error = 'Произошла ошибка при отправке данных';
 		
 		return '<div class="alert alert-error">' . $error . '</div>';
+	}
+	
+	public function actionAccruePoints($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new NotFoundHttpException('Доступ запрещен');
+			}
+		}
+		if (!$stage->championship->useMoscowPoints) {
+			throw new UserException('Функция доступна только для чемпионатов, использующих Московскую схему начисления баллов');
+		}
+		if ($stage->calculatePoints()) {
+			return true;
+		}
+		return 'При начислении баллов за этап возникла ошибка. Свяжитесь с разработчиком.';
 	}
 }

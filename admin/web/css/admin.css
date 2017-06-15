@@ -388,3 +388,7 @@ tr.gray {
     background: #ffffff;
     color: #000000;
 }
+
+.dark-border {
+    border-bottom: 2px solid #4b4e53;
+}
