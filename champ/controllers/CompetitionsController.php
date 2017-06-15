@@ -580,7 +580,7 @@ class CompetitionsController extends BaseController
 			$athlete = $participant->athlete;
 			$email = $athlete->email;
 		}
-		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '', 'UTF-8')) {
+		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '@', null, 'UTF-8')) {
 			if (YII_ENV != 'dev') {
 				\Yii::$app->mailer->compose('confirm-request', [
 					'championship'   => $championship,
