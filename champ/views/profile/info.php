@@ -41,21 +41,21 @@ use yii\bootstrap\Html;
                             </div>
                         </div>
                         <div class="col-md-3 col-xs-6">
-			                <?php if ($participant->status == \common\models\Participant::STATUS_ACTIVE) { ?>
-				                <?= Html::a('Отменить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
-					                [
-						                'class'       => 'btn btn-light getRequest',
-						                'data-id'     => $participant->id,
-						                'data-action' => '/profile/change-participant-status'
-					                ]) ?>
-			                <?php } else { ?>
-				                <?= Html::a('Возобновить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
-					                [
-						                'class'       => 'btn btn-dark getRequest',
-						                'data-id'     => $participant->id,
-						                'data-action' => '/profile/change-participant-status'
-					                ]) ?>
-			                <?php } ?>
+							<?php if ($participant->status == \common\models\Participant::STATUS_ACTIVE || $participant->status == \common\models\Participant::STATUS_NEED_CLARIFICATION) { ?>
+								<?= Html::a('Отменить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
+									[
+										'class'       => 'btn btn-light getRequest',
+										'data-id'     => $participant->id,
+										'data-action' => '/profile/change-participant-status'
+									]) ?>
+							<?php } else { ?>
+								<?= Html::a('Возобновить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
+									[
+										'class'       => 'btn btn-dark getRequest',
+										'data-id'     => $participant->id,
+										'data-action' => '/profile/change-participant-status'
+									]) ?>
+							<?php } ?>
                         </div>
                     </div>
                 </td>
@@ -76,18 +76,18 @@ use yii\bootstrap\Html;
                             <div class="col-md-9 col-xs-6">
                                 <div class="row">
                                     <div class="col-md-4 col-sm-12">
-		                                <?= $newStage->championship->title ?>
+										<?= $newStage->championship->title ?>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-		                                <?= $newStage->title ?>
+										<?= $newStage->title ?>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-		                                <?= $newStage->city->title ?>
+										<?= $newStage->city->title ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3 col-xs-6">
-	                            <?= Html::a('Подробнее', ['/competitions/stage', 'id' => $newStage->id]) ?>
+								<?= Html::a('Подробнее', ['/competitions/stage', 'id' => $newStage->id]) ?>
                             </div>
                         </div>
                     </td>
