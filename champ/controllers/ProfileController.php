@@ -225,7 +225,7 @@ class ProfileController extends AccessController
 					if ($hisResult) {
 						$hisResults[$athleteId] = $hisResult;
 						if ($hisResult->resultTime < $bestTime) {
-							$bestTime = $hisResult;
+							$bestTime = $hisResult->resultTime;
 							$bestId = $athleteId;
 						}
 					}
