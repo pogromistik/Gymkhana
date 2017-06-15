@@ -8,6 +8,7 @@ use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Motorcycle;
+use common\models\Notice;
 use common\models\Stage;
 use common\models\Time;
 use dosamigos\editable\EditableAction;
@@ -17,6 +18,7 @@ use common\models\search\ParticipantSearch;
 use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -75,6 +77,17 @@ class ParticipantsController extends BaseController
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['stageId' => $stageId]);
 		
+		$forSearch = Participant::find()->from(['a' => Participant::tableName(), 'b' => Athlete::tableName()])
+			->select(['a."athleteId"', '(b."lastName" || \' \' || b."firstName") as "name"'])
+			->where(new Expression('"a"."athleteId" = "b"."id"'))
+			->andWhere(['stageId' => $stageId])
+			->orderBy(['name' => SORT_ASC])
+			->distinct()
+			->asArray()->all();
+		if ($forSearch) {
+			$forSearch = ArrayHelper::map($forSearch, 'athleteId', 'name');
+		}
+		
 		$participant = new Participant();
 		$participant->stageId = $stage->id;
 		$participant->championshipId = $stage->championshipId;
@@ -109,7 +122,8 @@ class ParticipantsController extends BaseController
 			'dataProvider' => $dataProvider,
 			'stage'        => $stage,
 			'participant'  => $participant,
-			'error'        => $error
+			'error'        => $error,
+			'forSearch'    => $forSearch
 		]);
 	}
 	
@@ -322,7 +336,7 @@ class ParticipantsController extends BaseController
 		return $result;
 	}
 	
-	public function actionChangeStatus($id)
+	public function actionChangeStatus($id, $status)
 	{
 		$this->can('competitions');
 		
@@ -337,16 +351,39 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		if ($participant->status == Participant::STATUS_ACTIVE) {
-			if ($stage->status == Stage::STATUS_PRESENT || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
-				//$participant->status = Participant::STATUS_DISQUALIFICATION;
-				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
-			} else {
-				$participant->status = Participant::STATUS_CANCEL_ADMINISTRATION;
+		$athlete = $participant->athlete;
+		if ($status == Participant::STATUS_ACTIVE && $participant->status != Participant::STATUS_ACTIVE && $stage->participantsLimit > 0) {
+			$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
+				->andWhere(['stageId' => $stage->id])->count();
+			if ($stage->participantsLimit <= $count) {
+				return 'На этап уже зарегистрировано максимальное количество (' . $count . ') человек. Дальнейшая регистрация запрещена.';
 			}
-		} else {
-			$participant->status = Participant::STATUS_ACTIVE;
+			if ($athlete->hasAccount) {
+				$text = 'Ваша заявка на этап "' . $stage->title
+					. '" чемпионата "' . $stage->championship->title . '" подтверждена';
+				Notice::add($participant->athleteId, $text);
+			}
+		} elseif ($status == Participant::STATUS_CANCEL_ADMINISTRATION && $stage->participantsLimit > 0
+			&& $participant->status != Participant::STATUS_CANCEL_ADMINISTRATION
+		) {
+			if ($athlete->hasAccount) {
+				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
+				Notice::add($participant->athleteId, $text);
+			}
+			if (YII_ENV != 'dev' && $athlete->email) {
+				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата 
+				"' . $stage->championship->title . '" на мотоцикле '
+					. $participant->motorcycle->getFullTitle() . ' отклонена, так как на этап уже зарегистрировано максимальное
+					количество участников. Для уточнения подробностей можете связаться с
+					организатором соревнования.';
+				\Yii::$app->mailer->compose('text', ['text' => $text])
+					->setTo($athlete->email)
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+					->setSubject('gymkhana-cup: регистрация на этап отклонена')
+					->send();
+			}
 		}
+		$participant->status = $status;
 		
 		if ($participant->save()) {
 			return true;

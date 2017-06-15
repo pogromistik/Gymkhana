@@ -34,10 +34,14 @@
 				}
 				$cssClass = 'default';
 				$participantClass = null;
-				if ($participant->athleteClassId) {
-					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->athleteClassId) {
+						$participantClass = $participant->athleteClass;
+						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+						}
 					}
 				}
 				?>
@@ -68,7 +72,11 @@
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
+                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                         (<?= $participant->newAthleteClass->title ?>)
+                    <?php } ?>
+                    </td>
                 </tr>
 				<?php
 				$attempt = 1;
@@ -147,10 +155,14 @@
 				
 				$cssClass = 'default';
 				$participantClass = null;
-				if ($participant->athleteClassId) {
-					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->athleteClassId) {
+						$participantClass = $participant->athleteClass;
+						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+						}
 					}
 				}
 				?>
@@ -196,7 +208,11 @@
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
                     </td>
-                    <td><?= $participant->percent ?>%</td>
+                    <td><?= $participant->percent ?>%
+	                    <?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+	                    <?php } ?>
+                    </td>
                 </tr>
 			<?php }
 		} ?>

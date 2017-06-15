@@ -44,6 +44,7 @@ class Participant extends BaseActiveRecord
 	
 	public $humanBestTime;
 	
+	const STATUS_NEED_CLARIFICATION = 0;
 	const STATUS_ACTIVE = 1;
 	const STATUS_DISQUALIFICATION = 2;
 	const STATUS_CANCEL_ATHLETE = 3;
@@ -147,6 +148,10 @@ class Participant extends BaseActiveRecord
 				if ($internalClass) {
 					$this->internalClassId = $internalClass;
 				}
+			}
+			
+			if ($this->stage->participantsLimit > 0) {
+				$this->status = self::STATUS_NEED_CLARIFICATION;
 			}
 			
 			/** @var Participant $participationInPreviousStages */

@@ -53,7 +53,7 @@ $this->title = 'Заявки на регистрацию в личном каб�
 						return $athlete->city;
 					} else {
 					    $html = $athlete->city . '<br>';
-						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewAthlete']);
+						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewAthlete'.$athlete->id]);
 						$html .= Html::hiddenInput('id', $athlete->id);
 					    $html .= Select2::widget([
 							'name'          => 'city',
@@ -73,7 +73,7 @@ $this->title = 'Заявки на регистрацию в личном каб�
 							],
 							'pluginEvents'  => [
 								'change' => 'function(e){
-				cityForNewAthlete();
+				cityForNewAthlete('.$athlete->id.');
 			}',
 							],
 						]);
