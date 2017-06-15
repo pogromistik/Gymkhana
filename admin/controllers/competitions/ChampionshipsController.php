@@ -166,7 +166,7 @@ class ChampionshipsController extends BaseController
 		$class = new InternalClass();
 		if ($class->load(\Yii::$app->request->post()) && $class->validate()) {
 			$championship = Championship::findOne($class->championshipId);
-			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
+			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId && !\Yii::$app->user->can('globalWorkWithCompetitions')) {
 				return 'Доступ запрещен';
 			}
 			$class->save();
