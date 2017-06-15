@@ -448,7 +448,7 @@ class CompetitionsController extends BaseController
 			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
 				return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
 			}
-			if ($old->status != Participant::STATUS_ACTIVE) {
+			if ($old->status != Participant::STATUS_ACTIVE && $old->status != Participant::STATUS_NEED_CLARIFICATION) {
 				if ($old->number != $form->number) {
 					if ($form->number) {
 						$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
