@@ -460,7 +460,7 @@ class CompetitionsController extends BaseController
 						$old->number = $athlete->number;
 					}
 				}
-				$old->status = Participant::STATUS_ACTIVE;
+				$old->status = Participant::STATUS_NEED_CLARIFICATION;
 				if ($old->save()) {
 					return true;
 				}
