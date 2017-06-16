@@ -1014,3 +1014,7 @@ table.results small.red {
     padding: 5px;
     margin-bottom: 5px;
 }
+
+.dark-border {
+    border-bottom: 2px solid #4b4e53;
+}

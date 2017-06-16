@@ -220,24 +220,30 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                                 спортсмена</a></li>
                                     </ul>
                                 </li>
-								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+	                            <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li>
                                         <a data-addr="/competitions/classes"
                                            href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы
                                             спортсменов</a>
                                     </li>
-									<?php if (\Yii::$app->user->can('developer')) { ?>
+		                            <?php if (\Yii::$app->user->can('developer')) { ?>
                                         <li>
                                             <a data-addr="/competitions/additional"
                                                href="<?= Url::to(['/competitions/additional/che-scheme']) ?>"> Классы
                                                 награждения</a>
                                         </li>
-									<?php } ?>
+		                            <?php } ?>
                                     <li>
                                         <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
                                             чемпионатов</a>
                                     </li>
-								<?php } ?>
+	                            <?php } ?>
+	                            <?php if (\common\helpers\UserHelper::fromRegion('Московская область')) { ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/moscow-points/index']) ?>"> Баллы для
+                                            Москвы</a>
+                                    </li>
+	                            <?php } ?>
 								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>
                                         <a data-addr="/competitions/news"

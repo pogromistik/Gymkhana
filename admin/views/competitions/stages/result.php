@@ -103,7 +103,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 					<?php } ?>
 				<?php } ?>
             </td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->points ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points ?></td>
         </tr>
 		<?php
 		$attempt = 1;

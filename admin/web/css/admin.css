@@ -367,3 +367,28 @@ tr.gray {
     height: 10px;
     display: inline-block;
 }
+
+.result-green {
+    background: #b5e4b6;
+}
+
+.result-red {
+    background: #ffe7ee;
+}
+
+.result-blue {
+    background: #d7edff;
+}
+
+.result-yellow {
+    background: #f8ff8a;
+}
+
+.result-white {
+    background: #ffffff;
+    color: #000000;
+}
+
+.dark-border {
+    border-bottom: 2px solid #4b4e53;
+}

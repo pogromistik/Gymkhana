@@ -30,6 +30,7 @@ $this->title = 'Результаты: ' . $championship->title;
     Количество этапов, по которым ведётся подсчёт результатов:
 	<?= $championship->estimatedAmount ?>
     <br>
+    <?php if(!$championship->useMoscowPoints) { ?>
     Таблица, по которой прозводился расчёт баллов за каждый этап:
 	<?php /** @var \common\models\Point[] $points */
 	$points = \common\models\Point::find()->orderBy(['id' => SORT_ASC])->all() ?>
@@ -47,6 +48,9 @@ $this->title = 'Результаты: ' . $championship->title;
 			<?php } ?>
         </tr>
     </table>
+    <?php } else { ?>
+        Подсчёт баллов ведётся по <a href="/competitions/moscow-scheme" target="_blank">Московской схеме</a> .
+    <?php } ?>
 </div>
 
 <div class="pb-10">

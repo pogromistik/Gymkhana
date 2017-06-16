@@ -227,8 +227,8 @@ class ChampionshipsController extends BaseController
 					];
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
-					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
-					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['stages'][$stage->id] = $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+					$results[$participant->athleteId]['points'] += $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
 					$results[$participant->athleteId]['countStages'] += 1;
 					if (!$results[$participant->athleteId]['cityId']) {
 						$results[$participant->athleteId]['cityId'] = $stage->cityId;

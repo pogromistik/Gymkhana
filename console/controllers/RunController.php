@@ -13,6 +13,7 @@ use common\models\Error;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\InternalClass;
+use common\models\MoscowPoint;
 use common\models\Motorcycle;
 use common\models\Notice;
 use common\models\Participant;
@@ -1052,9 +1053,11 @@ class RunController extends Controller
 		foreach ($tmp as $tmpItem) {
 			$needAdd = false;
 			if (mb_strstr($tmpItem->videoLink, 'http://', 'UTF-8') !== false
-				|| mb_strstr($tmpItem->videoLink, 'https://', 'UTF-8') !== false) {
+				|| mb_strstr($tmpItem->videoLink, 'https://', 'UTF-8') !== false
+			) {
 				if (mb_strstr($tmpItem->videoLink, 'http://vk.', 'UTF-8') !== false
-					|| mb_strstr($tmpItem->videoLink, 'https://vk.', 'UTF-8') !== false) {
+					|| mb_strstr($tmpItem->videoLink, 'https://vk.', 'UTF-8') !== false
+				) {
 					if (mb_strstr($tmpItem->videoLink, 'video', 'UTF-8') !== false) {
 						$needAdd = true;
 					}
@@ -1077,6 +1080,106 @@ class RunController extends Controller
 		}
 		
 		echo 'update ' . $count . ' items';
+		
+		return true;
+	}
+	
+	public function actionInsertMoscowPoints()
+	{
+		$array1 = [
+			'A'  => [
+				1 => 500,
+				2 => 490,
+				3 => 480
+			],
+			'B'  => [
+				1 => 470,
+				2 => 460,
+				3 => 455
+			],
+			'D4' => [
+				1 => 20,
+				2 => 17,
+				3 => 15,
+				4 => 13,
+				5 => 11,
+				6 => 9,
+				7 => 7,
+				8 => 5,
+				9 => 3,
+				10 => 1
+			]
+		];
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($array1 as $letter => $items) {
+			$class = AthletesClass::findOne(['title' => $letter]);
+			if (!$class) {
+				echo 'Class ' . $letter . ' not found' . PHP_EOL;
+				$transaction->rollBack();
+				
+				return false;
+			}
+			foreach ($items as $place => $item) {
+				$pointModel = new MoscowPoint();
+				$pointModel->class = $class->id;
+				$pointModel->place = $place;
+				$pointModel->point = $item;
+				if (!$pointModel->save()) {
+					var_dump($pointModel->errors);
+					$transaction->rollBack();
+					
+					return false;
+				}
+			}
+		}
+		//начальное количестово; смещение; количество мест
+		$array2 = [
+			'C1' => [
+				450, 10, 5
+			],
+			'C2' => [
+				400, 10, 5
+			],
+			'C3' => [
+				350, 10, 5
+			],
+			'D1' => [
+				300, 10, 10
+			],
+			'D2' => [
+				200, 5, 20
+			],
+			'D3' => [
+				100, 4, 20
+			],
+		];
+		foreach ($array2 as $letter => $item) {
+			$class = AthletesClass::findOne(['title' => $letter]);
+			if (!$class) {
+				echo 'Class ' . $letter . ' not found' . PHP_EOL;
+				$transaction->rollBack();
+				
+				return false;
+			}
+			$point = $item[0];
+			$place = 1;
+			while ($place <= $item[2]) {
+				$pointModel = new MoscowPoint();
+				$pointModel->class = $class->id;
+				$pointModel->place = $place;
+				$pointModel->point = $point;
+				if (!$pointModel->save()) {
+					var_dump($pointModel->errors);
+					$transaction->rollBack();
+					
+					return false;
+				}
+				$point -= $item[1];
+				$place++;
+			}
+		}
+		$transaction->commit();
+		
 		return true;
 	}
 }
