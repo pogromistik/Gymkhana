@@ -387,7 +387,8 @@ class Stage extends BaseActiveRecord
 		$participants = $this->getActiveParticipants()
 			->select(['*', '(CASE WHEN "newAthleteClassStatus"=2 THEN "newAthleteClassId" ELSE "athleteClassId" END) as "resultClass"',
 'row_number() over (partition BY CASE WHEN "newAthleteClassId" IS NOT NULL AND "newAthleteClassStatus"='.Participant::NEW_CLASS_STATUS_APPROVE.' THEN "newAthleteClassId" ELSE "athleteClassId" END
-order by "percent" asc) n'])
+order by "bestTime" asc) n'])
+			->andWhere(['not', ['bestTime' => null]])
 			->all();
 		$points = ArrayHelper::map(MoscowPoint::find()->all(), 'place', 'point', 'class');
 		/** @var AthletesClass $bestClass */
