@@ -402,12 +402,12 @@ order by "bestTime" asc) n'])
 			}
 			$places = $points[$participant->resultClass];
 			if (!isset($places[$participant->n])) {
-				if (!$participant->newAthleteClassId || $participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_APPROVE) {
+				/*if (!$participant->newAthleteClassId || $participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_APPROVE) {
 					continue;
 				}
 				if ($bestClass && $participant->resultClass == $bestClass->id) {
 					continue;
-				}
+				}*/
 				$participant->pointsByMoscow = min($places);
 			} else {
 				$participant->pointsByMoscow = $places[$participant->n];
