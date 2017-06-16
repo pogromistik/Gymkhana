@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\MoscowPoint */
@@ -12,7 +13,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'class')->textInput() ?>
+	<?= $form->field($model, 'class')->widget(Select2::classname(), [
+		'name'    => 'kv-type-01',
+		'data'    =>  \yii\helpers\ArrayHelper::map(\common\models\AthletesClass::find()->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
+		'options' => [
+			'placeholder' => 'Выберите группу...',
+		],
+	]) ?>
 
     <?= $form->field($model, 'place')->textInput() ?>
 
