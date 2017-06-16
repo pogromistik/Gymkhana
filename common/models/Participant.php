@@ -156,7 +156,7 @@ class Participant extends BaseActiveRecord
 				}
 			}
 			
-			if ($this->stage->participantsLimit > 0) {
+			if ($this->stage->participantsLimit > 0 && $this->status != self::STATUS_ACTIVE) {
 				$this->status = self::STATUS_NEED_CLARIFICATION;
 			}
 			

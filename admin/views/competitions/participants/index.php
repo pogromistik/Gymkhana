@@ -14,6 +14,7 @@ use kartik\widgets\Select2;
  * @var \yii\web\View                           $this
  * @var string                                  $error
  * @var array                                   $forSearch
+ * @var bool                                    $needClarification
  */
 
 $this->title = 'Участники';
@@ -30,8 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
 </div>
 <?= $this->render('_form', [
-	'model'        => $participant,
-	'championship' => $championship
+	'model'             => $participant,
+	'championship'      => $championship,
+	'needClarification' => $needClarification
 ]) ?>
 
 <?php if ($error) { ?>
@@ -56,16 +58,16 @@ $this->params['breadcrumbs'][] = $this->title;
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
 		'rowOptions'   => function (\common\models\Participant $item) {
-	        if ($item->status === \common\models\Participant::STATUS_ACTIVE) {
-	            return ['class' => 'active-participant'];
-            } elseif ($item->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
-		        return ['class' => 'need-clarification-participant'];
-            } elseif ($item->status === \common\models\Participant::STATUS_CANCEL_ATHLETE) {
-		        return ['class' => 'inactive-participant2'];
-	        } else {
-	            return ['class' => 'inactive-participant'];
-            }
-        },
+			if ($item->status === \common\models\Participant::STATUS_ACTIVE) {
+				return ['class' => 'active-participant'];
+			} elseif ($item->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+				return ['class' => 'need-clarification-participant'];
+			} elseif ($item->status === \common\models\Participant::STATUS_CANCEL_ATHLETE) {
+				return ['class' => 'inactive-participant2'];
+			} else {
+				return ['class' => 'inactive-participant'];
+			}
+		},
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
