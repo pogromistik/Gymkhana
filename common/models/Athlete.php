@@ -305,12 +305,12 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 				Notice::add($this->id, $text);
 			}
-			$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
+			/*$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
 				->andWhere(['status' => [Stage::STATUS_START_REGISTRATION, Stage::STATUS_END_REGISTRATION, Stage::STATUS_UPCOMING]])
 				->asArray()->column();
 			if ($stageIds) {
 				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);
-			}
+			}*/
 		}
 		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
 			$link = Url::to(['/profile/help']);
