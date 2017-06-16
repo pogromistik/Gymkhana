@@ -72,6 +72,7 @@ class ParticipantsController extends BaseController
 		}
 		
 		$error = null;
+		$needClarification = false;
 		
 		$searchModel = new ParticipantSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -112,18 +113,30 @@ class ParticipantsController extends BaseController
 					$participant->number = $athlete->number;
 				}
 			}
-			if (!$error && $participant->save()) {
+			if ($stage->participantsLimit > 0) {
+				$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
+					->andWhere(['stageId' => $stage->id])->count();
+				if ($count >= $stage->participantsLimit) {
+					$confirmed = \Yii::$app->request->post('confirmed');
+					if (!$confirmed) {
+						$needClarification = true;
+					}
+				}
+			}
+			$participant->status = Participant::STATUS_ACTIVE;
+			if (!$error && !$needClarification && $participant->save()) {
 				return $this->redirect(['index', 'stageId' => $stageId]);
 			}
 		}
 		
 		return $this->render('index', [
-			'searchModel'  => $searchModel,
-			'dataProvider' => $dataProvider,
-			'stage'        => $stage,
-			'participant'  => $participant,
-			'error'        => $error,
-			'forSearch'    => $forSearch
+			'searchModel'       => $searchModel,
+			'dataProvider'      => $dataProvider,
+			'stage'             => $stage,
+			'participant'       => $participant,
+			'error'             => $error,
+			'forSearch'         => $forSearch,
+			'needClarification' => $needClarification
 		]);
 	}
 	
@@ -336,18 +349,32 @@ class ParticipantsController extends BaseController
 		return $result;
 	}
 	
-	public function actionChangeStatus($id, $status)
+	public function actionChangeStatus($id, $status, $confirmed = false)
 	{
 		$this->can('competitions');
 		
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		
+		$result = [
+			'text'              => null,
+			'success'           => false,
+			'error'             => false,
+			'needClarification' => false
+		];
 		$participant = Participant::findOne($id);
 		if (!$participant) {
-			return 'Заявка не найдена';
+			$result['text'] = 'Заявка не найдена';
+			$result['error'] = true;
+			
+			return $result;
 		}
 		$stage = $participant->stage;
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				return 'Доступ запрещен';
+				$result['text'] = 'Доступ запрещен';
+				$result['error'] = true;
+				
+				return $result;
 			}
 		}
 		
@@ -355,8 +382,11 @@ class ParticipantsController extends BaseController
 		if ($status == Participant::STATUS_ACTIVE && $participant->status != Participant::STATUS_ACTIVE && $stage->participantsLimit > 0) {
 			$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
 				->andWhere(['stageId' => $stage->id])->count();
-			if ($stage->participantsLimit <= $count) {
-				return 'На этап уже зарегистрировано максимальное количество (' . $count . ') человек. Дальнейшая регистрация запрещена.';
+			if ($stage->participantsLimit <= $count && !$confirmed) {
+				$result['text'] = 'На этап уже зарегистрировано максимальное количество (' . $count . ') человек. Всё равно зарегистрировать этого спортсмена?.';
+				$result['needClarification'] = true;
+				
+				return $result;
 			}
 			if ($athlete->hasAccount) {
 				$text = 'Ваша заявка на этап "' . $stage->title
@@ -386,10 +416,15 @@ class ParticipantsController extends BaseController
 		$participant->status = $status;
 		
 		if ($participant->save()) {
-			return true;
+			$result['success'] = true;
+			
+			return $result;
 		}
 		
-		return 'Возникла ошибка при сохранении изменений';
+		$result['text'] = 'Возникла ошибка при сохранении изменений. Свяжитесь с разработчиком.';
+		$result['error'] = true;
+		
+		return $result;
 	}
 	
 	public function actionSetClasses($stageId)
@@ -422,7 +457,7 @@ class ParticipantsController extends BaseController
 		}
 		
 		$championship = $stage->championship;
-		$participants = Participant::findAll(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE]);
+		$participants = Participant::findAll(['stageId' => $stageId]);
 		foreach ($participants as $participant) {
 			$athlete = $participant->athlete;
 			if (!$athlete->athleteClassId) {
@@ -436,10 +471,11 @@ class ParticipantsController extends BaseController
 				}
 			}
 			if (!$participant->save()) {
-				return 'Не удалось установить класс участнику ' . $athlete->getFullName();
+				return 'Не удалось установить класс участнику ' . $athlete->getFullName() . '. Обратитесь к разработчику.';
 			}
 		}
 		
+		$participants = Participant::findAll(['stageId' => $stageId, 'status' => [Participant::STATUS_ACTIVE]]);
 		if ($participants) {
 			$classIds = Participant::find()->select('athleteClassId')
 				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])->distinct()->asArray()->column();

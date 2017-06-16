@@ -293,11 +293,47 @@ $('.changeParticipantStatus').click(function (e) {
         id: id,
         status: status
     }).done(function (data) {
-        if (data == true) {
+        if (data['success'] == true) {
             location.reload(true);
+        } else if (data['needClarification'] == true) {
+            hideBackDrop();
+            bootbox.dialog({
+                locale: 'ru',
+                title: 'Регистрация спортсмена',
+                message: data['text'],
+                className: 'info',
+                buttons: {
+                    cancel: {
+                        label: 'Отмена',
+                        className: "btn-danger",
+                        callback: function () {
+                            return true;
+                        }
+                    },
+                    confirm: {
+                        label: 'Добавить',
+                        className: "btn-success",
+                        callback: function () {
+                            showBackDrop();
+                            $.get('/competitions/participants/change-status', {
+                                id: id, status: status, confirmed: true
+                            }).done(function (data) {
+                                hideBackDrop();
+                                if (data['success'] == true) {
+                                    location.reload();
+                                } else {
+                                    alert(data['text']);
+                                }
+                            }).fail(function (error) {
+                                alert(error.responseText);
+                            });
+                        }
+                    }
+                }
+            });
         } else {
             hideBackDrop();
-            BootboxError(data);
+            BootboxError(data['text']);
         }
     }).fail(function (error) {
         hideBackDrop();
