@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use common\models\Athlete;
@@ -11,7 +12,7 @@ use yii\web\NotFoundHttpException;
 
 class AthletesController extends BaseController
 {
-	public function actionList()
+	public function actionList($pg = null)
 	{
 		$this->pageTitle = 'Спортсмены';
 		$this->description = 'Спортсмены, хоть раз поучаствовавшие в соревнованиях по мотоджимхане';
@@ -19,12 +20,13 @@ class AthletesController extends BaseController
 		$this->layout = 'full-content';
 		
 		$searchModel = new AthleteSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams, $pg);
 		$dataProvider->query->orderBy(['athleteClassId' => SORT_ASC, 'lastName' => SORT_ASC, 'cityId' => SORT_ASC]);
 		
 		return $this->render('list', [
 			'searchModel'  => $searchModel,
-			'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider,
+			'pg'           => $pg
 		]);
 	}
 	
