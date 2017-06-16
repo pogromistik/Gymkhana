@@ -51,8 +51,20 @@ $this->title = 'Спортсмены';
 					]
 				])
 			],
-			'phone',
-			'email:email',
+			[
+				'attribute' => 'phone',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'phone', ['class' => 'form-control']) . '
+</div>',
+			],
+			[
+				'attribute' => 'email',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'email', ['class' => 'form-control']) . '
+</div>',
+			],
 			[
 				'attribute' => 'cityId',
 				'filter'    => Select2::widget([
@@ -102,7 +114,13 @@ $this->title = 'Спортсмены';
 					return $athlete->athleteClassId ? $athlete->athleteClass->title : null;
 				}
 			],
-			'number',
+			[
+				'attribute' => 'number',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'number', ['class' => 'form-control']) . '
+</div>',
+			],
 			[
 				'attribute' => 'hasAccount',
 				'format'    => 'raw',
@@ -127,13 +145,13 @@ $this->title = 'Спортсмены';
 				}
 			],
 			[
-				'format'  => 'raw',
-				'value'   => function (\common\models\Athlete $athlete) {
+				'format' => 'raw',
+				'value'  => function (\common\models\Athlete $athlete) {
 					return \common\helpers\UserHelper::accessAverage($athlete->regionId, $athlete->creatorUserId) ?
-                        Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
-						'class' => 'btn btn-primary',
-						'title' => 'Редактирование'
-					]) : '';
+						Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
+							'class' => 'btn btn-primary',
+							'title' => 'Редактирование'
+						]) : '';
 				}
 			],
 		],
