@@ -212,9 +212,9 @@
 							<?= $athlete->city->title ?>
                             <br>
 							<?= $participant->motorcycle->getFullTitle() ?>
-							<?php if ($participant->internalClassId) { ?>
+							<?php if ($participant->athleteClassId) { ?>
                                 <br>
-								<?= $participant->internalClass->title ?>
+								<?= $participant->athleteClass->title ?>
 							<?php } ?>
                         </small>
                     </td>
