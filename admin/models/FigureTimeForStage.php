@@ -26,6 +26,7 @@ class FigureTimeForStage extends Model
 	public $newClassId;
 	public $resultTime;
 	public $newClassTitle;
+	public $newClassForParticipant;
 	
 	/**
 	 * @inheritdoc
@@ -36,7 +37,7 @@ class FigureTimeForStage extends Model
 			
 			[['figureId', 'participantId', 'date', 'timeForHuman', 'motorcycleId', 'stageId'], 'required'],
 			[['percent', 'resultTime'], 'number'],
-			[['newClassId', 'fine'], 'integer'],
+			[['newClassId', 'fine', 'newClassForParticipant'], 'integer'],
 			['newClassTitle', 'string']
 		];
 	}
