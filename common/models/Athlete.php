@@ -305,8 +305,14 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 				Notice::add($this->id, $text);
 			}
+			$time = time();
 			$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
 				->andWhere(['status' => [Stage::STATUS_START_REGISTRATION, Stage::STATUS_END_REGISTRATION, Stage::STATUS_UPCOMING]])
+				->andWhere(['or',
+					['fastenClassFor' => null],
+					['fastenClassFor' => 0],
+					new Expression('"dateOfThe"-"fastenClassFor"*86400 >= ' . $time)
+					])
 				->asArray()->column();
 			if ($stageIds) {
 				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);

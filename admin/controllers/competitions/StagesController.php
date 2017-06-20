@@ -259,6 +259,19 @@ class StagesController extends BaseController
 							$figureTime->newClassTitle = $newClass->title;
 						}
 					}
+					if (!$figureTime->newClassId && $newClass && $newClass->id != $participant->athleteClassId) {
+						if ($participant->athleteClassId) {
+							$oldClass = $participant->athleteClass;
+							if ($oldClass->id != $newClass->id && $oldClass->percent > $newClass->percent) {
+								$figureTime->newClassForParticipant = $newClass->id;
+								$figureTime->newClassTitle = $newClass->title;
+							}
+						}
+						else {
+							$figureTime->newClassForParticipant = $newClass->id;
+							$figureTime->newClassTitle = $newClass->title;
+						}
+					}
 				}
 			}
 		} else {
@@ -364,6 +377,27 @@ class StagesController extends BaseController
 							$transaction->rollBack();
 							
 							return var_dump($participant->errors);
+						}
+					} elseif ($figureTime->newClassForParticipant) {
+						$athlete = $participant->athlete;
+						$newClass = AthletesClass::findOne($figureTime->newClassForParticipant);
+						$athleteClass = $athlete->athleteClass;
+						if ($athleteClass && $athleteClass->percent > $newClass->percent) {
+							$transaction->rollBack();
+							return '<div class="alert alert-error">Класс спортсмена не может быть ниже класса участника</div>';
+						}
+						$participantClass = $participant->athleteClass;
+						if ($participantClass->percent < $newClass->percent) {
+							$transaction->rollBack();
+							return '<div class="alert alert-error">Нельзя понизить класс участника</div>';
+						}
+						if ($participant->athleteClassId != $newClass->id) {
+							$participant->athleteClassId = $newClass->id;
+							if (!$participant->save(false)) {
+								$transaction->rollBack();
+								
+								return var_dump($participant->errors);
+							}
 						}
 					}
 					$transaction->commit();

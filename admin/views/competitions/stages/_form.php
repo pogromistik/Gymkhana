@@ -118,6 +118,13 @@ use common\models\Country;
 			]
 		]) ?>
 	
+	<?= $form->field($model, 'fastenClassFor',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+Класс участников этапа перестанет меняться за указанное количество дней (напр. спортсмен зарегистрировался на этап в классе N,
+затем проехал GP8 в класс D3. Класс спортсмена на сайте изменится, но на этом этапе он будет выступать в классе N).
+</div>{input}</div>'])
+		->textInput(['placeholder' => 'Количество суток...']) ?>
+	
 	<?php if ($model->trackPhoto) { ?>
         <div class="row">
             <div class="col-md-2 col-sm-4 img-in-profile">

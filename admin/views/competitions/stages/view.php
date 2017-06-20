@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<?= Html::a('Добавить время по фигурам',
 				['/competitions/stages/add-figures-results', 'stageId' => $model->id], ['class' => 'btn btn-info-light']) ?>
 		<?php } ?>
-		<?= Html::a('Установить классы участникам', ['/competitions/participants/set-classes', 'stageId' => $model->id],
+		<?= Html::a('Установить классы участникам и класс соревнования', ['/competitions/participants/set-classes', 'stageId' => $model->id],
 			[
 				'class'   => 'btn btn-danger setParticipantsClasses',
 				'data-id' => $model->id
@@ -95,7 +95,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label'     => 'Статус публикации фото',
 				'value'     => $model->trackPhotoStatus ? 'опубликовано' : 'не опубликовано'
 			],
-			'referenceTimeHuman'
+			'referenceTimeHuman',
+            'participantsLimit',
+            'fastenClassFor'
 		],
 	]) ?>
 
