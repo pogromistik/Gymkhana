@@ -1098,15 +1098,15 @@ class RunController extends Controller
 				3 => 455
 			],
 			'D4' => [
-				1 => 20,
-				2 => 17,
-				3 => 15,
-				4 => 13,
-				5 => 11,
-				6 => 9,
-				7 => 7,
-				8 => 5,
-				9 => 3,
+				1  => 20,
+				2  => 17,
+				3  => 15,
+				4  => 13,
+				5  => 11,
+				6  => 9,
+				7  => 7,
+				8  => 5,
+				9  => 3,
 				10 => 1
 			]
 		];
@@ -1179,6 +1179,38 @@ class RunController extends Controller
 			}
 		}
 		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionUpdateParticipants($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+			
+			return false;
+		}
+		if ($stage->status == Stage::STATUS_PAST) {
+			echo 'Past stage' . PHP_EOL;
+			
+			return false;
+		}
+		$participants = Participant::findAll(['stageId' => $stageId]);
+		$count = 0;
+		foreach ($participants as $participant) {
+			$athlete = $participant->athlete;
+			if ($participant->athleteClassId != $athlete->athleteClassId) {
+				$participant->athleteClassId = $athlete->athleteClassId;
+				if (!$participant->save()) {
+					var_dump($participant->errors);
+					
+					return false;
+				}
+				$count++;
+			}
+		}
+		echo 'Update ' . $count . ' items' . PHP_EOL;
 		
 		return true;
 	}
