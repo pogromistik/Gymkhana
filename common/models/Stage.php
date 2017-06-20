@@ -31,6 +31,7 @@ use yii\web\UploadedFile;
  * @property integer       $countryId
  * @property integer       $documentId
  * @property integer       $participantsLimit
+ * @property integer       $fastenClassFor
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -108,7 +109,8 @@ class Stage extends BaseActiveRecord
 				'trackPhotoStatus',
 				'countryId',
 				'documentId',
-				'participantsLimit'
+				'participantsLimit',
+				'fastenClassFor'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			['description', 'string'],
@@ -150,7 +152,8 @@ class Stage extends BaseActiveRecord
 			'trackPhotoStatus'       => 'Опубликовать трассу',
 			'countryId'              => 'Страна',
 			'documentId'             => 'Регламент',
-			'participantsLimit'      => 'Допустимое количество участников'
+			'participantsLimit'      => 'Допустимое количество участников',
+			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа'
 		];
 	}
 	
@@ -386,7 +389,7 @@ class Stage extends BaseActiveRecord
 		/** @var Participant[] $participants */
 		$participants = $this->getActiveParticipants()
 			->select(['*', '(CASE WHEN "newAthleteClassStatus"=2 THEN "newAthleteClassId" ELSE "athleteClassId" END) as "resultClass"',
-'row_number() over (partition BY CASE WHEN "newAthleteClassId" IS NOT NULL AND "newAthleteClassStatus"='.Participant::NEW_CLASS_STATUS_APPROVE.' THEN "newAthleteClassId" ELSE "athleteClassId" END
+				'row_number() over (partition BY CASE WHEN "newAthleteClassId" IS NOT NULL AND "newAthleteClassStatus"=' . Participant::NEW_CLASS_STATUS_APPROVE . ' THEN "newAthleteClassId" ELSE "athleteClassId" END
 order by "bestTime" asc) n'])
 			->andWhere(['not', ['bestTime' => null]])
 			->all();
@@ -416,6 +419,7 @@ order by "bestTime" asc) n'])
 				return false;
 			}
 		}
+		
 		return true;
 	}
 	
