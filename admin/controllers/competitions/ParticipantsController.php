@@ -457,21 +457,24 @@ class ParticipantsController extends BaseController
 		}
 		
 		$championship = $stage->championship;
-		$participants = Participant::findAll(['stageId' => $stageId]);
-		foreach ($participants as $participant) {
-			$athlete = $participant->athlete;
-			if (!$athlete->athleteClassId) {
-				return 'Необходимо сначала установить класс для спортсмена ' . $athlete->getFullName();
-			}
-			$participant->athleteClassId = $athlete->athleteClassId;
-			if ($championship->useCheScheme) {
-				$internalClass = $participant->internalClassWithScheme($participant->athleteClassId);
-				if ($internalClass) {
-					$participant->internalClassId = $internalClass;
+		
+		if (!$stage->fastenClassFor || $stage->fastenClassFor == 0 || ($stage->dateOfThe - $stage->fastenClassFor * 86400) >= time()) {
+			$participants = Participant::findAll(['stageId' => $stageId]);
+			foreach ($participants as $participant) {
+				$athlete = $participant->athlete;
+				if (!$athlete->athleteClassId) {
+					return 'Необходимо сначала установить класс для спортсмена ' . $athlete->getFullName();
 				}
-			}
-			if (!$participant->save()) {
-				return 'Не удалось установить класс участнику ' . $athlete->getFullName() . '. Обратитесь к разработчику.';
+				$participant->athleteClassId = $athlete->athleteClassId;
+				if ($championship->useCheScheme) {
+					$internalClass = $participant->internalClassWithScheme($participant->athleteClassId);
+					if ($internalClass) {
+						$participant->internalClassId = $internalClass;
+					}
+				}
+				if (!$participant->save()) {
+					return 'Не удалось установить класс участнику ' . $athlete->getFullName() . '. Обратитесь к разработчику.';
+				}
 			}
 		}
 		
@@ -573,11 +576,15 @@ class ParticipantsController extends BaseController
 		/** @var Participant[] $participants */
 		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
 			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
+		$errors = null;
 		foreach ($participants as $participant) {
 			$result = $this->approveClassForParticipant($participant);
 			if ($result !== true) {
-				return $result;
+				$errors .= $result . PHP_EOL . PHP_EOL;
 			}
+		}
+		if ($errors) {
+			return $errors;
 		}
 		
 		return true;
@@ -630,15 +637,16 @@ class ParticipantsController extends BaseController
 		}
 		
 		$athlete = $participant->athlete;
-		if ($athlete->athleteClass->percent < $participant->newAthleteClass->percent) {
+		/*if ($athlete->athleteClass->percent < $participant->newAthleteClass->percent) {
 			return 'Вы пытаетесь понизить спортсмену ' . $athlete->getFullName() . ' класс с ' . $athlete->athleteClass->title . ' на '
-				. $participant->newAthleteClass->title . '. Понижение класса невозможно';
-		}
-		if ($athlete->athleteClass->percent == $participant->newAthleteClass->percent) {
+				. $participant->newAthleteClass->title . '. Скорее всего, участник уже повысил класс по результатам фигур после
+				того, как оставил заявку на участие в чемпионате. Понижение класса невозможно';
+		}*/
+		if ($athlete->athleteClass->percent <= $participant->newAthleteClass->percent) {
 			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
 			if (!$participant->save()) {
 				
-				return 'Невозможно сохранить изменения для участника';
+				return 'Невозможно сохранить изменения для участника. Свяжитесь с разработчиком.';
 			}
 			
 			return true;
@@ -654,21 +662,21 @@ class ParticipantsController extends BaseController
 			if (!$history) {
 				$transaction->rollBack();
 				
-				return 'Возникла ошибка при изменении данных';
+				return 'Возникла ошибка при изменении данных. Свяжитесь с разработчиком.';
 			}
 			
 			$athlete->athleteClassId = $participant->newAthleteClassId;
 			if (!$athlete->save()) {
 				$transaction->rollBack();
 				
-				return 'Невозможно изменить класс спортсмену';
+				return 'Невозможно изменить класс спортсмену ' . $athlete->getFullName() . '. Свяжитесь с разработчиком.';
 			}
 			
 			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
 			if (!$participant->save()) {
 				$transaction->rollBack();
 				
-				return 'Невозможно сохранить изменения для участника';
+				return 'Невозможно сохранить изменения для участника. Свяжитесь с разработчиком.';
 			}
 			$transaction->commit();
 		}

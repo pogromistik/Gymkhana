@@ -18,6 +18,10 @@ use yii\bootstrap\ActiveForm;
 	<?php } else { ?>
         Класс спортсмена не изменился
 	<?php } ?>
+    <?php if ($figureTime->newClassForParticipant) { ?>
+        <br>
+        Спортсмену для этапа будет установлен класс: <?= $figureTime->newClassTitle ?>.
+        <?php } ?>
     
     <div class="form">
 	    <?php $form = ActiveForm::begin(['id' => 'addFigureTimeForStage']); ?>
@@ -32,6 +36,7 @@ use yii\bootstrap\ActiveForm;
 	    <?= $form->field($figureTime, 'percent')->hiddenInput()->label(false)->error(false) ?>
 	    <?= $form->field($figureTime, 'newClassId')->hiddenInput()->label(false)->error(false) ?>
 	    <?= $form->field($figureTime, 'resultTime')->hiddenInput()->label(false)->error(false) ?>
+	    <?= $form->field($figureTime, 'newClassForParticipant')->hiddenInput()->label(false)->error(false) ?>
         
         <?= \yii\bootstrap\Html::submitButton('Нажмите чтобы добавить результат', ['class' => 'btn btn-primary']) ?>
         
