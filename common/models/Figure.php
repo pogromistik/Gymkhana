@@ -78,14 +78,14 @@ class Figure extends \yii\db\ActiveRecord
 	{
 		if ($this->bestTimeForHuman) {
 			list($min, $secs) = explode(':', $this->bestTimeForHuman);
-			$this->bestTime = ($min * 60000) + $secs * 1000;
+			$this->bestTime = ($min * 60000) + round($secs * 1000);
 		} else {
 			$this->bestTime = null;
 		}
 		
 		if ($this->bestTimeInRussiaForHuman) {
 			list($min, $secs) = explode(':', $this->bestTimeInRussiaForHuman);
-			$this->bestTimeInRussia = ($min * 60000) + $secs * 1000;
+			$this->bestTimeInRussia = ($min * 60000) + round($secs * 1000);
 		} else {
 			$this->bestTimeInRussia = null;
 		}
