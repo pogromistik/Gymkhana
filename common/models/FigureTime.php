@@ -134,7 +134,7 @@ class FigureTime extends BaseActiveRecord
 		}
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
-			$this->time = ($min * 60000) + $secs * 1000;
+			$this->time = ($min * 60000) + round($secs * 1000);
 		}
 		$this->resultTime = $this->time + $this->fine * 1000;
 		if ($this->dateForHuman) {
