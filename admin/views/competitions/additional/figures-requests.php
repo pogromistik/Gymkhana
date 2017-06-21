@@ -20,6 +20,13 @@ $this->title = 'Обработанные заявки с результатам�
 			['class' => 'yii\grid\SerialColumn'],
 			
 			[
+				'attribute' => 'dateAdded',
+				'format'    => 'raw',
+				'value'     => function (TmpFigureResult $figureResult) {
+					return date("d.m.Y, H:i", $figureResult->dateAdded);
+				}
+			],
+			[
 				'attribute' => 'figureId',
 				'format'    => 'raw',
 				'filter'    => Select2::widget([
