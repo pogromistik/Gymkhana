@@ -180,7 +180,7 @@ class StagesController extends BaseController
 			добавление результатов по фигурам невозможно');
 		}
 		
-		$participants = $stage->activeParticipants;
+		$participants = $stage->participantsForRaces;
 		$figures = Figure::find()->where(['useForClassesCalculate' => 1])->orderBy(['title' => SORT_ASC])->all();
 		
 		$figureTime = new FigureTimeForStage();
