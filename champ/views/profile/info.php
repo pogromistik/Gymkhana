@@ -8,8 +8,9 @@ use yii\bootstrap\Html;
 ?>
 
     <h2>Ваши актуальные регистрации:</h2>
-<b>Если вы регистрировались на этап не из личного кабинета - ваша заявка появится на этой страице после подтверждения организатором.</b>
-<br>
+    <b>Если вы регистрировались на этап не из личного кабинета - ваша заявка появится на этой страице после
+        подтверждения организатором.</b>
+    <br>
 <?php if (!$participants) { ?>
     Вы не зарегистрированы ни на один из предстоящих этапов.
 <?php } else { ?>
@@ -43,14 +44,21 @@ use yii\bootstrap\Html;
                             </div>
                         </div>
                         <div class="col-md-3 col-xs-6">
-							<?php if ($participant->status == \common\models\Participant::STATUS_ACTIVE || $participant->status == \common\models\Participant::STATUS_NEED_CLARIFICATION) { ?>
+							<?php if ($participant->status == \common\models\Participant::STATUS_ACTIVE
+								|| $participant->status == \common\models\Participant::STATUS_NEED_CLARIFICATION
+								|| $participant->status == \common\models\Participant::STATUS_OUT_COMPETITION
+							) { ?>
 								<?= Html::a('Отменить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
 									[
 										'class'       => 'btn btn-light getRequest',
 										'data-id'     => $participant->id,
 										'data-action' => '/profile/change-participant-status'
 									]) ?>
-							<?php } else { ?>
+							<?php } elseif ($participant->status == \common\models\Participant::STATUS_CANCEL_ADMINISTRATION) {
+							    ?>
+                                <b>отменено организатором</b>
+                                <?php
+                            } else { ?>
 								<?= Html::a('Возобновить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
 									[
 										'class'       => 'btn btn-dark getRequest',

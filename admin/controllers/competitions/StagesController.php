@@ -135,8 +135,8 @@ class StagesController extends BaseController
 		
 		$stage = $this->findModel($stageId);
 		$participants = $stage->getParticipants()
-			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
-			->orderBy(['bestTime' => SORT_ASC])->all();
+			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION, Participant::STATUS_OUT_COMPETITION]])
+			->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC])->all();
 		
 		return $this->render('result', [
 			'stage'        => $stage,
