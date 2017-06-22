@@ -141,7 +141,7 @@ class Participant extends BaseActiveRecord
 			'placeOfClass'        => 'Место в классе награждения',
 			'placeOfAthleteClass' => 'Место в классе спортсмена',
 			'number'              => 'Номер спортсмена',
-			'sort'                => 'Сортировка',
+			'sort'                => 'Порядок выступления',
 			'dateAdded'           => 'Дата добавления',
 			'status'              => 'Статус',
 			'percent'             => 'Рейтинг',
