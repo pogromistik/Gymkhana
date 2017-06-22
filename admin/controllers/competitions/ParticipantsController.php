@@ -579,7 +579,7 @@ class ParticipantsController extends BaseController
 		}
 		
 		/** @var Participant[] $participants */
-		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+		$participants = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteClassId' => null]])
 			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 		$errors = null;
 		foreach ($participants as $participant) {
@@ -610,7 +610,7 @@ class ParticipantsController extends BaseController
 		}
 		
 		/** @var Participant[] $participants */
-		$participants = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+		$participants = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteClassId' => null]])
 			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 		foreach ($participants as $participant) {
 			if ($participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_NEED_CHECK) {

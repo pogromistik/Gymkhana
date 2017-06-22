@@ -190,13 +190,44 @@ class Participant extends BaseActiveRecord
 		}
 		
 		if ($this->status == self::STATUS_OUT_COMPETITION) {
-			$referenceTime = $this->stage->referenceTime;
-			if ($referenceTime && $this->bestTime && $this->bestTime < 1800000) {
-				$this->percent = round($this->bestTime / $this->stage->referenceTime * 100, 2);
+			$stage = $this->stage;
+			if ($stage->referenceTime && $this->bestTime && $this->bestTime < 1800000) {
+				$this->percent = round($this->bestTime / $stage->referenceTime * 100, 2);
+				if ($stage->class && isset($this->getOldAttributes()["bestTime"])
+					&& $this->bestTime != $this->getOldAttributes()["bestTime"]) {
+					$newClassId = self::getNewClass($stage->classModel, $this);
+					if ($newClassId) {
+						$this->newAthleteClassId = $newClassId;
+						$this->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+					}
+				}
 			}
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public static function getNewClass(AthletesClass $stageClass, Participant $participant)
+	{
+		if ($participant->athleteClassId) {
+			/** @var AthletesClass $resultClass */
+			$resultClass = AthletesClass::find()->where(['>', 'percent', $participant->percent])
+				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
+			if ($resultClass && $resultClass->id != $participant->id) {
+				if ($stageClass->percent > $resultClass->percent) {
+					if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent
+						&& $stageClass->id != $participant->newAthleteClassId
+					) {
+						return $stageClass->id;
+					}
+				} elseif (!$participant->athleteClassId ||
+					$participant->athleteClass->percent > $resultClass->percent && $participant->newAthleteClassId != $resultClass->id
+				) {
+					return $resultClass->id;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public function internalClassWithScheme($classId)
