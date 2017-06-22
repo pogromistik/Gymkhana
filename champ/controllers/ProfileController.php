@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use champ\models\PasswordForm;
@@ -62,6 +63,7 @@ class ProfileController extends AccessController
 					$athlete->save(false);
 				}
 			}
+			
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
@@ -415,7 +417,7 @@ class ProfileController extends AccessController
 		if ($stage->dateOfThe < time()) {
 			return 'В день соревнований изменение данных невозможно';
 		}
-
+		
 		if (in_array($stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
 			return 'Этап начался, изменение данных невозможно';
 		}
@@ -428,7 +430,9 @@ class ProfileController extends AccessController
 			return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
 		}
 		
-		if ($participant->status == Participant::STATUS_ACTIVE || $participant->status == Participant::STATUS_NEED_CLARIFICATION) {
+		if ($participant->status == Participant::STATUS_ACTIVE || $participant->status == Participant::STATUS_NEED_CLARIFICATION
+			|| $participant->status == Participant::STATUS_OUT_COMPETITION
+		) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
 		} else {
 			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
