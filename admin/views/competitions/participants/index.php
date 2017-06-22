@@ -51,6 +51,8 @@ $this->params['breadcrumbs'][] = $this->title;
     - отклоненные заявки.
     <div class="color-div inactive-participant2"></div>
     - заявки, отмененные участником.
+    <div class="color-div out-participant"></div>
+    - участники вне зачета
 </div>
 
 <div class="participant-index">
@@ -64,7 +66,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				return ['class' => 'need-clarification-participant'];
 			} elseif ($item->status === \common\models\Participant::STATUS_CANCEL_ATHLETE) {
 				return ['class' => 'inactive-participant2'];
-			} else {
+			} elseif ($item->status === \common\models\Participant::STATUS_OUT_COMPETITION) {
+				return ['class' => 'out-participant'];
+            } else {
 				return ['class' => 'inactive-participant'];
 			}
 		},
@@ -182,17 +186,27 @@ $this->params['breadcrumbs'][] = $this->title;
 							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
 							'title'       => 'Отменить заявку',
 							'data-id'     => $item->id
-						]);
-					} elseif ($item->status !== \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+						]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-info changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+								'data-id'     => $item->id,
+								'title'       => 'Допустить до участия вне зачёта'
+							]) . '</div>';
+					} elseif ($item->status !== \common\models\Participant::STATUS_NEED_CLARIFICATION && $item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
 						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
 							'class'       => 'btn btn-success changeParticipantStatus',
 							'data-status' => \common\models\Participant::STATUS_ACTIVE,
 							'data-id'     => $item->id,
 							'title'       => 'Возобновить заявку'
-						]);
+						]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-info changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+								'data-id'     => $item->id,
+								'title'       => 'Допустить до участия вне зачёта'
+							]) . '</div>';
 					}
 					
-					return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
+					$html = Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
 							'class'       => 'btn btn-danger changeParticipantStatus',
 							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
 							'title'       => 'Отменить заявку',
@@ -203,6 +217,15 @@ $this->params['breadcrumbs'][] = $this->title;
 							'data-id'     => $item->id,
 							'title'       => 'Подтвердить заявку'
 						]);
+					if ($item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+					    $html .= '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+							    'class'       => 'btn btn-info changeParticipantStatus',
+							    'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+							    'data-id'     => $item->id,
+							    'title'       => 'Допустить до участия вне зачёта'
+						    ]) . '</div>';
+                    }
+					return $html;
 				}
 			]
 		],

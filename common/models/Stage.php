@@ -38,6 +38,8 @@ use yii\web\UploadedFile;
  * @property City          $city
  * @property Participant[] $participants
  * @property Participant[] $activeParticipants
+ * @property Participant[] $outParticipants
+ * @property Participant[] $participantsForRaces
  * @property OverallFile   $document
  */
 class Stage extends BaseActiveRecord
@@ -275,6 +277,18 @@ class Stage extends BaseActiveRecord
 			->andOnCondition(['status' => Participant::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 	}
 	
+	public function getOutParticipants()
+	{
+		return $this->hasMany(Participant::className(), ['stageId' => 'id'])
+			->andOnCondition(['status' => Participant::STATUS_OUT_COMPETITION])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
+	}
+	
+	public function getParticipantsForRaces()
+	{
+		return $this->hasMany(Participant::className(), ['stageId' => 'id'])
+			->andOnCondition(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
+	}
+	
 	public function placesCalculate()
 	{
 		Participant::updateAll(['place' => null, 'placeOfClass' => null, 'placeOfAthleteClass' => null], ['stageId' => $this->id]);
@@ -283,7 +297,7 @@ class Stage extends BaseActiveRecord
 		$place = 1;
 		$transaction = \Yii::$app->db->beginTransaction();
 		/** @var Participant $best */
-		$best = $this->getActiveParticipants()->where(['athleteClassId' => $this->class])->orderBy(['bestTime' => SORT_ASC])->one();
+		$best = $this->getActiveParticipants()->andWhere(['athleteClassId' => $this->class])->orderBy(['bestTime' => SORT_ASC])->one();
 		if (!$best) {
 			$transaction->rollBack();
 			
@@ -379,6 +393,21 @@ class Stage extends BaseActiveRecord
 				}
 			}
 		}
+		
+		//вне зачёта
+		$participants = $this->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
+		foreach ($participants as $participant) {
+			if ($participant->bestTime && $participant->bestTime < 1800000) {
+				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				
+				if (!$participant->save()) {
+					$transaction->rollBack();
+					
+					return var_dump($participant->errors);
+				}
+			}
+		}
+		
 		$transaction->commit();
 		
 		return true;
@@ -386,6 +415,7 @@ class Stage extends BaseActiveRecord
 	
 	public function calculatePoints()
 	{
+		Participant::updateAll(['pointsByMoscow' => null], ['stageId' => $this->id]);
 		/** @var Participant[] $participants */
 		$participants = $this->getActiveParticipants()
 			->select(['*', '(CASE WHEN "newAthleteClassStatus"=2 THEN "newAthleteClassId" ELSE "athleteClassId" END) as "resultClass"',
