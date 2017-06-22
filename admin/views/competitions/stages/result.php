@@ -36,6 +36,8 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
     </div>
 <?php } ?>
 
+<div class="color-div out-participant"></div>
+- участники вне зачета
 <table class="table results">
     <thead>
     <tr>
@@ -64,8 +66,12 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 		if ($times) {
 			$first = reset($times);
 		}
+		$class = 'default';
+		if ($participant->status == \common\models\Participant::STATUS_OUT_COMPETITION) {
+		    $class = 'out-participant';
+        }
 		?>
-        <tr>
+        <tr class="<?= $class ?>">
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfAthleteClass ?></td>
@@ -113,7 +119,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 				$next = next($times);
 			}
 			?>
-            <tr>
+            <tr class="<?= $class ?>">
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
                     <td><?= $next->timeForHuman ?></td>

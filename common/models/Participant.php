@@ -53,6 +53,7 @@ class Participant extends BaseActiveRecord
 	const STATUS_DISQUALIFICATION = 2;
 	const STATUS_CANCEL_ATHLETE = 3;
 	const STATUS_CANCEL_ADMINISTRATION = 4;
+	const STATUS_OUT_COMPETITION = 5;
 	
 	const NEW_CLASS_STATUS_NEED_CHECK = 1;
 	const NEW_CLASS_STATUS_APPROVE = 2;
@@ -62,7 +63,14 @@ class Participant extends BaseActiveRecord
 		self::STATUS_ACTIVE                => 'Заявка активна',
 		self::STATUS_DISQUALIFICATION      => 'Участник дисквалифицирован',
 		self::STATUS_CANCEL_ATHLETE        => 'Отменена участником',
-		self::STATUS_CANCEL_ADMINISTRATION => 'Отменена администрацией'
+		self::STATUS_CANCEL_ADMINISTRATION => 'Отменена администрацией',
+		self::STATUS_NEED_CLARIFICATION    => 'Требует подтверждения организатора',
+		self::STATUS_OUT_COMPETITION       => 'Вне зачёта'
+	];
+	
+	public static $typesTitle = [
+		self::STATUS_ACTIVE          => 'В зачёте',
+		self::STATUS_OUT_COMPETITION => 'Вне зачёта'
 	];
 	
 	/**
@@ -156,7 +164,7 @@ class Participant extends BaseActiveRecord
 				}
 			}
 			
-			if ($this->stage->participantsLimit > 0 && $this->status != self::STATUS_ACTIVE) {
+			if ($this->stage->participantsLimit > 0 && $this->status != self::STATUS_ACTIVE && $this->status != self::STATUS_OUT_COMPETITION) {
 				$this->status = self::STATUS_NEED_CLARIFICATION;
 			}
 			

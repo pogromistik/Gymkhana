@@ -61,6 +61,8 @@ use common\models\AthletesClass;
 	
 	<?= $form->field($model, 'sort')->textInput() ?>
 	
+	<?= $form->field($model, 'status')->dropDownList(\common\models\Participant::$typesTitle) ?>
+	
 	<?php if (!$needClarification) { ?>
         <div class="form-group">
 	        <?= Html::hiddenInput('confirmed', false) ?>

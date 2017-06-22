@@ -113,17 +113,19 @@ class ParticipantsController extends BaseController
 					$participant->number = $athlete->number;
 				}
 			}
-			if ($stage->participantsLimit > 0) {
-				$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
-					->andWhere(['stageId' => $stage->id])->count();
-				if ($count >= $stage->participantsLimit) {
-					$confirmed = \Yii::$app->request->post('confirmed');
-					if (!$confirmed) {
-						$needClarification = true;
+			if ($participant->status != Participant::STATUS_OUT_COMPETITION) {
+				if ($stage->participantsLimit > 0) {
+					$count = Participant::find()->where(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
+						->andWhere(['stageId' => $stage->id])->count();
+					if ($count >= $stage->participantsLimit) {
+						$confirmed = \Yii::$app->request->post('confirmed');
+						if (!$confirmed) {
+							$needClarification = true;
+						}
 					}
 				}
+				$participant->status = Participant::STATUS_ACTIVE;
 			}
-			$participant->status = Participant::STATUS_ACTIVE;
 			if (!$error && !$needClarification && $participant->save()) {
 				return $this->redirect(['index', 'stageId' => $stageId]);
 			}
@@ -412,6 +414,9 @@ class ParticipantsController extends BaseController
 					->setSubject('gymkhana-cup: регистрация на этап отклонена')
 					->send();
 			}
+		} elseif ($status == Participant::STATUS_OUT_COMPETITION && $participant->status != Participant::STATUS_OUT_COMPETITION) {
+			$text = 'Вы допущены на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" вне зачёта';
+			Notice::add($participant->athleteId, $text);
 		}
 		$participant->status = $status;
 		

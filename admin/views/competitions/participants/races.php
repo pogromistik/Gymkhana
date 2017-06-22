@@ -58,7 +58,7 @@ $attempt = 0;
     </div>
     <hr>
 	<?php
-	$participants = $stage->activeParticipants;
+	$participants = $stage->participantsForRaces;
 	foreach ($participants as $participant) {
 		$timeModel = $participant->getTimeForm($attempt);
 		?>
