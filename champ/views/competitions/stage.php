@@ -112,6 +112,8 @@ $championship = $stage->championship;
 							<?php } ?>
 						<?php } ?>
                     </div>
+				<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
+                    <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
 				<?php } ?>
 				
 				<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
@@ -134,7 +136,8 @@ $championship = $stage->championship;
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="show-pk">
-                                            Количество участников: <?= count($participantsByInternalClasses) + count($tmpParticipants) ?>
+                                            Количество
+                                            участников: <?= count($participantsByInternalClasses) + count($tmpParticipants) ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -147,14 +150,15 @@ $championship = $stage->championship;
                                         </div>
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
-                                        Количество участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                        Количество
+                                        участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
                                     </div>
                                 </div>
 								<?= $this->render('_byJapan', [
-								        'stage' => $stage,
-                                        'participants' => $participantsByJapan,
-								        'tmpParticipants' => $tmpParticipants
-                                ]) ?>
+									'stage'           => $stage,
+									'participants'    => $participantsByJapan,
+									'tmpParticipants' => $tmpParticipants
+								]) ?>
                             </div>
                             <div class="result-scheme">
                                 <div class="change-type">
@@ -164,7 +168,8 @@ $championship = $stage->championship;
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="show-pk">
-                                            Количество участников: <?= count($participantsByInternalClasses) + count($tmpParticipants) ?>
+                                            Количество
+                                            участников: <?= count($participantsByInternalClasses) + count($tmpParticipants) ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -177,7 +182,8 @@ $championship = $stage->championship;
                                         </div>
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
-                                        Количество участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                        Количество
+                                        участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
                                     </div>
                                 </div>
 								<?= $this->render('_byInternalClasses', [
@@ -190,7 +196,8 @@ $championship = $stage->championship;
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="show-pk">
-                                        Количество участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                        Количество
+                                        участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
