@@ -189,6 +189,13 @@ class Participant extends BaseActiveRecord
 			}
 		}
 		
+		if ($this->status == self::STATUS_OUT_COMPETITION) {
+			$referenceTime = $this->stage->referenceTime;
+			if ($referenceTime && $this->bestTime && $this->bestTime < 1800000) {
+				$this->percent = round($this->bestTime / $this->stage->referenceTime * 100, 2);
+			}
+		}
+		
 		return parent::beforeValidate();
 	}
 	
@@ -223,7 +230,7 @@ class Participant extends BaseActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		$stage = $this->stage;
 		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
-			if (array_key_exists('bestTime', $changedAttributes)) {
+			if ($this->status != Participant::STATUS_OUT_COMPETITION && array_key_exists('bestTime', $changedAttributes)) {
 				$stage->placesCalculate();
 			}
 		}
