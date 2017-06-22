@@ -184,6 +184,10 @@ img {
     font-weight: bold;
 }
 
+.pt-5 {
+    padding-top: 5px;
+}
+
 .pt-10 {
     padding-top: 10px;
 }
@@ -351,6 +355,10 @@ small.very {
 
 .inactive-participant2 {
     background: #dbdfef !important;
+}
+
+.out-participant {
+    background: #cfefea !important;
 }
 
 .need-clarification-participant {
