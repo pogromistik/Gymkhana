@@ -728,6 +728,8 @@ $(document).ready(function () {
         var count = 255 - box.length;
 
         if (count >= 0) {
+            $('#length').removeClass('color-red');
+            $('#length').addClass('color-green');
             $('#length').html('осталось символов: ' + count);
         } else {
             $('#length').removeClass('color-green');
