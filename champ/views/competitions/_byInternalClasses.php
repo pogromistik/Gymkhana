@@ -319,12 +319,12 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 			foreach ($tmpParticipants as $tmpParticipant) {
 				?>
                 <tr class="result-needClarificationParticipant">
-                    <th></th>
-                    <th><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
-						<?= $tmpParticipant->city ?><br>
-						<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></th>
-                    <th></th>
-                    <th></th>
+                    <td></td>
+                    <td><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
+                        <small><?= $tmpParticipant->city ?><br>
+                            <?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></small></td>
+                    <td></td>
+                    <td></td>
                 </tr>
 				<?php
 			}
