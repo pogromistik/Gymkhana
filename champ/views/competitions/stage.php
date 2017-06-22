@@ -112,7 +112,9 @@ $championship = $stage->championship;
 							<?php } ?>
 						<?php } ?>
                     </div>
-				<?php } ?>
+				<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
+                    <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
+    <?php } ?>
 				
 				<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
 
