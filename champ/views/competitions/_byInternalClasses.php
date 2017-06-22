@@ -53,7 +53,7 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
-						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                         <br><?= $athlete->city->title ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
@@ -184,7 +184,7 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
-						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                         <br><?= $athlete->city->title ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
@@ -204,7 +204,11 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->percent ?>%</td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->percent ?>%
+						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $outParticipant->newAthleteClass->title ?>)
+						<?php } ?>
+                    </td>
                 </tr>
 				<?php
 				$attempt = 1;
@@ -270,9 +274,9 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     <td>
 						<?php if ($participant->number) { ?>
 							<?= \yii\bootstrap\Html::a('№' . $participant->number . ' ' . $athlete->getFullName(),
-								['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+								['/athletes/view', 'id' => $athlete->id]) ?>
 						<?php } else { ?>
-							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
 						<?php } ?>
                         <br>
                         <small>
@@ -322,7 +326,8 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     <td></td>
                     <td><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
                         <small><?= $tmpParticipant->city ?><br>
-                            <?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></small></td>
+							<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></small>
+                    </td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -349,9 +354,9 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     <td>
 						<?php if ($outParticipant->number) { ?>
 							<?= \yii\bootstrap\Html::a('№' . $outParticipant->number . ' ' . $athlete->getFullName(),
-								['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+								['/athletes/view', 'id' => $athlete->id]) ?>
 						<?php } else { ?>
-							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
 						<?php } ?>
                         <br>
                         <small>
@@ -386,7 +391,11 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
                     </td>
-                    <td><?= $outParticipant->percent ?>%</td>
+                    <td><?= $outParticipant->percent ?>%
+						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $outParticipant->newAthleteClass->title ?>)
+						<?php } ?>
+                    </td>
                 </tr>
 			<?php } ?>
 		<?php } ?>
