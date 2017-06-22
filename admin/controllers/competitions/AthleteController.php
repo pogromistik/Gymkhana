@@ -13,6 +13,8 @@ use common\models\search\AthleteSearch;
 use admin\controllers\BaseController;
 use yii\base\UserException;
 use yii\bootstrap\ActiveForm;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -248,5 +250,29 @@ class AthleteController extends BaseController
 		}
 		
 		return true;
+	}
+	
+	public function actionGetList($title = null)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$out = ['results' => ['id' => '', 'text' => '']];
+		$query = new Query();
+		$query->select('"Athletes"."id", ("Athletes"."lastName" || \' \' || "Athletes"."firstName"
+		|| \' (\' || "Cities"."title" || \')\') AS text')
+			->from([City::tableName(), Athlete::tableName()])
+			->where(new Expression('"Athletes"."cityId" = "Cities"."id"'));
+		if (!is_null($title)) {
+			$query->andWhere(['or',
+				['like', 'upper("Athletes"."lastName")', mb_strtoupper($title, 'UTF-8')],
+				['like', 'upper("Athletes"."firstName")', mb_strtoupper($title, 'UTF-8')]
+			]);
+		}
+		$query->orderBy(['"Athletes"."lastName"' => SORT_ASC]);
+		$command = $query->createCommand();
+		$data = $command->queryAll();
+		$out['results'] = array_values($data);
+		
+		return $out;
+	
 	}
 }

@@ -31,6 +31,13 @@ use common\models\AthletesClass;
 			'placeholder' => 'Выберите спортсмена...',
 			'id'          => 'athlete-id',
 		],
+		/*'pluginOptions' => [
+			'ajax' => [
+				'url' => \yii\helpers\Url::to('/competitions/athlete/get-list'),
+				'dataType' => 'json',
+				'data' => new \yii\web\JsExpression('function(params) { return {title:params.term}; }')
+			],
+		],*/
 	]) ?>
 	
 	<?= $form->field($model, 'motorcycleId')->widget(\kartik\widgets\DepDrop::className(), [

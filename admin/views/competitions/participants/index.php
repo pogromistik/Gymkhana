@@ -48,11 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="color-div need-clarification-participant"></div>
     - заявки, требующие модерации;
     <div class="color-div inactive-participant"></div>
-    - отклоненные заявки.
+    - отклоненные заявки;
     <div class="color-div inactive-participant2"></div>
-    - заявки, отмененные участником.
+    - заявки, отмененные участником;
     <div class="color-div out-participant"></div>
-    - участники вне зачета
+    - участники вне зачета.
 </div>
 
 <div class="participant-index">
