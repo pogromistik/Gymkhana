@@ -35,7 +35,10 @@ $stages = $model->stages;
 		'model'      => $model,
 		'attributes' => [
 			'title',
-			'description:ntext',
+			[
+				'attribute' => 'description',
+				'format'     => 'raw'
+			],
 			[
 				'attribute' => 'yearId',
 				'value'     => $model->year->year
