@@ -1250,6 +1250,8 @@ class RunController extends Controller
 		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
 		$count = TmpParticipant::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update TmpParticipant: ' . $count . PHP_EOL;
+		$count = ClassHistory::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update ClassHistory: ' . $count . PHP_EOL;
 		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
 			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
 			$mainAthlete->save(false);
@@ -1277,6 +1279,8 @@ class RunController extends Controller
 		echo 'Update Participant: ' . $count . PHP_EOL;
 		$count = TmpFigureResult::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
 		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
+		$count = ClassHistory::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update ClassHistory: ' . $count . PHP_EOL;
 		
 		if ($motorcycle2->delete()) {
 			echo 'success' . PHP_EOL;
