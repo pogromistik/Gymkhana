@@ -10,6 +10,7 @@ use kartik\widgets\DepDrop;
 use yii\web\JsExpression;
 use yii\helpers\ArrayHelper;
 use common\models\Country;
+use dosamigos\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
@@ -72,7 +73,9 @@ use common\models\Country;
 	
 	<?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
 	
-	<?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
+	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+		'preset' => 'full', 'clientOptions' => ['height' => 150]
+	]) ?>
 	
 	<?= $form->field($model, 'countRace')->textInput(['maxlength' => true]) ?>
 	
