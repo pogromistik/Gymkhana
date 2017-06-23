@@ -6,6 +6,7 @@ use common\models\Year;
 use yii\helpers\ArrayHelper;
 use common\models\Championship;
 use kartik\widgets\Select2;
+use dosamigos\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model Championship */
@@ -32,7 +33,9 @@ $country = \common\models\Country::getRussia();
 	
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'название чемпионата, необязательное поле']) ?>
 	
-	<?= $form->field($model, 'description')->textarea(['rows' => 3, 'placeholder' => 'краткое описание, необязательное поле']) ?>
+	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+		'preset' => 'full', 'clientOptions' => ['height' => 150]
+	]) ?>
 	
 	<?= $form->field($model, 'yearId')->dropDownList(ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year')) ?>
 	
