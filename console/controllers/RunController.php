@@ -1214,4 +1214,75 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionMergeAthletes($id1, $id2)
+	{
+		$athlete1 = Athlete::findOne($id1);
+		$athlete2 = Athlete::findOne($id2);
+		if ($athlete1->hasAccount && $athlete2->hasAccount) {
+			echo 'account error' . PHP_EOL;
+			return false;
+		}
+		if ($athlete1->lastName != $athlete2->lastName) {
+			echo 'lastname error' . PHP_EOL;
+			return false;
+		}
+		if ($athlete1->hasAccount) {
+			$mainAthlete = $athlete1;
+		} else {
+			$mainAthlete = $athlete2;
+			$athlete2 = $athlete1;
+		}
+		
+		//объединяем время по фигурам
+		$transaction = \Yii::$app->db->beginTransaction();
+		$count = FigureTime::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update FigureTime: ' . $count . PHP_EOL;
+		$count = Motorcycle::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update Motorcycle: ' . $count . PHP_EOL;
+		$count = Notice::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update Notice: ' . $count . PHP_EOL;
+		$count = Participant::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update Participant: ' . $count . PHP_EOL;
+		$count = TmpAthlete::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update TmpAthlete: ' . $count . PHP_EOL;
+		$count = TmpFigureResult::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
+		$count = TmpParticipant::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update TmpParticipant: ' . $count . PHP_EOL;
+		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
+			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
+			$mainAthlete->save(false);
+		}
+		if ($athlete2->delete()) {
+			echo 'success' . PHP_EOL;
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionMergeMotorcycles($id1, $id2)
+	{
+		$motorcycle1 = Motorcycle::findOne($id1);
+		$motorcycle2 = Motorcycle::findOne($id2);
+		if ($motorcycle2->athleteId != $motorcycle1->athleteId) {
+			echo 'athlete error' . PHP_EOL;
+			return false;
+		}
+		$transaction = \Yii::$app->db->beginTransaction();
+		$count = FigureTime::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update FigureTime: ' . $count . PHP_EOL;
+		$count = Participant::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update Participant: ' . $count . PHP_EOL;
+		$count = TmpFigureResult::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
+		
+		if ($motorcycle2->delete()) {
+			echo 'success' . PHP_EOL;
+		}
+		$transaction->commit();
+		
+		return true;
+	}
 }
