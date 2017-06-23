@@ -46,7 +46,7 @@ class Time extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['participantId', 'stageId', 'time', 'resultTime', 'attemptNumber', 'timeForHuman'], 'required'],
+			[['participantId', 'stageId', 'time', 'resultTime', 'attemptNumber'], 'required'],
 			[['participantId', 'stageId', 'time', 'fine', 'resultTime', 'attemptNumber'], 'integer'],
 			['timeForHuman', 'string'],
 			[['fine', 'isFail'], 'default', 'value' => 0]
