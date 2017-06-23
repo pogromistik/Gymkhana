@@ -32,7 +32,7 @@ $championship = $stage->championship;
                     , <?= $stage->city->title ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
                     <span class="label label-success"><?= Stage::$statusesTitle[$stage->status] ?></span></h4>
 				<?php if ($stage->location) { ?>
-                    <p><b>Место проведения этапа: </b> <?= $stage->location ?></p>
+                    <p>Место проведения этапа: <?= $stage->location ?></p>
 				<?php } ?>
 				
 				<?php if ($stage->description) { ?>
