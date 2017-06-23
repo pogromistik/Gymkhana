@@ -22,7 +22,7 @@ use common\models\Client;
 ]); ?>
 
 <?= $form->field($user, 'email')->textInput(['maxlength' => 255]) ?>
-<?= $form->field($user, 'username')->textInput(['maxlength' => 255]) ?>
+<?= $form->field($user, 'username')->textInput(['maxlength' => 255])->label('Логин') ?>
 
 <?= $form->field($assignment, 'items[]')->dropDownList(
 	\admin\controllers\competitions\UsersController::$rolesTitle, $assignment->items ? [
