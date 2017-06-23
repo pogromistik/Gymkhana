@@ -59,7 +59,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'cityId',
 				'value'     => $model->city->title
 			],
-			'description',
+			[
+				'attribute' => 'description',
+				'format'     => 'raw'
+			],
 			'countRace',
 			[
 				'attribute' => 'dateAdded',
