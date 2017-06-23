@@ -3,9 +3,8 @@
  * @var \common\models\Stage            $stage
  * @var \common\models\Participant[]    $participants
  * @var \common\models\TmpParticipant[] $tmpParticipants
+ * @var \common\models\Participant[]    $outCompetitionParticipants
  */
-/** @var \common\models\Participant[] $outCompetitionParticipants */
-$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
 <div class="show-pk">
