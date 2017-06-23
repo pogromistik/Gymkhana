@@ -19,6 +19,7 @@ if ($city->timezone) {
 }
 
 $championship = $stage->championship;
+$countParticipants = count($participantsByInternalClasses) + count($tmpParticipants) + count($stage->outParticipants);
 ?>
 
     <div class="row">
@@ -141,7 +142,7 @@ $championship = $stage->championship;
                                     <div class="col-sm-6">
                                         <div class="show-pk">
                                             Количество
-                                            участников: <?= count($participantsByInternalClasses) + count($tmpParticipants) ?>
+                                            участников: <?= $countParticipants ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -173,7 +174,7 @@ $championship = $stage->championship;
                                     <div class="col-sm-6">
                                         <div class="show-pk">
                                             Количество
-                                            участников: <?= count($participantsByInternalClasses) + count($tmpParticipants) ?>
+                                            участников: <?= $countParticipants ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -187,7 +188,7 @@ $championship = $stage->championship;
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
                                         Количество
-                                        участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                        участников: <?= $countParticipants ?>
                                     </div>
                                 </div>
 								<?= $this->render('_byInternalClasses', [
