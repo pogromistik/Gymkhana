@@ -156,7 +156,7 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
                                         Количество
-                                        участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                        участников: <?= $countParticipants ?>
                                     </div>
                                 </div>
 								<?= $this->render('_byJapan', [
@@ -202,7 +202,7 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                                 <div class="col-sm-6">
                                     <div class="show-pk">
                                         Количество
-                                        участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                        участников: <?= $countParticipants ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -215,7 +215,7 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                                     </div>
                                 </div>
                                 <div class="col-sm-12 show-mobile text-right">
-                                    Количество участников: <?= count($participantsByJapan) + count($tmpParticipants) ?>
+                                    Количество участников: <?= $countParticipants ?>
                                 </div>
                             </div>
 							<?= $this->render('_byJapan', [
