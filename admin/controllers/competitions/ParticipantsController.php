@@ -415,8 +415,10 @@ class ParticipantsController extends BaseController
 					->send();
 			}
 		} elseif ($status == Participant::STATUS_OUT_COMPETITION && $participant->status != Participant::STATUS_OUT_COMPETITION) {
-			$text = 'Вы допущены на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" вне зачёта';
-			Notice::add($participant->athleteId, $text);
+			if ($athlete->hasAccount) {
+				$text = 'Вы допущены на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" вне зачёта';
+				Notice::add($participant->athleteId, $text);
+			}
 		}
 		$participant->status = $status;
 		
