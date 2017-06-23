@@ -3,9 +3,8 @@
  * @var \common\models\Stage            $stage
  * @var \common\models\Participant[]    $participants
  * @var \common\models\TmpParticipant[] $tmpParticipants
+ * @var \common\models\Participant[]    $outCompetitionParticipants
  */
-/** @var \common\models\Participant[] $outCompetitionParticipants */
-$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
 <div class="show-pk">
@@ -208,9 +207,9 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->percent ?>%
-	                    <?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
                             (<?= $outParticipant->newAthleteClass->title ?>)
-	                    <?php } ?>
+						<?php } ?>
                     </td>
                 </tr>
 				<?php
