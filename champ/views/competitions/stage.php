@@ -20,6 +20,7 @@ if ($city->timezone) {
 
 $championship = $stage->championship;
 $countParticipants = count($participantsByInternalClasses) + count($tmpParticipants) + count($stage->outParticipants);
+$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
     <div class="row">
@@ -160,9 +161,10 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                                     </div>
                                 </div>
 								<?= $this->render('_byJapan', [
-									'stage'           => $stage,
-									'participants'    => $participantsByJapan,
-									'tmpParticipants' => $tmpParticipants
+									'stage'                      => $stage,
+									'participants'               => $participantsByJapan,
+									'tmpParticipants'            => $tmpParticipants,
+									'outCompetitionParticipants' => $outCompetitionParticipants
 								]) ?>
                             </div>
                             <div class="result-scheme">
@@ -192,9 +194,10 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                                     </div>
                                 </div>
 								<?= $this->render('_byInternalClasses', [
-									'stage'           => $stage,
-									'participants'    => $participantsByInternalClasses,
-									'tmpParticipants' => $tmpParticipants
+									'stage'                      => $stage,
+									'participants'               => $participantsByInternalClasses,
+									'tmpParticipants'            => $tmpParticipants,
+									'outCompetitionParticipants' => $outCompetitionParticipants
 								]) ?>
                             </div>
 						<?php } else { ?>
@@ -219,9 +222,10 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                                 </div>
                             </div>
 							<?= $this->render('_byJapan', [
-								'stage'           => $stage,
-								'participants'    => $participantsByJapan,
-								'tmpParticipants' => $tmpParticipants
+								'stage'                      => $stage,
+								'participants'               => $participantsByJapan,
+								'tmpParticipants'            => $tmpParticipants,
+								'outCompetitionParticipants' => $outCompetitionParticipants
 							]) ?>
 						<?php } ?>
                     </div>
