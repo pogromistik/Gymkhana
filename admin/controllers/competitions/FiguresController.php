@@ -10,6 +10,7 @@ use common\models\search\FigureTimeSearch;
 use Yii;
 use common\models\Figure;
 use common\models\search\FigureSearch;
+use yii\base\UserException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -387,5 +388,18 @@ class FiguresController extends BaseController
 		}
 		
 		return true;
+	}
+	
+	public function actionDeleteTime($id, $figureId) {
+		$this->can('developer');
+		$item = FigureTime::findOne($id);
+		if (!$item) {
+			throw new NotFoundHttpException('Результат не найден');
+		}
+		if ($item->newAthleteClassId || $item->isNewRecord) {
+			throw new UserException('Удаление невозможно');
+		}
+		$item->delete();
+		return $this->redirect(['update', 'id' => $figureId]);
 	}
 }
