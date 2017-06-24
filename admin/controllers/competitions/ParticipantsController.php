@@ -160,7 +160,7 @@ class ParticipantsController extends BaseController
 		$query->from(['a' => Participant::tableName(), 'd' => AthletesClass::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
 		$query->where(['a.stageId' => $stageId]);
 		$query->select(['a."id", b."lastName", b."firstName", c."mark", c."model", a."number", d."title"']);
-		$query->andWhere(['a.status' => Participant::STATUS_ACTIVE]);
+		$query->andWhere(['a.status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]]);
 		$query->andWhere(new Expression('"a"."athleteId" = "b"."id"'));
 		$query->andWhere(new Expression('"a"."motorcycleId" = "c"."id"'));
 		$query->andWhere(new Expression('"a"."athleteClassId" = "d"."id"'));
