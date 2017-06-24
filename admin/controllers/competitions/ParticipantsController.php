@@ -408,11 +408,13 @@ class ParticipantsController extends BaseController
 					. $participant->motorcycle->getFullTitle() . ' отклонена, так как на этап уже зарегистрировано максимальное
 					количество участников. Для уточнения подробностей можете связаться с
 					организатором соревнования.';
-				\Yii::$app->mailer->compose('text', ['text' => $text])
-					->setTo($athlete->email)
-					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-					->setSubject('gymkhana-cup: регистрация на этап отклонена')
-					->send();
+				if (YII_ENV != 'dev') {
+					\Yii::$app->mailer->compose('text', ['text' => $text])
+						->setTo($athlete->email)
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup: регистрация на этап отклонена')
+						->send();
+				}
 			}
 		} elseif ($status == Participant::STATUS_OUT_COMPETITION && $participant->status != Participant::STATUS_OUT_COMPETITION) {
 			if ($athlete->hasAccount) {
