@@ -167,7 +167,7 @@ class AthleteController extends BaseController
 	
 	public function actionAddAthlete()
 	{
-		$this->can('competitions');
+		$this->can('refereeOfCompetitions');
 		
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$model = new Athlete();
