@@ -397,7 +397,7 @@ class ParticipantsController extends BaseController
 			}
 		} elseif ($status == Participant::STATUS_CANCEL_ADMINISTRATION && $stage->participantsLimit > 0
 			&& $participant->status != Participant::STATUS_CANCEL_ADMINISTRATION
-			&& $stage->dateOfThe > to
+			&& $stage->dateOfThe > time()
 		) {
 			if ($athlete->hasAccount) {
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
