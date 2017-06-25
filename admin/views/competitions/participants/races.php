@@ -63,7 +63,7 @@ $attempt = 0;
 		$timeModel = $participant->getTimeForm($attempt);
 		?>
 		<?php $form = ActiveForm::begin([
-			'id'      => 'raceTimeForm' . $participant->id,
+			'id'      => 'raceTimeForm' . $participant->id . '-' . $attempt,
 			'options' => [
 				'class' => 'raceTimeForm form-' . $attempt,
 			]
