@@ -1,9 +1,11 @@
 <?php
 use yii\bootstrap\ActiveForm;
+
 /**
  * @var string                           $error
  * @var \admin\models\FigureTimeForStage $figureTime
  * @var \common\models\Athlete           $athlete
+ * @var \common\models\FigureTime        $oldResult
  */
 ?>
 
@@ -18,28 +20,32 @@ use yii\bootstrap\ActiveForm;
 	<?php } else { ?>
         Класс спортсмена не изменился
 	<?php } ?>
-    <?php if ($figureTime->newClassForParticipant) { ?>
+	<?php if ($figureTime->newClassForParticipant) { ?>
         <br>
         Спортсмену для этапа будет установлен класс: <?= $figureTime->newClassTitle ?>.
+	<?php } ?>
+    <?php if ($oldResult) { ?>
+        <br>
+        <b>У спортсмена уже есть результат <?= $oldResult->resultTimeForHuman ?> от <?= $oldResult->dateForHuman ?> на этом мотоцикле</b>
         <?php } ?>
-    
+
     <div class="form">
-	    <?php $form = ActiveForm::begin(['id' => 'addFigureTimeForStage']); ?>
-	
-	    <?= $form->field($figureTime, 'date')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'stageId')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'figureId')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'participantId')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'motorcycleId')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'timeForHuman')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'fine')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'percent')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'newClassId')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'resultTime')->hiddenInput()->label(false)->error(false) ?>
-	    <?= $form->field($figureTime, 'newClassForParticipant')->hiddenInput()->label(false)->error(false) ?>
-        
-        <?= \yii\bootstrap\Html::submitButton('Нажмите чтобы добавить результат', ['class' => 'btn btn-primary']) ?>
-        
-	    <?php $form->end() ?>
+		<?php $form = ActiveForm::begin(['id' => 'addFigureTimeForStage']); ?>
+		
+		<?= $form->field($figureTime, 'date')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'stageId')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'figureId')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'participantId')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'motorcycleId')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'timeForHuman')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'fine')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'percent')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'newClassId')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'resultTime')->hiddenInput()->label(false)->error(false) ?>
+		<?= $form->field($figureTime, 'newClassForParticipant')->hiddenInput()->label(false)->error(false) ?>
+		
+		<?= \yii\bootstrap\Html::submitButton('Нажмите чтобы добавить результат', ['class' => 'btn btn-primary']) ?>
+		
+		<?php $form->end() ?>
     </div>
 <?php } ?>

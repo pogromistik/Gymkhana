@@ -706,12 +706,50 @@ $(document).on("submit", '#figureTimeForm', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            if (result == true) {
+            if (result['success'] == true) {
                 location.href = '/competitions/figures/add-results?figureId=' + figureId +
                     '&date=' + date + '&success=true';
+            } else if (result['confirm'] == true) {
+                hideBackDrop();
+                bootbox.dialog({
+                    locale: 'ru',
+                    title: 'Добавление времени',
+                    message: result['text'],
+                    className: 'info',
+                    buttons: {
+                        cancel: {
+                            label: 'Отмена',
+                            className: "btn-danger",
+                            callback: function () {
+                                location.href = '/competitions/figures/add-results?figureId=' + figureId +
+                                    '&date=' + date;
+                            }
+                        },
+                        confirm: {
+                            label: 'Добавить',
+                            className: "btn-success",
+                            callback: function () {
+                                showBackDrop();
+                                $.ajax({
+                                    url: '/competitions/figures/add-time?confirm=true',
+                                    type: "POST",
+                                    data: form.serialize(),
+                                    success: function (result) {
+                                        if (result['success'] == true) {
+                                            location.href = '/competitions/figures/add-results?figureId=' + figureId +
+                                                '&date=' + date + '&success=true';
+                                        } else {
+                                            alert(result['text']);
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                });
             } else {
                 hideBackDrop();
-                BootboxError(result);
+                BootboxError(result['text']);
             }
         },
         error: function (result) {

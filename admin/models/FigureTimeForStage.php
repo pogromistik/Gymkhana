@@ -8,6 +8,7 @@
 
 namespace admin\models;
 
+use common\models\Participant;
 use yii\base\Model;
 
 /**
@@ -35,9 +36,9 @@ class FigureTimeForStage extends Model
 	{
 		return [
 			
-			[['figureId', 'participantId', 'date', 'timeForHuman', 'motorcycleId', 'stageId'], 'required'],
+			[['figureId', 'participantId', 'date', 'timeForHuman', 'stageId'], 'required'],
 			[['percent', 'resultTime'], 'number'],
-			[['newClassId', 'fine', 'newClassForParticipant'], 'integer'],
+			[['newClassId', 'fine', 'newClassForParticipant', 'motorcycleId'], 'integer'],
 			['newClassTitle', 'string']
 		];
 	}
@@ -56,5 +57,13 @@ class FigureTimeForStage extends Model
 			'motorcycleId'  => 'Мотоцикл',
 			'stageId'       => 'Этап'
 		];
+	}
+	
+	public function beforeValidate()
+	{
+		if (!$this->motorcycleId) {
+			$this->motorcycleId = Participant::findOne($this->participantId)->motorcycleId;
+		}
+		return parent::beforeValidate();
 	}
 }
