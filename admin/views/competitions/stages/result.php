@@ -1,5 +1,6 @@
 <?php
 use common\models\Championship;
+
 /**
  * @var \yii\web\View                $this
  * @var \common\models\Stage         $stage
@@ -68,8 +69,8 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 		}
 		$class = 'default';
 		if ($participant->status == \common\models\Participant::STATUS_OUT_COMPETITION) {
-		    $class = 'out-participant';
-        }
+			$class = 'out-participant';
+		}
 		?>
         <tr class="<?= $class ?>">
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
@@ -80,7 +81,13 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 			<?php if ($first) { ?>
                 <td>1.</td>
-                <td><?= $first->timeForHuman ?></td>
+                <td>
+					<?php if ($first->isFail) { ?>
+                        <strike><?= $first->timeForHuman ?></strike>
+                    <?php } else { ?>
+						<?= $first->timeForHuman ?>
+					<?php } ?>
+                </td>
                 <td><?= $first->fine ?></td>
 			<?php } else { ?>
                 <td>1.</td>
@@ -122,7 +129,13 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
             <tr class="<?= $class ?>">
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
-                    <td><?= $next->timeForHuman ?></td>
+                    <td>
+	                    <?php if ($next->isFail) { ?>
+                            <strike><?= $next->timeForHuman ?></strike>
+	                    <?php } else { ?>
+		                    <?= $next->timeForHuman ?>
+	                    <?php } ?>
+                    </td>
                     <td><?= $next->fine ?></td>
 				<?php } else { ?>
                     <td></td>
