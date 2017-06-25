@@ -186,8 +186,12 @@ class ParticipantsController extends BaseController
 		
 		$sortList = \Yii::$app->request->getBodyParam('sort_list');
 		$sortItems = explode(',', $sortList);
-		$transaction = \Yii::$app->db->beginTransaction();
 		$i = 1;
+		$values = '';
+		foreach ($sortItems as $item) {
+			$values .= '(' . $item . ',' . $i++ . ')';
+		}
+		$transaction = \Yii::$app->db->beginTransaction();
 		foreach ($sortItems as $item) {
 			$participant = Participant::findOne($item);
 			$participant->sort = $i++;
@@ -393,7 +397,7 @@ class ParticipantsController extends BaseController
 			}
 		} elseif ($status == Participant::STATUS_CANCEL_ADMINISTRATION && $stage->participantsLimit > 0
 			&& $participant->status != Participant::STATUS_CANCEL_ADMINISTRATION
-			&& $stage->dateOfThe > time()
+			&& $stage->dateOfThe > to
 		) {
 			if ($athlete->hasAccount) {
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
