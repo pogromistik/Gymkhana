@@ -212,7 +212,7 @@ class CompetitionsController extends BaseController
 			$participantsByJapan = $participantsQuery
 				->orderBy([
 					'b."status"'   => SORT_DESC,
-					//'c."percent"'  => SORT_ASC,
+					'c."percent"'  => SORT_ASC,
 					'b."bestTime"' => SORT_ASC,
 					'b."sort"'     => SORT_ASC,
 					'b."id"'       => SORT_ASC
