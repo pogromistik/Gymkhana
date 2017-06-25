@@ -49,28 +49,18 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?= $form->field($figureTime, 'figureId')->dropDownList(ArrayHelper::map($figures, 'id', 'title'))
 			->label(false) ?>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-6">
 		<?= $form->field($figureTime, 'participantId')->widget(Select2::classname(), [
 			'name'    => 'kv-type-01',
 			'data'    => ArrayHelper::map($participants, 'id', function (\common\models\Participant $item) {
 				$athlete = $item->athlete;
 				
-				return $athlete->getFullName() . '  (' . $athlete->city->title . ')';
+				return $athlete->getFullName() . '  (' . $athlete->city->title . '), ' . $item->motorcycle->getFullTitle();
 			}),
 			'options' => [
 				'placeholder' => 'Выберите участника...',
 				'id'          => 'athlete-id',
 			],
-		])->label(false) ?>
-    </div>
-    <div class="col-sm-3">
-		<?= $form->field($figureTime, 'motorcycleId')->widget(\kartik\widgets\DepDrop::className(), [
-			'options'       => ['id' => 'motorcycle-id'],
-			'pluginOptions' => [
-				'depends'     => ['athlete-id'],
-				'placeholder' => 'Выберите мотоцикл...',
-				'url'         => \yii\helpers\Url::to('/competitions/participants/motorcycle-category-for-participants')
-			]
 		])->label(false) ?>
     </div>
     <div class="col-sm-2">

@@ -256,7 +256,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				'format'  => 'raw',
 				'visible' => \Yii::$app->user->can('developer'),
 				'value'   => function (\common\models\FigureTime $item) {
-					if ($item->newAthleteClassId || $item->isNewRecord) {
+					if ($item->newAthleteClassId || $item->recordType) {
 						return null;
 					}
 					
