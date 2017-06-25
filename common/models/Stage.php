@@ -357,21 +357,20 @@ class Stage extends BaseActiveRecord
 		foreach ($participants as $participant) {
 			if ($participant->bestTime && $participant->bestTime < 1800000) {
 				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
-			}
-			
-			//Рассчёт класса
-			if ($this->class) {
-				$newClassId = Participant::getNewClass($this->classModel, $participant);
-				if ($newClassId) {
-					$participant->newAthleteClassId = $newClassId;
-					$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+				//Рассчёт класса
+				if ($this->class) {
+					$newClassId = Participant::getNewClass($this->classModel, $participant);
+					if ($newClassId) {
+						$participant->newAthleteClassId = $newClassId;
+						$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+					}
 				}
-			}
-			
-			if (!$participant->save()) {
-				$transaction->rollBack();
 				
-				return var_dump($participant->errors);
+				if (!$participant->save()) {
+					$transaction->rollBack();
+					
+					return var_dump($participant->errors);
+				}
 			}
 		}
 		
