@@ -186,12 +186,8 @@ class ParticipantsController extends BaseController
 		
 		$sortList = \Yii::$app->request->getBodyParam('sort_list');
 		$sortItems = explode(',', $sortList);
-		$i = 1;
-		$values = '';
-		foreach ($sortItems as $item) {
-			$values .= '(' . $item . ',' . $i++ . ')';
-		}
 		$transaction = \Yii::$app->db->beginTransaction();
+		$i = 1;
 		foreach ($sortItems as $item) {
 			$participant = Participant::findOne($item);
 			$participant->sort = $i++;
