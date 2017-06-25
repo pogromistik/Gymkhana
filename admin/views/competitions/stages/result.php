@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' 
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = 'Итоги';
 $place = 1;
-$newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+$newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteClassId' => null]])
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
