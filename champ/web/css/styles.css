@@ -44,6 +44,10 @@ a:hover {
     text-decoration: underline;
 }
 
+.stage a {
+    word-wrap: break-word;
+}
+
 .content a:hover, .full-content a:hover {
     color: #56a025;
 }
