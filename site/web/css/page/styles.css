@@ -1309,3 +1309,14 @@ nav .dropdown-menu li a:hover {
 .help_project .text .item.card {
     font-size: 18px;
 }
+
+.news-table {
+    background: #ddd!important;
+    color: #242423!important;;
+    border: 1px solid #242423!important;
+}
+
+.news-table > thead > tr > th, .news-table > tbody > tr > th, .news-table > tfoot > tr > th,
+.news-table > thead > tr > td, .news-table > tbody > tr > td, .news-table > tfoot > tr > td {
+    border: 1px solid #242423!important;
+}
