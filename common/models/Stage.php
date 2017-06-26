@@ -384,14 +384,22 @@ class Stage extends BaseActiveRecord
 		Participant::updateAll(['pointsByMoscow' => null], ['stageId' => $this->id]);
 		/** @var Participant[] $participants */
 		$participants = $this->getActiveParticipants()
-			->select(['*', '(CASE WHEN "newAthleteClassStatus"=2 THEN "newAthleteClassId" ELSE "athleteClassId" END) as "resultClass"',
-				'row_number() over (partition BY CASE WHEN "newAthleteClassId" IS NOT NULL AND "newAthleteClassStatus"=' . Participant::NEW_CLASS_STATUS_APPROVE . ' THEN "newAthleteClassId" ELSE "athleteClassId" END
-order by "bestTime" asc) n'])
+			->select(['*', '(SELECT "AthletesClasses"."id"
+FROM "AthletesClasses"
+WHERE "AthletesClasses"."percent" > "Participants"."percent"
+ORDER BY "AthletesClasses"."percent" asc, "AthletesClasses"."title" DESC
+LIMIT 1) as "resultClass"',
+				'row_number() over (partition BY (
+				SELECT "AthletesClasses"."id"
+FROM "AthletesClasses"
+WHERE "AthletesClasses"."percent" > "Participants"."percent"
+ORDER BY "AthletesClasses"."percent" asc, "AthletesClasses"."title" DESC
+LIMIT 1) order by "bestTime" asc) n'])
 			->andWhere(['not', ['bestTime' => null]])
 			->all();
 		$points = ArrayHelper::map(MoscowPoint::find()->all(), 'place', 'point', 'class');
 		/** @var AthletesClass $bestClass */
-		$bestClass = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->one();
+		//$bestClass = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->one();
 		foreach ($participants as $participant) {
 			if (!$participant->resultClass) {
 				continue;
