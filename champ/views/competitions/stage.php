@@ -24,7 +24,7 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
 $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
-    <div class="row">
+    <div class="row stage">
         <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
             <div class="title-with-bg">
 				<?= $championship->title ?>

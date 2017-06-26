@@ -42,6 +42,9 @@ a:hover {
 
 .content a, .full-content a {
     text-decoration: underline;
+}
+
+.stage a {
     word-wrap: break-word;
 }
 
