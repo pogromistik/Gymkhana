@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </tr>
         <tr>
             <th>Текст</th>
-            <td><?= $model->text ?></td>
+            <td><?= nl2br(htmlspecialchars($model->text)) ?></td>
         </tr>
         </tbody>
     </table>
