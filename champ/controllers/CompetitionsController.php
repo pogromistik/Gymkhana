@@ -8,6 +8,7 @@ use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\HelpModel;
 use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
@@ -238,9 +239,41 @@ class CompetitionsController extends BaseController
 		
 		$tmpParticipants = null;
 		if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION
-		|| $stage->status == Stage::STATUS_END_REGISTRATION) {
+			|| $stage->status == Stage::STATUS_END_REGISTRATION
+		) {
 			$tmpParticipants = TmpParticipant::find()->where(['status' => TmpParticipant::STATUS_NEW])
 				->andWhere(['stageId' => $stage->id])->all();
+		}
+		
+		$needTime = [];
+		if ($stage->referenceTime) {
+			/** @var AthletesClass[] $allClasses */
+			$allClasses = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+			/** @var AthletesClass $prev */
+			$prev = null;
+			$last = null;
+			foreach ($allClasses as $class) {
+				if (!$prev || $prev->percent == $class->percent) {
+					$startTime = '00:00.00';
+				} else {
+					$time = $stage->referenceTime * ($prev->percent) / 100;
+					$startTime = HelpModel::convertTimeToHuman($time);
+				}
+				$time = $stage->referenceTime * ($class->percent - 0.01) / 100;
+				$endTime = HelpModel::convertTimeToHuman($time);
+				$needTime[$class->id] = [
+					'classModel' => $class,
+					'startTime'  => $startTime,
+					'endTime'    => $endTime,
+					'percent'    => $class->percent
+				];
+				$prev = $class;
+				$last = $class->id;
+			}
+			$needTime[$last]['endTime'] = '59:59.59';
+			if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+				$needTime[$last]['percent'] = '> ' . $prev->percent;
+			}
 		}
 		
 		return $this->render('stage', [
@@ -249,7 +282,8 @@ class CompetitionsController extends BaseController
 			'participantsByInternalClasses' => $participantsByInternalClasses,
 			'sortBy'                        => $sortBy,
 			'showByClasses'                 => $showByClasses,
-			'tmpParticipants'               => $tmpParticipants
+			'tmpParticipants'               => $tmpParticipants,
+			'needTime'                      => $needTime
 		]);
 	}
 	

@@ -200,4 +200,12 @@ class HelpModel extends Model
 	{
 		return mb_strtoupper(mb_substr($name, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($name, 1, null, 'UTF-8');
 	}
+	
+	public static function convertTimeToHuman($time)
+	{
+		$min = str_pad(floor($time / 60000), 2, '0', STR_PAD_LEFT);
+		$sec = str_pad(floor(($time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
+		$mls = str_pad(round(($time - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
+		return $min . ':' . $sec . '.' . $mls;
+	}
 }

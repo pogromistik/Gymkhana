@@ -9,6 +9,7 @@ use yii\bootstrap\Html;
  * @var \common\models\Participant[]    $participantsByInternalClasses
  * @var integer                         $sortBy
  * @var \common\models\TmpParticipant[] $tmpParticipants
+ * @var array                           $needTime
  */
 $time = time();
 $city = $stage->city;
@@ -72,6 +73,45 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 				<?php if ($stage->referenceTime) { ?>
                     <div>
                         Эталонное время трассы: <?= $stage->referenceTimeHuman ?>
+                        <br>
+                        Время, необходимое для повышения класса:
+                        <table class="table">
+                            <tr>
+                                <td>Класс</td>
+                                <td>Процент</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12">
+                                            Минимальное время
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            Максимальное время
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+							<?php foreach ($needTime as $id => $data) {
+								$cssClass = null;
+								if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($data['classModel']->title, 'UTF-8')])) {
+									$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($data['classModel']->title, 'UTF-8')];
+								}
+								?>
+                                <tr class="result-<?=$cssClass?>">
+                                    <td><?= $data['classModel']->title ?></td>
+                                    <td><?= $data['percent'] ?>%</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['startTime'] ?>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['endTime'] ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+							<?php } ?>
+                        </table>
                     </div>
 				<?php } ?>
 				<?php if ($stage->class) { ?>
