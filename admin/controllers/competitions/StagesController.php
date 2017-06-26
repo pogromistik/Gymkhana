@@ -200,6 +200,7 @@ class StagesController extends BaseController
 		$error = false;
 		$figureTime = new FigureTimeForStage();
 		$athlete = null;
+		$oldResult = null;
 		if ($figureTime->load(\Yii::$app->request->post())) {
 			if (!$figureTime->validate()) {
 				return '<div class="alert alert-danger">Необходимо заполнить все поля</div>';
@@ -241,6 +242,9 @@ class StagesController extends BaseController
 						$figureTime->percent = 100;
 					}
 					
+					$oldResult = FigureTime::findOne(['athleteId' => $participant->athleteId, 'motorcycleId' => $figureTime->motorcycleId,
+						'resultTime' => $figureTime->resultTime]);
+					
 					//новый класс
 					$athlete = $participant->athlete;
 					/** @var AthletesClass $newClass */
@@ -281,7 +285,8 @@ class StagesController extends BaseController
 		return $this->renderAjax('check-figure-time', [
 			'figureTime' => $figureTime,
 			'error'      => $error,
-			'athlete'    => $athlete
+			'athlete'    => $athlete,
+			'oldResult' => $oldResult
 		]);
 	}
 	
@@ -318,6 +323,9 @@ class StagesController extends BaseController
 				}
 				
 				if (!$error) {
+					if (!$figureTime->motorcycleId) {
+						$figureTime->motorcycleId = $participant->motorcycleId;
+					}
 					//проверка нового класса
 					$athlete = $participant->athlete;
 					if (!$figureTime->newClassId) {
