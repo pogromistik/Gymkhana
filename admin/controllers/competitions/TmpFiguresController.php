@@ -116,6 +116,19 @@ class TmpFiguresController extends BaseController
 			$figureResult->date = $tmp->date;
 			$figureResult->timeForHuman = $tmp->timeForHuman;
 			$figureResult->dateForHuman = $tmp->dateForHuman;
+			if ($tmp->videoLink) {
+				if (mb_strstr($tmp->videoLink, 'http://', 'UTF-8') !== false
+					|| mb_strstr($tmp->videoLink, 'https://', 'UTF-8') !== false) {
+					if (mb_strstr($tmp->videoLink, 'http://vk.', 'UTF-8') !== false
+						|| mb_strstr($tmp->videoLink, 'https://vk.', 'UTF-8') !== false) {
+						if (mb_strstr($tmp->videoLink, 'video', 'UTF-8') !== false) {
+							$figureResult->videoLink = $tmp->videoLink;
+						}
+					} else {
+						$figureResult->videoLink = $tmp->videoLink;
+					}
+				}
+			}
 			
 			$transaction = \Yii::$app->db->beginTransaction();
 			if (!$figureResult->save()) {

@@ -46,7 +46,7 @@ class Time extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['participantId', 'stageId', 'time', 'resultTime', 'attemptNumber', 'timeForHuman'], 'required'],
+			[['participantId', 'stageId', 'time', 'resultTime', 'attemptNumber'], 'required'],
 			[['participantId', 'stageId', 'time', 'fine', 'resultTime', 'attemptNumber'], 'integer'],
 			['timeForHuman', 'string'],
 			[['fine', 'isFail'], 'default', 'value' => 0]
@@ -98,7 +98,7 @@ class Time extends BaseActiveRecord
 		
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
-			$this->time = ($min * 60000) + $secs * 1000;
+			$this->time = ($min * 60000) + round($secs * 1000);
 			if ($this->time > self::FAIL_TIME) {
 				$this->time = self::FAIL_TIME;
 			}

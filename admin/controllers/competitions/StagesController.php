@@ -10,12 +10,14 @@ use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Year;
 use Yii;
 use common\models\Stage;
 use common\models\search\StageSearch;
 use yii\base\UserException;
+use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -133,8 +135,8 @@ class StagesController extends BaseController
 		
 		$stage = $this->findModel($stageId);
 		$participants = $stage->getParticipants()
-			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION]])
-			->orderBy(['bestTime' => SORT_ASC])->all();
+			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION, Participant::STATUS_OUT_COMPETITION]])
+			->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC])->all();
 		
 		return $this->render('result', [
 			'stage'        => $stage,
@@ -178,8 +180,8 @@ class StagesController extends BaseController
 			добавление результатов по фигурам невозможно');
 		}
 		
-		$participants = $stage->activeParticipants;
-		$figures = Figure::findAll(['useForClassesCalculate' => 1]);
+		$participants = $stage->participantsForRaces;
+		$figures = Figure::find()->where(['useForClassesCalculate' => 1])->orderBy(['title' => SORT_ASC])->all();
 		
 		$figureTime = new FigureTimeForStage();
 		$figureTime->stageId = $stage->id;
@@ -254,6 +256,19 @@ class StagesController extends BaseController
 							}
 						} else {
 							$figureTime->newClassId = $newClass->id;
+							$figureTime->newClassTitle = $newClass->title;
+						}
+					}
+					if (!$figureTime->newClassId && $newClass && $newClass->id != $participant->athleteClassId) {
+						if ($participant->athleteClassId) {
+							$oldClass = $participant->athleteClass;
+							if ($oldClass->id != $newClass->id && $oldClass->percent > $newClass->percent) {
+								$figureTime->newClassForParticipant = $newClass->id;
+								$figureTime->newClassTitle = $newClass->title;
+							}
+						}
+						else {
+							$figureTime->newClassForParticipant = $newClass->id;
 							$figureTime->newClassTitle = $newClass->title;
 						}
 					}
@@ -337,24 +352,10 @@ class StagesController extends BaseController
 					if (!$newTime->save()) {
 						$transaction->rollBack();
 						
-						return $newTime->errors;
+						return var_dump($newTime->errors);
 					}
 					
 					if ($correctNewClass) {
-						$athlete->athleteClassId = $newTime->newAthleteClassId;
-						if (!$athlete->save()) {
-							$transaction->rollBack();
-							
-							return $athlete->errors;
-						}
-						
-						$participant->athleteClassId = $newTime->newAthleteClassId;
-						if (!$participant->save(false)) {
-							$transaction->rollBack();
-							
-							return $athlete->errors;
-						}
-						
 						$history = ClassHistory::create($athlete->id, $newTime->motorcycleId,
 							$oldClassId, $newTime->newAthleteClassId, $figure->title,
 							$newTime->resultTime, $figure->bestTime, $newTime->percent);
@@ -362,6 +363,41 @@ class StagesController extends BaseController
 							$transaction->rollBack();
 							
 							return var_dump($history->errors);
+						}
+						
+						$athlete->athleteClassId = $newTime->newAthleteClassId;
+						if (!$athlete->save()) {
+							$transaction->rollBack();
+							
+							return var_dump($athlete->errors);
+						}
+						
+						$participant->athleteClassId = $newTime->newAthleteClassId;
+						if (!$participant->save(false)) {
+							$transaction->rollBack();
+							
+							return var_dump($participant->errors);
+						}
+					} elseif ($figureTime->newClassForParticipant) {
+						$athlete = $participant->athlete;
+						$newClass = AthletesClass::findOne($figureTime->newClassForParticipant);
+						$athleteClass = $athlete->athleteClass;
+						if ($athleteClass && $athleteClass->percent > $newClass->percent) {
+							$transaction->rollBack();
+							return '<div class="alert alert-error">Класс спортсмена не может быть ниже класса участника</div>';
+						}
+						$participantClass = $participant->athleteClass;
+						if ($participantClass->percent < $newClass->percent) {
+							$transaction->rollBack();
+							return '<div class="alert alert-error">Нельзя понизить класс участника</div>';
+						}
+						if ($participant->athleteClassId != $newClass->id) {
+							$participant->athleteClassId = $newClass->id;
+							if (!$participant->save(false)) {
+								$transaction->rollBack();
+								
+								return var_dump($participant->errors);
+							}
 						}
 					}
 					$transaction->commit();
@@ -374,5 +410,25 @@ class StagesController extends BaseController
 		$error = 'Произошла ошибка при отправке данных';
 		
 		return '<div class="alert alert-error">' . $error . '</div>';
+	}
+	
+	public function actionAccruePoints($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new NotFoundHttpException('Доступ запрещен');
+			}
+		}
+		if (!$stage->championship->useMoscowPoints) {
+			throw new UserException('Функция доступна только для чемпионатов, использующих Московскую схему начисления баллов');
+		}
+		if ($stage->calculatePoints()) {
+			return true;
+		}
+		return 'При начислении баллов за этап возникла ошибка. Свяжитесь с разработчиком.';
 	}
 }

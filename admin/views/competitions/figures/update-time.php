@@ -52,6 +52,11 @@ $this->params['breadcrumbs'][] = 'Редактирование результа�
 			'value'     => $form->field($figureTime, 'fine')->textInput()->label(false)
 		],
 		[
+			'attribute' => 'videoLink',
+			'format'    => 'raw',
+			'value'     => $form->field($figureTime, 'videoLink')->textInput()->label(false)
+		],
+		[
 			'attribute' => '',
 			'format'    => 'raw',
 			'value'     => Html::submitButton('Сохранить', ['class' => 'btn btn-primary'])

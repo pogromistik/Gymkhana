@@ -29,6 +29,8 @@ use yii\db\Query;
  * @property integer         $isClosed
  * @property string          $onlyRegions
  * @property integer         $useCheScheme
+ * @property integer         $showResults
+ * @property integer         $useMoscowPoints
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -102,12 +104,12 @@ class Championship extends BaseActiveRecord
 		return [
 			[['description'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber',
-				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'], 'required'],
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount', 'showResults'], 'required'],
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
 				'dateAdded', 'dateUpdated', 'regionId',
 				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount',
-				'isClosed', 'useCheScheme'
+				'isClosed', 'useCheScheme', 'showResults', 'useMoscowPoints'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
@@ -117,7 +119,7 @@ class Championship extends BaseActiveRecord
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
 			['maxNumber', 'default', 'value' => 99],
-			[['requiredOtherRegions', 'isClosed', 'useCheScheme'], 'default', 'value' => 0],
+			[['requiredOtherRegions', 'isClosed', 'useCheScheme', 'showResults', 'useMoscowPoints'], 'default', 'value' => 0],
 			[['onlyRegions'], 'safe'],
 			['useCheScheme', 'validateClasses']
 		];
@@ -158,7 +160,9 @@ class Championship extends BaseActiveRecord
 			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог',
 			'isClosed'             => 'Закрытый чемпионат',
 			'onlyRegions'          => 'Регионы, которые могут принимать участие',
-			'useCheScheme'         => 'Использовать Челябинскую схему для награждения'
+			'useCheScheme'         => 'Использовать Челябинскую схему для награждения',
+			'showResults'          => 'Показывать итоги чемпионата',
+			'useMoscowPoints'      => 'Считать баллы по Московской схеме'
 		];
 	}
 	
@@ -369,8 +373,8 @@ class Championship extends BaseActiveRecord
 					];
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
-					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
-					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['stages'][$stage->id] = $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+					$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
 					$results[$participant->athleteId]['countStages'] += 1;
 					if (!$results[$participant->athleteId]['cityId']) {
 						$results[$participant->athleteId]['cityId'] = $stage->cityId;

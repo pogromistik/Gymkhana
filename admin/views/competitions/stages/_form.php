@@ -10,6 +10,7 @@ use kartik\widgets\DepDrop;
 use yii\web\JsExpression;
 use yii\helpers\ArrayHelper;
 use common\models\Country;
+use dosamigos\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
@@ -72,9 +73,17 @@ use common\models\Country;
 	
 	<?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
 	
-	<?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
+	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+		'preset' => 'full', 'clientOptions' => ['height' => 150]
+	]) ?>
 	
 	<?= $form->field($model, 'countRace')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'participantsLimit',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Если ограничения по количеству участников нет - оставьте поле пустым.
+</div>{input}</div>'])
+		->textInput() ?>
 	
 	<?= $form->field($model, 'dateOfTheHuman')->widget(DatePicker::classname(), [
 		'options'       => ['placeholder' => 'Введите дату проведения соревнований'],
@@ -111,6 +120,13 @@ use common\models\Country;
 				'format'    => 'dd.mm.yyyy, hh:ii',
 			]
 		]) ?>
+	
+	<?= $form->field($model, 'fastenClassFor',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+Класс участников этапа перестанет меняться за указанное количество дней (напр. спортсмен зарегистрировался на этап в классе N,
+затем проехал GP8 в класс D3. Класс спортсмена на сайте изменится, но на этом этапе он будет выступать в классе N).
+</div>{input}</div>'])
+		->textInput(['placeholder' => 'Количество суток...']) ?>
 	
 	<?php if ($model->trackPhoto) { ?>
         <div class="row">

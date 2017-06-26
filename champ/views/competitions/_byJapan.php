@@ -1,7 +1,9 @@
 <?php
 /**
- * @var \common\models\Stage         $stage
- * @var \common\models\Participant[] $participants
+ * @var \common\models\Stage            $stage
+ * @var \common\models\Participant[]    $participants
+ * @var \common\models\TmpParticipant[] $tmpParticipants
+ * @var \common\models\Participant[]    $outCompetitionParticipants
  */
 ?>
 
@@ -24,6 +26,7 @@
         </thead>
         <tbody>
 		<?php
+		$countColumns = 11;
 		if ($participants) {
 			foreach ($participants as $participant) {
 				$athlete = $participant->athlete;
@@ -34,10 +37,14 @@
 				}
 				$cssClass = 'default';
 				$participantClass = null;
-				if ($participant->athleteClassId) {
-					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->athleteClassId) {
+						$participantClass = $participant->athleteClass;
+						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+						}
 					}
 				}
 				?>
@@ -48,17 +55,17 @@
                     </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
-						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                         <br><?= $athlete->city->title ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
                         <td>1.</td>
                         <td>
-	                        <?php if ($first->isFail) { ?>
+							<?php if ($first->isFail) { ?>
                                 <strike><?= $first->timeForHuman ?></strike>
-	                        <?php } else { ?>
-		                        <?= $first->timeForHuman ?>
-	                        <?php } ?>
+							<?php } else { ?>
+								<?= $first->timeForHuman ?>
+							<?php } ?>
                         </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
@@ -68,7 +75,11 @@
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
+						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+						<?php } ?>
+                    </td>
                 </tr>
 				<?php
 				$attempt = 1;
@@ -98,7 +109,7 @@
 				}
 				?>
 			<?php }
-		} else { ?>
+		} elseif (!$tmpParticipants && !$outCompetitionParticipants) { ?>
             <tr>
                 <td rowspan="<?= $stage->countRace ?>"></td>
                 <td rowspan="<?= $stage->countRace ?>"></td>
@@ -123,7 +134,113 @@
                 </tr>
 				<?php
 			}
-		} ?>
+		}
+		if ($tmpParticipants) {
+			foreach ($tmpParticipants as $tmpParticipant) { ?>
+                <tr class="result-needClarificationParticipant">
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->number ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?>
+                        <br>
+						<?= $tmpParticipant->city ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></td>
+                    <td>1.</td>
+                    <td></td>
+                    <td></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>">%</td>
+                </tr>
+				<?php
+				$attempt = 1;
+				while ($attempt++ < $stage->countRace) {
+					?>
+                    <tr class="result-needClarificationParticipant">
+                        <td><?= $attempt ?>.</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+					<?php
+				} ?>
+			<?php }
+		}
+		?>
+		<?php if ($outCompetitionParticipants) { ?>
+            <tr>
+                <td colspan="<?= $countColumns ?>" class="text-center">
+                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                </td>
+            </tr>
+			<?php foreach ($outCompetitionParticipants as $outParticipant) {
+				$athlete = $outParticipant->athlete;
+				$times = $outParticipant->times;
+				$first = null;
+				if ($times) {
+					$first = reset($times);
+				}
+				?>
+                <tr>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->athleteClassId ? $outParticipant->athleteClass->title : null ?></td>
+                    <td rowspan="<?= $stage->countRace ?>">
+                    </td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->number ?></td>
+                    <td rowspan="<?= $stage->countRace ?>">
+						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
+                        <br><?= $athlete->city->title ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->motorcycle->getFullTitle() ?></td>
+					<?php if ($first) { ?>
+                        <td>1.</td>
+                        <td>
+							<?php if ($first->isFail) { ?>
+                                <strike><?= $first->timeForHuman ?></strike>
+							<?php } else { ?>
+								<?= $first->timeForHuman ?>
+							<?php } ?>
+                        </td>
+                        <td><?= $first->fine ?></td>
+					<?php } else { ?>
+                        <td>1.</td>
+                        <td></td>
+                        <td></td>
+					<?php } ?>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->humanBestTime ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->percent ?>%
+						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $outParticipant->newAthleteClass->title ?>)
+						<?php } ?>
+                    </td>
+                </tr>
+				<?php
+				$attempt = 1;
+				while ($attempt++ < $stage->countRace) {
+					$next = null;
+					if ($times) {
+						$next = next($times);
+					}
+					?>
+                    <tr>
+                        <td><?= $attempt ?>.</td>
+						<?php if ($next) { ?>
+                            <td>
+								<?php if ($next->isFail) { ?>
+                                    <strike><?= $next->timeForHuman ?></strike>
+								<?php } else { ?>
+									<?= $next->timeForHuman ?>
+								<?php } ?>
+                            </td>
+                            <td><?= $next->fine ?></td>
+						<?php } else { ?>
+                            <td></td>
+                            <td></td>
+						<?php } ?>
+                    </tr>
+					<?php
+				}
+				?>
+			<?php } ?>
+		<?php } ?>
         </tbody>
     </table>
 </div>
@@ -140,6 +257,7 @@
         </thead>
         <tbody>
 		<?php
+		$countColumns = 4;
 		if ($participants) {
 			foreach ($participants as $participant) {
 				$athlete = $participant->athlete;
@@ -147,10 +265,14 @@
 				
 				$cssClass = 'default';
 				$participantClass = null;
-				if ($participant->athleteClassId) {
-					$participantClass = $participant->athleteClass;
-					if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-						$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+					$cssClass = 'needClarificationParticipant';
+				} else {
+					if ($participant->athleteClassId) {
+						$participantClass = $participant->athleteClass;
+						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+						}
 					}
 				}
 				?>
@@ -159,18 +281,18 @@
                     <td>
 						<?php if ($participant->number) { ?>
 							<?= \yii\bootstrap\Html::a('№' . $participant->number . ' ' . $athlete->getFullName(),
-								['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+								['/athletes/view', 'id' => $athlete->id]) ?>
 						<?php } else { ?>
-							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
 						<?php } ?>
                         <br>
                         <small>
 							<?= $athlete->city->title ?>
                             <br>
 							<?= $participant->motorcycle->getFullTitle() ?>
-							<?php if ($participant->internalClassId) { ?>
+							<?php if ($participant->athleteClassId) { ?>
                                 <br>
-								<?= $participant->internalClass->title ?>
+								<?= $participant->athleteClass->title ?>
 							<?php } ?>
                         </small>
                     </td>
@@ -178,10 +300,10 @@
 						<?php foreach ($times as $time) { ?>
 							<?php if ($time->isFail) { ?>
                                 <strike>
-	                                <?= $time->timeForHuman ?>
-	                                <?php if ($time->fine) { ?>
+									<?= $time->timeForHuman ?>
+									<?php if ($time->fine) { ?>
                                         <span class="red"> +<?= $time->fine ?></span>
-	                                <?php } ?>
+									<?php } ?>
                                 </strike>
 							<?php } else { ?>
 								<?= $time->timeForHuman ?>
@@ -196,10 +318,94 @@
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
                     </td>
-                    <td><?= $participant->percent ?>%</td>
+                    <td><?= $participant->percent ?>%
+						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $participant->newAthleteClass->title ?>)
+						<?php } ?>
+                    </td>
                 </tr>
 			<?php }
 		} ?>
+		<?php if ($tmpParticipants) {
+			foreach ($tmpParticipants as $tmpParticipant) {
+				?>
+                <tr class="result-needClarificationParticipant">
+                    <td></td>
+                    <td><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
+                        <small><?= $tmpParticipant->city ?><br>
+							<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></small>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+				<?php
+			}
+		}
+		?>
+		<?php if ($outCompetitionParticipants) { ?>
+            <tr>
+                <td colspan="<?= $countColumns ?>" class="text-center">
+                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                </td>
+            </tr>
+			<?php foreach ($outCompetitionParticipants as $outParticipant) {
+				$athlete = $outParticipant->athlete;
+				$times = $outParticipant->times;
+				$first = null;
+				if ($times) {
+					$first = reset($times);
+				}
+				?>
+                <tr>
+                    <td></td>
+                    <td>
+						<?php if ($outParticipant->number) { ?>
+							<?= \yii\bootstrap\Html::a('№' . $outParticipant->number . ' ' . $athlete->getFullName(),
+								['/athletes/view', 'id' => $athlete->id]) ?>
+						<?php } else { ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
+						<?php } ?>
+                        <br>
+                        <small>
+							<?= $athlete->city->title ?>
+                            <br>
+							<?= $outParticipant->motorcycle->getFullTitle() ?>
+							<?php if ($outParticipant->athleteClassId) { ?>
+                                <br>
+								<?= $outParticipant->athleteClass->title ?>
+							<?php } ?>
+                        </small>
+                    </td>
+                    <td>
+						<?php foreach ($times as $time) { ?>
+							<?php if ($time->isFail) { ?>
+                                <strike>
+									<?= $time->timeForHuman ?>
+									<?php if ($time->fine) { ?>
+                                        <span class="red"> +<?= $time->fine ?></span>
+									<?php } ?>
+                                </strike>
+							<?php } else { ?>
+								<?= $time->timeForHuman ?>
+								<?php if ($time->fine) { ?>
+                                    <span class="red"> +<?= $time->fine ?></span>
+								<?php } ?>
+							<?php } ?>
+                            <br>
+						<?php } ?>
+						<?php if ($outParticipant->bestTime) { ?>
+                            <span class="green"><?= $participant->humanBestTime ?></span>
+                            <span class="green fa fa-thumbs-o-up"></span>
+						<?php } ?>
+                    </td>
+                    <td><?= $outParticipant->percent ?>%
+						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
+                            (<?= $outParticipant->newAthleteClass->title ?>)
+						<?php } ?>
+                    </td>
+                </tr>
+			<?php } ?>
+		<?php } ?>
         </tbody>
     </table>
 </div>

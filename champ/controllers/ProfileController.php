@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use champ\models\PasswordForm;
@@ -62,6 +63,7 @@ class ProfileController extends AccessController
 					$athlete->save(false);
 				}
 			}
+			
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
@@ -111,6 +113,13 @@ class ProfileController extends AccessController
 			$participants = Participant::find()->where(['stageId' => $stageIds])
 				->andWhere(['athleteId' => \Yii::$app->user->id])
 				->orderBy(['status' => SORT_ASC, 'dateAdded' => SORT_ASC])->all();
+		} else {
+			$stageIds = Stage::find()->select('id')->where(['>=', 'dateOfThe', $time])->andWhere(['status' => Stage::STATUS_END_REGISTRATION])->asArray()->column();
+			if ($stageIds) {
+				$participants = Participant::find()->where(['stageId' => $stageIds])
+					->andWhere(['athleteId' => \Yii::$app->user->id])
+					->orderBy(['status' => SORT_ASC, 'dateAdded' => SORT_ASC])->all();
+			}
 		}
 		
 		return $this->render('info', [
@@ -182,9 +191,11 @@ class ProfileController extends AccessController
 				$percent = $athlete->athleteClass->percent;
 				if ($bestPercentOfClass > $percent) {
 					$bestClass = $athlete->athleteClassId;
+					$bestPercentOfClass = $percent;
 				}
 			}
 		}
+		
 		if ($bestClass) {
 			if ($me->athleteClassId == $bestClass) {
 				$bestClassIds[] = $me->id;
@@ -218,7 +229,7 @@ class ProfileController extends AccessController
 					if ($hisResult) {
 						$hisResults[$athleteId] = $hisResult;
 						if ($hisResult->resultTime < $bestTime) {
-							$bestTime = $hisResult;
+							$bestTime = $hisResult->resultTime;
 							$bestId = $athleteId;
 						}
 					}
@@ -402,7 +413,12 @@ class ProfileController extends AccessController
 			return 'Вы участвуете в этапе. Изменение данных невозможно';
 		}
 		
-		if (in_array($participant->stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
+		$stage = $participant->stage;
+		if ($stage->dateOfThe < time()) {
+			return 'В день соревнований изменение данных невозможно';
+		}
+		
+		if (in_array($stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
 			return 'Этап начался, изменение данных невозможно';
 		}
 		
@@ -410,10 +426,16 @@ class ProfileController extends AccessController
 			return 'Вы были дисквалифицированы. Изменение данных невозможно';
 		}
 		
-		if ($participant->status == Participant::STATUS_ACTIVE) {
+		if ($participant->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
+			return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
+		}
+		
+		if ($participant->status == Participant::STATUS_ACTIVE || $participant->status == Participant::STATUS_NEED_CLARIFICATION
+			|| $participant->status == Participant::STATUS_OUT_COMPETITION
+		) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
 		} else {
-			$participant->status = Participant::STATUS_ACTIVE;
+			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
 		}
 		
 		if (!$participant->save()) {

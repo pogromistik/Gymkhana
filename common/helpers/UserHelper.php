@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use common\models\Region;
 use common\models\User;
 use yii\base\ErrorException;
 
@@ -56,5 +57,17 @@ class UserHelper
 			}
 		}
 		return true;
+	}
+	
+	public static function fromRegion($regionTitle)
+	{
+		if (\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			return true;
+		}
+		$region = Region::findOne(['upper("title")' => mb_strtoupper($regionTitle, 'UTF-8')]);
+		if ($region && $region->id == \Yii::$app->user->identity->regionId) {
+			return true;
+		}
+		return false;
 	}
 }

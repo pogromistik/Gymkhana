@@ -48,6 +48,7 @@ class TmpParticipantSearch extends TmpParticipant
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => ['defaultOrder' => ['dateAdded' => SORT_ASC]]
 		]);
 		
 		$this->load($params);

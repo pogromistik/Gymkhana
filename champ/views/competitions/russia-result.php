@@ -27,13 +27,15 @@ use yii\bootstrap\Html;
                         </div>
 					<?php } else { ?>
                         <div class="pl-10">
-							<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-								<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
-                                <br>
-							<?php } else { ?>
-								<?= Html::a('Предварительные итоги чемпионата',
-									['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
-                                <br>
+							<?php if ($yearInfo['showResults']) { ?>
+								<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
+									<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+                                    <br>
+								<?php } else { ?>
+									<?= Html::a('Предварительные итоги чемпионата',
+										['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+                                    <br>
+								<?php } ?>
 							<?php } ?>
 							<?php foreach ($stages as $stage) { ?>
 								<?php

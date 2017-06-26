@@ -26,7 +26,7 @@ $this->title = 'Уведомления';
 				'label'  => 'Сообщение',
 				'format' => 'raw',
 				'value'  => function (Notice $notice) {
-					return $notice->text . '<br>' . Html::a($notice->link, [$notice->link]);
+					return $notice->text . '<br><a href="' . $notice->link . '">' . $notice->link . '</a>';
 				}
 			],
 		],

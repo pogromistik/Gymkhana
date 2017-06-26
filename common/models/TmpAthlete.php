@@ -71,8 +71,8 @@ class TmpAthlete extends BaseActiveRecord
 			'city'        => 'Город',
 			'motorcycles' => 'Мотоциклы',
 			'status'      => 'Статус',
-			'dateAdded'   => 'Date Added',
-			'dateUpdated' => 'Date Updated',
+			'dateAdded'   => 'Дата добавления',
+			'dateUpdated' => 'Дата редактирования',
 		];
 	}
 	

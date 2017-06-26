@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use common\models\Athlete;
@@ -7,6 +8,7 @@ use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
@@ -18,6 +20,7 @@ use yii\base\UserException;
 use yii\data\Pagination;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -122,10 +125,11 @@ class CompetitionsController extends BaseController
 					$results = [];
 					foreach ($championships as $championship) {
 						$results[$championship->yearId] = [
-							'year'   => $championship->year->year,
-							'stages' => $championship->stages,
-							'status' => $championship->status,
-							'id'     => $championship->id
+							'year'        => $championship->year->year,
+							'stages'      => $championship->stages,
+							'status'      => $championship->status,
+							'id'          => $championship->id,
+							'showResults' => $championship->showResults
 						];
 					}
 					if (isset($results)) {
@@ -153,11 +157,12 @@ class CompetitionsController extends BaseController
 							];
 						}
 						$results[$item['regionGroupId']]['years'][$item['yearId']] = [
-							'year'   => $item['year'],
-							'stages' => Stage::find()->where(['championshipId' => $item['id']])
+							'year'        => $item['year'],
+							'stages'      => Stage::find()->where(['championshipId' => $item['id']])
 								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
-							'status' => $item['status'],
-							'id'     => $item['id']
+							'status'      => $item['status'],
+							'id'          => $item['id'],
+							'showResults' => $item['showResults']
 						];
 						
 						if (isset($results)) {
@@ -189,10 +194,15 @@ class CompetitionsController extends BaseController
 		$participantsQuery->from(['b' => Participant::tableName(), 'c' => AthletesClass::tableName()]);
 		$participantsQuery->where(['b.stageId' => $stage->id]);
 		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
-		$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+		if ($stage->participantsLimit > 0) {
+			$participantsQuery->andWhere(['b.status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
+		} else {
+			$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+		}
 		if ($sortBy) {
 			$participantsByJapan = $participantsQuery
 				->orderBy([
+					'b."status"'   => SORT_DESC,
 					'b."bestTime"' => SORT_ASC,
 					'b."sort"'     => SORT_ASC,
 					'b."id"'       => SORT_ASC
@@ -201,6 +211,7 @@ class CompetitionsController extends BaseController
 		} else {
 			$participantsByJapan = $participantsQuery
 				->orderBy([
+					'b."status"'   => SORT_DESC,
 					'c."percent"'  => SORT_ASC,
 					'b."bestTime"' => SORT_ASC,
 					'b."sort"'     => SORT_ASC,
@@ -211,8 +222,13 @@ class CompetitionsController extends BaseController
 		
 		$participantsByInternalClasses = [];
 		if ($stage->championship->internalClasses) {
-			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id])
-				->andWhere(['status' => Participant::STATUS_ACTIVE]);
+			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id]);
+			if ($stage->participantsLimit > 0) {
+				$participantsByInternalClasses = $participantsByInternalClasses
+					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
+			} else {
+				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => Participant::STATUS_ACTIVE]);
+			}
 			if ($sortBy) {
 				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
 			} else {
@@ -220,12 +236,20 @@ class CompetitionsController extends BaseController
 			}
 		}
 		
+		$tmpParticipants = null;
+		if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION
+		|| $stage->status == Stage::STATUS_END_REGISTRATION) {
+			$tmpParticipants = TmpParticipant::find()->where(['status' => TmpParticipant::STATUS_NEW])
+				->andWhere(['stageId' => $stage->id])->all();
+		}
+		
 		return $this->render('stage', [
 			'stage'                         => $stage,
 			'participantsByJapan'           => $participantsByJapan,
 			'participantsByInternalClasses' => $participantsByInternalClasses,
 			'sortBy'                        => $sortBy,
-			'showByClasses'                 => $showByClasses
+			'showByClasses'                 => $showByClasses,
+			'tmpParticipants'               => $tmpParticipants
 		]);
 	}
 	
@@ -431,7 +455,10 @@ class CompetitionsController extends BaseController
 			if ($old->status == Participant::STATUS_DISQUALIFICATION) {
 				return 'Вы были дисквалифицированы. Повторная регистрация невозможна';
 			}
-			if ($old->status != Participant::STATUS_ACTIVE) {
+			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
+				return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
+			}
+			if ($old->status == Participant::STATUS_CANCEL_ATHLETE) {
 				if ($old->number != $form->number) {
 					if ($form->number) {
 						$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
@@ -443,7 +470,7 @@ class CompetitionsController extends BaseController
 						$old->number = $athlete->number;
 					}
 				}
-				$old->status = Participant::STATUS_ACTIVE;
+				$old->status = Participant::STATUS_NEED_CLARIFICATION;
 				if ($old->save()) {
 					return true;
 				}
@@ -471,6 +498,7 @@ class CompetitionsController extends BaseController
 			\Yii::$app->mutex->release('setNumber' . $stage->id);
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				$this->sendConfirmEmail($championship, $stage, $form);
 				
 				return true;
 			} else {
@@ -535,10 +563,11 @@ class CompetitionsController extends BaseController
 				}
 			}
 			if (!$form->validate()) {
-				return 'Необходимо указать имя, фамилию, город, марку и модель мотоцикла.';
+				return 'Необходимо указать имя, фамилию, город, email, а так же марку и модель мотоцикла.';
 			}
-			if ($form->save()) {
+			if ($form->save(false)) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				$this->sendConfirmEmail($championship, $stage, null, $form);
 				
 				return true;
 			} else {
@@ -552,11 +581,41 @@ class CompetitionsController extends BaseController
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
 	}
 	
+	private function sendConfirmEmail(Championship $championship, Stage $stage, Participant $participant = null, TmpParticipant $tmpParticipant = null)
+	{
+		$email = null;
+		if ($tmpParticipant && $tmpParticipant->email) {
+			$email = $tmpParticipant->email;
+		} elseif ($participant) {
+			$athlete = $participant->athlete;
+			$email = $athlete->email;
+		}
+		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '@', null, 'UTF-8')) {
+			if (YII_ENV != 'dev') {
+				\Yii::$app->mailer->compose('confirm-request', [
+					'championship'   => $championship,
+					'stage'          => $stage,
+					'tmpParticipant' => $tmpParticipant,
+					'participant'    => $participant
+				])
+					->setTo($email)
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+					->setSubject('gymkhana-cup: предварительная регистрация на этап')
+					->send();
+			}
+		}
+		
+		return true;
+	}
+	
 	public function actionChampionshipResult($championshipId, $showAll = null)
 	{
 		$championship = Championship::findOne($championshipId);
 		if (!$championship) {
 			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		if (!$championship->showResults) {
+			throw new UserException('Для данного чемпионата не ведётся подсчёт итогов');
 		}
 		$this->pageTitle = $championship->title . ': итоги';
 		$this->description = 'Итоги соревнования: ' . $championship->title;
@@ -583,5 +642,20 @@ class CompetitionsController extends BaseController
 		$this->layout = 'full-content';
 		
 		return $this->render('championship', ['championship' => $championship]);
+	}
+	
+	public function actionMoscowScheme()
+	{
+		$this->pageTitle = 'Московская схема начисления баллов';
+		$this->description = 'Схема начисления баллов за этап в Москве';
+		
+		$points = (new Query())->select('*')
+			->from(['a' => MoscowPoint::tableName(), 'b' => AthletesClass::tableName()])
+			->where(new Expression('"a"."class" = "b"."id"'))
+			->orderBy(['b."percent"' => SORT_ASC, 'b."title"' => SORT_ASC, 'a."place"' => SORT_ASC])->all();
+		$items = ArrayHelper::map($points,
+			'place', 'point', 'title');
+		
+		return $this->render('moscow-scheme', ['items' => $items]);
 	}
 }
