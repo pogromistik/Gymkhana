@@ -47,7 +47,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-			<?php if (\Yii::$app->user->can('competitions')) { ?>
+			<?php if (\Yii::$app->user->can('refereeOfCompetitions')) { ?>
 				<?php $countNewLK = \common\models\TmpAthlete::find()
 					->where(['status' => \common\models\TmpAthlete::STATUS_NEW])->count() ?>
 				<?php if ($countNewLK) { ?>

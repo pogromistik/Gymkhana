@@ -1,5 +1,6 @@
 <?php
 use common\models\Championship;
+
 /**
  * @var \yii\web\View                $this
  * @var \common\models\Stage         $stage
@@ -13,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' 
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = 'Итоги';
 $place = 1;
-$newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+$newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteClassId' => null]])
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
@@ -68,8 +69,8 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 		}
 		$class = 'default';
 		if ($participant->status == \common\models\Participant::STATUS_OUT_COMPETITION) {
-		    $class = 'out-participant';
-        }
+			$class = 'out-participant';
+		}
 		?>
         <tr class="<?= $class ?>">
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
@@ -80,7 +81,13 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 			<?php if ($first) { ?>
                 <td>1.</td>
-                <td><?= $first->timeForHuman ?></td>
+                <td>
+					<?php if ($first->isFail) { ?>
+                        <strike><?= $first->timeForHuman ?></strike>
+                    <?php } else { ?>
+						<?= $first->timeForHuman ?>
+					<?php } ?>
+                </td>
                 <td><?= $first->fine ?></td>
 			<?php } else { ?>
                 <td>1.</td>
@@ -122,7 +129,13 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
             <tr class="<?= $class ?>">
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
-                    <td><?= $next->timeForHuman ?></td>
+                    <td>
+	                    <?php if ($next->isFail) { ?>
+                            <strike><?= $next->timeForHuman ?></strike>
+	                    <?php } else { ?>
+		                    <?= $next->timeForHuman ?>
+	                    <?php } ?>
+                    </td>
                     <td><?= $next->fine ?></td>
 				<?php } else { ?>
                     <td></td>

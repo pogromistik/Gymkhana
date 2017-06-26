@@ -13,6 +13,7 @@ use common\models\search\FigureSearch;
 use yii\base\UserException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * FiguresController implements the CRUD actions for Figure model.
@@ -113,15 +114,36 @@ class FiguresController extends BaseController
 		]);
 	}
 	
-	public function actionAddTime()
+	public function actionAddTime($confirm = false)
 	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$figureTime = new FigureTime();
 		$figureTime->load(\Yii::$app->request->post());
-		if ($figureTime->save()) {
-			return true;
-		} else {
-			return var_dump($figureTime->errors);
+		$result = [
+			'success' => false,
+			'error'   => false,
+			'confirm' => false,
+			'text'    => null
+		];
+		if ($figureTime->validate()) {
+			$oldResult = FigureTime::findOne(['athleteId'  => $figureTime->athleteId, 'motorcycleId' => $figureTime->motorcycleId,
+			                                  'resultTime' => $figureTime->resultTime]);
+			if ($oldResult && !$confirm) {
+				$result['text'] = 'У спортсмена уже есть результат ' . $oldResult->resultTimeForHuman . ' от '
+					. $oldResult->dateForHuman . ' на этом мотоцикле. Всё равно добавить?';
+				$result['confirm'] = true;
+				
+				return $result;
+			}
+			$figureTime->save(false);
+			$result['success'] = true;
+			
+			return $result;
 		}
+		$result['text'] = var_dump($figureTime->errors);
+		$result['error'] = true;
+		
+		return $result;
 	}
 	
 	public function actionUpdateTime($id)
@@ -188,6 +210,7 @@ class FiguresController extends BaseController
 			case FigureTime::RECORD_IN_RUSSIA:
 				if ($figure->bestTimeInRussia && $figure->bestTimeInRussia <= $item->resultTime) {
 					$transaction->rollBack();
+					
 					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
 				}
 				$figure->bestTimeInRussia = $item->resultTime;
@@ -201,6 +224,7 @@ class FiguresController extends BaseController
 			case FigureTime::RECORD_IN_WORLD:
 				if ($figure->bestTime && $figure->bestTime <= $item->resultTime) {
 					$transaction->rollBack();
+					
 					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
 				}
 				$figure->bestTime = $item->resultTime;
@@ -355,6 +379,7 @@ class FiguresController extends BaseController
 				
 				return 'Невозможно изменить класс спортсмену';
 			}
+			
 			return true;
 		}
 		
@@ -390,16 +415,18 @@ class FiguresController extends BaseController
 		return true;
 	}
 	
-	public function actionDeleteTime($id, $figureId) {
+	public function actionDeleteTime($id, $figureId)
+	{
 		$this->can('developer');
 		$item = FigureTime::findOne($id);
 		if (!$item) {
 			throw new NotFoundHttpException('Результат не найден');
 		}
-		if ($item->newAthleteClassId || $item->isNewRecord) {
+		if ($item->newAthleteClassId || $item->recordType) {
 			throw new UserException('Удаление невозможно');
 		}
 		$item->delete();
+		
 		return $this->redirect(['update', 'id' => $figureId]);
 	}
 }
