@@ -315,6 +315,11 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                         </ul>
                                     </li>
 								<?php } ?>
+	                            <?php if (\Yii::$app->user->can('competitions')) { ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/additional/stats']) ?>"> Статистика</a>
+                                    </li>
+	                            <?php } ?>
                             </ul>
                         </li>
 					<?php } ?>

@@ -3,7 +3,10 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\CheScheme;
+use common\models\Region;
 use common\models\search\CheSchemeSearch;
 use common\models\search\TmpAthletesSearch;
 use common\models\search\TmpFigureResultSearch;
@@ -12,6 +15,8 @@ use common\models\TmpAthlete;
 use Yii;
 use common\models\Point;
 use common\models\search\PointSearch;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -141,7 +146,7 @@ class AdditionalController extends BaseController
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
 		return $this->render('che-scheme', [
-			'searchModel' => $searchModel,
+			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
 	}
@@ -217,5 +222,45 @@ class AdditionalController extends BaseController
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
+	}
+	
+	public function actionStats()
+	{
+		$this->can('competitions');
+		$query = new Query();
+		$query->from(['a' => Athlete::tableName(), 'b' => Region::tableName(), 'c' => AthletesClass::tableName()]);
+		$query->select(['count("a"."id")', '"b"."title" as "region"', '"c"."title" as "class"']);
+		$query->where(new Expression('"a"."athleteClassId" = "c"."id"'))
+			->andWhere(new Expression('"a"."regionId" = "b"."id"'));
+		$query->orderBy(['"b"."title"' => SORT_ASC, '"c"."title"' => SORT_ASC]);
+		$query->groupBy(['"b"."title"', '"c"."title"']);
+		$items = $query->all();
+		
+		$stats = [];
+		$totalClasses = [];
+		$totalClasses['total'] = 0;
+		$classes = AthletesClass::find()->select('title')->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])
+			->asArray()->column();
+		foreach ($items as $item) {
+			if (!isset($stats[$item['region']])) {
+				$stats[$item['region']] = [
+					'total' => 0,
+					'groups' => []
+				];
+				foreach ($classes as $class) {
+					$stats[$item['region']]['groups'][$class] = 0;
+				}
+			}
+			if (!isset($totalClasses[$item['class']])) {
+				$totalClasses[$item['class']] = 0;
+			}
+			$totalClasses[$item['class']] += $item['count'];
+			$totalClasses['total'] += $item['count'];
+			$stats[$item['region']]['groups'][$item['class']] = $item['count'];
+			$stats[$item['region']]['total'] += $item['count'];
+		}
+		
+		
+		return $this->render('stats', ['stats' => $stats, 'classes' => $classes, 'totalClasses' => $totalClasses]);
 	}
 }
