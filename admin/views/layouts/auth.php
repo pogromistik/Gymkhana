@@ -17,21 +17,33 @@ AppAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
-	<meta charset="<?= Yii::$app->charset ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<?= Html::csrfMetaTags() ?>
-	<title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode($this->title) ?></title>
 	<?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-	<div class="col-sm-10 content">
-		<?= Alert::widget() ?>
-		<h1><?= Html::encode($this->title) ?></h1>
+    <div class="col-sm-10 content">
+		
+		<?php if (Yii::$app->session->getFlash('error')) {
+			?>
+            <div class="pt-20">
+                <div class="alert alert-danger">
+					<?= Yii::$app->session->getFlash('error'); ?>
+                </div>
+            </div>
+			<?php
+		} else { ?>
+			<?= Alert::widget() ?>
+		<?php }
+		?>
+        <h1><?= Html::encode($this->title) ?></h1>
 		<?= $content ?>
-	</div>
+    </div>
 </div>
 
 <?php $this->endBody() ?>

@@ -1,8 +1,10 @@
 <?php
 namespace admin\controllers;
 
+use common\helpers\UserHelper;
 use common\models\HelpModel;
 use common\models\MainPhoto;
+use common\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -13,10 +15,18 @@ class BaseController extends Controller
 	public $pageTitle = '';
 	public $keywords = '';
 	public $url = '';
-
+	
 	public function can($role)
 	{
 		if (!\Yii::$app->user->can($role)) {
+			throw new ForbiddenHttpException('Доступ запрещён');
+		}
+		return true;
+	}
+	
+	public function canRegion($region)
+	{
+		if (!UserHelper::fromRegion($region)) {
 			throw new ForbiddenHttpException('Доступ запрещён');
 		}
 		return true;
@@ -29,9 +39,14 @@ class BaseController extends Controller
 		if (\Yii::$app->user->isGuest) {
 			$this->redirect(['/user/login']);
 			\Yii::$app->end();
-		} elseif (\Yii::$app->user->identity->blocked_at) {
+		} elseif (\Yii::$app->user->identity->isBlocked) {
 			\Yii::$app->getUser()->logout();
+			\Yii::$app->getSession()->setFlash('error', 'Ваш аккаунт заблокирован');
 			return $this->goHome();
+		} else {
+			$user = User::findOne(\Yii::$app->user->id);
+			$user->last_login_at = time();
+			$user->save();
 		}
 	}
 

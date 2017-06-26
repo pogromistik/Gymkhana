@@ -178,11 +178,14 @@ img {
 .input-with-description .text {
     background: #f1f1f1;
     margin-bottom: 2px;
-    padding: 5px;
     font-size: 12px;
     border-radius: 4px;
     color: #6a6a6a;
     font-weight: bold;
+}
+
+.pt-5 {
+    padding-top: 5px;
 }
 
 .pt-10 {
@@ -344,4 +347,55 @@ small.very {
 .calculate-result {
     background: #e4e4e4;
     padding: 10px 20px;
+}
+
+.inactive-participant {
+    background: #efe2e2!important;
+}
+
+.inactive-participant2 {
+    background: #dbdfef !important;
+}
+
+.out-participant {
+    background: #cfefea !important;
+}
+
+.need-clarification-participant {
+    background: #fffdba!important;
+}
+
+tr.gray {
+    background: #e2e2e2!important;
+}
+
+.color-div {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+}
+
+.result-green {
+    background: #b5e4b6;
+}
+
+.result-red {
+    background: #ffe7ee;
+}
+
+.result-blue {
+    background: #d7edff;
+}
+
+.result-yellow {
+    background: #f8ff8a;
+}
+
+.result-white {
+    background: #ffffff;
+    color: #000000;
+}
+
+.dark-border {
+    border-bottom: 2px solid #4b4e53;
 }

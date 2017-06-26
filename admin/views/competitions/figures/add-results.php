@@ -55,6 +55,9 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
     <div class="col-sm-1">
         <label>Штраф</label>
     </div>
+    <div class="col-sm-2">
+        <label>Видео</label>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-3">
@@ -90,6 +93,7 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 		])->label(false) ?>
     </div>
     <div class="col-sm-1"><?= $form->field($figureTime, 'fine')->textInput()->label(false) ?></div>
+    <div class="col-sm-2"><?= $form->field($figureTime, 'videoLink')->textInput()->label(false) ?></div>
     <div class="col-sm-1">
         <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
     </div>

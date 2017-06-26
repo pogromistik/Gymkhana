@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use dosamigos\editable\Editable;
 use common\models\Championship;
+use kartik\widgets\Select2;
 
 /**
  * @var \common\models\Participant              $participant
@@ -12,6 +13,8 @@ use common\models\Championship;
  * @var \common\models\search\ParticipantSearch $searchModel
  * @var \yii\web\View                           $this
  * @var string                                  $error
+ * @var array                                   $forSearch
+ * @var bool                                    $needClarification
  */
 
 $this->title = 'Участники';
@@ -22,34 +25,74 @@ $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competit
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<h3>Зарегистрировать участника на этап</h3>
+<div class="alert alert-info">
+    Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
+    <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
+</div>
 <?= $this->render('_form', [
-	'model'        => $participant,
-	'championship' => $championship
+	'model'             => $participant,
+	'championship'      => $championship,
+	'needClarification' => $needClarification
 ]) ?>
 
 <?php if ($error) { ?>
     <div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
+<h3>Список участников</h3>
 <?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
 	['class' => 'btn btn-info']) ?>
+
+<div class="small">
+    <div class="color-div need-clarification-participant"></div>
+    - заявки, требующие модерации;
+    <div class="color-div inactive-participant"></div>
+    - отклоненные заявки;
+    <div class="color-div inactive-participant2"></div>
+    - заявки, отмененные участником;
+    <div class="color-div out-participant"></div>
+    - участники вне зачета.
+</div>
 
 <div class="participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
+		'rowOptions'   => function (\common\models\Participant $item) {
+			if ($item->status === \common\models\Participant::STATUS_ACTIVE) {
+				return ['class' => 'active-participant'];
+			} elseif ($item->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
+				return ['class' => 'need-clarification-participant'];
+			} elseif ($item->status === \common\models\Participant::STATUS_CANCEL_ATHLETE) {
+				return ['class' => 'inactive-participant2'];
+			} elseif ($item->status === \common\models\Participant::STATUS_OUT_COMPETITION) {
+				return ['class' => 'out-participant'];
+            } else {
+				return ['class' => 'inactive-participant'];
+			}
+		},
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
 			[
 				'attribute' => 'athleteId',
 				'format'    => 'raw',
-				'filter'    => '<div class="input-group">
-  <span class="input-group-addon"><i class="fa fa-search"></i></span>
-' . Html::activeInput('text', $searchModel, 'athleteId', ['class' => 'form-control', 'placeholder' => 'Введите фамилию ИЛИ имя...']) . '
-</div>',
+				'filter'    => Select2::widget([
+					'model'         => $searchModel,
+					'attribute'     => 'athleteId',
+					'data'          => $forSearch,
+					'theme'         => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear' => true
+					],
+					'options'       => [
+						'placeholder' => 'Укажите фамилию или имя...',
+					]
+				]),
 				'value'     => function (\common\models\Participant $item) {
 					$athlete = $item->athlete;
+					
 					return Html::a($athlete->getFullName() . ', ' . $athlete->city->title, ['/competitions/athlete/view', 'id' => $item->athleteId]);
 				}
 			],
@@ -139,17 +182,50 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value'   => function (\common\models\Participant $item) {
 					if ($item->status == \common\models\Participant::STATUS_ACTIVE) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-							'class'   => 'btn btn-danger changeParticipantStatus',
-							'title'   => 'Отменить заявку',
-							'data-id' => $item->id
-						]);
-					} else {
+							'class'       => 'btn btn-danger changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
+							'title'       => 'Отменить заявку',
+							'data-id'     => $item->id
+						]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-info changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+								'data-id'     => $item->id,
+								'title'       => 'Допустить до участия вне зачёта'
+							]) . '</div>';
+					} elseif ($item->status !== \common\models\Participant::STATUS_NEED_CLARIFICATION && $item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
 						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
-							'class'   => 'btn btn-success changeParticipantStatus',
-							'data-id' => $item->id,
-							'title'   => 'Возобновить заявку'
-						]);
+							'class'       => 'btn btn-success changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_ACTIVE,
+							'data-id'     => $item->id,
+							'title'       => 'Возобновить заявку'
+						]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-info changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+								'data-id'     => $item->id,
+								'title'       => 'Допустить до участия вне зачёта'
+							]) . '</div>';
 					}
+					
+					$html = Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
+							'class'       => 'btn btn-danger changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
+							'title'       => 'Отменить заявку',
+							'data-id'     => $item->id
+						]) . ' ' . Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
+							'class'       => 'btn btn-success changeParticipantStatus',
+							'data-status' => \common\models\Participant::STATUS_ACTIVE,
+							'data-id'     => $item->id,
+							'title'       => 'Подтвердить заявку'
+						]);
+					if ($item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+					    $html .= '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+							    'class'       => 'btn btn-info changeParticipantStatus',
+							    'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+							    'data-id'     => $item->id,
+							    'title'       => 'Допустить до участия вне зачёта'
+						    ]) . '</div>';
+                    }
+					return $html;
 				}
 			]
 		],

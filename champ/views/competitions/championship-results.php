@@ -9,9 +9,12 @@
  */
 $this->title = 'Результаты: ' . $championship->title;
 ?>
-
+<?php if ($championship->showResults) { ?>
 <h3><?= $championship->title ?>: <?= ($championship->status == \common\models\Championship::STATUS_PAST)
     ? 'итоги' : 'предварительные итоги' ?></h3>
+<?php } else { ?>
+    <h3><?= $championship->title ?></h3>
+<?php } ?>
 
 <div class="about">
 	<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
@@ -27,6 +30,7 @@ $this->title = 'Результаты: ' . $championship->title;
     Количество этапов, по которым ведётся подсчёт результатов:
 	<?= $championship->estimatedAmount ?>
     <br>
+    <?php if(!$championship->useMoscowPoints) { ?>
     Таблица, по которой прозводился расчёт баллов за каждый этап:
 	<?php /** @var \common\models\Point[] $points */
 	$points = \common\models\Point::find()->orderBy(['id' => SORT_ASC])->all() ?>
@@ -44,6 +48,9 @@ $this->title = 'Результаты: ' . $championship->title;
 			<?php } ?>
         </tr>
     </table>
+    <?php } else { ?>
+        Подсчёт баллов ведётся по <a href="/competitions/moscow-scheme" target="_blank">Московской схеме</a> .
+    <?php } ?>
 </div>
 
 <div class="pb-10">

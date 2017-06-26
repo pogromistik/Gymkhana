@@ -34,7 +34,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 			[
 				'label'   => 'Редактировать фигуру',
 				'content' => $this->render('_form', ['model' => $model]),
-                'options' => ['class' => 'panel panel-green']
+				'options' => ['class' => 'panel panel-green']
 			],
 		]
 	]);
@@ -105,7 +105,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
             </div>
         </div>
 	<?php } ?>
-    
+	
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
@@ -148,9 +148,14 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				]),
 				'value'     => function (\common\models\FigureTime $item) {
 					$athlete = $item->athlete;
-					
-					return $athlete->getFullName() . ', ' . $athlete->city->title . '<br>'
+					$html = $athlete->getFullName() . ', ' . $athlete->city->title . '<br>'
 						. $item->motorcycle->getFullTitle();
+					if ($item->videoLink) {
+						$html .= '<br>';
+						$html .= '<a href="' . $item->videoLink . '" target="_blank">Видео заезда</a>';
+					}
+					
+					return $html;
 				}
 			],
 			[
@@ -166,7 +171,13 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				'attribute' => 'fine',
 				'filter'    => false
 			],
-			'resultTimeForHuman',
+			[
+				'attribute' => 'resultTime',
+				'filter'    => false,
+				'value'     => function (\common\models\FigureTime $item) {
+					return $item->resultTimeForHuman;
+				}
+			],
 			[
 				'attribute' => 'percent',
 				'filter'    => false,
@@ -239,6 +250,21 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				'value'  => function (\common\models\FigureTime $item) {
 					return Html::a('<span class = "fa fa-edit"></span>', ['update-time', 'id' => $item->id],
 						['class' => 'btn btn-primary']);
+				}
+			],
+			[
+				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('developer'),
+				'value'   => function (\common\models\FigureTime $item) {
+					if ($item->newAthleteClassId || $item->isNewRecord) {
+						return null;
+					}
+					
+					return Html::a('<span class = "fa fa-remove"></span>', ['delete-time', 'id' => $item->id, 'figureId' => $item->figureId],
+						['class' => 'btn btn-danger',
+						 'data'  => [
+							 'confirm' => 'Уверены, что хотите удалить результат спортсмена' . $item->athlete->getFullName() . '?'
+						 ]]);
 				}
 			]
 		],

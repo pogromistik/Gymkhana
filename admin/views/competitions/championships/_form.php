@@ -6,6 +6,7 @@ use common\models\Year;
 use yii\helpers\ArrayHelper;
 use common\models\Championship;
 use kartik\widgets\Select2;
+use dosamigos\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model Championship */
@@ -32,7 +33,9 @@ $country = \common\models\Country::getRussia();
 	
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'название чемпионата, необязательное поле']) ?>
 	
-	<?= $form->field($model, 'description')->textarea(['rows' => 3, 'placeholder' => 'краткое описание, необязательное поле']) ?>
+	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+		'preset' => 'full', 'clientOptions' => ['height' => 150]
+	]) ?>
 	
 	<?= $form->field($model, 'yearId')->dropDownList(ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year')) ?>
 	
@@ -96,7 +99,12 @@ $country = \common\models\Country::getRussia();
 	<?= $form->field($model, 'requiredOtherRegions')->checkbox() ?>
 	<?= $form->field($model, 'useCheScheme',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">
-'.Html::a('Нажмите, чтобы узнать подробнее о схеме', ['/competitions/help/che-scheme'], ['target' => '_blank']).'
+'.Html::a('Нажмите, чтобы узнать подробнее о Челябинской схеме награждения', ['/competitions/help/che-scheme'], ['target' => '_blank']).'
+</div>{input}</div>'])->checkbox() ?>
+	<?= $form->field($model, 'showResults')->checkbox() ?>
+	<?= $form->field($model, 'useMoscowPoints',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+'.Html::a('Нажмите, чтобы узнать подробнее о Московской схеме баллов', ['/competitions/help/moscow-points-scheme'], ['target' => '_blank']).'
 </div>{input}</div>'])->checkbox() ?>
 
     <div class="form-group">

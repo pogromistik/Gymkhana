@@ -144,6 +144,9 @@ class TmpParticipantController extends BaseController
 			$athlete->countryId = $city->countryId;
 			$athlete->regionId = $city->regionId;
 			$athlete->phone = $tmpParticipant->phone;
+			if ($tmpParticipant->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($tmpParticipant->email, 'UTF-8')])) {
+				$athlete->email = $tmpParticipant->email;
+			}
 			if (!$athlete->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
@@ -260,12 +263,14 @@ class TmpParticipantController extends BaseController
 		$old = Participant::find()->where(['stageId' => $tmpParticipant->stageId])
 			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->one();
 		if ($old) {
-			if ($old->status == Participant::STATUS_ACTIVE) {
-				return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
+				return 'Спортсмен уже подавал заявку, она была отклонена администратором';
 			} elseif ($old->status == Participant::STATUS_DISQUALIFICATION) {
 				return 'Спортсмен дисквалифицирован, регистрация невозможна';
 			}
-			$old->status = Participant::STATUS_ACTIVE;
+			if ($old->status != Participant::STATUS_ACTIVE) {
+				$old->status = Participant::STATUS_NEED_CLARIFICATION;
+			}
 			$old->save();
 			
 			$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;

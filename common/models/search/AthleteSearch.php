@@ -37,18 +37,22 @@ class AthleteSearch extends Athlete
 	 * Creates data provider instance with search query applied
 	 *
 	 * @param array $params
+	 * @param int   $pg
 	 *
 	 * @return ActiveDataProvider
 	 */
-	public function search($params)
+	public function search($params, $pg = 20)
 	{
 		$query = Athlete::find();
 		
 		// add conditions that should always apply here
 		
 		$dataProvider = new ActiveDataProvider([
-			'query' => $query,
-			'sort'  => ['defaultOrder' => ['lastName' => SORT_ASC, 'cityId' => SORT_ASC, 'firstName' => SORT_ASC]]
+			'pagination' => [
+				'pageSize' => $pg,
+			],
+			'query'      => $query,
+			'sort'       => ['defaultOrder' => ['lastName' => SORT_ASC, 'cityId' => SORT_ASC, 'firstName' => SORT_ASC]]
 		]);
 		
 		$this->load($params);

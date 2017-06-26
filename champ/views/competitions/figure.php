@@ -164,7 +164,7 @@ $time = time();
                 </div>
                 <div class="small text-right">
 					<?php $count = count($results); ?>
-					<?php if ($count > 30) { ?>
+					<?php if ($count == 30) { ?>
                         Показаны 30 лучших результатов. <a href="#" class="showAll">Показать все</a>
 					<?php } else { ?>
                         Количество результатов: <?= $count ?>

@@ -182,39 +182,46 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function validateNumber($attribute, $params)
 	{
 		if (!$this->hasErrors()) {
-			$regionId = $this->city->regionId;
-			$query = new Query();
-			$query->from([self::tableName(), City::tableName(), Region::tableName()]);
-			$query->where(['Regions."id"' => $regionId]);
-			$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
-			$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
-			$query->andWhere(['Athletes."number"' => $this->number]);
-			$query->andWhere(['not', ['Athletes."id"' => $this->id]]);
-			if ($query->one()) {
-				$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
-			} else {
+			if ($this->isNewRecord || (isset($this->dirtyAttributes['number']) &&
+					$this->getOldAttributes()["number"] != $this->number)
+			) {
+				$regionId = $this->city->regionId;
 				$query = new Query();
-				$query->from(['a' => Stage::tableName(), 'b' => Championship::tableName()]);
-				$query->select('a.id');
-				$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
-				$query->andWhere(['not', ['b.regionId' => null]]);
-				$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
-				$stageIds = $query->column();
-				if ($stageIds) {
-					/** @var Participant $busy */
-					$busy = Participant::find()->where(['stageId' => $stageIds])->andWhere(['not', ['athleteId' => $this->id]])
-						->andWhere(['number' => $this->number])->one();
-					if (!$busy) {
-						$busy = TmpParticipant::find()->where(['stageId' => $stageIds])
-							->andWhere(['number' => $this->number])->andWhere(['status' => TmpParticipant::STATUS_NEW])
-							->one();
+				$query->from([self::tableName(), City::tableName(), Region::tableName()]);
+				$query->where(['Regions."id"' => $regionId]);
+				$query->andWhere(new Expression('"Athletes"."cityId" = "Cities"."id"'));
+				$query->andWhere(new Expression('"Cities"."regionId" = "Regions"."id"'));
+				$query->andWhere(['Athletes."number"' => $this->number]);
+				$query->andWhere(['not', ['Athletes."id"' => $this->id]]);
+				if ($query->one()) {
+					$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
+				} else {
+					$query = new Query();
+					$query->from(['a' => Stage::tableName(), 'b' => Championship::tableName()]);
+					$query->select('a.id');
+					$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
+					$query->andWhere(['not', ['b.regionId' => null]]);
+					if ($this->regionId) {
+						$query->andWhere(['b.regionId' => $this->regionId]);
 					}
-					if ($busy) {
-						$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
+					$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
+					$stageIds = $query->column();
+					if ($stageIds) {
+						/** @var Participant $busy */
+						$busy = Participant::find()->where(['stageId' => $stageIds])->andWhere(['not', ['athleteId' => $this->id]])
+							->andWhere(['number' => $this->number])->one();
+						if (!$busy) {
+							$busy = TmpParticipant::find()->where(['stageId' => $stageIds])
+								->andWhere(['number' => $this->number])->andWhere(['status' => TmpParticipant::STATUS_NEW])
+								->one();
+						}
+						if ($busy) {
+							$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
 						"' . $busy->stage->title . '" 
 						чемпионата "' . $busy->championship->title . '"');
-					} else {
-						
+						} else {
+							
+						}
 					}
 				}
 			}
@@ -298,6 +305,18 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 				Notice::add($this->id, $text);
 			}
+			$time = time();
+			$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
+				->andWhere(['status' => [Stage::STATUS_START_REGISTRATION, Stage::STATUS_END_REGISTRATION, Stage::STATUS_UPCOMING]])
+				->andWhere(['or',
+					['fastenClassFor' => null],
+					['fastenClassFor' => 0],
+					new Expression('"dateOfThe"-"fastenClassFor"*86400 >= ' . $time)
+					])
+				->asArray()->column();
+			if ($stageIds) {
+				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);
+			}
 		}
 		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
 			$link = Url::to(['/profile/help']);
@@ -321,13 +340,14 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 							->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
 							->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 					}
-				}  elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
+				} elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
 					return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])
 						->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
 						->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 				}
 			}
 		}
+		
 		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 	}
 	
@@ -378,6 +398,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function createCabinet()
 	{
 		$password = $this->generatePassword();
+		if (YII_ENV == 'dev') {
+			$password = '111111';
+		}
 		$this->login = $this->id + 6000;
 		$this->generateAuthKey();
 		$this->setPassword($password);

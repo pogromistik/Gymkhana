@@ -117,6 +117,6 @@ class News extends \yii\db\ActiveRecord
 	
 	public function getNewsBlock()
 	{
-		return $this->hasMany(NewsBlock::className(), ['newsId' => 'id']);
+		return $this->hasMany(NewsBlock::className(), ['newsId' => 'id'])->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 	}
 }

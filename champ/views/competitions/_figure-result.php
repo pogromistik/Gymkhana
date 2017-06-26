@@ -43,6 +43,11 @@
 			                    'alt'   => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!'
 		                    ]) ?>
 	                    <?php } ?>
+                        <?php if ($item->videoLink) { ?>
+                            <a href="<?= $item->videoLink ?>" target="_blank">
+                                <i class="fa fa-youtube"></i>
+                            </a>
+                        <?php } ?>
                     </td>
                     <td><?= $item->percent ?>%</td>
                     <td><?= ($item->newAthleteClassId &&
@@ -82,6 +87,8 @@
                                     <br>
 									<?= $item->athleteClass->title ?>
 								<?php } ?>
+                                <br>
+                                <?= $item->dateForHuman ?>
                             </small>
                         </td>
                         <td>
@@ -91,6 +98,12 @@
 							<?php } ?>
                             <br>
                             <span class="green"><?= $item->resultTimeForHuman ?></span>
+	                        <?php if ($item->videoLink) { ?>
+                                <br>
+                                <a href="<?= $item->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
                         </td>
                         <td>
 							<?= $item->percent ?>%

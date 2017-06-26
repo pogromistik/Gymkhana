@@ -47,7 +47,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-			<?php if (\Yii::$app->user->can('competitions')) { ?>
+			<?php if (\Yii::$app->user->can('refereeOfCompetitions')) { ?>
 				<?php $countNewLK = \common\models\TmpAthlete::find()
 					->where(['status' => \common\models\TmpAthlete::STATUS_NEW])->count() ?>
 				<?php if ($countNewLK) { ?>
@@ -214,28 +214,36 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     <a href="#"> Калькулятор<span
                                                 class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
-                                        <li><a href="<?= Url::to(['/competitions/help/time-calculate']) ?>"> Эталонное время</a></li>
-                                        <li><a href="<?= Url::to(['/competitions/help/result-calculate']) ?>"> Результат спортсмена</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/help/time-calculate']) ?>"> Эталонное
+                                                время</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/help/result-calculate']) ?>"> Результат
+                                                спортсмена</a></li>
                                     </ul>
                                 </li>
-								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+	                            <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li>
                                         <a data-addr="/competitions/classes"
                                            href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы
                                             спортсменов</a>
                                     </li>
-									<?php if (\Yii::$app->user->can('developer')) { ?>
+		                            <?php if (\Yii::$app->user->can('developer')) { ?>
                                         <li>
                                             <a data-addr="/competitions/additional"
                                                href="<?= Url::to(['/competitions/additional/che-scheme']) ?>"> Классы
                                                 награждения</a>
                                         </li>
-									<?php } ?>
+		                            <?php } ?>
                                     <li>
                                         <a href="<?= Url::to(['/competitions/additional/points']) ?>"> Баллы для
                                             чемпионатов</a>
                                     </li>
-								<?php } ?>
+	                            <?php } ?>
+	                            <?php if (\common\helpers\UserHelper::fromRegion('Московская область')) { ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/moscow-points/index']) ?>"> Баллы для
+                                            Москвы</a>
+                                    </li>
+	                            <?php } ?>
 								<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
                                     <li>
                                         <a data-addr="/competitions/news"
@@ -291,6 +299,20 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                     <li>
                                         <a href="<?= Url::to(['/competitions/users/index']) ?>"> Управление
                                             пользователями</a>
+                                    </li>
+								<?php } ?>
+								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+                                    <li class="level-2">
+                                        <a href="#"> Обработанные заявки<span
+                                                    class="fa arrow"></span></a>
+                                        <ul class="nav nav-second-level">
+                                            <li><a href="<?= Url::to(['/competitions/additional/l-k-requests']) ?>">
+                                                    Личный кабинет</a></li>
+                                            <li><a href="<?= Url::to(['/competitions/additional/figures-requests']) ?>">
+                                                    Базовые фигуры</a></li>
+                                            <li><a href="<?= Url::to(['/competitions/additional/stages-requests']) ?>">
+                                                    Заявки на этап</a></li>
+                                        </ul>
                                     </li>
 								<?php } ?>
                             </ul>

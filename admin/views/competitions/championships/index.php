@@ -29,7 +29,13 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
-			'title',
+			[
+				'attribute' => 'title',
+				'filter'    => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
+</div>',
+			],
 			[
 				'attribute' => 'yearId',
 				'format'    => 'raw',
@@ -52,8 +58,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 			[
 				'attribute' => 'groupId',
 				'format'    => 'raw',
-				'filter'    => Html::activeDropDownList($searchModel, 'groupId', Championship::$groupsTitle,
-					['class' => 'form-control', 'prompt' => 'Выберите раздел']),
+				'filter'    => false,
 				'value'     => function (Championship $championship) {
 					return Championship::$groupsTitle[$championship->groupId];
 				}

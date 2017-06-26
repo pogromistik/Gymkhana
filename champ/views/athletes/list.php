@@ -9,7 +9,9 @@ use yii\helpers\ArrayHelper;
  * @var \yii\web\View                       $this
  * @var \common\models\search\AthleteSearch $searchModel
  * @var \yii\data\ActiveDataProvider        $dataProvider
+ * @var int | null                          $pg
  */
+$countAthletes = $dataProvider->query->count();
 ?>
 
 <?php
@@ -136,6 +138,16 @@ $listView = new \yii\widgets\ListView([
 
 <div class="athletes">
 	<?= $listView->renderPager() ?>
+    <div class="text-right">Всего спортсменов: <?= $countAthletes ?></div>
+    <div class="text-right">
+		<?php if ($pg) { ?>
+			<?= Html::a(($countAthletes <= 500) ? 'Вернуться к постраничной навигации' : 'Показывать по 20 на странице',
+				['/athletes/list']) ?>
+		<?php } else { ?>
+			<?= Html::a(($countAthletes <= 500) ? 'Показать всех спортсменов' : 'Показывать по 500 на странице',
+				['/athletes/list', 'pg' => ($countAthletes <= 500) ? $countAthletes : 500]) ?>
+		<?php } ?>
+    </div>
     <div class="row">
 		<?php
 		foreach ($dataProvider->models as $index => $model) {

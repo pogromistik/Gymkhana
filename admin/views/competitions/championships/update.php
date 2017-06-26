@@ -44,7 +44,7 @@ $stages = $model->stages;
 		    ]) ?>
         </div>
         <div class="col-md-6 col-sm-12">
-            <h3>Классы чемпионата</h3>
+            <h3>Классы награждения</h3>
 		    <?= $this->render('_classes', [
 			    'model' => $model,
 		    ]) ?>
