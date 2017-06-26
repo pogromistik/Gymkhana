@@ -77,8 +77,16 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                         Время, необходимое для повышения класса:
                         <table class="table">
                             <tr>
-                                <td>Класс</td>
-                                <td>Процент</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12">
+                                            Класс
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            Процент
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
@@ -97,8 +105,16 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 								}
 								?>
                                 <tr class="result-<?=$cssClass?>">
-                                    <td><?= $data['classModel']->title ?></td>
-                                    <td><?= $data['percent'] ?>%</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['classModel']->title ?>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['percent'] ?>%
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>
                                         <div class="row">
                                             <div class="col-sm-6 col-xs-12">
