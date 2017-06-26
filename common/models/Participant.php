@@ -47,6 +47,9 @@ class Participant extends BaseActiveRecord
 	
 	public $resultClass;
 	public $n;
+	public $tmpPlace;
+	public $tmpPlaceInInternalClass;
+	public $tmpPlaceInAthleteClass;
 	
 	const STATUS_NEED_CLARIFICATION = 0;
 	const STATUS_ACTIVE = 1;

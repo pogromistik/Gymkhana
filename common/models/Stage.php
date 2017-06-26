@@ -293,8 +293,12 @@ class Stage extends BaseActiveRecord
 	{
 		Participant::updateAll(['place' => null, 'placeOfClass' => null, 'placeOfAthleteClass' => null], ['stageId' => $this->id]);
 		/** @var Participant[] $participants */
-		$participants = $this->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
-		$place = 1;
+		$participants = $this->getActiveParticipants()->select(['*',
+			'row_number() over (partition by "athleteClassId" order by "bestTime" asc) "tmpPlaceInAthleteClass"',
+			'row_number() over (partition by "internalClassId" order by "bestTime" asc) "tmpPlaceInInternalClass"',
+			'row_number() over (order by "bestTime" asc) "tmpPlace"'])
+			->orderBy(['bestTime' => SORT_ASC])->all();
+		//$place = 1;
 		$transaction = \Yii::$app->db->beginTransaction();
 		/** @var Participant $best */
 		$best = $this->getActiveParticipants()->andWhere(['athleteClassId' => $this->class])->orderBy(['bestTime' => SORT_ASC])->one();
@@ -323,7 +327,19 @@ class Stage extends BaseActiveRecord
 		$prevResult = null;
 		foreach ($participants as $participant) {
 			if ($participant->bestTime && $participant->bestTime < 1800000) {
+				$participant->place = $participant->tmpPlace;
+				$participant->placeOfClass = $participant->tmpPlaceInInternalClass;
+				$participant->placeOfAthleteClass = $participant->tmpPlaceInAthleteClass;
 				if ($prevResult && $prevResult->bestTime == $participant->bestTime) {
+					$participant->place = $prevResult->place;
+					if ($participant->internalClassId == $prevResult->internalClassId) {
+						$participant->placeOfClass = $prevResult->placeOfClass;
+					}
+					if ($participant->athleteClassId == $prevResult->athleteClassId) {
+						$participant->placeOfAthleteClass = $prevResult->placeOfAthleteClass;
+					}
+				}
+				/*if ($prevResult && $prevResult->bestTime == $participant->bestTime) {
 					$participant->place = $place-1;
 					$place++;
 					if ($prevResult->athleteClassId == $participant->athleteClassId) {
@@ -353,7 +369,7 @@ class Stage extends BaseActiveRecord
 					$participant->placeOfAthleteClass = $this->getActiveParticipants()
 							->andWhere(['athleteClassId' => $participant->athleteClassId])
 							->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
-				}
+				}*/
 				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
 				
 				//баллы
@@ -375,7 +391,7 @@ class Stage extends BaseActiveRecord
 				if (!$participant->save()) {
 					$transaction->rollBack();
 					
-					return var_dump($participant->errors);
+					return $participant->athlete->getFullName() . var_dump($participant->errors);
 				}
 				$prevResult = $participant;
 			}
@@ -425,16 +441,21 @@ WHERE "AthletesClasses"."percent" > "Participants"."percent"
 ORDER BY "AthletesClasses"."percent" asc, "AthletesClasses"."title" DESC
 LIMIT 1) order by "bestTime" asc) n'])
 			->andWhere(['not', ['bestTime' => null]])
+			->orderBy(['bestTime' => SORT_ASC])
 			->all();
 		$points = ArrayHelper::map(MoscowPoint::find()->all(), 'place', 'point', 'class');
 		/** @var AthletesClass $bestClass */
 		//$bestClass = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->one();
+		$prev = null;
 		foreach ($participants as $participant) {
 			if (!$participant->resultClass) {
 				continue;
 			}
 			if (!isset($points[$participant->resultClass])) {
 				continue;
+			}
+			if ($prev && $participant->bestTime == $prev->bestTime) {
+				$participant->n = $prev->n;
 			}
 			$places = $points[$participant->resultClass];
 			if (!isset($places[$participant->n])) {
@@ -451,6 +472,7 @@ LIMIT 1) order by "bestTime" asc) n'])
 			if (!$participant->save()) {
 				return false;
 			}
+			$prev = $participant;
 		}
 		
 		return true;
