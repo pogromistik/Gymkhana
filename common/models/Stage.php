@@ -319,13 +319,41 @@ class Stage extends BaseActiveRecord
 			return 'Невозможно установить эталонное время для этапа';
 		}
 		$points = ArrayHelper::map(Point::find()->all(), 'id', 'point');
+		/** @var Participant $prevResult */
+		$prevResult = null;
 		foreach ($participants as $participant) {
 			if ($participant->bestTime && $participant->bestTime < 1800000) {
-				$participant->place = $place++;
-				$participant->placeOfClass = $this->getActiveParticipants()
-						->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"') + 1;
-				$participant->placeOfAthleteClass = $this->getActiveParticipants()
-						->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfAthleteClass"') + 1;
+				if ($prevResult && $prevResult->bestTime == $participant->bestTime) {
+					$participant->place = $place-1;
+					$place++;
+					if ($prevResult->athleteClassId == $participant->athleteClassId) {
+						$participant->placeOfAthleteClass = $this->getActiveParticipants()
+							->andWhere(['athleteClassId' => $participant->athleteClassId])->max('"placeOfAthleteClass"');
+					} else {
+						$participant->placeOfAthleteClass = $this->getActiveParticipants()
+								->andWhere(['athleteClassId' => $participant->athleteClassId])
+								->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
+					}
+					if ($prevResult->internalClassId == $participant->internalClassId) {
+						$participant->placeOfClass = $this->getActiveParticipants()
+							->andWhere(['internalClassId' => $participant->internalClassId])->max('"placeOfClass"');
+					} else {
+						$participant->placeOfClass = $this->getActiveParticipants()
+							->andWhere(['internalClassId' => $participant->internalClassId])
+								->andWhere(['not', ['placeOfClass' => null]])->count() + 1;
+						$participant->placeOfAthleteClass = $this->getActiveParticipants()
+								->andWhere(['athleteClassId' => $participant->athleteClassId])
+								->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
+					}
+				} else {
+					$participant->place = $place++;
+					$participant->placeOfClass = $this->getActiveParticipants()
+							->andWhere(['internalClassId' => $participant->internalClassId])
+							->andWhere(['not', ['placeOfClass' => null]])->count() + 1;
+					$participant->placeOfAthleteClass = $this->getActiveParticipants()
+							->andWhere(['athleteClassId' => $participant->athleteClassId])
+							->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
+				}
 				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
 				
 				//баллы
@@ -349,6 +377,7 @@ class Stage extends BaseActiveRecord
 					
 					return var_dump($participant->errors);
 				}
+				$prevResult = $participant;
 			}
 		}
 		
