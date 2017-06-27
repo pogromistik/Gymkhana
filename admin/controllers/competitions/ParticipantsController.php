@@ -129,6 +129,9 @@ class ParticipantsController extends BaseController
 					$participant->isArrived = true;
 				}
 			}
+			if ($error) {
+				$needClarification = false;
+			}
 			if (!$error && !$needClarification && $participant->save()) {
 				return $this->redirect(['index', 'stageId' => $stageId]);
 			}
