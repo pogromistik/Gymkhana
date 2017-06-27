@@ -73,7 +73,7 @@
 					?>
 					<tr>
 						<td>
-							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
 							<br>
 							<small>
 								<?= $athlete->city->title ?>
