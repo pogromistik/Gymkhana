@@ -974,3 +974,23 @@ $(document).on("submit", '#addFigureTimeForStage', function (e) {
         }
     });
 });
+
+$('.participantIsArrived').click(function () {
+   var elem = $(this);
+   var id = elem.data('id');
+   showBackDrop();
+    $.get('/competitions/participants/is-arrived', {
+        id: id
+    }).done(function (data) {
+        if (data == true) {
+            $('<div class="text-with-backdrop">Сохранено</div>').appendTo(document.body);
+            setTimeout(function() { $('.text-with-backdrop').hide(); hideBackDrop() }, 1000);
+        } else {
+            hideBackDrop();
+            BootboxError(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});

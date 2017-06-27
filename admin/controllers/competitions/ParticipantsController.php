@@ -689,4 +689,28 @@ class ParticipantsController extends BaseController
 		
 		return true;
 	}
+	
+	public function actionIsArrived($id)
+	{
+		$this->can('competitions');
+		$participant = Participant::findOne($id);
+		if (!$participant) {
+			return 'Заявка не найдена';
+		}
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
+		if ($participant->isArrived) {
+			$participant->isArrived = 0;
+		} else {
+			$participant->isArrived = 1;
+		}
+		if ($participant->save(false)) {
+			return true;
+		}
+		return var_dump($participant->errors);
+	}
 }

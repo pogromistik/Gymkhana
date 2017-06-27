@@ -29,6 +29,7 @@ use yii\db\Expression;
  * @property integer       $placeOfAthleteClass
  * @property integer       $points
  * @property integer       $pointsByMoscow
+ * @property integer       $isArrived
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -110,9 +111,11 @@ class Participant extends BaseActiveRecord
 				'newAthleteClassStatus',
 				'placeOfAthleteClass',
 				'points',
-				'pointsByMoscow'
+				'pointsByMoscow',
+				'isArrived'
 			], 'integer'],
-			['number', 'validateNumber']
+			['number', 'validateNumber'],
+			['isArrived', 'default', 'value' => 0]
 		];
 	}
 	
@@ -150,7 +153,8 @@ class Participant extends BaseActiveRecord
 			'percent'             => 'Рейтинг',
 			'newAthleteClassId'   => 'Класс по итогам проведенного этапа',
 			'points'              => 'Баллы за этап',
-			'pointsByMoscow'      => 'Баллы за этап по Московской схеме'
+			'pointsByMoscow'      => 'Баллы за этап по Московской схеме',
+			'isArrived'           => 'Участник приехал на этап'
 		];
 	}
 	
@@ -212,7 +216,8 @@ class Participant extends BaseActiveRecord
 			if ($stage->referenceTime && $this->bestTime && $this->bestTime < 1800000) {
 				$this->percent = round($this->bestTime / $stage->referenceTime * 100, 2);
 				if ($stage->class && isset($this->getOldAttributes()["bestTime"])
-					&& $this->bestTime != $this->getOldAttributes()["bestTime"]) {
+					&& $this->bestTime != $this->getOldAttributes()["bestTime"]
+				) {
 					$newClassId = self::getNewClass($stage->classModel, $this);
 					if ($newClassId) {
 						$this->newAthleteClassId = $newClassId;
@@ -245,6 +250,7 @@ class Participant extends BaseActiveRecord
 				}
 			}
 		}
+		
 		return null;
 	}
 	
