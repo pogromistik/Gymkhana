@@ -202,16 +202,18 @@ class Participant extends BaseActiveRecord
 			}
 			
 			//если в предыдущих этапах кто-то другой был под этим номером - обнуляем номер
-			$oldStage = Participant::find()->where(['championshipId' => $this->championshipId])
-				->andWhere(['not', ['stageId' => $this->stageId]])
-				->andWhere(['not', ['athleteId' => $this->athleteId]])
-				->andWhere(['number' => $this->number])
-				->one();
-			if ($oldStage) {
-				$championship = Championship::findOne($this->championshipId);
-				$athlete = Athlete::findOne($this->athleteId);
-				if ($championship->regionId && $championship->regionId == $athlete->regionId) {
-					$this->number = null;
+			if ($this->number) {
+				$oldStage = Participant::find()->where(['championshipId' => $this->championshipId])
+					->andWhere(['not', ['stageId' => $this->stageId]])
+					->andWhere(['not', ['athleteId' => $this->athleteId]])
+					->andWhere(['number' => $this->number])
+					->one();
+				if ($oldStage) {
+					$championship = Championship::findOne($this->championshipId);
+					$athlete = Athlete::findOne($this->athleteId);
+					if ($championship->regionId && $championship->regionId == $athlete->regionId) {
+						$this->number = null;
+					}
 				}
 			}
 		}
