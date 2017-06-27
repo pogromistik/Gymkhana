@@ -30,7 +30,7 @@
 					<td><?= $place++ ?></td>
 					<td><?= $item->dateForHuman ?></td>
 					<td><?= $item->athleteClassId ? $item->athleteClass->title : null ?></td>
-					<td><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?><br><?= $athlete->city->title ?></td>
+					<td><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?><br><?= $athlete->city->title ?></td>
 					<td><?= $item->motorcycle->getFullTitle() ?></td>
 					<td><?= $item->timeForHuman ?></td>
 					<td><?= $item->fine ?></td>
@@ -73,7 +73,7 @@
 					?>
 					<tr>
 						<td>
-							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
 							<br>
 							<small>
 								<?= $athlete->city->title ?>
