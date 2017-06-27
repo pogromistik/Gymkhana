@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				return ['class' => 'inactive-participant2'];
 			} elseif ($item->status === \common\models\Participant::STATUS_OUT_COMPETITION) {
 				return ['class' => 'out-participant'];
-            } else {
+			} else {
 				return ['class' => 'inactive-participant'];
 			}
 		},
@@ -93,17 +93,18 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value'     => function (\common\models\Participant $item) {
 					$athlete = $item->athlete;
 					
-					return Html::a($athlete->getFullName() . ', ' . $athlete->city->title, ['/competitions/athlete/view', 'id' => $item->athleteId]);
+					return Html::a($athlete->getFullName() . ', ' . $athlete->city->title,
+							['/competitions/athlete/view', 'id' => $item->athleteId]) . '<br>' . $item->motorcycle->getFullTitle();
 				}
 			],
-			[
+			/*[
 				'attribute' => 'motorcycleId',
 				'format'    => 'raw',
 				'filter'    => false,
 				'value'     => function (\common\models\Participant $item) {
 					return $item->motorcycle->getFullTitle();
 				}
-			],
+			],*/
 			[
 				'attribute' => 'athleteClassId',
 				'format'    => 'raw',
@@ -182,11 +183,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value'   => function (\common\models\Participant $item) {
 					if ($item->status == \common\models\Participant::STATUS_ACTIVE) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-							'class'       => 'btn btn-danger changeParticipantStatus',
-							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
-							'title'       => 'Отменить заявку',
-							'data-id'     => $item->id
-						]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-danger changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
+								'title'       => 'Отменить заявку',
+								'data-id'     => $item->id
+							]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
 								'class'       => 'btn btn-info changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
 								'data-id'     => $item->id,
@@ -194,11 +195,11 @@ $this->params['breadcrumbs'][] = $this->title;
 							]) . '</div>';
 					} elseif ($item->status !== \common\models\Participant::STATUS_NEED_CLARIFICATION && $item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
 						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
-							'class'       => 'btn btn-success changeParticipantStatus',
-							'data-status' => \common\models\Participant::STATUS_ACTIVE,
-							'data-id'     => $item->id,
-							'title'       => 'Возобновить заявку'
-						]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-success changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_ACTIVE,
+								'data-id'     => $item->id,
+								'title'       => 'Возобновить заявку'
+							]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
 								'class'       => 'btn btn-info changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
 								'data-id'     => $item->id,
@@ -218,14 +219,37 @@ $this->params['breadcrumbs'][] = $this->title;
 							'title'       => 'Подтвердить заявку'
 						]);
 					if ($item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
-					    $html .= '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
-							    'class'       => 'btn btn-info changeParticipantStatus',
-							    'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
-							    'data-id'     => $item->id,
-							    'title'       => 'Допустить до участия вне зачёта'
-						    ]) . '</div>';
-                    }
+						$html .= '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-info changeParticipantStatus',
+								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
+								'data-id'     => $item->id,
+								'title'       => 'Допустить до участия вне зачёта'
+							]) . '</div>';
+					}
+					
 					return $html;
+				}
+			],
+			[
+				'visible' => !($stage->status == \common\models\Stage::STATUS_PAST),
+				'format'  => 'raw',
+				'filter'  => false,
+				'value'   => function (\common\models\Participant $item) {
+					if ($item->status == \common\models\Participant::STATUS_ACTIVE
+						|| $item->status == \common\models\Participant::STATUS_OUT_COMPETITION
+					) {
+						$html = '<div class="checkbox"><label for="isArrived-' . $item->id . '">' .
+							Html::checkbox('isArrived', $item->isArrived, [
+								'id'      => 'isArrived-' . $item->id,
+								'class'   => 'participantIsArrived',
+								'data-id' => $item->id
+							])
+							. ' Участник приехал на этап</label></div>';
+						
+						return $html;
+					}
+					
+					return '';
 				}
 			]
 		],

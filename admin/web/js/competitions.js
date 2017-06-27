@@ -210,7 +210,7 @@ $('.saveAllStageResult').click(function (e) {
     var elem = $(this);
     var attempt = elem.data('attempt');
     showBackDrop();
-    var form = $('.form-'+attempt+':first');
+    var form = $('.form-' + attempt + ':first');
     AddAllResults(form);
 });
 
@@ -246,43 +246,43 @@ function AddAllResults(form) {
     });
 }
 /*
-$('.saveAllStageResult').click(function (e) {
-    e.preventDefault();
-    var elem = $(this);
-    var attempt = elem.data('attempt');
-    var count = elem.data('count');
-    showBackDrop();
-    var i = 1;
-    $(".form-"+attempt).each(function() {
-        var form = $(this);
-        AddAllResults(form, i, count);
-        i++;
-    });
-});
+ $('.saveAllStageResult').click(function (e) {
+ e.preventDefault();
+ var elem = $(this);
+ var attempt = elem.data('attempt');
+ var count = elem.data('count');
+ showBackDrop();
+ var i = 1;
+ $(".form-"+attempt).each(function() {
+ var form = $(this);
+ AddAllResults(form, i, count);
+ i++;
+ });
+ });
 
-function AddAllResults(form, i, count) {
-    $.ajax({
-        url: '/competitions/participants/add-time',
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            if (result == true) {
-                form.find('.row').addClass('result-line');
-                if (i == count) {
-                    hideBackDrop();
-                }
-            } else {
-                hideBackDrop();
-                alert(result);
-            }
-        },
-        error: function (result) {
-            hideBackDrop();
-            alert(result);
-        }
-    });
-}
-*/
+ function AddAllResults(form, i, count) {
+ $.ajax({
+ url: '/competitions/participants/add-time',
+ type: "POST",
+ data: form.serialize(),
+ success: function (result) {
+ if (result == true) {
+ form.find('.row').addClass('result-line');
+ if (i == count) {
+ hideBackDrop();
+ }
+ } else {
+ hideBackDrop();
+ alert(result);
+ }
+ },
+ error: function (result) {
+ hideBackDrop();
+ alert(result);
+ }
+ });
+ }
+ */
 $('.changeParticipantStatus').click(function (e) {
     e.preventDefault();
     showBackDrop();
@@ -899,7 +899,7 @@ function cityForNewAthlete(id) {
     $.ajax({
         url: '/competitions/tmp-athletes/save-new-city',
         type: "POST",
-        data: $('#cityForNewAthlete'+id).serialize(),
+        data: $('#cityForNewAthlete' + id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
@@ -920,7 +920,7 @@ function cityForNewParticipant(id) {
     $.ajax({
         url: '/competitions/tmp-participant/save-new-city',
         type: "POST",
-        data: $('#cityForNewParticipant'+id).serialize(),
+        data: $('#cityForNewParticipant' + id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
@@ -971,6 +971,76 @@ $(document).on("submit", '#addFigureTimeForStage', function (e) {
         error: function (result) {
             hideBackDrop();
             alert(result);
+        }
+    });
+});
+
+$('.participantIsArrived').click(function () {
+    var elem = $(this);
+    var id = elem.data('id');
+    showBackDrop();
+    $.get('/competitions/participants/is-arrived', {
+        id: id
+    }).done(function (data) {
+        if (data == true) {
+            $('<div class="text-with-backdrop">Сохранено</div>').appendTo(document.body);
+            setTimeout(function () {
+                $('.text-with-backdrop').hide();
+                hideBackDrop()
+            }, 1000);
+        } else {
+            hideBackDrop();
+            BootboxError(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$('.setFinalList').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var stageId = elem.data('id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Формирование итогового списка',
+        message: 'Все заявки, для которых не отмечен пункт "Участник приехал на этап", будут отменены. ' +
+        'Для отмененных заявок невозможно установить время заездов. Уверены, что хотите совершить это действие? (' +
+        'в дальнейшем отмененные заявки можно вернуть в работу на странице "участники")',
+        className: 'info',
+        buttons: {
+            cancel: {
+                label: 'Отмена',
+                className: "btn-danger",
+                callback: function () {
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Сформировать список',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/participants/set-final-list', {
+                        stageId: stageId
+                    }).done(function (data) {
+                        if (data['success'] == true) {
+                            hideBackDrop();
+                            $('<div class="text-with-backdrop">' + data['text'] + '</div>').appendTo(document.body);
+                            setTimeout(function () {
+                                $('.text-with-backdrop').hide();
+                            }, 1500);
+                        } else {
+                            hideBackDrop();
+                            alert(data['text']);
+                        }
+                    }).fail(function (error) {
+                        hideBackDrop();
+                        alert(error.responseText);
+                    });
+                }
+            }
         }
     });
 });

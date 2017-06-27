@@ -314,6 +314,22 @@ img {
     background-color: #56a025;
 }
 
+.text-with-backdrop {
+    position: fixed;
+    top: calc(50% - 150px);
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    height: 200px;
+    left: calc(50% - 100px);
+    z-index: 1020;
+    background: #7dff65;
+    text-align: center;
+    padding-top: 80px;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
 .bg-blue {
     background: #73afe8;
     color: #fff;
@@ -341,7 +357,7 @@ small.very {
 }
 
 .is-delivery-2 {
-    background: #dff0d8!important;
+    background: #dff0d8 !important;
 }
 
 .calculate-result {
@@ -350,7 +366,7 @@ small.very {
 }
 
 .inactive-participant {
-    background: #efe2e2!important;
+    background: #efe2e2 !important;
 }
 
 .inactive-participant2 {
@@ -362,11 +378,11 @@ small.very {
 }
 
 .need-clarification-participant {
-    background: #fffdba!important;
+    background: #fffdba !important;
 }
 
 tr.gray {
-    background: #e2e2e2!important;
+    background: #e2e2e2 !important;
 }
 
 .color-div {
@@ -398,4 +414,12 @@ tr.gray {
 
 .dark-border {
     border-bottom: 2px solid #4b4e53;
+}
+
+.buttons {
+    padding-bottom: 15px;
+}
+
+.buttons > a {
+    margin-right: 4px;
 }
