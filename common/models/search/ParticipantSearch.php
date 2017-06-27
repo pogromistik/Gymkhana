@@ -20,7 +20,7 @@ class ParticipantSearch extends Participant
 	public function rules()
 	{
 		return [
-			[['athleteId', 'id', 'championshipId', 'stageId', 'motorcycleId', 'internalClassId', 'athleteClassId', 'bestTime', 'place', 'number', 'sort', 'dateAdded', 'status'], 'integer'],
+			[['athleteId', 'isArrived', 'id', 'championshipId', 'stageId', 'motorcycleId', 'internalClassId', 'athleteClassId', 'bestTime', 'place', 'number', 'sort', 'dateAdded', 'status'], 'integer'],
 		];
 	}
 	
