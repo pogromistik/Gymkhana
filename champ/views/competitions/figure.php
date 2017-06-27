@@ -58,7 +58,13 @@ $time = time();
             </div>
 	
 	        <?php if (\Yii::$app->user->isGuest) { ?>
-		        <div class="pb-10">Отправка результатов на сайт доступна только зарегистрированным пользователям</div>
+                <div class="pb-10">Отправка результатов на сайт доступна только зарегистрированным пользователям</div>
+	        <?php } ?>
+	
+	        <?php if (!$figure->useForClassesCalculate) { ?>
+                <div class="pb-10"><b>
+                        По данной фигуре не производится смена класса.
+                    </b></div>
 	        <?php } ?>
 
     <div class="filters">
@@ -171,7 +177,11 @@ $time = time();
 					<?php } ?>
                 </div>
 				
+                <?php if ($figure->useForClassesCalculate) { ?>
 				<?= $this->render('_figure-result', ['results' => $results]) ?>
+                <?php } else { ?>
+	                <?= $this->render('_figure-result-without-class', ['results' => $results]) ?>
+                <?php } ?>
             </div>
         </div>
 

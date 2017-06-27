@@ -152,11 +152,11 @@ class TmpAthletesController extends BaseController
 			
 			return $result;
 		}
-		if ($oldAthlete->hasAccount) {
+		/*if ($oldAthlete->hasAccount) {
 			$result['error'] = 'У спортсмена уже есть личный кабинет';
 			
 			return $result;
-		}
+		}*/
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$oldAthlete->email = $tmpAthlete->email;

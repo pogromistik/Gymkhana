@@ -9,6 +9,7 @@ use yii\bootstrap\Html;
  * @var \common\models\Participant[]    $participantsByInternalClasses
  * @var integer                         $sortBy
  * @var \common\models\TmpParticipant[] $tmpParticipants
+ * @var array                           $needTime
  */
 $time = time();
 $city = $stage->city;
@@ -23,7 +24,7 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
 $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
-    <div class="row">
+    <div class="row stage">
         <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
             <div class="title-with-bg">
 				<?= $championship->title ?>
@@ -72,6 +73,61 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 				<?php if ($stage->referenceTime) { ?>
                     <div>
                         Эталонное время трассы: <?= $stage->referenceTimeHuman ?>
+                        <br>
+                        Время, необходимое для повышения класса:
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12">
+                                            Класс
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            Процент
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12">
+                                            Минимальное время
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            Максимальное время
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+							<?php foreach ($needTime as $id => $data) {
+								$cssClass = null;
+								if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($data['classModel']->title, 'UTF-8')])) {
+									$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($data['classModel']->title, 'UTF-8')];
+								}
+								?>
+                                <tr class="result-<?=$cssClass?>">
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['classModel']->title ?>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['percent'] ?>%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['startTime'] ?>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+	                                            <?= $data['endTime'] ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+							<?php } ?>
+                        </table>
                     </div>
 				<?php } ?>
 				<?php if ($stage->class) { ?>
