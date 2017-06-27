@@ -231,10 +231,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				}
 			],
 			[
-				'visible' => !($stage->status == \common\models\Stage::STATUS_PAST),
-				'format'  => 'raw',
-				'filter'  => false,
-				'value'   => function (\common\models\Participant $item) {
+				'attribute' => 'isArrived',
+				'visible'   => !($stage->status == \common\models\Stage::STATUS_PAST),
+				'format'    => 'raw',
+				'filter'    => false,
+				'value'     => function (\common\models\Participant $item) {
 					if ($item->status == \common\models\Participant::STATUS_ACTIVE
 						|| $item->status == \common\models\Participant::STATUS_OUT_COMPETITION
 					) {
