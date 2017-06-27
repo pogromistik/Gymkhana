@@ -6,10 +6,11 @@ use yii\bootstrap\Html;
 use common\models\Championship;
 
 /**
- * @var \yii\web\View              $this
- * @var \common\models\Stage       $stage
- * @var \common\models\Participant $participant
- * @var string                     $error
+ * @var \yii\web\View                $this
+ * @var \common\models\Stage         $stage
+ * @var \common\models\Participant   $participant
+ * @var string                       $error
+ * @var \common\models\Participant[] $participants
  */
 $championship = $stage->championship;
 $this->title = $championship->title . ', ' . $stage->title;
@@ -58,7 +59,6 @@ $attempt = 0;
     </div>
     <hr>
 	<?php
-	$participants = $stage->participantsForRaces;
 	foreach ($participants as $participant) {
 		$timeModel = $participant->getTimeForm($attempt);
 		?>

@@ -357,7 +357,7 @@ small.very {
 }
 
 .is-delivery-2 {
-    background: #dff0d8!important;
+    background: #dff0d8 !important;
 }
 
 .calculate-result {
@@ -366,7 +366,7 @@ small.very {
 }
 
 .inactive-participant {
-    background: #efe2e2!important;
+    background: #efe2e2 !important;
 }
 
 .inactive-participant2 {
@@ -378,11 +378,11 @@ small.very {
 }
 
 .need-clarification-participant {
-    background: #fffdba!important;
+    background: #fffdba !important;
 }
 
 tr.gray {
-    background: #e2e2e2!important;
+    background: #e2e2e2 !important;
 }
 
 .color-div {
@@ -414,4 +414,12 @@ tr.gray {
 
 .dark-border {
     border-bottom: 2px solid #4b4e53;
+}
+
+.buttons {
+    padding-bottom: 15px;
+}
+
+.buttons > a {
+    margin-right: 4px;
 }

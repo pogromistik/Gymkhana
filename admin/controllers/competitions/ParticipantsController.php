@@ -286,9 +286,12 @@ class ParticipantsController extends BaseController
 			$error = 'Не установлены классы спортсменов';
 		}
 		
+		$participants = $stage->getParticipantsForRaces()->andWhere(['isArrived' => 1])->all();
+		
 		return $this->render('races', [
-			'stage' => $stage,
-			'error' => $error
+			'stage'        => $stage,
+			'error'        => $error,
+			'participants' => $participants
 		]);
 	}
 	
@@ -711,6 +714,44 @@ class ParticipantsController extends BaseController
 		if ($participant->save(false)) {
 			return true;
 		}
+		
 		return var_dump($participant->errors);
+	}
+	
+	public function actionSetFinalList($stageId)
+	{
+		$this->can('competitions');
+		
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$result = [
+			'error'   => false,
+			'success' => false,
+			'text'    => null
+		];
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			$result['text'] = 'Этап не найден';
+			$result['error'] = true;
+			
+			return $result;
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				$result['text'] = 'Доступ запрещен';
+				$result['error'] = true;
+				
+				return $result;
+			}
+		}
+		
+		$count = Participant::updateAll(['status' => Participant::STATUS_CANCEL_ADMINISTRATION],
+			['bestTime' => null, 'stageId' => $stage->id, 'isArrived' => 0,
+			 'status'   => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION, Participant::STATUS_NEED_CLARIFICATION]]);
+		
+		$result['text'] = 'Отменено заявок: ' . $count;
+		$result['success'] = true;
+		
+		return $result;
 	}
 }
