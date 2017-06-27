@@ -194,7 +194,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 			[
 				'format' => 'raw',
 				'value'  => function (TmpParticipant $participant) {
-					$html = '<div class = "pb-10">' . Html::a('Добавить и зарегистрировать',
+					$html = '<div class = "pb-10">' . Html::a('Создать спортсмена и зарегистрировать на этап',
 							['/competitions/tmp-participant/add-and-registration', 'id' => $participant->id],
 							['class' => 'btn btn-success addAndRegistration', 'data-id' => $participant->id]) . '</div>';
 					$html .= '<div class = "pb-10">' . Html::a('Отменить заявку',
