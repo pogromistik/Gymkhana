@@ -29,6 +29,8 @@ use yii\db\Expression;
  * @property integer       $placeOfAthleteClass
  * @property integer       $points
  * @property integer       $pointsByMoscow
+ * @property integer       $isArrived
+ * @property integer       $dateRegistration
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -110,9 +112,12 @@ class Participant extends BaseActiveRecord
 				'newAthleteClassStatus',
 				'placeOfAthleteClass',
 				'points',
-				'pointsByMoscow'
+				'pointsByMoscow',
+				'isArrived',
+				'dateRegistration'
 			], 'integer'],
-			['number', 'validateNumber']
+			['number', 'validateNumber'],
+			['isArrived', 'default', 'value' => 0]
 		];
 	}
 	
@@ -150,7 +155,8 @@ class Participant extends BaseActiveRecord
 			'percent'             => 'Рейтинг',
 			'newAthleteClassId'   => 'Класс по итогам проведенного этапа',
 			'points'              => 'Баллы за этап',
-			'pointsByMoscow'      => 'Баллы за этап по Московской схеме'
+			'pointsByMoscow'      => 'Баллы за этап по Московской схеме',
+			'isArrived'           => 'Участник приехал на этап'
 		];
 	}
 	
@@ -159,6 +165,9 @@ class Participant extends BaseActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 			$this->athleteClassId = $this->athlete->athleteClassId;
+			if (!$this->dateRegistration) {
+				$this->dateRegistration = time();
+			}
 			
 			if ($this->championship->useCheScheme && !$this->internalClassId) {
 				$internalClass = $this->internalClassWithScheme($this->athleteClassId);
@@ -193,16 +202,18 @@ class Participant extends BaseActiveRecord
 			}
 			
 			//если в предыдущих этапах кто-то другой был под этим номером - обнуляем номер
-			$oldStage = Participant::find()->where(['championshipId' => $this->championshipId])
-				->andWhere(['not', ['stageId' => $this->stageId]])
-				->andWhere(['not', ['athleteId' => $this->athleteId]])
-				->andWhere(['number' => $this->number])
-				->one();
-			if ($oldStage) {
-				$championship = Championship::findOne($this->championshipId);
-				$athlete = Athlete::findOne($this->athleteId);
-				if ($championship->regionId && $championship->regionId == $athlete->regionId) {
-					$this->number = null;
+			if ($this->number) {
+				$oldStage = Participant::find()->where(['championshipId' => $this->championshipId])
+					->andWhere(['not', ['stageId' => $this->stageId]])
+					->andWhere(['not', ['athleteId' => $this->athleteId]])
+					->andWhere(['number' => $this->number])
+					->one();
+				if ($oldStage) {
+					$championship = Championship::findOne($this->championshipId);
+					$athlete = Athlete::findOne($this->athleteId);
+					if ($championship->regionId && $championship->regionId == $athlete->regionId) {
+						$this->number = null;
+					}
 				}
 			}
 		}
@@ -212,7 +223,8 @@ class Participant extends BaseActiveRecord
 			if ($stage->referenceTime && $this->bestTime && $this->bestTime < 1800000) {
 				$this->percent = round($this->bestTime / $stage->referenceTime * 100, 2);
 				if ($stage->class && isset($this->getOldAttributes()["bestTime"])
-					&& $this->bestTime != $this->getOldAttributes()["bestTime"]) {
+					&& $this->bestTime != $this->getOldAttributes()["bestTime"]
+				) {
 					$newClassId = self::getNewClass($stage->classModel, $this);
 					if ($newClassId) {
 						$this->newAthleteClassId = $newClassId;
@@ -245,6 +257,7 @@ class Participant extends BaseActiveRecord
 				}
 			}
 		}
+		
 		return null;
 	}
 	

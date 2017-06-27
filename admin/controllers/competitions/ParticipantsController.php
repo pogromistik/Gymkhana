@@ -125,6 +125,12 @@ class ParticipantsController extends BaseController
 					}
 				}
 				$participant->status = Participant::STATUS_ACTIVE;
+				if ($stage->dateOfThe <= time()) {
+					$participant->isArrived = true;
+				}
+			}
+			if ($error) {
+				$needClarification = false;
 			}
 			if (!$error && !$needClarification && $participant->save()) {
 				return $this->redirect(['index', 'stageId' => $stageId]);
@@ -164,7 +170,7 @@ class ParticipantsController extends BaseController
 		$query->andWhere(new Expression('"a"."athleteId" = "b"."id"'));
 		$query->andWhere(new Expression('"a"."motorcycleId" = "c"."id"'));
 		$query->andWhere(new Expression('"a"."athleteClassId" = "d"."id"'));
-		$query->orderBy(['a.sort' => SORT_ASC, 'a.id' => SORT_ASC]);
+		$query->orderBy(['a.isArrived' => SORT_DESC, 'a.sort' => SORT_ASC, 'a.id' => SORT_ASC]);
 		$participants = $query->all();
 		$participantsArray = [];
 		foreach ($participants as $participant) {
@@ -286,9 +292,12 @@ class ParticipantsController extends BaseController
 			$error = 'Не установлены классы спортсменов';
 		}
 		
+		$participants = $stage->getParticipantsForRaces()->andWhere(['isArrived' => 1])->all();
+		
 		return $this->render('races', [
-			'stage' => $stage,
-			'error' => $error
+			'stage'        => $stage,
+			'error'        => $error,
+			'participants' => $participants
 		]);
 	}
 	
@@ -688,5 +697,67 @@ class ParticipantsController extends BaseController
 		}
 		
 		return true;
+	}
+	
+	public function actionIsArrived($id)
+	{
+		$this->can('competitions');
+		$participant = Participant::findOne($id);
+		if (!$participant) {
+			return 'Заявка не найдена';
+		}
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
+		if ($participant->isArrived) {
+			$participant->isArrived = 0;
+		} else {
+			$participant->isArrived = 1;
+		}
+		if ($participant->save(false)) {
+			return true;
+		}
+		
+		return var_dump($participant->errors);
+	}
+	
+	public function actionSetFinalList($stageId)
+	{
+		$this->can('competitions');
+		
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$result = [
+			'error'   => false,
+			'success' => false,
+			'text'    => null
+		];
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			$result['text'] = 'Этап не найден';
+			$result['error'] = true;
+			
+			return $result;
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				$result['text'] = 'Доступ запрещен';
+				$result['error'] = true;
+				
+				return $result;
+			}
+		}
+		
+		$count = Participant::updateAll(['status' => Participant::STATUS_CANCEL_ADMINISTRATION],
+			['bestTime' => null, 'stageId' => $stage->id, 'isArrived' => 0,
+			 'status'   => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION, Participant::STATUS_NEED_CLARIFICATION]]);
+		
+		$result['text'] = 'Отменено заявок: ' . $count;
+		$result['success'] = true;
+		
+		return $result;
 	}
 }

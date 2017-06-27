@@ -111,6 +111,12 @@ class RunController extends Controller
 		\Yii::$app->db->createCommand('SELECT setval(\'"Russia_id_seq"\'::regclass, MAX("id")) FROM "Cities"')->execute();
 	}
 	
+	public function actionUpdateParticipantsArrived()
+	{
+		Participant::updateAll(['isArrived' => 1],
+			['status' => [Participant::STATUS_OUT_COMPETITION, Participant::STATUS_ACTIVE]]);
+	}
+	
 	public function actionAddRegions()
 	{
 		$athletes = Athlete::find()->all();
