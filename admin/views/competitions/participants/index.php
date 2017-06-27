@@ -235,15 +235,21 @@ $this->params['breadcrumbs'][] = $this->title;
 				'format'  => 'raw',
 				'filter'  => false,
 				'value'   => function (\common\models\Participant $item) {
-					$html = '<div class="checkbox"><label for="isArrived-' . $item->id . '">' .
-						Html::checkbox('isArrived', $item->isArrived, [
-							'id'      => 'isArrived-' . $item->id,
-							'class'   => 'participantIsArrived',
-							'data-id' => $item->id
-						])
-						. ' Участник приехал на этап</label></div>';
+					if ($item->status == \common\models\Participant::STATUS_ACTIVE
+						|| $item->status == \common\models\Participant::STATUS_OUT_COMPETITION
+					) {
+						$html = '<div class="checkbox"><label for="isArrived-' . $item->id . '">' .
+							Html::checkbox('isArrived', $item->isArrived, [
+								'id'      => 'isArrived-' . $item->id,
+								'class'   => 'participantIsArrived',
+								'data-id' => $item->id
+							])
+							. ' Участник приехал на этап</label></div>';
+						
+						return $html;
+					}
 					
-					return $html;
+					return '';
 				}
 			]
 		],
