@@ -168,6 +168,7 @@ class TmpParticipantController extends BaseController
 			$participant = new Participant();
 			$participant->athleteId = $athlete->id;
 			$participant->motorcycleId = $motorcycle->id;
+			$participant->dateRegistration = $tmpParticipant->dateAdded;
 			if ($tmpParticipant->number) {
 				$participant->number = $tmpParticipant->number;
 			}
@@ -296,6 +297,7 @@ class TmpParticipantController extends BaseController
 			
 			$participant = new Participant();
 			$participant->athleteId = $athlete->id;
+			$participant->dateRegistration = $tmpParticipant->dateAdded;
 			$participant->motorcycleId = $motorcycle->id;
 			$participant->stageId = $tmpParticipant->stageId;
 			$participant->championshipId = $tmpParticipant->championshipId;
@@ -370,6 +372,7 @@ class TmpParticipantController extends BaseController
 			}
 			
 			$participant = new Participant();
+			$participant->dateRegistration = $tmpParticipant->dateAdded;
 			$participant->athleteId = $athlete->id;
 			$participant->motorcycleId = $motorcycle->id;
 			$participant->stageId = $tmpParticipant->stageId;

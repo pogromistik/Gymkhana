@@ -30,6 +30,7 @@ use yii\db\Expression;
  * @property integer       $points
  * @property integer       $pointsByMoscow
  * @property integer       $isArrived
+ * @property integer       $dateRegistration
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -112,7 +113,8 @@ class Participant extends BaseActiveRecord
 				'placeOfAthleteClass',
 				'points',
 				'pointsByMoscow',
-				'isArrived'
+				'isArrived',
+				'dateRegistration'
 			], 'integer'],
 			['number', 'validateNumber'],
 			['isArrived', 'default', 'value' => 0]
@@ -163,6 +165,9 @@ class Participant extends BaseActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 			$this->athleteClassId = $this->athlete->athleteClassId;
+			if (!$this->dateRegistration) {
+				$this->dateRegistration = time();
+			}
 			
 			if ($this->championship->useCheScheme && !$this->internalClassId) {
 				$internalClass = $this->internalClassWithScheme($this->athleteClassId);
