@@ -125,6 +125,9 @@ class ParticipantsController extends BaseController
 					}
 				}
 				$participant->status = Participant::STATUS_ACTIVE;
+				if ($stage->dateOfThe <= time()) {
+					$participant->isArrived = true;
+				}
 			}
 			if (!$error && !$needClarification && $participant->save()) {
 				return $this->redirect(['index', 'stageId' => $stageId]);
