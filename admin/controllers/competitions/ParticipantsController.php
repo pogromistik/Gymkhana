@@ -167,7 +167,7 @@ class ParticipantsController extends BaseController
 		$query->andWhere(new Expression('"a"."athleteId" = "b"."id"'));
 		$query->andWhere(new Expression('"a"."motorcycleId" = "c"."id"'));
 		$query->andWhere(new Expression('"a"."athleteClassId" = "d"."id"'));
-		$query->orderBy(['a.sort' => SORT_ASC, 'a.id' => SORT_ASC]);
+		$query->orderBy(['a.isArrived' => SORT_DESC, 'a.sort' => SORT_ASC, 'a.id' => SORT_ASC]);
 		$participants = $query->all();
 		$participantsArray = [];
 		foreach ($participants as $participant) {
