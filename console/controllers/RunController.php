@@ -12,6 +12,7 @@ use common\models\Country;
 use common\models\Error;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\HelpModel;
 use common\models\InternalClass;
 use common\models\MoscowPoint;
 use common\models\Motorcycle;
@@ -1227,10 +1228,12 @@ class RunController extends Controller
 		$athlete2 = Athlete::findOne($id2);
 		if ($athlete1->hasAccount && $athlete2->hasAccount) {
 			echo 'account error' . PHP_EOL;
+			
 			return false;
 		}
 		if ($athlete1->lastName != $athlete2->lastName) {
 			echo 'lastname error' . PHP_EOL;
+			
 			return false;
 		}
 		if ($athlete1->hasAccount) {
@@ -1276,6 +1279,7 @@ class RunController extends Controller
 		$motorcycle2 = Motorcycle::findOne($id2);
 		if ($motorcycle2->athleteId != $motorcycle1->athleteId) {
 			echo 'athlete error' . PHP_EOL;
+			
 			return false;
 		}
 		$transaction = \Yii::$app->db->beginTransaction();
@@ -1292,6 +1296,40 @@ class RunController extends Controller
 			echo 'success' . PHP_EOL;
 		}
 		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionTestTime()
+	{
+		$timeHuman = '00:00.191';
+		$time = HelpModel::convertTime($timeHuman);
+		echo 'Old: ' . $time . ', ' . HelpModel::convertTimeToHuman($time) . PHP_EOL;
+		$referenceTime = round($time / 10) * 10;
+		echo 'New: ' . $referenceTime . ', ' . HelpModel::convertTimeToHuman($referenceTime) . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionFixForStages($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+			return false;
+		}
+		$stage->referenceTime = round($stage->referenceTime/10)*10;
+		$participants = $stage->participants;
+		foreach ($participants as $participant) {
+			if ($participant->percent) {
+				$percent = round($participant->bestTime / $stage->referenceTime * 100, 2);
+				if ($percent != $participant->percent) {
+					file_put_contents('txt.txt',
+						$participant->athlete->getFullName() . ': old ' .
+						$participant->percent . ', new ' . $percent . PHP_EOL, FILE_APPEND);
+				}
+			}
+		}
 		
 		return true;
 	}
