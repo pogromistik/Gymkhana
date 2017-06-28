@@ -257,11 +257,14 @@ class CompetitionsController extends BaseController
 				if (!$prev || $prev->percent == $class->percent) {
 					$startTime = '00:00.00';
 				} else {
-					$time = $prevTime+10;
+					$time = $prevTime + 10;
 					$startTime = HelpModel::convertTimeToHuman($time);
 				}
 				$time = floor($stage->referenceTime * ($class->percent) / 100);
-				$time = ((int)($time/10))*10;
+				$time = ((int)($time / 10)) * 10;
+				if (round($time / $stage->referenceTime * 100, 2) >= $class->percent) {
+					$time -= 10;
+				}
 				$prevTime = $time;
 				$endTime = HelpModel::convertTimeToHuman($time);
 				$needTime[$class->id] = [
@@ -341,11 +344,11 @@ class CompetitionsController extends BaseController
 					if (!$prev || $prev->percent == $class->percent) {
 						$startTime = '00:00.00';
 					} else {
-						$time = $prevTime+10;
+						$time = $prevTime + 10;
 						$startTime = HelpModel::convertTimeToHuman($time);
 					}
 					$time = floor($figure->bestTime * ($class->percent) / 100);
-					$time = ((int)($time/10))*10;
+					$time = ((int)($time / 10)) * 10;
 					$prevTime = $time;
 					$endTime = HelpModel::convertTimeToHuman($time);
 					$needTime[$class->id] = [
