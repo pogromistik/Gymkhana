@@ -208,4 +208,14 @@ class HelpModel extends Model
 		$mls = str_pad(round(($time - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
 		return $min . ':' . $sec . '.' . $mls;
 	}
+	
+	public static function convertTime($time)
+	{
+		list($min, $secs) = explode(':', $time);
+		$result = ($min * 60000) + round($secs * 1000);
+		if ($result > Time::FAIL_TIME) {
+			$result = Time::FAIL_TIME;
+		}
+		return $result;
+	}
 }
