@@ -252,14 +252,17 @@ class CompetitionsController extends BaseController
 			/** @var AthletesClass $prev */
 			$prev = null;
 			$last = null;
+			$prevTime = 0;
 			foreach ($allClasses as $class) {
 				if (!$prev || $prev->percent == $class->percent) {
 					$startTime = '00:00.00';
 				} else {
-					$time = $stage->referenceTime * ($prev->percent) / 100;
+					$time = $prevTime+10;
 					$startTime = HelpModel::convertTimeToHuman($time);
 				}
-				$time = $stage->referenceTime * ($class->percent - 0.01) / 100;
+				$time = floor($stage->referenceTime * ($class->percent) / 100);
+				$time = ((int)($time/10))*10;
+				$prevTime = $time;
 				$endTime = HelpModel::convertTimeToHuman($time);
 				$needTime[$class->id] = [
 					'classModel' => $class,
@@ -325,16 +328,53 @@ class CompetitionsController extends BaseController
 			$results = $results->all();
 		}
 		
+		$needTime = [];
+		if ($figure->useForClassesCalculate) {
+			if ($figure->bestTime) {
+				/** @var AthletesClass[] $allClasses */
+				$allClasses = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+				/** @var AthletesClass $prev */
+				$prev = null;
+				$last = null;
+				$prevTime = 0;
+				foreach ($allClasses as $class) {
+					if (!$prev || $prev->percent == $class->percent) {
+						$startTime = '00:00.00';
+					} else {
+						$time = $prevTime+10;
+						$startTime = HelpModel::convertTimeToHuman($time);
+					}
+					$time = floor($figure->bestTime * ($class->percent) / 100);
+					$time = ((int)($time/10))*10;
+					$prevTime = $time;
+					$endTime = HelpModel::convertTimeToHuman($time);
+					$needTime[$class->id] = [
+						'classModel' => $class,
+						'startTime'  => $startTime,
+						'endTime'    => $endTime,
+						'percent'    => $class->percent
+					];
+					$prev = $class;
+					$last = $class->id;
+				}
+				$needTime[$last]['endTime'] = '59:59.59';
+				if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+					$needTime[$last]['percent'] = '> ' . $prev->percent;
+				}
+			}
+		}
+		
 		$this->pageTitle = $figure->title;
 		$this->description = 'Результаты заездов по фигуре ' . $figure->title;
 		$this->keywords = 'Фигуры мотоджимханы, базовые фигуры, ' . $figure->title;
 		$this->layout = 'full-content';
 		
 		return $this->render('figure', [
-			'figure'  => $figure,
-			'results' => $results,
-			'year'    => $yearModel,
-			'showAll' => $showAll
+			'figure'   => $figure,
+			'results'  => $results,
+			'year'     => $yearModel,
+			'showAll'  => $showAll,
+			'needTime' => $needTime
 		]);
 	}
 	
