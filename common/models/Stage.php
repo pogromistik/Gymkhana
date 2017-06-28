@@ -313,6 +313,7 @@ class Stage extends BaseActiveRecord
 			return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
 		}
 		$referenceTime = round($best->bestTime / $best->athleteClass->coefficient);
+		$referenceTime = round($referenceTime/10)*10;
 		$this->referenceTime = $referenceTime;
 		if ($this->status != self::STATUS_CALCULATE_RESULTS && $this->status != Stage::STATUS_PAST) {
 			$this->status = self::STATUS_CALCULATE_RESULTS;
