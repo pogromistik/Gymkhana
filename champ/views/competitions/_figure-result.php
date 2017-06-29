@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \common\models\FigureTime[] $results
+ * @var \common\models\Figure       $figure
  */
 ?>
 
@@ -17,7 +18,12 @@
                 <th><p>Время</p></th>
                 <th><p>Штраф</p></th>
                 <th><p>Итоговое время</p></th>
-                <th><p>Рейтинг</p></th>
+				<?php if ($figure->severalRecords) { ?>
+                    <th><p>Начальный рейтинг</p></th>
+                    <th><p>Актуальный рейтинг</p></th>
+				<?php } else { ?>
+                    <th><p>Рейтинг</p></th>
+				<?php } ?>
                 <th><p>Переход в класс</p></th>
             </tr>
             </thead>
@@ -31,25 +37,31 @@
                     <td><?= $place++ ?></td>
                     <td><?= $item->dateForHuman ?></td>
                     <td><?= $item->athleteClassId ? $item->athleteClass->title : null ?></td>
-                    <td><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?><br><?= $athlete->city->title ?></td>
+                    <td><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
+                        <br><?= $athlete->city->title ?></td>
                     <td><?= $item->motorcycle->getFullTitle() ?></td>
                     <td><?= $item->timeForHuman ?></td>
                     <td><?= $item->fine ?></td>
                     <td>
-                        <?= $item->resultTimeForHuman ?>
-	                    <?php if ($item->recordType && $item->recordStatus == \common\models\FigureTime::NEW_RECORD_APPROVE) { ?>
-		                    <?= \yii\bootstrap\Html::img('/img/crown.png', [
-			                    'title' => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!',
-			                    'alt'   => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!'
-		                    ]) ?>
-	                    <?php } ?>
-                        <?php if ($item->videoLink) { ?>
+						<?= $item->resultTimeForHuman ?>
+						<?php if ($item->recordType && $item->recordStatus == \common\models\FigureTime::NEW_RECORD_APPROVE) { ?>
+							<?= \yii\bootstrap\Html::img('/img/crown.png', [
+								'title' => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!',
+								'alt'   => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!'
+							]) ?>
+						<?php } ?>
+						<?php if ($item->videoLink) { ?>
                             <a href="<?= $item->videoLink ?>" target="_blank">
                                 <i class="fa fa-youtube"></i>
                             </a>
-                        <?php } ?>
+						<?php } ?>
                     </td>
-                    <td><?= $item->percent ?>%</td>
+	                <?php if ($figure->severalRecords) { ?>
+                        <td><abbr title="<?= $item->recordInMomentHuman ?>"><?= $item->percent ?>%</abbr></td>
+                        <td><?= $item->actualPercent ?>%</td>
+	                <?php } else { ?>
+                        <td><?= $item->percent ?>%</td>
+                    <?php } ?>
                     <td><?= ($item->newAthleteClassId &&
 							$item->newAthleteClassStatus == \common\models\FigureTime::NEW_CLASS_STATUS_APPROVE)
 							? $item->newAthleteClass->title : null ?></td>
@@ -66,7 +78,11 @@
             <tr>
                 <th>Участник</th>
                 <th>Время</th>
-                <th>Рейтинг</th>
+                <?php if ($figure->severalRecords) { ?>
+                    <th>Н.рейтинг<br>А.рейтинг</th>
+                <?php } else { ?>
+                    <th>Рейтинг</th>
+                <?php } ?>
             </tr>
             </thead>
             <tbody>
@@ -77,7 +93,7 @@
 					?>
                     <tr>
                         <td>
-	                        <?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
+							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                             <br>
                             <small>
 								<?= $athlete->city->title ?>
@@ -88,7 +104,7 @@
 									<?= $item->athleteClass->title ?>
 								<?php } ?>
                                 <br>
-                                <?= $item->dateForHuman ?>
+								<?= $item->dateForHuman ?>
                             </small>
                         </td>
                         <td>
@@ -98,15 +114,18 @@
 							<?php } ?>
                             <br>
                             <span class="green"><?= $item->resultTimeForHuman ?></span>
-	                        <?php if ($item->videoLink) { ?>
+							<?php if ($item->videoLink) { ?>
                                 <br>
                                 <a href="<?= $item->videoLink ?>" target="_blank">
                                     <i class="fa fa-youtube"></i>
                                 </a>
-	                        <?php } ?>
+							<?php } ?>
                         </td>
                         <td>
 							<?= $item->percent ?>%
+							<?php if ($figure->severalRecords) { ?>
+                                <br><?= $item->actualPercent ?>%<br>
+							<?php } ?>
 							<?php if ($item->newAthleteClassId) { ?>
 								<?= $item->newAthleteClass->title ?>
 							<?php } ?>

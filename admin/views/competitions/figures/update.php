@@ -186,6 +186,14 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				}
 			],
 			[
+				'attribute' => 'actualPercent',
+				'visible'   => $model->severalRecords,
+				'filter'    => false,
+				'value'     => function (\common\models\FigureTime $item) {
+					return ($item->actualPercent) ? $item->actualPercent . '%' : '';
+				}
+			],
+			[
 				'attribute' => 'newAthleteClassId',
 				'format'    => 'raw',
 				'filter'    => false,
