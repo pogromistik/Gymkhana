@@ -15,7 +15,7 @@ use yii\bootstrap\Html;
 $time = time();
 ?>
 
-<div class="row">
+<div class="row figure">
     <div class="col-bg-7 col-lg-9 col-md-10 col-sm-12">
         <div class="title-with-bg">
 			<?= $figure->title ?>
