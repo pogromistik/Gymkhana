@@ -296,7 +296,7 @@ class AthleteController extends BaseController
 		return $this->render('change-class', ['athletes' => $athletes, 'history' => $history, 'success' => $success]);
 	}
 	
-	public function actionChangeAthleteClass($success = false)
+	public function actionChangeAthleteClass()
 	{
 		$this->can('projectOrganizer');
 		

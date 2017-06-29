@@ -12,6 +12,7 @@ use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
 use common\models\Participant;
+use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
 use common\models\Year;
 use yii\base\UserException;
@@ -502,5 +503,20 @@ class ProfileController extends AccessController
 		}
 		
 		return 'Возникла ошибка при отправке данных';
+	}
+	
+	public function actionHistoryClassesRequest()
+	{
+		$searchModel = new ClassesRequestSearch();
+		$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
+		
+		$this->pageTitle = 'Заявки на изменение класса';
+		$this->layout = 'full-content';
+		
+		return $this->render('history-classes-request', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
 	}
 }
