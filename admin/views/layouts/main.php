@@ -59,6 +59,17 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 				<?php } ?>
 				
 				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+					<?php $countNewClassesRequest = \common\models\ClassesRequest::find()
+						->where(['status' => \common\models\ClassesRequest::STATUS_NEW])->count() ?>
+					<?php if ($countNewClassesRequest) { ?>
+                        <li>
+                            <a href="<?= Url::to(['/competitions/classes-request/index']) ?>"><i
+                                        class="fa fa-hand-spock-o fa-fw"></i> Запросы на смену класса <?= $countNewClassesRequest ? '(' . $countNewClassesRequest . ')' : '' ?></a>
+                        </li>
+					<?php } ?>
+				<?php } ?>
+				
+				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
 					<?php $countNewFigure = \common\models\TmpFigureResult::find()
 						->where(['isNew' => 1])->count() ?>
 					<?php if ($countNewFigure) { ?>
@@ -312,6 +323,8 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                                     Базовые фигуры</a></li>
                                             <li><a href="<?= Url::to(['/competitions/additional/stages-requests']) ?>">
                                                     Заявки на этап</a></li>
+                                            <li><a href="<?= Url::to(['/competitions/additional/classes-request']) ?>">
+                                                    Заявки на изменение класса</a></li>
                                         </ul>
                                     </li>
 								<?php } ?>
