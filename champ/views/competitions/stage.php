@@ -10,6 +10,7 @@ use yii\bootstrap\Html;
  * @var integer                         $sortBy
  * @var \common\models\TmpParticipant[] $tmpParticipants
  * @var array                           $needTime
+ * @var \common\models\Participant[]    $outCompetitionParticipants
  */
 $time = time();
 $city = $stage->city;
@@ -21,7 +22,6 @@ if ($city->timezone) {
 
 $championship = $stage->championship;
 $countParticipants = count($participantsByInternalClasses) + count($tmpParticipants) + count($stage->outParticipants);
-$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
     <div class="row stage">
@@ -104,24 +104,24 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 									$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($data['classModel']->title, 'UTF-8')];
 								}
 								?>
-                                <tr class="result-<?=$cssClass?>">
+                                <tr class="result-<?= $cssClass ?>">
                                     <td>
                                         <div class="row">
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['classModel']->title ?>
+												<?= $data['classModel']->title ?>
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['percent'] ?>%
+												<?= $data['percent'] ?>%
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="row">
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['startTime'] ?>
+												<?= $data['startTime'] ?>
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['endTime'] ?>
+												<?= $data['endTime'] ?>
                                             </div>
                                         </div>
                                     </td>
@@ -205,9 +205,11 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                                     <div class="col-sm-6">
                                         <div class="text-right">
 											<?php if ($sortBy) { ?>
-												<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+												<?= Html::a('отсортировать по местам в классе',
+                                                    ['stage', 'id' => $stage->id, 'addOut' => $addOut]) ?>
 											<?php } else { ?>
-												<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+												<?= Html::a('отсортировать по местам вне класса',
+                                                    ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'addOut' => $addOut]) ?>
 											<?php } ?>
                                         </div>
                                     </div>
@@ -220,7 +222,10 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 									'stage'                      => $stage,
 									'participants'               => $participantsByJapan,
 									'tmpParticipants'            => $tmpParticipants,
-									'outCompetitionParticipants' => $outCompetitionParticipants
+									'outCompetitionParticipants' => $outCompetitionParticipants,
+									'showByClasses'              => $showByClasses,
+									'sortBy'                     => $sortBy,
+									'addOut'                     => $addOut
 								]) ?>
                             </div>
                             <div class="result-scheme">
@@ -238,9 +243,13 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                                     <div class="col-sm-6">
                                         <div class="text-right">
 											<?php if ($sortBy) { ?>
-												<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id, 'showByClasses' => true]) ?>
+												<?= Html::a('отсортировать по местам в классе',
+                                                    ['stage', 'id' => $stage->id, 'showByClasses' => true,
+                                                              'addOut' => $addOut]) ?>
 											<?php } else { ?>
-												<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'showByClasses' => true]) ?>
+												<?= Html::a('отсортировать по местам вне класса', ['stage',
+                                                    'id' => $stage->id, 'sortBy' => 'place', 'showByClasses' => true,
+                                                    'addOut' => $addOut]) ?>
 											<?php } ?>
                                         </div>
                                     </div>
@@ -253,7 +262,10 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 									'stage'                      => $stage,
 									'participants'               => $participantsByInternalClasses,
 									'tmpParticipants'            => $tmpParticipants,
-									'outCompetitionParticipants' => $outCompetitionParticipants
+									'outCompetitionParticipants' => $outCompetitionParticipants,
+									'showByClasses'              => $showByClasses,
+									'sortBy'                     => $sortBy,
+									'addOut'                     => $addOut
 								]) ?>
                             </div>
 						<?php } else { ?>
@@ -267,9 +279,11 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                                 <div class="col-sm-6">
                                     <div class="text-right">
 										<?php if ($sortBy) { ?>
-											<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+											<?= Html::a('отсортировать по местам в классе',
+                                                ['stage', 'id' => $stage->id, 'addOut' => $addOut]) ?>
 										<?php } else { ?>
-											<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+											<?= Html::a('отсортировать по местам вне класса',
+                                                ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'addOut' => $addOut]) ?>
 										<?php } ?>
                                     </div>
                                 </div>
@@ -281,7 +295,10 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 								'stage'                      => $stage,
 								'participants'               => $participantsByJapan,
 								'tmpParticipants'            => $tmpParticipants,
-								'outCompetitionParticipants' => $outCompetitionParticipants
+								'outCompetitionParticipants' => $outCompetitionParticipants,
+								'showByClasses'              => $showByClasses,
+								'sortBy'                     => $sortBy,
+								'addOut'                     => $addOut
 							]) ?>
 						<?php } ?>
                     </div>

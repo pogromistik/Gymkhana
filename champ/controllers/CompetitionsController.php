@@ -179,7 +179,7 @@ class CompetitionsController extends BaseController
 		return $this->render('results', ['by' => $by]);
 	}
 	
-	public function actionStage($id, $sortBy = null, $showByClasses = false)
+	public function actionStage($id, $sortBy = null, $showByClasses = false, $addOut = false)
 	{
 		$stage = Stage::findOne($id);
 		if (!$stage) {
@@ -191,49 +191,107 @@ class CompetitionsController extends BaseController
 		$this->layout = 'full-content';
 		
 		$participantsQuery = Participant::find();
-		$participantsQuery->select('b.*');
+		$statuses[] = Participant::STATUS_ACTIVE;
+		$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
+		if ($addOut) {
+			$statuses[] = Participant::STATUS_OUT_COMPETITION;
+			$participantsQuery->select(['b.*',
+				'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (partition by "athleteClassId" order by "bestTime" asc)
+				 END AS "tmpPlaceInAthleteClass"',
+				'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (order by "bestTime" asc)
+				 END AS "tmpPlace"',
+				'CASE WHEN "bestTime" IS NULL THEN 1 ELSE 2 END AS time_alias']);
+		} else {
+			$participantsQuery->select('b.*');
+		}
 		$participantsQuery->from(['b' => Participant::tableName(), 'c' => AthletesClass::tableName()]);
 		$participantsQuery->where(['b.stageId' => $stage->id]);
 		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
 		if ($stage->participantsLimit > 0) {
-			$participantsQuery->andWhere(['b.status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
-		} else {
-			$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+			$statuses[] = Participant::STATUS_NEED_CLARIFICATION;
 		}
+		$participantsQuery->andWhere(['b.status' => $statuses]);
 		if ($sortBy) {
-			$participantsByJapan = $participantsQuery
-				->orderBy([
-					'b."status"'   => SORT_DESC,
-					'b."bestTime"' => SORT_ASC,
-					'b."sort"'     => SORT_ASC,
-					'b."id"'       => SORT_ASC
-				])
-				->all();
+			if ($addOut) {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'"time_alias"' => SORT_DESC,
+						'b."bestTime"' => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			} else {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'b."status"'   => SORT_DESC,
+						'b."bestTime"' => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			}
 		} else {
-			$participantsByJapan = $participantsQuery
-				->orderBy([
-					'b."status"'   => SORT_DESC,
-					'c."percent"'  => SORT_ASC,
-					'b."bestTime"' => SORT_ASC,
-					'b."sort"'     => SORT_ASC,
-					'b."id"'       => SORT_ASC
-				])
-				->all();
+			if ($addOut) {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'"time_alias"' => SORT_DESC,
+						'c."percent"'  => SORT_ASC,
+						'b."bestTime"' => SORT_ASC,
+						'"tmpPlace"'   => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			} else {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'b."status"'   => SORT_DESC,
+						'c."percent"'  => SORT_ASC,
+						'b."bestTime"' => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			}
 		}
 		
 		$participantsByInternalClasses = [];
 		if ($stage->championship->internalClasses) {
-			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id]);
+			$participantsByInternalClasses = Participant::find();
+			if ($addOut) {
+				$participantsByInternalClasses->select(['*',
+					'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (partition by "internalClassId" order by "bestTime" asc)
+				END AS "tmpPlaceInInternalClass"',
+					'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (order by "bestTime" asc)
+				 END AS "tmpPlace"']);
+			}
+			$participantsByInternalClasses->where(['stageId' => $stage->id]);
 			if ($stage->participantsLimit > 0) {
 				$participantsByInternalClasses = $participantsByInternalClasses
-					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
+					->andWhere(['status' => $statuses]);
 			} else {
-				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => Participant::STATUS_ACTIVE]);
+				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => $statuses]);
 			}
 			if ($sortBy) {
-				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				if ($addOut) {
+					$participantsByInternalClasses = $participantsByInternalClasses
+						->orderBy(['bestTime' => SORT_ASC, '"tmpPlace"' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				} else {
+					$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				}
 			} else {
-				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				if ($addOut) {
+					$participantsByInternalClasses = $participantsByInternalClasses
+						->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, '"tmpPlace"' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				} else {
+					$participantsByInternalClasses = $participantsByInternalClasses
+						->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				}
 			}
 		}
 		
@@ -289,7 +347,9 @@ class CompetitionsController extends BaseController
 			'sortBy'                        => $sortBy,
 			'showByClasses'                 => $showByClasses,
 			'tmpParticipants'               => $tmpParticipants,
-			'needTime'                      => $needTime
+			'needTime'                      => $needTime,
+			'outCompetitionParticipants'    => $outCompetitionParticipants,
+			'addOut'                        => $addOut
 		]);
 	}
 	
