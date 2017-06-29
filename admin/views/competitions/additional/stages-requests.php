@@ -87,12 +87,3 @@ $this->title = 'Обработанные заявки на участие в э�
 			],
 		]); ?>
     </div>
-
-    <div class="modalList"></div>
-<?php
-/**
- * Created by PhpStorm.
- * User: nadia
- * Date: 07.06.2017
- * Time: 14:39
- */

@@ -6,8 +6,10 @@ use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\CheScheme;
+use common\models\ClassesRequest;
 use common\models\Region;
 use common\models\search\CheSchemeSearch;
+use common\models\search\ClassesRequestSearch;
 use common\models\search\TmpAthletesSearch;
 use common\models\search\TmpFigureResultSearch;
 use common\models\search\TmpParticipantSearch;
@@ -219,6 +221,20 @@ class AdditionalController extends BaseController
 		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
 		
 		return $this->render('stages-requests', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionClassesRequest()
+	{
+		$this->can('globalWorkWithCompetitions');
+		$searchModel = new ClassesRequestSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['not', ['status' => ClassesRequest::STATUS_NEW]]);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('classes-request', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);

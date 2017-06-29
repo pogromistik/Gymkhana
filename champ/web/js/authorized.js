@@ -104,3 +104,27 @@ $(document).on("submit", '#sendFigureResult', function (e) {
         }
     });
 });
+
+$(document).on("submit", '#changeClassRequest', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    $('.alert').hide();
+    showBackDrop();
+
+    $.ajax({
+        url: "/profile/send-class-request",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                $('.alert-success').text('Запрос отправлен. После его рассмотрения вам придёт уведомление в личный кабинет.').show();
+                form.trigger('reset');
+                hideBackDrop();
+            } else {
+                $('.alert-danger').text(result).show();
+                hideBackDrop();
+            }
+        }
+    });
+});
