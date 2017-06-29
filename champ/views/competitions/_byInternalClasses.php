@@ -48,7 +48,7 @@
                 <tr class="internal-class-<?= $cssClass ?>">
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClassId ? $participant->internalClass->title : '' ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
-						<?= $participant->placeOfClass ?>
+						<?= $participant->tmpPlaceInInternalClass ?: $participant->placeOfClass ?>
                     </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
@@ -71,7 +71,7 @@
                         <td></td>
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->tmpPlace ?: $participant->place ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
 						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
                             (<?= $participant->newAthleteClass->title ?>)
@@ -163,10 +163,15 @@
 			<?php }
 		}
 		?>
-		<?php if ($outCompetitionParticipants) { ?>
+		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
                     <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <div class="small text-right">
+						<?= \yii\helpers\Html::a('добавить в общий список', [
+							'stage',
+							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
+                    </div>
                 </td>
             </tr>
 			<?php foreach ($outCompetitionParticipants as $outParticipant) {
@@ -178,7 +183,7 @@
 				}
 				?>
                 <tr>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->athleteClassId ? $outParticipant->athleteClass->title : null ?></td>
+                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->internalClassId ? $outParticipant->internalClass->title : null ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
                     </td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->number ?></td>
@@ -240,6 +245,13 @@
 		<?php } ?>
         </tbody>
     </table>
+	<?php if ($addOut) { ?>
+        <div class="small text-right">
+			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+				'stage',
+				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
+        </div>
+	<?php } ?>
 </div>
 
 <div class="show-mobile">
@@ -269,7 +281,8 @@
 				}
 				?>
                 <tr class="internal-class-<?= $cssClass ?>">
-                    <td><?= $participant->place ?> / <?= $participant->placeOfClass ?></td>
+                    <td><?= $participant->tmpPlace ?: $participant->place ?>
+                        / <?= $participant->tmpPlaceInAthleteClass ?: $participant->placeOfClass ?></td>
                     <td>
 						<?php if ($participant->number) { ?>
 							<?= \yii\bootstrap\Html::a('№' . $participant->number . ' ' . $athlete->getFullName(),
@@ -334,10 +347,15 @@
 			}
 		}
 		?>
-		<?php if ($outCompetitionParticipants) { ?>
+		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
                     <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <div class="small text-right">
+						<?= \yii\helpers\Html::a('добавить в общий список', [
+							'stage',
+							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
+                    </div>
                 </td>
             </tr>
 			<?php foreach ($outCompetitionParticipants as $outParticipant) {
@@ -362,9 +380,9 @@
 							<?= $athlete->city->title ?>
                             <br>
 							<?= $outParticipant->motorcycle->getFullTitle() ?>
-							<?php if ($outParticipant->athleteClassId) { ?>
+							<?php if ($outParticipant->internalClassId) { ?>
                                 <br>
-								<?= $outParticipant->athleteClass->title ?>
+								<?= $outParticipant->internalClass->title ?>
 							<?php } ?>
                         </small>
                     </td>
@@ -400,4 +418,11 @@
 		<?php } ?>
         </tbody>
     </table>
+	<?php if ($addOut) { ?>
+        <div class="small text-right">
+			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+				'stage',
+				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
+        </div>
+	<?php } ?>
 </div>
