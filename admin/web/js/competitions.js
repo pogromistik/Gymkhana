@@ -1044,3 +1044,64 @@ $('.setFinalList').click(function (e) {
         }
     });
 });
+
+$(document).on("submit", '#changeAthleteClassForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $('.alert-danger').hide();
+    showBackDrop();
+    $.ajax({
+        url: "/competitions/athlete/change-athlete-class",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.href = '/competitions/athlete/change-class?success=true';
+            } else {
+                hideBackDrop();
+                $('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+});
+
+$('.processClassRequest').click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var status = $(this).data('status');
+    $('.alert').hide();
+    $('#id').val(id);
+    $('#status').val(status);
+    if (status == 1) {
+        $('.modal-body h4').text('Укажите текст события для перехода в новый класс');
+        $('.modal-header h3').text('Вы собираетесь ПОДТВЕРДИТЬ класс');
+    } else {
+        $('.modal-body h4').text('Укажите причину отказа');
+        $('.modal-header h3').text('Вы собираетесь ОТКЛОНИТЬ класс');
+    }
+    $('#processClassRequest').modal('show')
+});
+
+$(document).on("submit", '#processClassRequestForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+        url: '/competitions/classes-request/process',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                $('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            $('.alert-danger').text(result).show();
+        }
+    });
+});
