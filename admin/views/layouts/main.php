@@ -320,6 +320,11 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                         <a href="<?= Url::to(['/competitions/additional/stats']) ?>"> Статистика</a>
                                     </li>
 	                            <?php } ?>
+	                            <?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+                                    <li>
+                                        <a href="<?= Url::to(['/competitions/athlete/change-class']) ?>">Повысить класс спортсмену</a>
+                                    </li>
+	                            <?php } ?>
                             </ul>
                         </li>
 					<?php } ?>

@@ -3,7 +3,9 @@
 namespace admin\controllers\competitions;
 
 use common\helpers\UserHelper;
+use common\models\AthletesClass;
 use common\models\City;
+use common\models\ClassHistory;
 use common\models\Country;
 use common\models\Motorcycle;
 use dosamigos\editable\EditableAction;
@@ -15,6 +17,7 @@ use yii\base\UserException;
 use yii\bootstrap\ActiveForm;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -109,6 +112,7 @@ class AthleteController extends BaseController
 		
 		if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
 			\Yii::$app->response->format = Response::FORMAT_JSON;
+			
 			return ActiveForm::validate($model);
 		}
 		
@@ -175,7 +179,7 @@ class AthleteController extends BaseController
 		$oldAthletes = Athlete::find()->where([
 			'or',
 			['upper("firstName")' => mb_strtoupper($model->firstName, 'UTF-8'),
-			 'upper("lastName")' => mb_strtoupper($model->lastName, 'UTF-8')],
+			 'upper("lastName")'  => mb_strtoupper($model->lastName, 'UTF-8')],
 			['upper("firstName")' => mb_strtoupper($model->lastName, 'UTF-8'), 'upper("lastName")' => mb_strtoupper($model->firstName, 'UTF-8')]
 		])->all();
 		$result = [
@@ -273,6 +277,94 @@ class AthleteController extends BaseController
 		$out['results'] = array_values($data);
 		
 		return $out;
+		
+	}
 	
+	public function actionChangeClass($success = false)
+	{
+		$this->can('projectOrganizer');
+		$athletes = (new Query())->from(['a' => Athlete::tableName(), 'b' => AthletesClass::tableName(), 'c' => City::tableName()])
+			->select(['a.id', '("a"."lastName" || \' \' || "a"."firstName" || \',\' || "c"."title" || \' \' || "b"."title") as "title"'])
+			->where(new Expression('"a"."cityId"="c"."id"'))
+			->andWhere(new Expression('"a"."athleteClassId"="b"."id"'))
+			->all();
+		if ($athletes) {
+			$athletes = ArrayHelper::map($athletes, 'id', 'title');
+		}
+		$history = new ClassHistory();
+		
+		return $this->render('change-class', ['athletes' => $athletes, 'history' => $history, 'success' => $success]);
+	}
+	
+	public function actionChangeAthleteClass($success = false)
+	{
+		$this->can('projectOrganizer');
+		
+		$history = new ClassHistory();
+		$history->load(\Yii::$app->request->post());
+		if (!$history->athleteId) {
+			return 'Необходимо выбрать спортсмена';
+		}
+		if (!$history->newClassId) {
+			return 'Необходимо указать новый класс';
+		}
+		if (!$history->event) {
+			return 'Необходимо указать событие';
+		}
+		$athlete = Athlete::findOne($history->athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		$newClass = AthletesClass::findOne($history->newClassId);
+		if (!$newClass) {
+			return 'Класс не найден';
+		}
+		if ($athlete->athleteClass->percent < $newClass->percent || $athlete->athleteClassId == $newClass->id) {
+			return 'Данный функционал позволяет только повышать класс спортсмену';
+		}
+		$history->oldClassId = $athlete->athleteClassId;
+		$transaction = \Yii::$app->db->beginTransaction();
+		if (!$history->save()) {
+			$transaction->rollBack();
+			
+			return var_dump($history->errors);
+		}
+		$athlete->athleteClassId = $history->newClassId;
+		if (!$athlete->save(false)) {
+			$transaction->rollBack();
+			
+			return var_dump($athlete->errors);
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionClassesCategory()
+	{
+		$this->can('competitions');
+		
+		if (isset($_POST['depdrop_parents'])) {
+			$parent = $_POST['depdrop_parents'];
+			if ($parent != null) {
+				$athleteId = $parent[0];
+				$out = self::getSubCatList($athleteId);
+				echo Json::encode(['output' => $out, 'selected' => '']);
+				
+				return;
+			}
+		}
+		echo Json::encode(['output' => '', 'selected' => '']);
+	}
+	
+	private function getSubCatList($athleteId)
+	{
+		$this->can('competitions');
+		
+		$athlete = Athlete::findOne($athleteId);
+		$class = $athlete->athleteClass;
+		
+		return AthletesClass::find()->select(['id', '"title" as "name"'])->where(['<=', 'percent', $class->percent])
+			->andWhere(['not', ['id' => $class->id]])->asArray()->all();
 	}
 }
