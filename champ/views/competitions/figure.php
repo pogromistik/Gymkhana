@@ -230,6 +230,17 @@ $time = time();
 						<?php } ?>
                     </div>
                 </div>
+                
+                <?php if ($figure->severalRecords) { ?>
+                    С момента добавления результатов мировой рекорд по фигуре <?= $figure->title ?>
+                    был обновлён. В связи с этим, в таблице выводится два рейтинга:<br>
+                    — "Начальный рейтинг" - рейтинг на момент добавления результата<br>
+                    — "Актуальный рейтинг" - процент отставания от текущего мирового рекорда<br>
+                    <div class="show-pk">
+                        При наведении на начальный рейтинг показывается рекорд, который был в момент добавления результата на сайт.
+                    </div>
+                <?php } ?>
+                
                 <div class="small text-right">
 					<?php $count = count($results); ?>
 					<?php if ($count == 30) { ?>
@@ -240,9 +251,9 @@ $time = time();
                 </div>
 				
 				<?php if ($figure->useForClassesCalculate) { ?>
-					<?= $this->render('_figure-result', ['results' => $results]) ?>
+					<?= $this->render('_figure-result', ['results' => $results, 'figure' => $figure]) ?>
 				<?php } else { ?>
-					<?= $this->render('_figure-result-without-class', ['results' => $results]) ?>
+					<?= $this->render('_figure-result-without-class', ['results' => $results, 'figure' => $figure]) ?>
 				<?php } ?>
             </div>
         </div>

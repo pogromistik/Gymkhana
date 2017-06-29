@@ -1333,4 +1333,23 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionUpdateEraser()
+	{
+		$figure = Figure::findOne(['title' => 'Eraser']);
+		$times = FigureTime::findAll(['figureId' => $figure->id]);
+		foreach ($times as $time) {
+			$percent = round($time->resultTime / $figure->bestTime * 100, 2);
+			$time->actualPercent = $percent;
+			$time->needClassCalculate = false;
+			if (!$time->recordInMoment) {
+				$time->recordInMoment = $time->time;
+			}
+			$time->save(false);
+		}
+		if (!$figure->severalRecords) {
+			$figure->severalRecords = 1;
+			$figure->save(false);
+		}
+	}
 }
