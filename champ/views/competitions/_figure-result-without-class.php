@@ -55,10 +55,11 @@
                             </a>
 						<?php } ?>
                     </td>
-                    <td><?= $item->percent ?>%</td>
                     <?php if ($figure->severalRecords) { ?>
                         <td><abbr title="<?= $item->recordInMomentHuman ?>"><?= $item->percent ?>%</abbr></td>
                         <td><?= $item->actualPercent ?>%</td>
+                    <?php } else { ?>
+                        <td><?= $item->percent ?>%</td>
                     <?php } ?>
                 </tr>
 			<?php }

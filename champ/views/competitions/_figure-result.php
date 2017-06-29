@@ -56,11 +56,12 @@
                             </a>
 						<?php } ?>
                     </td>
-                    <td><?= $item->percent ?>%</td>
 	                <?php if ($figure->severalRecords) { ?>
                         <td><abbr title="<?= $item->recordInMomentHuman ?>"><?= $item->percent ?>%</abbr></td>
                         <td><?= $item->actualPercent ?>%</td>
-	                <?php } ?>
+	                <?php } else { ?>
+                        <td><?= $item->percent ?>%</td>
+                    <?php } ?>
                     <td><?= ($item->newAthleteClassId &&
 							$item->newAthleteClassStatus == \common\models\FigureTime::NEW_CLASS_STATUS_APPROVE)
 							? $item->newAthleteClass->title : null ?></td>
