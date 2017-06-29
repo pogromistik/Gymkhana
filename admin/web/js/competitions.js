@@ -1044,3 +1044,27 @@ $('.setFinalList').click(function (e) {
         }
     });
 });
+
+$(document).on("submit", '#changeAthleteClassForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $('.alert-danger').hide();
+    showBackDrop();
+    $.ajax({
+        url: "/competitions/athlete/change-athlete-class",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.href = '/competitions/athlete/change-class?success=true';
+            } else {
+                hideBackDrop();
+                $('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+});
