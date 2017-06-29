@@ -4,7 +4,9 @@ namespace champ\controllers;
 
 use champ\models\PasswordForm;
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\Championship;
+use common\models\ClassesRequest;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
@@ -466,5 +468,39 @@ class ProfileController extends AccessController
 			'figure'        => $figure,
 			'figuresResult' => $figuresResult
 		]);
+	}
+	
+	public function actionChangeClass()
+	{
+		$this->pageTitle = 'Отправить запрос на изменение класса';
+		
+		$model = new ClassesRequest();
+		$model->athleteId = \Yii::$app->user->id;
+		
+		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		
+		return $this->render('change-class', [
+			'model'   => $model,
+			'classes' => $classes
+		]);
+	}
+	
+	public function actionSendClassRequest()
+	{
+		$model = new ClassesRequest();
+		
+		if ($model->load(\Yii::$app->request->post())) {
+			if (!$model->newClassId) {
+				return 'Выберите класс';
+			}
+			if (!$model->comment) {
+				return 'Укажите причину смены класса';
+			}
+			if ($model->save()) {
+				return true;
+			}
+		}
+		
+		return 'Возникла ошибка при отправке данных';
 	}
 }
