@@ -34,7 +34,7 @@ class SiteController extends BaseController
 		$this->layout = 'main-with-img';
 		$this->pageTitle = 'Мотоджимхана: события';
 		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
-		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, новости мото джимханы, события мото джимханы, новости, события';
+		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
 		
 		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
 		$pagination = new Pagination([
@@ -83,6 +83,7 @@ class SiteController extends BaseController
 	public function actionLogin()
 	{
 		$this->pageTitle = 'Вход в личный кабинет';
+		$this->keywords = 'джимхана кап, gymkhana cup';
 		
 		if (!Yii::$app->user->isGuest) {
 			return $this->goHome();
