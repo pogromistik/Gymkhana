@@ -59,6 +59,7 @@ class Stage extends BaseActiveRecord
 	const STATUS_END_REGISTRATION = 4;
 	const STATUS_CALCULATE_RESULTS = 5;
 	const STATUS_PRESENT = 6;
+	const STATUS_CANCEL = 7;
 	
 	const PHOTO_NOT_PUBLISH = 0;
 	const PHOTO_PUBLISH = 1;
@@ -70,6 +71,7 @@ class Stage extends BaseActiveRecord
 		self::STATUS_PRESENT            => 'Текущий этап',
 		self::STATUS_CALCULATE_RESULTS  => 'Подведение итогов',
 		self::STATUS_PAST               => 'Прошедший этап',
+		self::STATUS_CANCEL             => 'Этап отменён'
 	];
 	
 	/**
@@ -313,7 +315,7 @@ class Stage extends BaseActiveRecord
 			return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
 		}
 		$referenceTime = round($best->bestTime / $best->athleteClass->coefficient);
-		$referenceTime = round($referenceTime/10)*10;
+		$referenceTime = round($referenceTime / 10) * 10;
 		$this->referenceTime = $referenceTime;
 		if ($this->status != self::STATUS_CALCULATE_RESULTS && $this->status != Stage::STATUS_PAST) {
 			$this->status = self::STATUS_CALCULATE_RESULTS;
