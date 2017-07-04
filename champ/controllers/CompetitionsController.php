@@ -577,6 +577,10 @@ class CompetitionsController extends BaseController
 			return 'Регистрация на этап завершилась.';
 		}
 		
+		if ($stage->status == Stage::STATUS_CANCEL) {
+			return 'Этап отменён';
+		}
+		
 		$championship = $stage->championship;
 		$athlete = Athlete::findOne($form->athleteId);
 		if ($championship->isClosed) {
@@ -665,6 +669,10 @@ class CompetitionsController extends BaseController
 		
 		if ($stage->endRegistration && time() > $stage->endRegistration) {
 			return 'Регистрация на этап завершилась.';
+		}
+		
+		if ($stage->status == Stage::STATUS_CANCEL) {
+			return 'Этап отменён';
 		}
 		
 		if (!$form->city && !$form->cityId) {
