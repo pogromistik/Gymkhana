@@ -108,7 +108,8 @@ class ProfileController extends AccessController
 		
 		$time = time();
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
-			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])->all();
+			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->all();
 		
 		$participants = null;
 		if ($newStages) {
