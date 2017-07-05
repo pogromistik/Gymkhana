@@ -34,9 +34,7 @@ $this->title = 'Отправленные письма';
 				'value'     => function (\common\models\Message $message) {
 					return $message->sender->username;
 				}
-			],
-			
-			['class' => 'yii\grid\ActionColumn'],
+			]
 		],
 	]); ?>
 </div>
