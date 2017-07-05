@@ -291,6 +291,7 @@ class AdditionalController extends BaseController
 		$message = new Message();
 		
 		$stages = null;
+		$athletes = null;
 		if ($type == Message::TYPE_TO_PARTICIPANTS) {
 			if (\Yii::$app->user->can('globalWorkWithCompetitions')) {
 				$stages = Stage::find()->orderBy(['dateOfThe' => SORT_DESC])->all();
@@ -298,12 +299,15 @@ class AdditionalController extends BaseController
 				$stages = Stage::find()->where(['regionId' => \Yii::$app->user->identity->regionId])
 					->orderBy(['dateOfThe' => SORT_DESC])->all();
 			}
+		} else {
+			$athletes = Athlete::find()->where(['not', ['email' => null]])->orderBy(['lastName' => SORT_ASC])->all();
 		}
 		
 		return $this->render('send-message', [
-			'message' => $message,
-			'type'    => $type,
-			'stages'  => $stages
+			'message'  => $message,
+			'type'     => $type,
+			'stages'   => $stages,
+			'athletes' => $athletes
 		]);
 	}
 	
@@ -360,6 +364,9 @@ class AdditionalController extends BaseController
 				->andWhere(['c.id' => $stage->id])
 				->distinct()
 				->all();
+		} else {
+			$emails = Athlete::find()->select('email')->where(['id' => $message->athleteIds])
+				->andWhere(['not', ['email' => null]])->asArray()->column();
 		}
 		if (!$emails) {
 			$result['error'] = true;
