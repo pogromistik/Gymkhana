@@ -5,14 +5,18 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\AthletesClass;
+use common\models\Championship;
 use common\models\CheScheme;
 use common\models\ClassesRequest;
+use common\models\Message;
+use common\models\Participant;
 use common\models\Region;
 use common\models\search\CheSchemeSearch;
 use common\models\search\ClassesRequestSearch;
 use common\models\search\TmpAthletesSearch;
 use common\models\search\TmpFigureResultSearch;
 use common\models\search\TmpParticipantSearch;
+use common\models\Stage;
 use common\models\TmpAthlete;
 use Yii;
 use common\models\Point;
@@ -21,6 +25,7 @@ use yii\db\Expression;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * AdditionalController implements the CRUD actions for Point model.
@@ -260,7 +265,7 @@ class AdditionalController extends BaseController
 		foreach ($items as $item) {
 			if (!isset($stats[$item['region']])) {
 				$stats[$item['region']] = [
-					'total' => 0,
+					'total'  => 0,
 					'groups' => []
 				];
 				foreach ($classes as $class) {
@@ -278,5 +283,116 @@ class AdditionalController extends BaseController
 		
 		
 		return $this->render('stats', ['stats' => $stats, 'classes' => $classes, 'totalClasses' => $totalClasses]);
+	}
+	
+	public function actionMessage($type)
+	{
+		$this->can('canSendMessages');
+		$message = new Message();
+		
+		$stages = null;
+		$athletes = null;
+		if ($type == Message::TYPE_TO_PARTICIPANTS) {
+			if (\Yii::$app->user->can('globalWorkWithCompetitions')) {
+				$stages = Stage::find()->orderBy(['dateOfThe' => SORT_DESC])->all();
+			} else {
+				$stages = Stage::find()->where(['regionId' => \Yii::$app->user->identity->regionId])
+					->orderBy(['dateOfThe' => SORT_DESC])->all();
+			}
+		} else {
+			$athletes = Athlete::find()->where(['not', ['email' => null]])->orderBy(['lastName' => SORT_ASC])->all();
+		}
+		
+		return $this->render('send-message', [
+			'message'  => $message,
+			'type'     => $type,
+			'stages'   => $stages,
+			'athletes' => $athletes
+		]);
+	}
+	
+	public function actionSendMessage()
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$this->can('canSendMessages');
+		$result = [
+			'success' => false,
+			'error'   => false,
+			'text'    => ''
+		];
+		$message = new Message();
+		$message->load(\Yii::$app->request->post());
+		if (!$message->athleteIds && !$message->stageId) {
+			$result['error'] = true;
+			$result['text'] = 'Не найдено спортсменов, которым нужно отправить сообщение';
+			
+			return $result;
+		}
+		if (!$message->text) {
+			$result['error'] = true;
+			$result['text'] = 'Введите текст';
+			
+			return $result;
+		}
+		if (!$message->title) {
+			$result['error'] = true;
+			$result['text'] = 'Укажите заголовок';
+			
+			return $result;
+		}
+		$emails = [];
+		if ($message->stageId) {
+			$stage = Stage::findOne(['id' => $message->stageId]);
+			if (!$stage) {
+				$result['error'] = true;
+				$result['text'] = 'Этап не найден';
+				
+				return $result;
+			}
+			if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+				if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+					$result['error'] = true;
+					$result['text'] = 'Access denied';
+					
+					return $result;
+				}
+			}
+			$emails = (new Query())->select('a.email')
+				->from(['a' => Athlete::tableName(), 'b' => Participant::tableName(), 'c' => Stage::tableName()])
+				->where(new Expression('"a"."id"="b"."athleteId"'))
+				->andWhere(new Expression('"b"."stageId"="c"."id"'))
+				->andWhere(['c.id' => $stage->id])
+				->distinct()
+				->all();
+		} else {
+			$emails = Athlete::find()->select('email')->where(['id' => $message->athleteIds])
+				->andWhere(['not', ['email' => null]])->asArray()->column();
+		}
+		if (!$emails) {
+			$result['error'] = true;
+			$result['text'] = 'Не найдено email для отправки';
+			
+			return $result;
+		}
+		$message->save();
+		$count = count($emails);
+		if (YII_ENV != 'dev') {
+			$count = 0;
+			foreach ($emails as $email) {
+				if (mb_stripos($email, '@', null, 'UTF-8')) {
+					\Yii::$app->mailer->compose('text', ['text' => $message->text])
+						->setTo($email)
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject($message->title)
+						->send();
+					$count++;
+				}
+			}
+		}
+		
+		$result['success'] = true;
+		$result['text'] = 'Сообщение успешно отправлено. Количество человек, которые его получат: ' . $count;
+		
+		return $result;
 	}
 }

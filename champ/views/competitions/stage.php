@@ -10,6 +10,7 @@ use yii\bootstrap\Html;
  * @var integer                         $sortBy
  * @var \common\models\TmpParticipant[] $tmpParticipants
  * @var array                           $needTime
+ * @var \common\models\Participant[]    $outCompetitionParticipants
  */
 $time = time();
 $city = $stage->city;
@@ -21,7 +22,6 @@ if ($city->timezone) {
 
 $championship = $stage->championship;
 $countParticipants = count($participantsByInternalClasses) + count($tmpParticipants) + count($stage->outParticipants);
-$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
 ?>
 
     <div class="row stage">
@@ -33,7 +33,8 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
             <div class="pl-10">
                 <h4><?= $stage->title ?>
                     , <?= $stage->city->title ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
-                    <span class="label label-success"><?= Stage::$statusesTitle[$stage->status] ?></span></h4>
+                    <span class="label <?= ($stage->status == Stage::STATUS_CANCEL) ?
+						'label-danger' : 'label-success' ?>"><?= Stage::$statusesTitle[$stage->status] ?></span></h4>
 				<?php if ($stage->location) { ?>
                     <p>Место проведения этапа: <?= $stage->location ?></p>
 				<?php } ?>
@@ -104,24 +105,24 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
 									$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($data['classModel']->title, 'UTF-8')];
 								}
 								?>
-                                <tr class="result-<?=$cssClass?>">
+                                <tr class="result-<?= $cssClass ?>">
                                     <td>
                                         <div class="row">
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['classModel']->title ?>
+												<?= $data['classModel']->title ?>
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['percent'] ?>%
+												<?= $data['percent'] ?>%
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="row">
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['startTime'] ?>
+												<?= $data['startTime'] ?>
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-	                                            <?= $data['endTime'] ?>
+												<?= $data['endTime'] ?>
                                             </div>
                                         </div>
                                     </td>
@@ -147,54 +148,136 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                     </div>
 				<?php } ?>
 				
-				<?php if ($stage->startRegistration && $time >= $stage->startRegistration
-					&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
-				) { ?>
-                    <div class="pt-30 enroll">
-						<?php if ($stage->participantsLimit > 0) { ?>
-                            <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению
-                                организатора соревнований. В
-                                этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки,
-                                требующие
-                                подтверждения организатора, выделены на сайте серым цветом.
-                            </div>
-						<?php } ?>
-						<?php if (\Yii::$app->user->isGuest) { ?>
-                            <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
-                            <div class="enrollForm">
-								<?= $this->render('_enroll', ['stage' => $stage]) ?>
-                            </div>
-                            <div class="enrollForm-success pt-10"></div>
-						<?php } else { ?>
-							<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
-                                <a href="#" class="btn btn-dark" data-toggle="modal"
-                                   data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
-							<?php } else { ?>
-                                Чемпионат закрыт для вашего города, регистрация невозможна.
-							<?php } ?>
-						<?php } ?>
-                    </div>
-				<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
-                    <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
-				<?php } ?>
-				
-				<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
-
-                    <div class="results pt-20">
-                        <div class="pb-10">
-							<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
-								'/export/export',
-								'modelId' => $stage->id,
-								'type'    => \champ\controllers\ExportController::TYPE_STAGE
-							]), ['class' => 'btn btn-light']) ?>
+				<?php if ($stage->status == Stage::STATUS_CANCEL) { ?>
+                    <div class="warning">
+                        <div class="text-center">
+                            ЭТАП ОТМЕНЁН<br>
+                            Для уточнения подробностей обратитесь к организаторам соревнования.
                         </div>
-						
-						<?php if ($participantsByInternalClasses) { ?>
-                            <div class="result-scheme active">
-                                <div class="change-type">
-                                    <a href="#" class="change-result-scheme">Посмотреть результаты по классам
-                                        награждений</a>
+                    </div>
+				<?php } else { ?>
+					<?php if ($stage->startRegistration && $time >= $stage->startRegistration
+						&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
+					) { ?>
+                        <div class="pt-30 enroll">
+							<?php if ($stage->participantsLimit > 0) { ?>
+                                <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению
+                                    организатора соревнований. В
+                                    этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки,
+                                    требующие
+                                    подтверждения организатора, выделены на сайте серым цветом.
                                 </div>
+							<?php } ?>
+							<?php if (\Yii::$app->user->isGuest) { ?>
+                                <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
+                                <div class="enrollForm">
+									<?= $this->render('_enroll', ['stage' => $stage]) ?>
+                                </div>
+                                <div class="enrollForm-success pt-10"></div>
+							<?php } else { ?>
+								<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
+                                    <a href="#" class="btn btn-dark" data-toggle="modal"
+                                       data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
+								<?php } else { ?>
+                                    Чемпионат закрыт для вашего города, регистрация невозможна.
+								<?php } ?>
+							<?php } ?>
+                        </div>
+					<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
+                        <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
+					<?php } ?>
+					
+					<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
+
+                        <div class="results pt-20">
+                            <div class="pb-10">
+								<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+									'/export/export',
+									'modelId' => $stage->id,
+									'type'    => \champ\controllers\ExportController::TYPE_STAGE
+								]), ['class' => 'btn btn-light']) ?>
+                            </div>
+							
+							<?php if ($participantsByInternalClasses) { ?>
+                                <div class="result-scheme active">
+                                    <div class="change-type">
+                                        <a href="#" class="change-result-scheme">Посмотреть результаты по классам
+                                            награждений</a>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="show-pk">
+                                                Количество
+                                                участников: <?= $countParticipants ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="text-right">
+												<?php if ($sortBy) { ?>
+													<?= Html::a('отсортировать по местам в классе',
+														['stage', 'id' => $stage->id, 'addOut' => $addOut]) ?>
+												<?php } else { ?>
+													<?= Html::a('отсортировать по местам вне класса',
+														['stage', 'id' => $stage->id, 'sortBy' => 'place', 'addOut' => $addOut]) ?>
+												<?php } ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 show-mobile text-right">
+                                            Количество
+                                            участников: <?= $countParticipants ?>
+                                        </div>
+                                    </div>
+									<?= $this->render('_byJapan', [
+										'stage'                      => $stage,
+										'participants'               => $participantsByJapan,
+										'tmpParticipants'            => $tmpParticipants,
+										'outCompetitionParticipants' => $outCompetitionParticipants,
+										'showByClasses'              => $showByClasses,
+										'sortBy'                     => $sortBy,
+										'addOut'                     => $addOut
+									]) ?>
+                                </div>
+                                <div class="result-scheme">
+                                    <div class="change-type">
+                                        <a href="#" class="change-result-scheme">Посмотреть результаты по японской
+                                            схеме</a>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="show-pk">
+                                                Количество
+                                                участников: <?= $countParticipants ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="text-right">
+												<?php if ($sortBy) { ?>
+													<?= Html::a('отсортировать по местам в классе',
+														['stage', 'id'     => $stage->id, 'showByClasses' => true,
+														          'addOut' => $addOut]) ?>
+												<?php } else { ?>
+													<?= Html::a('отсортировать по местам вне класса', ['stage',
+														'id'     => $stage->id, 'sortBy' => 'place', 'showByClasses' => true,
+														'addOut' => $addOut]) ?>
+												<?php } ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 show-mobile text-right">
+                                            Количество
+                                            участников: <?= $countParticipants ?>
+                                        </div>
+                                    </div>
+									<?= $this->render('_byInternalClasses', [
+										'stage'                      => $stage,
+										'participants'               => $participantsByInternalClasses,
+										'tmpParticipants'            => $tmpParticipants,
+										'outCompetitionParticipants' => $outCompetitionParticipants,
+										'showByClasses'              => $showByClasses,
+										'sortBy'                     => $sortBy,
+										'addOut'                     => $addOut
+									]) ?>
+                                </div>
+							<?php } else { ?>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="show-pk">
@@ -205,86 +288,30 @@ $outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' 
                                     <div class="col-sm-6">
                                         <div class="text-right">
 											<?php if ($sortBy) { ?>
-												<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
+												<?= Html::a('отсортировать по местам в классе',
+													['stage', 'id' => $stage->id, 'addOut' => $addOut]) ?>
 											<?php } else { ?>
-												<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
+												<?= Html::a('отсортировать по местам вне класса',
+													['stage', 'id' => $stage->id, 'sortBy' => 'place', 'addOut' => $addOut]) ?>
 											<?php } ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
-                                        Количество
-                                        участников: <?= $countParticipants ?>
+                                        Количество участников: <?= $countParticipants ?>
                                     </div>
                                 </div>
 								<?= $this->render('_byJapan', [
 									'stage'                      => $stage,
 									'participants'               => $participantsByJapan,
 									'tmpParticipants'            => $tmpParticipants,
-									'outCompetitionParticipants' => $outCompetitionParticipants
+									'outCompetitionParticipants' => $outCompetitionParticipants,
+									'showByClasses'              => $showByClasses,
+									'sortBy'                     => $sortBy,
+									'addOut'                     => $addOut
 								]) ?>
-                            </div>
-                            <div class="result-scheme">
-                                <div class="change-type">
-                                    <a href="#" class="change-result-scheme">Посмотреть результаты по японской
-                                        схеме</a>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="show-pk">
-                                            Количество
-                                            участников: <?= $countParticipants ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="text-right">
-											<?php if ($sortBy) { ?>
-												<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id, 'showByClasses' => true]) ?>
-											<?php } else { ?>
-												<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place', 'showByClasses' => true]) ?>
-											<?php } ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 show-mobile text-right">
-                                        Количество
-                                        участников: <?= $countParticipants ?>
-                                    </div>
-                                </div>
-								<?= $this->render('_byInternalClasses', [
-									'stage'                      => $stage,
-									'participants'               => $participantsByInternalClasses,
-									'tmpParticipants'            => $tmpParticipants,
-									'outCompetitionParticipants' => $outCompetitionParticipants
-								]) ?>
-                            </div>
-						<?php } else { ?>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="show-pk">
-                                        Количество
-                                        участников: <?= $countParticipants ?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="text-right">
-										<?php if ($sortBy) { ?>
-											<?= Html::a('отсортировать по местам в классе', ['stage', 'id' => $stage->id]) ?>
-										<?php } else { ?>
-											<?= Html::a('отсортировать по местам вне класса', ['stage', 'id' => $stage->id, 'sortBy' => 'place']) ?>
-										<?php } ?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 show-mobile text-right">
-                                    Количество участников: <?= $countParticipants ?>
-                                </div>
-                            </div>
-							<?= $this->render('_byJapan', [
-								'stage'                      => $stage,
-								'participants'               => $participantsByJapan,
-								'tmpParticipants'            => $tmpParticipants,
-								'outCompetitionParticipants' => $outCompetitionParticipants
-							]) ?>
-						<?php } ?>
-                    </div>
+							<?php } ?>
+                        </div>
+					<?php } ?>
 				<?php } ?>
             </div>
 

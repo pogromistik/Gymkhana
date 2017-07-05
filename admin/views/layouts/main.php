@@ -338,6 +338,24 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                         <a href="<?= Url::to(['/competitions/athlete/change-class']) ?>">Повысить класс спортсмену</a>
                                     </li>
 	                            <?php } ?>
+	                            <?php if (\Yii::$app->user->can('canSendMessages')) { ?>
+                                    <li>
+                                        <a href="#"> Отправка сообщений<span
+                                                    class="fa arrow"></span></a>
+                                        <ul class="nav nav-second-level">
+                                            <li>
+                                                <a data-addr="/competitions/notice/"
+                                                   href="<?= Url::to(['/competitions/additional/message',
+                                                       'type' => \common\models\Message::TYPE_TO_PARTICIPANTS]) ?>"> Участникам этапа</a>
+                                            </li>
+                                            <li>
+                                                <a href="<?= Url::to(['/competitions/additional/message',
+	                                                'type' => \common\models\Message::TYPE_TO_ATHLETES]) ?>">
+                                                    Спортсменам</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+	                            <?php } ?>
                             </ul>
                         </li>
 					<?php } ?>
