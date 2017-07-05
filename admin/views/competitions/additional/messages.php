@@ -11,8 +11,8 @@ $this->title = 'Отправленные письма';
 <div class="message-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
-		'filterModel'  => $searchModel,
 		'columns'      => [
+			['class' => 'yii\grid\SerialColumn'],
 			
 			[
 				'attribute' => 'dateAdded',
