@@ -13,6 +13,7 @@ use common\models\Participant;
 use common\models\Region;
 use common\models\search\CheSchemeSearch;
 use common\models\search\ClassesRequestSearch;
+use common\models\search\MessagesSearch;
 use common\models\search\TmpAthletesSearch;
 use common\models\search\TmpFigureResultSearch;
 use common\models\search\TmpParticipantSearch;
@@ -240,6 +241,19 @@ class AdditionalController extends BaseController
 		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
 		
 		return $this->render('classes-request', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionMessages()
+	{
+		$this->can('globalWorkWithCompetitions');
+		$searchModel = new MessagesSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('messages', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
