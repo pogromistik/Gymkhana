@@ -363,7 +363,7 @@ class AdditionalController extends BaseController
 				->andWhere(new Expression('"b"."stageId"="c"."id"'))
 				->andWhere(['c.id' => $stage->id])
 				->distinct()
-				->all();
+				->column();
 		} else {
 			$emails = Athlete::find()->select('email')->where(['id' => $message->athleteIds])
 				->andWhere(['not', ['email' => null]])->asArray()->column();
