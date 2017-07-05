@@ -13,6 +13,8 @@ use Yii;
  * @property string  $text
  * @property integer $userId
  * @property integer $dateAdded
+ *
+ * @property User    $sender
  */
 class Message extends \yii\db\ActiveRecord
 {
@@ -70,5 +72,10 @@ class Message extends \yii\db\ActiveRecord
 		$this->title = trim($this->title);
 		
 		return parent::beforeValidate();
+	}
+	
+	public function getSender()
+	{
+		return $this->hasOne(User::className(), ['id' => 'userId']);
 	}
 }

@@ -314,7 +314,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 								<?php } ?>
 								<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                                     <li class="level-2">
-                                        <a href="#"> Обработанные заявки<span
+                                        <a href="#"> История<span
                                                     class="fa arrow"></span></a>
                                         <ul class="nav nav-second-level">
                                             <li><a href="<?= Url::to(['/competitions/additional/l-k-requests']) ?>">
@@ -325,6 +325,8 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                                     Заявки на этап</a></li>
                                             <li><a href="<?= Url::to(['/competitions/additional/classes-request']) ?>">
                                                     Заявки на изменение класса</a></li>
+                                            <li><a href="<?= Url::to(['/competitions/additional/messages']) ?>">
+                                                    Отправленные письма</a></li>
                                         </ul>
                                     </li>
 								<?php } ?>
