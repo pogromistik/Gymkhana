@@ -32,7 +32,7 @@ $this->title = 'Отправленные письма';
 				'attribute' => 'userId',
 				'format'    => 'raw',
 				'value'     => function (\common\models\Message $message) {
-					return $message->sender->login;
+					return $message->sender->username;
 				}
 			],
 			
