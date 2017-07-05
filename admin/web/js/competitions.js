@@ -1105,3 +1105,26 @@ $(document).on("submit", '#processClassRequestForm', function (e) {
         }
     });
 });
+
+$(document).on("submit", '#sendMessagesForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $('.alert').hide();
+    $.ajax({
+        url: '/competitions/additional/send-message',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['success'] == true) {
+                $('.form').slideToggle();
+                form.trigger('reset');
+                $('.alert-success').text(result['text']).slideToggle();
+            } else {
+                $('.alert-danger').text(result['text']).show();
+            }
+        },
+        error: function (result) {
+            $('.alert-danger').text(result).show();
+        }
+    });
+});
