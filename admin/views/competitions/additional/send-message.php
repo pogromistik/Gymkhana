@@ -49,7 +49,7 @@ $this->title = 'Отправка сообщения на почту';
 			<?= $form->field($message, 'title')->textInput(['maxlength' => true]) ?>
 			
 			<?= $form->field($message, 'text')->widget(CKEditor::className(), [
-				'preset' => 'full', 'clientOptions' => ['height' => 150]
+				'preset' => 'basic', 'clientOptions' => ['height' => 150]
 			]) ?>
 
             <div class="alert alert-danger" style="display: none"></div>
