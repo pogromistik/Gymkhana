@@ -16,8 +16,9 @@ use common\models\TranslateMessageSource;
 	
 	]);
 	?>
-	<td><?= $form->field($model, 'id')->label(false)->hiddenInput()->error(false) ?>
+    <td><?= $form->field($model, 'id')->label(false)->hiddenInput()->error(false) ?>
 		<?= $form->field($model, 'message')->label(false)->textInput() ?></td>
+    <td><?= $form->field($model, 'comment')->label(false)->textarea(['rows' => 1]) ?></td>
 	<td>
 		<?= $form->field($model,
 			'status')->dropDownList(TranslateMessageSource::$statusesTitle)->label(false) ?>
