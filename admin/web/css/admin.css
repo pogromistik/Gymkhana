@@ -423,3 +423,8 @@ tr.gray {
 .buttons > a {
     margin-right: 4px;
 }
+
+.field-translationhandbookform-id, .field-translatemessagesource-id,
+.field-translatemessage-id, .field-translatemessage-language {
+    margin: 0;
+}

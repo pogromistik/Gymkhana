@@ -358,6 +358,24 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                         </ul>
                                     </li>
 	                            <?php } ?>
+	                            <?php
+	                            if (\Yii::$app->user->can('admin')) {
+		                            ?>
+                                    <li>
+                                        <a href="#"><i
+                                                    class="glyphicon glyphicon-sort-by-alphabet  fa-fw"></i>Перевод<span
+                                                    class="fa arrow"></span></a>
+                                        <ul class="nav nav-second-level">
+                                            <li>
+                                                <a href="<?= Url::to(['/competitions/translate-messages/index']) ?>">Слова для перевода</a>
+                                            </li>
+                                            <li>
+                                                <a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>">Переводы</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+		                            <?php
+	                            } ?>
                             </ul>
                         </li>
 					<?php } ?>
