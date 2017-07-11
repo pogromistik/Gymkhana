@@ -55,7 +55,7 @@ use yii\helpers\Url;
                 <div id="navbarCollapse" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-left">
                         <li>
-                            <a href="/">Главная</a>
+                            <a href="/"><?= \Yii::t('app', 'Главная') ?></a>
                         </li>
                         <li>
                             <a href="<?= Url::to(['site/documents']) ?>">Документы</a>
