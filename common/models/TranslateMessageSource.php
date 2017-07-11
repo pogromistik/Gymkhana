@@ -43,7 +43,8 @@ class TranslateMessageSource extends \yii\db\ActiveRecord
 			[['status'], 'integer'],
 			[['category'], 'string', 'max' => 255],
 			[['message'], 'messageCheck'],
-			['category', 'default', 'value' => 'app']
+			['category', 'default', 'value' => 'app'],
+			[['status'], 'default', 'value' => self::STATUS_ACTIVE]
 		];
 	}
 	
