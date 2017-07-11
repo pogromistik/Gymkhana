@@ -95,7 +95,7 @@ use yii\helpers\Url;
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
                                 <li><a href="/profile/index"><?= \Yii::t('app', 'Профиль') ?></a></li>
-                                <li><a href="/profile/stats"><? \Yii::t('app', 'Статистика') ?></a></li>
+                                <li><a href="/profile/stats"><?= \Yii::t('app', 'Статистика') ?></a></li>
                                 <li><a href="/profile/info"><?= \Yii::t('app', 'Заявки на участие') ?></a></li>
                                 <li><a href="/figures/send-result"><?= \Yii::t('app', 'Отправить результат') ?></a></li>
                                 <li><a href="/profile/change-class"><?= \Yii::t('app', 'Смена класса') ?></a></li>
