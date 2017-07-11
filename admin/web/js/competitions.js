@@ -975,6 +975,10 @@ $(document).on("submit", '#addFigureTimeForStage', function (e) {
     });
 });
 
+$('#isClosedChamp').click(function () {
+    $('#regionsForChamp').slideToggle();
+});
+
 $('.participantIsArrived').click(function () {
     var elem = $(this);
     var id = elem.data('id');
