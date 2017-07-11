@@ -8,7 +8,7 @@
 use yii\bootstrap\Html;
 
 ?>
-<h2>Документы</h2>
+<h2><?= \Yii::t('app', 'Документы') ?></h2>
 <div class="documents">
     <div class="list">
 		<?php foreach ($sections as $section) {

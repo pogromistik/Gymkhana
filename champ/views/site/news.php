@@ -23,6 +23,6 @@ use yii\bootstrap\Html;
 	</div>
 	
 	<div class="text-left pt-20">
-		<a href="/">К списку новостей</a>
+		<a href="/"><?= \Yii::t('app', 'К списку новостей') ?></a>
 	</div>
 </div>
