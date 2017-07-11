@@ -8,10 +8,10 @@ use yii\widgets\LinkPager;
  * @var \yii\data\Pagination $pagination
  */
 ?>
-    <h2>Базовые фигуры</h2>
+    <h2><?= \Yii::t('app', 'Базовые фигуры') ?></h2>
 
     <?php if (!\Yii::$app->user->isGuest) { ?>
-        <?= Html::a('Добавить свой результат', ['/figures/send-result'], ['class' => 'btn btn-dark']) ?>
+        <?= Html::a(\Yii::t('app', 'Добавить свой результат'), ['/figures/send-result'], ['class' => 'btn btn-dark']) ?>
     <?php } ?>
 
     <div class="list">
@@ -19,7 +19,7 @@ use yii\widgets\LinkPager;
             <div class="toggle">
                 <div class="background"></div>
 				<?php if (!$figuresArray) { ?>
-                    В данном разделе пока нет фигур.
+                    <?= \Yii::t('app', 'В данном разделе пока нет фигур.') ?>
 				<?php } else { ?>
 					<?php foreach ($figuresArray as $figureData) {
 						/** @var \common\models\Figure $figure */
@@ -36,14 +36,14 @@ use yii\widgets\LinkPager;
                                 <div class="info">
 									<?php
 									if (!$years) { ?>
-                                        Для фигуры пока нет ни одного результата.
+                                        <?= \Yii::t('app', 'Для фигуры пока нет ни одного результата.') ?>
 									<?php } else { ?>
                                         <div class="pl-10">
-											<?= Html::a('Лучшие результаты за всё время', ['/competitions/figure', 'id' => $figure->id]) ?>
+											<?= Html::a(\Yii::t('app', 'Лучшие результаты за всё время'), ['/competitions/figure', 'id' => $figure->id]) ?>
                                         </div>
 										<?php foreach ($years as $year) { ?>
                                             <div class="pl-10">
-												<?= Html::a($year->year . ' год', ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
+												<?= Html::a($year->year . ' ' . \Yii::t('app', 'год'), ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
                                             </div>
 										<?php } ?>
 									<?php } ?>

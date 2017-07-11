@@ -31,7 +31,7 @@ $listView = new \yii\widgets\ListView([
 ]);
 ?>
 
-<h2>Спортсмены</h2>
+<h2><?= \Yii::t('app', 'Спортсмены') ?></h2>
 
 <?php $form = \yii\bootstrap\ActiveForm::begin([
 	'id'                     => 'search',
@@ -48,7 +48,7 @@ $listView = new \yii\widgets\ListView([
 			'data'          => \common\models\Country::getAll(true),
 			'maintainOrder' => true,
 			'options'       => [
-				'placeholder' => 'Выберите страну...',
+				'placeholder' => \Yii::t('app', 'Выберите страну...'),
 				'multiple'    => false,
 				'id'          => 'country-id',
 				'onchange'    => 'this.form.submit()'
@@ -65,12 +65,12 @@ $listView = new \yii\widgets\ListView([
 			'data'           => ($searchModel->countryId !== null && $searchModel->countryId != '') ? \common\models\Region::getAll(true, $searchModel->countryId)
 				: [],
 			'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
-			'select2Options' => ['pluginOptions' => ['allowClear' => true, 'placeholder' => 'Выберите регион...', 'multiple' => true]],
+			'select2Options' => ['pluginOptions' => ['allowClear' => true, 'placeholder' => \Yii::t('app', 'Выберите регион...'), 'multiple' => true]],
 			'pluginOptions'  => [
 				'depends'     => ['country-id'],
 				'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
-				'loadingText' => 'Для выбранной страны нет городов...',
-				'placeholder' => 'Выберите регион...',
+				'loadingText' => \Yii::t('app', 'Для выбранной страны нет городов...'),
+				'placeholder' => \Yii::t('app', 'Выберите регион...'),
 			],
 			'options'        => [
 				'onchange' => 'this.form.submit()'
@@ -104,7 +104,7 @@ $listView = new \yii\widgets\ListView([
 				->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['percent' => SORT_ASC, 'id' => SORT_ASC])->all(), 'id', 'title'),
 			'maintainOrder' => true,
 			'options'       => [
-				'placeholder' => 'Выберите класс...',
+				'placeholder' => \Yii::t('app', 'Выберите класс...'),
 				'multiple'    => true,
 				'onchange'    => 'this.form.submit()'
 			],

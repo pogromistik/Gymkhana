@@ -16,12 +16,12 @@ $this->title = $championship->title;
         <span class="label label-info"><?= \Yii::t('app', \common\models\Championship::$statusesTitle[$championship->status]) ?></span>
 		<?php if ($championship->regionId) { ?>
             <div class="pb-10">
-                Регион проведения: <?= $championship->region->title ?>
+                <?= \Yii::t('app', 'Регион проведения:') ?> <?= $championship->region->title ?>
             </div>
 		<?php } ?>
 		<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
             <div class="pb-10">
-                Регионы, допускающиеся к участию: <?= $championship->getRegionsFor(true) ?>
+                <?= \Yii::t('app', 'Регионы, допускающиеся к участию:') ?> <?= $championship->getRegionsFor(true) ?>
             </div>
 		<?php } ?>
 		<?php if ($championship->description) { ?>
@@ -30,19 +30,19 @@ $this->title = $championship->title;
             </div>
 		<?php } ?>
         <div>
-            Количество этапов, необходимое для участия в чемпионате: <?= $championship->amountForAthlete ?>
+            <?= \Yii::t('app', 'Количество этапов, необходимое для участия в чемпионате:') ?> <?= $championship->amountForAthlete ?>
             <br>
-            Необходимое количество этапов в других регионах:
+            <?= \Yii::t('app', 'Необходимое количество этапов в других регионах:') ?>
 			<?= $championship->requiredOtherRegions ?>
             <br>
-            Количество этапов, по которым ведётся подсчёт результатов:
+            <?= \Yii::t('app', 'Количество этапов, по которым ведётся подсчёт результатов:') ?>
 			<?= $championship->estimatedAmount ?>
 			<?php if ($championship->requiredOtherRegions) { ?>
                 <br>
-                Для полноценного участия в чемпионате необходимо хоть раз выступить на этапе в другом городе.
+                <?= \Yii::t('app', 'Для полноценного участия в чемпионате необходимо хоть раз выступить на этапе в другом городе.') ?>
 			<?php } ?>
             <br>
-            Диапазон стартовых номеров участников: <?= $championship->minNumber ?>-<?= $championship->maxNumber ?>.
+            <?= \Yii::t('app', 'Диапазон стартовых номеров участников:') ?> <?= $championship->minNumber ?>-<?= $championship->maxNumber ?>.
         </div>
 		<?php if ($championship->activeInternalClasses) { ?>
             <div class="pt-10 pb-10">
@@ -52,7 +52,7 @@ $this->title = $championship->title;
 					$internalClasses[] = $class->title;
 				}
 				?>
-                <b>Классы награждения:</b> <?= implode(', ', $internalClasses) ?>
+                <b><?= \Yii::t('app', 'Классы награждения:') ?></b> <?= implode(', ', $internalClasses) ?>
             </div>
 		<?php } ?>
     </div>
@@ -70,7 +70,7 @@ $this->title = $championship->title;
 				<?php } ?>
 				<?php if ($championship->showResults) { ?>
                     <li>
-						<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $championship->id]) ?>
+						<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $championship->id]) ?>
                     </li>
 				<?php } ?>
             </ul>

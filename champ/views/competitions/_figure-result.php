@@ -11,20 +11,20 @@
             <thead>
             <tr>
                 <th><p>#</p></th>
-                <th><p>Дата</p></th>
-                <th><p>Класс</p></th>
-                <th><p>Участник</p></th>
-                <th><p>Мотоцикл</p></th>
-                <th><p>Время</p></th>
-                <th><p>Штраф</p></th>
-                <th><p>Итоговое время</p></th>
+                <th><p><?= \Yii::t('app', 'Дата') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Класс') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Участник') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Мотоцикл') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Время') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Штраф') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Итоговое время') ?></p></th>
 				<?php if ($figure->severalRecords) { ?>
-                    <th><p>Начальный рейтинг</p></th>
-                    <th><p>Актуальный рейтинг</p></th>
+                    <th><p><?= \Yii::t('app', 'Начальный рейтинг') ?></p></th>
+                    <th><p><?= \Yii::t('app', 'Актуальный рейтинг') ?></p></th>
 				<?php } else { ?>
-                    <th><p>Рейтинг</p></th>
+                    <th><p><?= \Yii::t('app', 'Рейтинг') ?></p></th>
 				<?php } ?>
-                <th><p>Переход в класс</p></th>
+                <th><p><?= \Yii::t('app', 'Переход в класс') ?></p></th>
             </tr>
             </thead>
             <tbody>
@@ -76,12 +76,12 @@
         <table class="table results">
             <thead>
             <tr>
-                <th>Участник</th>
-                <th>Время</th>
+                <th><?= \Yii::t('app', 'Участник') ?></th>
+                <th><?= \Yii::t('app', 'Время') ?></th>
                 <?php if ($figure->severalRecords) { ?>
-                    <th>Н.рейтинг<br>А.рейтинг</th>
+                    <th><?= \Yii::t('app', 'Н.рейтинг') ?><br><?= \Yii::t('app', 'А.рейтинг') ?></th>
                 <?php } else { ?>
-                    <th>Рейтинг</th>
+                    <th><?= \Yii::t('app', 'Рейтинг') ?></th>
                 <?php } ?>
             </tr>
             </thead>
@@ -137,5 +137,5 @@
         </table>
     </div>
 <?php } else { ?>
-    Результатов не найдено
+    <?= \Yii::t('app', 'Результатов не найдено') ?>
 <?php } ?>

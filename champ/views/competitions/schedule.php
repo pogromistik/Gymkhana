@@ -9,11 +9,11 @@ use yii\bootstrap\Html;
  * @var array                $events
  */
 ?>
-<h2>Расписание соревнований</h2>
+<h2><?= \Yii::t('app', 'Расписание соревнований') ?></h2>
 
 <div class="result-scheme active">
     <div class="change-type">
-        <a class="change-result-scheme">Посмотреть список</a>
+        <a class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть список') ?></a>
     </div>
 	<?= \yii2fullcalendar\yii2fullcalendar::widget([
 		'events'        => $events,
@@ -33,7 +33,7 @@ use yii\bootstrap\Html;
 </div>
 <div class="result-scheme">
     <div class="change-type">
-        <a href="#" class="change-result-scheme">Посмотреть календарь</a>
+        <a href="#" class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть календарь') ?></a>
     </div>
     <div class="schedule">
         <table class="table table-striped">
@@ -41,7 +41,7 @@ use yii\bootstrap\Html;
                 <tr>
                     <th>
                         <div class="month">
-                            Дата проведения не установлена
+                            <?= \Yii::t('app', 'Дата проведения не установлена') ?>
                         </div>
                     </th>
                 </tr>

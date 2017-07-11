@@ -7,11 +7,11 @@
  * @var \common\models\Athlete      $athlete
  * @var integer                     $showAll
  */
-$this->title = 'Результаты: ' . $championship->title;
+$this->title = \Yii::t('app', 'Результаты:') . ' ' . $championship->title;
 ?>
 <?php if ($championship->showResults) { ?>
-<h3><?= $championship->title ?>: <?= ($championship->status == \common\models\Championship::STATUS_PAST)
-    ? 'итоги' : 'предварительные итоги' ?></h3>
+    <h3><?= $championship->title ?>: <?= ($championship->status == \common\models\Championship::STATUS_PAST)
+			? \Yii::t('app', 'итоги') : \Yii::t('app', 'предварительные итоги') ?></h3>
 <?php } else { ?>
     <h3><?= $championship->title ?></h3>
 <?php } ?>
@@ -19,69 +19,69 @@ $this->title = 'Результаты: ' . $championship->title;
 <div class="about">
 	<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
         <div>
-            Регионы, допускающиеся к участию: <?= $championship->getRegionsFor(true) ?>
+			<?= \Yii::t('app', 'Регионы, допускающиеся к участию:') ?> <?= $championship->getRegionsFor(true) ?>
         </div>
 	<?php } ?>
-    Количество этапов, необходимое для участия в чемпионате: <?= $championship->amountForAthlete ?>
+	<?= \Yii::t('app', 'Количество этапов, необходимое для участия в чемпионате:') ?> <?= $championship->amountForAthlete ?>
     <br>
-    Необходимое количество этапов в других регионах:
+	<?= \Yii::t('app', 'Необходимое количество этапов в других регионах:') ?>
 	<?= $championship->requiredOtherRegions ?>
     <br>
-    Количество этапов, по которым ведётся подсчёт результатов:
+	<?= \Yii::t('app', 'Количество этапов, по которым ведётся подсчёт результатов:') ?>
 	<?= $championship->estimatedAmount ?>
     <br>
-    <?php if(!$championship->useMoscowPoints) { ?>
-    Таблица, по которой прозводился расчёт баллов за каждый этап:
-	<?php /** @var \common\models\Point[] $points */
-	$points = \common\models\Point::find()->orderBy(['id' => SORT_ASC])->all() ?>
-    <table class="table table-responsive table-bordered text-center">
-        <tr>
-            <td class="text-left"><b>место</b></td>
-			<?php foreach ($points as $point) { ?>
-                <td><?= $point->id ?></td>
-			<?php } ?>
-        </tr>
-        <tr>
-            <td class="text-left"><b>балл</b></td>
-			<?php foreach ($points as $point) { ?>
-                <td><?= $point->point ?></td>
-			<?php } ?>
-        </tr>
-    </table>
-    <?php } else { ?>
-        Подсчёт баллов ведётся по <a href="/competitions/moscow-scheme" target="_blank">Московской схеме</a> .
-    <?php } ?>
+	<?php if (!$championship->useMoscowPoints) { ?>
+		<?= \Yii::t('app', ' Таблица, по которой прозводился расчёт баллов за каждый этап:') ?>
+		<?php /** @var \common\models\Point[] $points */
+		$points = \common\models\Point::find()->orderBy(['id' => SORT_ASC])->all() ?>
+        <table class="table table-responsive table-bordered text-center">
+            <tr>
+                <td class="text-left"><b><?= \Yii::t('app', 'место') ?></b></td>
+				<?php foreach ($points as $point) { ?>
+                    <td><?= $point->id ?></td>
+				<?php } ?>
+            </tr>
+            <tr>
+                <td class="text-left"><b><?= \Yii::t('app', 'балл') ?></b></td>
+				<?php foreach ($points as $point) { ?>
+                    <td><?= $point->point ?></td>
+				<?php } ?>
+            </tr>
+        </table>
+	<?php } else { ?>
+        <a href="/competitions/moscow-scheme" target="_blank"><?= \Yii::t('app', 'Подсчёт баллов ведётся по Московской схеме.') ?></a>
+	<?php } ?>
 </div>
 
 <div class="pb-10">
-	<?= \yii\bootstrap\Html::a('Скачать результаты в xls', \yii\helpers\Url::to([
+	<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Скачать результаты в xls'), \yii\helpers\Url::to([
 		'/export/export',
 		'modelId' => $championship->id,
 		'type'    => \champ\controllers\ExportController::TYPE_CHAMPIONSHIP,
-		'showAll'  => $showAll
+		'showAll' => $showAll
 	]), ['class' => 'btn btn-light']) ?>
 </div>
 <?php if ($showAll) { ?>
-    В таблице приведены все спортсмены, выступившие хотя бы на одном из этапов, независимо от того, есть ли у них необходимое количество этапов.
+    <?= \Yii::t('app', 'В таблице приведены все спортсмены, выступившие хотя бы на одном из этапов, независимо от того, есть ли у них необходимое количество этапов.') ?>)
     <br>
-	<?= \yii\bootstrap\Html::a('Показать участников с необходимым количеством этапов',
-        ['championship-result', 'championshipId' => $championship->id]) ?>
+	<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать участников с необходимым количеством этапов'),
+		['championship-result', 'championshipId' => $championship->id]) ?>
 <?php } else { ?>
-    В таблице приведены только спортсмены, принявшие участие в необходимом количестве этапов.
+    <?= \Yii::t('app', 'В таблице приведены только спортсмены, принявшие участие в необходимом количестве этапов.') ?>
     <br>
-	<?= \yii\bootstrap\Html::a('Показать всех участников',
+	<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать всех участников'),
 		['championship-result', 'championshipId' => $championship->id, 'showAll' => true]) ?>
 <?php } ?>
 <table class="table table-responsive">
     <thead>
     <tr>
-        <th>Место</th>
-        <th>Класс</th>
-        <th>Спортсмен</th>
+        <th><?= \Yii::t('app', 'Место') ?></th>
+        <th><?= \Yii::t('app', 'Класс') ?></th>
+        <th><?= \Yii::t('app', 'Спортсмен') ?></th>
 		<?php foreach ($stages as $stage) { ?>
             <th><?= \yii\helpers\Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?></th>
 		<?php } ?>
-        <th>Итого</th>
+        <th><?= \Yii::t('app', 'Итого') ?></th>
     </tr>
     </thead>
     <tbody>

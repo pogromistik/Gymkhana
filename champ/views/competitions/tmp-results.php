@@ -8,7 +8,7 @@ use yii\bootstrap\Html;
  * @var string | null $active
  */
 ?>
-    <h2>Результаты соревнований</h2>
+    <h2><?= \Yii::t('app', 'Результаты соревнований') ?></h2>
     <div class="list">
 		<?php foreach (\common\models\Championship::$groupsTitle as $group => $title) { ?>
             <div class="item">
@@ -19,7 +19,7 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="info">
 						<?php if (!isset($results[$group])) { ?>
-                            В данном разделе пока нет соревнований.
+							<?= \Yii::t('app', 'В данном разделе пока нет соревнований.') ?>
 						<?php } else { ?>
 							<?php switch ($group) {
 								case \common\models\Championship::GROUPS_RUSSIA:
@@ -31,14 +31,14 @@ use yii\bootstrap\Html;
 										/** @var \common\models\Stage[] $stages */
 										$stages = $yearInfo['stages'];
 										if (!$stages) { ?>
-                                            Для чемпионата пока не создано ни одного этапа.
+											<?= \Yii::t('app', 'Для чемпионата пока не создано ни одного этапа.') ?>
 										<?php } else { ?>
                                             <div class="pl-10">
 												<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-													<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+													<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                     <br>
 												<?php } else { ?>
-													<?= Html::a('Предварительные итоги чемпионата',
+													<?= Html::a(\Yii::t('app', 'Предварительные итоги чемпионата'),
 														['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                     <br>
 												<?php } ?>
@@ -67,14 +67,14 @@ use yii\bootstrap\Html;
 												<?php
 												$stages = $yearInfo['stages'];
 												if (!$stages) { ?>
-                                                    Для чемпионата пока не создано ни одного этапа.
+													<?= \Yii::t('app', 'Для чемпионата пока не создано ни одного этапа.') ?>
 												<?php } else { ?>
                                                     <div class="pl-10">
 														<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-															<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+															<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                             <br>
 														<?php } else { ?>
-															<?= Html::a('Предварительные итоги чемпионата',
+															<?= Html::a(\Yii::t('app', 'Предварительные итоги чемпионата'),
 																['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                             <br>
 														<?php } ?>
@@ -133,11 +133,11 @@ use yii\bootstrap\Html;
             <div class="toggle">
                 <div class="background"></div>
                 <div class="title figure">
-                    Базовые фигуры
+					<?= \Yii::t('app', 'Базовые фигуры') ?>
                 </div>
                 <div class="info">
 					<?php if (!$figuresArray) { ?>
-                        В данном разделе пока нет фигур.
+						<?= \Yii::t('app', 'В данном разделе пока нет фигур.') ?>
 					<?php } else { ?>
 						<?php foreach ($figuresArray as $figureData) {
 							/** @var \common\models\Figure $figure */
@@ -154,14 +154,14 @@ use yii\bootstrap\Html;
                                     <div class="info">
 										<?php
 										if (!$years) { ?>
-                                            Для фигуры пока нет ни одного результата.
+											<?= \Yii::t('app', 'Для фигуры пока нет ни одного результата.') ?>
 										<?php } else { ?>
                                             <div class="pl-10">
-												<?= Html::a('Лучшие результаты за всё время', ['/competitions/figure', 'id' => $figure->id]) ?>
+												<?= Html::a(\Yii::t('app', 'Лучшие результаты за всё время'), ['/competitions/figure', 'id' => $figure->id]) ?>
                                             </div>
 											<?php foreach ($years as $year) { ?>
                                                 <div class="pl-10">
-													<?= Html::a($year->year . ' год', ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
+													<?= Html::a($year->year . ' ' . \Yii::t('app', 'год'), ['/competitions/figure', 'id' => $figure->id, 'year' => $year->year]) ?>
                                                 </div>
 											<?php } ?>
 										<?php } ?>

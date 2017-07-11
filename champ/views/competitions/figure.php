@@ -30,14 +30,14 @@ $time = time();
                     <p><?= $figure->description ?></p>
 				<?php } ?>
                 <div class="records">
-                    <b>Мировой рекорд:</b>
+                    <b><?= \Yii::t('app', 'Мировой рекорд:') ?></b>
 					<?php if ($figure->bestAthlete) { ?>
 						<?= $figure->bestAthlete ?>
 					<?php } ?>
 					<?= $figure->bestTimeForHuman ?>
 					<?php if ($figure->bestAthleteInRussia || $figure->bestTimeInRussia) { ?>
                         <br>
-                        <b>Рекорд в России:</b>
+                        <b><?= \Yii::t('app', 'Рекорд в России:') ?></b>
 						<?php if ($figure->bestAthleteInRussia) { ?>
 							<?= $figure->bestAthleteInRussia ?>
 						<?php } ?>
@@ -49,7 +49,7 @@ $time = time();
 				<?php if ($figure->picture) { ?>
                     <div class="track-photo">
                         <div class="toggle">
-                            <div class="title">Посмотреть схему фигуры</div>
+                            <div class="title"><?= \Yii::t('app', 'Посмотреть схему фигуры') ?></div>
                             <div class="toggle-content">
 								<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $figure->picture) ?>
                             </div>
@@ -61,26 +61,26 @@ $time = time();
             <div>
 				<?php if ($needTime && $figure->useForClassesCalculate) { ?>
                     <div>
-                        Время, необходимое для повышения класса:
+						<?= \Yii::t('app', 'Время, необходимое для повышения класса:') ?>
                         <table class="table">
                             <tr>
                                 <td>
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
-                                            Класс
+											<?= \Yii::t('app', 'Класс') ?>
                                         </div>
                                         <div class="col-sm-6 col-xs-12">
-                                            Процент
+											<?= \Yii::t('app', 'Процент') ?>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
-                                            Минимальное время
+											<?= \Yii::t('app', 'Минимальное время') ?>
                                         </div>
                                         <div class="col-sm-6 col-xs-12">
-                                            Максимальное время
+											<?= \Yii::t('app', 'Максимальное время') ?>
                                         </div>
                                     </div>
                                 </td>
@@ -120,12 +120,14 @@ $time = time();
             </div>
 			
 			<?php if (\Yii::$app->user->isGuest) { ?>
-                <div class="pb-10">Отправка результатов на сайт доступна только зарегистрированным пользователям</div>
+                <div class="pb-10">
+					<?= \Yii::t('app', 'Отправка результатов на сайт доступна только зарегистрированным пользователям') ?>
+                </div>
 			<?php } ?>
 			
 			<?php if (!$figure->useForClassesCalculate) { ?>
                 <div class="pb-10"><b>
-                        По данной фигуре не производится смена класса.
+						<?= \Yii::t('app', 'По данной фигуре не производится смена класса.') ?>
                     </b></div>
 			<?php } ?>
 
@@ -140,7 +142,7 @@ $time = time();
 							'name'    => 'countryId',
 							'data'    => \common\models\Country::getAll(true),
 							'options' => [
-								'placeholder' => 'Выберите страну...',
+								'placeholder' => \Yii::t('app', 'Выберите страну...'),
 								'id'          => 'country-id',
 							],
 						]) ?>
@@ -149,14 +151,14 @@ $time = time();
 						<?= \kartik\widgets\DepDrop::widget([
 							'name'           => 'regionIds',
 							'data'           => [],
-							'options'        => ['placeholder' => 'Выберите регион ...'],
+							'options'        => ['placeholder' => \Yii::t('app', 'Выберите регион...')],
 							'type'           => \kartik\widgets\DepDrop::TYPE_SELECT2,
 							'select2Options' => ['pluginOptions' => ['allowClear' => true, 'multiple' => true]],
 							'pluginOptions'  => [
 								'depends'     => ['country-id'],
 								'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_REGION]),
-								'loadingText' => 'Для выбранной страны нет городов...',
-								'placeholder' => 'Выберите регион...'
+								'loadingText' => \Yii::t('app', 'Для выбранной страны нет городов...'),
+								'placeholder' => \Yii::t('app', 'Выберите регион...')
 							],
 							'pluginEvents'   => [
 								'change' => 'function(e){
@@ -192,7 +194,7 @@ $time = time();
 								->where(['status' => \common\models\AthletesClass::STATUS_ACTIVE])
 								->orderBy(['percent' => SORT_ASC])->all(), 'id', 'title'),
 							'maintainOrder' => true,
-							'options'       => ['placeholder' => 'Выберите класс...', 'multiple' => true],
+							'options'       => ['placeholder' => \Yii::t('app', 'Выберите класс...'), 'multiple' => true],
 							'pluginOptions' => [
 								'tags'               => true,
 								'maximumInputLength' => 10
@@ -214,7 +216,7 @@ $time = time();
             <div class="results pt-20">
                 <div class="row">
                     <div class="col-sm-6 col-xs-12 pb-10">
-						<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+						<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Скачать в xls'), \yii\helpers\Url::to([
 							'/export/export',
 							'modelId' => $figure->id,
 							'type'    => \champ\controllers\ExportController::TYPE_FIGURE,
@@ -223,30 +225,32 @@ $time = time();
                     </div>
                     <div class="col-sm-6 col-xs-12 pb-10 text-right">
 						<?php if (!\Yii::$app->user->isGuest) { ?>
-							<?= \yii\bootstrap\Html::a('Добавить результат', \yii\helpers\Url::to([
+							<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Добавить результат'), \yii\helpers\Url::to([
 								'/figures/send-result',
 								'figureId' => $figure->id
 							]), ['class' => 'btn btn-dark']) ?>
 						<?php } ?>
                     </div>
                 </div>
-                
-                <?php if ($figure->severalRecords) { ?>
-                    С момента добавления результатов мировой рекорд по фигуре <?= $figure->title ?>
-                    был обновлён. В связи с этим, в таблице выводится два рейтинга:<br>
-                    — "Начальный рейтинг" - рейтинг на момент добавления результата<br>
-                    — "Актуальный рейтинг" - процент отставания от текущего мирового рекорда<br>
+				
+				<?php if ($figure->severalRecords) { ?>
+					<?= \Yii::t('app', ' С момента добавления результатов мировой рекорд по фигуре был обновлён. В связи с этим, в таблице выводится два рейтинга:') ?>
+                    <br>
+                    — <?= \Yii::t('app', '"Начальный рейтинг" - рейтинг на момент добавления результата') ?><br>
+                    — <?= \Yii::t('app', '"Актуальный рейтинг" - процент отставания от текущего мирового рекорда') ?>
+                    <br>
                     <div class="show-pk">
-                        При наведении на начальный рейтинг показывается рекорд, который был в момент добавления результата на сайт.
+						<?= \Yii::t('app', 'При наведении на начальный рейтинг показывается рекорд, который был в момент добавления результата на сайт.') ?>
                     </div>
-                <?php } ?>
-                
+				<?php } ?>
+
                 <div class="small text-right">
 					<?php $count = count($results); ?>
 					<?php if ($count == 30) { ?>
-                        Показаны 30 лучших результатов. <a href="#" class="showAll">Показать все</a>
+						<?= \Yii::t('app', 'Показаны 30 лучших результатов.') ?> <a href="#"
+                                                                                    class="showAll"><?= \Yii::t('app', 'Показать все') ?></a>
 					<?php } else { ?>
-                        Количество результатов: <?= $count ?>
+						<?= \Yii::t('app', 'Количество результатов:') ?> <?= $count ?>
 					<?php } ?>
                 </div>
 				
@@ -258,8 +262,8 @@ $time = time();
             </div>
         </div>
 
-        <a href="<?= \yii\helpers\Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">Вернуться
-            к фигурам</a>
+        <a href="<?= \yii\helpers\Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">
+			<?= \Yii::t('app', 'Вернуться к фигурам') ?></a>
     </div>
 
     <div class="col-bg-5 col-lg-3 col-md-2 col-sm-12 list-nav">
