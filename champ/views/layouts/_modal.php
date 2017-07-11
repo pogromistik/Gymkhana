@@ -10,7 +10,7 @@ $contact = new \common\models\Feedback();
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Обратная связь</h4>
+                <h4 class="modal-title"><?= \Yii::t('app', 'Обратная связь') ?></h4>
             </div>
 			<?php $form = ActiveForm::begin(['options' => ['class' => 'newQuestion']]) ?>
             <div class="modal-body">
@@ -23,15 +23,16 @@ $contact = new \common\models\Feedback();
 	                <?= $form->field($contact, 'username')->hiddenInput()->label(false)->error(false) ?>
 	                <?= $form->field($contact, 'athleteId')->hiddenInput()->label(false)->error(false) ?>
                 <?php } else { ?>
-	                <?= $form->field($contact, 'username')->textInput(['placeholder' => 'ваше имя']) ?>
+	                <?= $form->field($contact, 'username')->textInput(['placeholder' => \Yii::t('app', 'ваше имя')]) ?>
                 <?php } ?>
-				<?= $form->field($contact, 'phoneOrMail')->textInput(['placeholder' => 'телефон или e-mail'])->label('Контакты для связи') ?>
+				<?= $form->field($contact, 'phoneOrMail')->textInput(['placeholder' => \Yii::t('app', 'телефон или e-mail')])
+                    ->label(\Yii::t('app', 'Контакты для связи')) ?>
 				<?= $form->field($contact, 'text')->textarea(['rows' => 3]) ?>
             </div>
             <div class="modal-footer">
                 <div class="form-text"></div>
                 <div class="button">
-					<?= Html::submitButton('Отправить', ['class' => 'btn btn-warning']) ?>
+					<?= Html::submitButton(\Yii::t('app', 'Отправить'), ['class' => 'btn btn-warning']) ?>
                 </div>
             </div>
 			<?php $form->end() ?>
