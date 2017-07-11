@@ -16,28 +16,13 @@ use yii\filters\VerbFilter;
 class TranslateMessagesController extends BaseController
 {
 	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'verbs' => [
-				'class'   => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-				],
-			],
-		];
-	}
-	
-	/**
 	 * Lists all SourceMessage models.
 	 *
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
-		$this->can('admin');
+		$this->can('developer');
 		$searchModel = new TranslateMessageSourceSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
@@ -49,7 +34,7 @@ class TranslateMessagesController extends BaseController
 	
 	public function actionTranslate()
 	{
-		$this->can('admin');
+		$this->can('translate');
 		$searchModel = new TranslateMessageSourceSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TranslateMessageSource::STATUS_ACTIVE]);
@@ -62,7 +47,7 @@ class TranslateMessagesController extends BaseController
 	
 	public function actionAddTranslate()
 	{
-		$this->can('admin');
+		$this->can('translate');
 		$params = \Yii::$app->request->getBodyParams();
 		$id = $params['TranslateMessage']['id'] ? $params['TranslateMessage']['id'] : null;
 		if (!$id) {
@@ -100,7 +85,7 @@ class TranslateMessagesController extends BaseController
 	 */
 	public function actionCreate()
 	{
-		$this->can('admin');
+		$this->can('developer');
 		$model = new TranslateMessageSource();
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -114,7 +99,7 @@ class TranslateMessagesController extends BaseController
 	
 	public function actionUpdate()
 	{
-		$this->can('admin');
+		$this->can('translate');
 		$params = \Yii::$app->request->getBodyParams();
 		$id = $params['TranslateMessageSource']['id'] ? $params['TranslateMessageSource']['id'] : null;
 		if (!$id) {
@@ -138,7 +123,7 @@ class TranslateMessagesController extends BaseController
 	
 	public function actionChangeStatus($id)
 	{
-		$this->can('admin');
+		$this->can('translate');
 		$message = $this->findModel($id);
 		if ($message->status == TranslateMessageSource::STATUS_WAIT) {
 			$message->status = TranslateMessageSource::STATUS_ACTIVE;
@@ -163,6 +148,7 @@ class TranslateMessagesController extends BaseController
 	 */
 	protected function findModel($id)
 	{
+		$this->can('translate');
 		if (($model = TranslateMessageSource::findOne($id)) !== null) {
 			return $model;
 		} else {
