@@ -37,5 +37,6 @@ class BaseController extends Controller
 			$user->lastActivityDate = time();
 			$user->save();
 		}
+		//\Yii::$app->language = 'en-US';
 	}
 }
