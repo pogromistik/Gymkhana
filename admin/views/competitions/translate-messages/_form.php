@@ -12,7 +12,8 @@ use yii\widgets\ActiveForm;
 	
 	<?php $form = ActiveForm::begin(); ?>
 	
-	<?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
+	<?= $form->field($model, 'message')->textarea(['rows' => 3]) ?>
+	<?= $form->field($model, 'comment')->textarea(['rows' => 3]) ?>
 	
 	<div class="form-group">
 		<?= Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>
