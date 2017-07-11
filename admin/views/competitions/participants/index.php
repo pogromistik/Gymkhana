@@ -19,7 +19,7 @@ use kartik\widgets\Select2;
 
 $this->title = 'Участники';
 $championship = $stage->championship;
-$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', Championship::$groupsTitle[$championship->groupId]), 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' => ['/competitions/championships/view', 'id' => $stage->championshipId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/stages/view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = $this->title;

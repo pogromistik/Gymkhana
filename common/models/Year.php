@@ -47,8 +47,8 @@ class Year extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'     => 'ID',
-			'year'   => 'Год',
-			'status' => 'Статус',
+			'year'   => \Yii::t('app', 'Год'),
+			'status' => \Yii::t('app', 'Статус'),
 		];
 	}
 	

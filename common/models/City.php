@@ -77,16 +77,16 @@ class City extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'               => 'ID',
-			'title'            => 'Город',
-			'link'             => 'Ссылка',
+			'title'            => \Yii::t('app', 'Город'),
+			'link'             => \Yii::t('app', 'Ссылка'),
 			'top'              => 'Top',
 			'left'             => 'Left',
 			'showInRussiaPage' => 'Показывать на странице "Россия"',
 			'federalDistrict'  => 'Федеральный округ',
-			'regionId'         => 'Регион',
-			'countryId'        => 'Страна',
-			'timezone'         => 'Временная зона',
-			'utc'              => 'Разница с UTC'
+			'regionId'         => \Yii::t('app', 'Регион'),
+			'countryId'        => \Yii::t('app', 'Страна'),
+			'timezone'         => \Yii::t('app', 'Временная зона'),
+			'utc'              => \Yii::t('app', 'Разница с UTC')
 		];
 	}
 	

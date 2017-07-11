@@ -13,7 +13,7 @@ use common\models\Year;
  * @var integer                                 $groupId
  */
 
-$this->title = Championship::$groupsTitle[$groupId];
+$this->title = \Yii::t('app', Championship::$groupsTitle[$groupId]);
 
 $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 ?>
@@ -49,10 +49,11 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 			[
 				'attribute' => 'status',
 				'format'    => 'raw',
-				'filter'    => Html::activeDropDownList($searchModel, 'status', Championship::$statusesTitle,
+				'filter'    => Html::activeDropDownList($searchModel, 'status',
+                    \common\helpers\TranslateHelper::translateArray(Championship::$statusesTitle),
 					['class' => 'form-control', 'prompt' => 'Выберите статус']),
 				'value'     => function (Championship $championship) {
-					return Championship::$statusesTitle[$championship->status];
+					return \Yii::t('app', Championship::$statusesTitle[$championship->status]);
 				}
 			],
 			[
@@ -60,7 +61,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'format'    => 'raw',
 				'filter'    => false,
 				'value'     => function (Championship $championship) {
-					return Championship::$groupsTitle[$championship->groupId];
+					return \Yii::t('app', Championship::$groupsTitle[$championship->groupId]);
 				}
 			],
 			[

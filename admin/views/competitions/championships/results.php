@@ -10,7 +10,7 @@ use common\models\Championship;
  * @var integer                     $showAll
  */
 $this->title = 'Результаты: ' . $championship->title;
-$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', Championship::$groupsTitle[$championship->groupId]), 'url' => ['index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $championship->title, 'url' => ['view', 'id' => $championship->id]];
 $this->params['breadcrumbs'][] = 'Результаты';
 ?>

@@ -53,11 +53,11 @@ class InternalClass extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'             => 'ID',
-			'title'          => 'Название',
-			'description'    => 'Описание',
-			'championshipId' => 'Чемпионат',
-			'status'         => 'Статус',
-			'cheId'          => 'Идентификатор класса из Челябинской схемы'
+			'title'          => \Yii::t('app', 'Название'),
+			'description'    => \Yii::t('app', 'Описание'),
+			'championshipId' => \Yii::t('app', 'Чемпионат'),
+			'status'         => \Yii::t('app', 'Статус'),
+			'cheId'          => \Yii::t('app', 'Идентификатор класса из Челябинской схемы')
 		];
 	}
 	

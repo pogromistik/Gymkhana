@@ -10,7 +10,7 @@ use common\models\Stage;
 
 $this->title = $model->title;
 $championship = $model->championship;
-$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', Championship::$groupsTitle[$championship->groupId]), 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $model->championship->title, 'url' => ['/competitions/championships/view', 'id' => $model->championshipId]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			[
 				'attribute' => 'status',
-				'value'     => \common\models\Stage::$statusesTitle[$model->status]
+				'value'     => \Yii::t('app', \common\models\Stage::$statusesTitle[$model->status])
 			],
 			[
 				'attribute' => 'class',

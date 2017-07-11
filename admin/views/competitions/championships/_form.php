@@ -58,7 +58,7 @@ $country = \common\models\Country::getRussia();
 	    ]) ?>
     </div>
     
-	<?= $form->field($model, 'status')->dropDownList(Championship::$statusesTitle) ?>
+	<?= $form->field($model, 'status')->dropDownList(\common\helpers\TranslateHelper::translateArray(Championship::$statusesTitle)) ?>
 	
 	<?= $form->field($model, 'groupId')->hiddenInput()->label(false)->error(false) ?>
 	

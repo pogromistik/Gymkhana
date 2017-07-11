@@ -39,6 +39,7 @@ class TranslateMessageSource extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
+			[['message'], 'required'],
 			[['message', 'comment'], 'string'],
 			[['status'], 'integer'],
 			[['category'], 'string', 'max' => 255],

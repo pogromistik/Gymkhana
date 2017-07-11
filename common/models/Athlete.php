@@ -235,26 +235,26 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		return [
 			'id'                 => 'ID',
-			'login'              => 'Логин',
-			'firstName'          => 'Имя',
-			'lastName'           => 'Фамилия',
-			'phone'              => 'Телефон',
-			'email'              => 'Почта',
-			'cityId'             => 'Город',
-			'athleteClassId'     => 'Класс',
-			'number'             => 'Номер',
+			'login'              => \Yii::t('app', 'Логин'),
+			'firstName'          => \Yii::t('app', 'Имя'),
+			'lastName'           => \Yii::t('app', 'Фамилия'),
+			'phone'              => \Yii::t('app', 'Телефон'),
+			'email'              => \Yii::t('app', 'Почта'),
+			'cityId'             => \Yii::t('app', 'Город'),
+			'athleteClassId'     => \Yii::t('app', 'Класс спортсмена'),
+			'number'             => \Yii::t('app', 'Номер спортсмена'),
 			'authKey'            => 'Auth Key',
 			'passwordHash'       => 'Password Hash',
 			'passwordResetToken' => 'Password Reset Token',
-			'status'             => 'Статус',
-			'createdAt'          => 'Создан',
-			'updatedAt'          => 'Обновлен',
-			'hasAccount'         => 'Аккаунт создан?',
-			'lastActivityDate'   => 'Дата последней активности',
-			'regionId'           => 'Регион',
-			'photo'              => 'Фотография',
-			'photoFile'          => 'Фотография',
-			'countryId'          => 'Страна'
+			'status'             => \Yii::t('app', 'Статус'),
+			'createdAt'          => \Yii::t('app', 'Дата добавления'),
+			'updatedAt'          => \Yii::t('app', 'Дата редактирования'),
+			'hasAccount'         => \Yii::t('app', 'Аккаунт создан?'),
+			'lastActivityDate'   => \Yii::t('app', 'Дата последней активности'),
+			'regionId'           => \Yii::t('app', 'Регион'),
+			'photo'              => \Yii::t('app', 'Фотография'),
+			'photoFile'          => \Yii::t('app', 'Фотография'),
+			'countryId'          => \Yii::t('app', 'Страна')
 		];
 	}
 	

@@ -67,22 +67,22 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		return [
 			'id'              => 'ID',
-			'championshipId'  => 'Чемпионат',
-			'stageId'         => 'Этап',
-			'firstName'       => 'Имя',
-			'lastName'        => 'Фамилия',
-			'city'            => 'Город',
-			'cityId'          => 'Город',
-			'motorcycleMark'  => 'Марка мотоцикла',
-			'motorcycleModel' => 'Модель мотоцикла',
-			'phone'           => 'Телефон',
-			'number'          => 'Номер участника',
-			'dateAdded'       => 'Дата создания',
-			'dateUpdated'     => 'Дата редактирования',
-			'status'          => 'Статус',
-			'athleteId'       => 'Спортсмен',
-			'countryId'       => 'Страна',
-			'email'           => 'Email'
+			'championshipId'  => \Yii::t('app', 'Чемпионат'),
+			'stageId'         => \Yii::t('app', 'Этап'),
+			'firstName'       => \Yii::t('app', 'Имя'),
+			'lastName'        => \Yii::t('app', 'Фамилия'),
+			'city'            => \Yii::t('app', 'Город'),
+			'cityId'          => \Yii::t('app', 'Город'),
+			'motorcycleMark'  => \Yii::t('app', 'Марка мотоцикла'),
+			'motorcycleModel' => \Yii::t('app', 'Модель мотоцикла'),
+			'phone'           => \Yii::t('app', 'Телефон'),
+			'number'          => \Yii::t('app', 'Номер участника'),
+			'dateAdded'       => \Yii::t('app', 'Дата создания'),
+			'dateUpdated'     => \Yii::t('app', 'Дата редактирования'),
+			'status'          => \Yii::t('app', 'Статус'),
+			'athleteId'       => \Yii::t('app', 'Спортсмен'),
+			'countryId'       => \Yii::t('app', 'Страна'),
+			'email'           => \Yii::t('app', 'Email')
 		];
 	}
 	

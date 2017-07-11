@@ -8,7 +8,7 @@ use common\models\Championship;
 /* @var $model common\models\Championship */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$model->groupId], 'url' => ['index', 'groupId' => $model->groupId]];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', Championship::$groupsTitle[$model->groupId]), 'url' => ['index', 'groupId' => $model->groupId]];
 $this->params['breadcrumbs'][] = $this->title;
 
 $stages = $model->stages;
@@ -45,11 +45,11 @@ $stages = $model->stages;
 			],
 			[
 				'attribute' => 'status',
-				'value'     => Championship::$statusesTitle[$model->status]
+				'value'     => \Yii::t('app', Championship::$statusesTitle[$model->status])
 			],
 			[
 				'attribute' => 'groupId',
-				'value'     => Championship::$groupsTitle[$model->groupId]
+				'value'     => \Yii::t('app', Championship::$groupsTitle[$model->groupId])
 			],
 			[
 				'attribute' => 'regionGroupId',
@@ -90,7 +90,7 @@ $stages = $model->stages;
                 <td><?= $stage->dateOfTheHuman ?></td>
                 <td><?= $stage->startRegistrationHuman ?></td>
                 <td><?= $stage->endRegistrationHuman ?></td>
-                <td><?= \common\models\Stage::$statusesTitle[$stage->status] ?></td>
+                <td><?= \Yii::t('app', \common\models\Stage::$statusesTitle[$stage->status]) ?></td>
                 <td><?= $stage->class ? $stage->classModel->title : null ?></td>
             </tr>
 		<?php } ?>

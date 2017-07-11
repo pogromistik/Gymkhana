@@ -38,8 +38,8 @@ class Point extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id'    => 'Место',
-			'point' => 'Балл',
+			'id'    => \Yii::t('app', 'Место'),
+			'point' => \Yii::t('app', 'Балл'),
 		];
 	}
 }

@@ -274,7 +274,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                                 class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
 										<?php foreach (\common\models\Championship::$groupsTitle as $groupId => $title) { ?>
-                                            <li><?= Html::a($title, ['/competitions/championships/index', 'groupId' => $groupId]) ?></li>
+                                            <li><?= Html::a(\Yii::t('app', $title), ['/competitions/championships/index', 'groupId' => $groupId]) ?></li>
 										<?php } ?>
                                     </ul>
                                 </li>

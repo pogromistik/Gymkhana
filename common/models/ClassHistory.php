@@ -57,15 +57,15 @@ class ClassHistory extends BaseActiveRecord
 	{
 		return [
 			'id'           => 'ID',
-			'athleteId'    => 'Спортсмен',
-			'motorcycleId' => 'Мотоцикл',
-			'oldClassId'   => 'Старый класс',
-			'newClassId'   => 'Новый класс',
-			'event'        => 'Событие',
-			'time'         => 'Время',
-			'bestTime'     => 'Лучшее время',
-			'percent'      => 'Процент от эталонного времени',
-			'date'         => 'Дата',
+			'athleteId'    => \Yii::t('app', 'Спортсмен'),
+			'motorcycleId' => \Yii::t('app', 'Мотоцикл'),
+			'oldClassId'   => \Yii::t('app', 'Старый класс'),
+			'newClassId'   => \Yii::t('app', 'Новый класс'),
+			'event'        => \Yii::t('app', 'Событие'),
+			'time'         => \Yii::t('app', 'Время'),
+			'bestTime'     => \Yii::t('app', 'Лучшее время'),
+			'percent'      => \Yii::t('app', 'Процент от эталонного времени'),
+			'date'         => \Yii::t('app', 'Дата'),
 		];
 	}
 	

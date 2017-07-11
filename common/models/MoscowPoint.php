@@ -42,9 +42,9 @@ class MoscowPoint extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'    => 'ID',
-			'class' => 'Группа',
-			'place' => 'Место',
-			'point' => 'Очки',
+			'class' => \Yii::t('app', 'Группа'),
+			'place' => \Yii::t('app', 'Место'),
+			'point' => \Yii::t('app', 'Очки'),
 		];
 	}
 	

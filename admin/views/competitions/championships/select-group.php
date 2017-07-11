@@ -10,6 +10,6 @@ $this->title = 'Выберите раздел Чемпионата';
 
 <ul>
 <?php foreach (Championship::$groupsTitle as $groupId => $title) { ?>
-	<li><?= Html::a($title, ['index', 'groupId' => $groupId]) ?></li>
+	<li><?= Html::a(\Yii::t('app', $title), ['index', 'groupId' => $groupId]) ?></li>
 <?php } ?>
 </ul>

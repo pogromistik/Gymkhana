@@ -59,13 +59,13 @@ class Motorcycle extends BaseActiveRecord
 	{
 		return [
 			'id'              => 'ID',
-			'athleteId'       => 'Спортсмен',
-			'mark'            => 'Марка',
-			'model'           => 'Модель',
-			'internalClassId' => 'Класс награждения',
-			'dateAdded'       => 'Добавлен',
-			'dateUpdated'     => 'Обновлен',
-			'status'          => 'Статус',
+			'athleteId'       => \Yii::t('app', 'Спортсмен'),
+			'mark'            => \Yii::t('app', 'Марка'),
+			'model'           => \Yii::t('app', 'Модель'),
+			'internalClassId' => \Yii::t('app', 'Класс награждения'),
+			'dateAdded'       => \Yii::t('app', 'Дата добавления'),
+			'dateUpdated'     => \Yii::t('app', 'Дата редактирования'),
+			'status'          => \Yii::t('app', 'Статус'),
 		];
 	}
 	

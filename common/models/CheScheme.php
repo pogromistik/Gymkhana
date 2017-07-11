@@ -40,9 +40,9 @@ class CheScheme extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'title'       => 'Название',
-			'description' => 'Описание',
-			'percent'     => 'Процент',
+			'title'       => \Yii::t('app', 'Название'),
+			'description' => \Yii::t('app', 'Описание'),
+			'percent'     => \Yii::t('app', 'Процент'),
 		];
 	}
 }

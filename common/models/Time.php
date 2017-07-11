@@ -60,14 +60,14 @@ class Time extends BaseActiveRecord
 	{
 		return [
 			'id'            => 'ID',
-			'participantId' => 'Участник',
-			'stageId'       => 'Этап',
-			'time'          => 'Время заезда',
-			'timeForHuman'  => 'Время заезда',
-			'fine'          => 'Штраф',
-			'resultTime'    => 'Итоговое время заезда',
-			'attemptNumber' => 'Номер попытки',
-			'isFail'        => 'Незачет'
+			'participantId' => \Yii::t('app', 'Участник'),
+			'stageId'       => \Yii::t('app', 'Этап'),
+			'time'          => \Yii::t('app', 'Время заезда'),
+			'timeForHuman'  => \Yii::t('app', 'Время заезда'),
+			'fine'          => \Yii::t('app', 'Штраф'),
+			'resultTime'    => \Yii::t('app', 'Итоговое время заезда'),
+			'attemptNumber' => \Yii::t('app', 'Номер попытки'),
+			'isFail'        => \Yii::t('app', 'Незачет')
 		];
 	}
 	

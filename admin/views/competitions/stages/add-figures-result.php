@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
 $championship = $stage->championship;
 
 $this->title = 'Добавить время по фигуре для этапа: "' . $stage->title . '"';
-$this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$championship->groupId], 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', Championship::$groupsTitle[$championship->groupId]), 'url' => ['/competitions/championships/index', 'groupId' => $championship->groupId]];
 $this->params['breadcrumbs'][] = ['label' => $championship->title, 'url' => ['/competitions/championships/view', 'id' => $stage->championshipId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = $this->title;

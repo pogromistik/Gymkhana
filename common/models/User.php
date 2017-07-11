@@ -35,7 +35,7 @@ class User extends BaseUser
 	public function attributeLabels()
 	{
 		$labels = parent::attributeLabels();
-		$labels['regionId'] = 'Регион';
+		$labels['regionId'] = \Yii::t('app', 'Регион');
 		return $labels;
 	}
 	

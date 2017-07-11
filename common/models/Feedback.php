@@ -55,13 +55,13 @@ class Feedback extends BaseActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'username'    => 'Имя',
-			'phone'       => 'Телефон',
-			'email'       => 'Email',
-			'text'        => 'Текст',
-			'dateAdded'   => 'Дата добавления',
-			'dateUpdated' => 'Дата редактирования',
-			'athleteId'   => 'Спортсмен'
+			'username'    => \Yii::t('app', 'Имя'),
+			'phone'       => \Yii::t('app', 'Телефон'),
+			'email'       => \Yii::t('app', 'Email'),
+			'text'        => \Yii::t('app', 'Текст'),
+			'dateAdded'   => \Yii::t('app', 'Дата добавления'),
+			'dateUpdated' => \Yii::t('app', 'Дата редактирования'),
+			'athleteId'   => \Yii::t('app', 'Спортсмен')
 		];
 	}
 	

@@ -68,7 +68,7 @@ use common\models\AthletesClass;
 	
 	<?= $form->field($model, 'sort')->textInput() ?>
 	
-	<?= $form->field($model, 'status')->dropDownList(\common\models\Participant::$typesTitle) ?>
+	<?= $form->field($model, 'status')->dropDownList(\common\helpers\TranslateHelper::translateArray(\common\models\Participant::$typesTitle)) ?>
 	
 	<?php if (!$needClarification) { ?>
         <div class="form-group">

@@ -62,11 +62,11 @@ class ClassesRequest extends BaseActiveRecord
 		return [
 			'id'         => 'ID',
 			'dateAdded'  => 'Date Added',
-			'status'     => 'Статус',
-			'comment'    => 'Причина',
-			'athleteId'  => 'Спортсмен',
-			'newClassId' => 'Новый класс',
-			'feedback'   => 'Наш ответ',
+			'status'     => \Yii::t('app', 'Статус'),
+			'comment'    => \Yii::t('app', 'Причина'),
+			'athleteId'  => \Yii::t('app', 'Спортсмен'),
+			'newClassId' => \Yii::t('app', 'Новый класс'),
+			'feedback'   => \Yii::t('app', 'Наш ответ'),
 		];
 	}
 	

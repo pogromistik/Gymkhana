@@ -58,15 +58,15 @@ class AssocNews extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'               => 'ID',
-			'title'            => 'Заголовок',
-			'previewText'      => 'Короткий текст',
-			'fullText'         => 'Подробный текст',
-			'link'             => 'Ссылка на страницу',
-			'dateAdded'        => 'Дата создания',
-			'dateUpdated'      => 'Дата добавления',
-			'datePublish'      => 'Дата публикации',
-			'datePublishHuman' => 'Дата публикации',
-			'secure'           => 'Закрепить сверху'
+			'title'            => \Yii::t('app', 'Заголовок'),
+			'previewText'      => \Yii::t('app', 'Короткий текст'),
+			'fullText'         => \Yii::t('app', 'Подробный текст'),
+			'link'             => \Yii::t('app', 'Ссылка на страницу'),
+			'dateAdded'        => \Yii::t('app', 'Дата создания'),
+			'dateUpdated'      => \Yii::t('app', 'Дата редактирования'),
+			'datePublish'      => \Yii::t('app', 'Дата публикации'),
+			'datePublishHuman' => \Yii::t('app', 'Дата публикации'),
+			'secure'           => \Yii::t('app', 'Закрепить сверху')
 		];
 	}
 	

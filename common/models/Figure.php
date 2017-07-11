@@ -60,19 +60,19 @@ class Figure extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'                       => 'ID',
-			'title'                    => 'Название',
-			'description'              => 'Описание',
-			'file'                     => 'Файл',
-			'picture'                  => 'Фото трассы',
-			'photoFile'                => 'Фото трассы',
-			'bestTime'                 => 'Эталонное время',
-			'bestTimeForHuman'         => 'Эталонное время',
-			'bestAthlete'              => 'Мировой рекордсмен',
-			'bestTimeInRussia'         => 'Лучшее время в России',
-			'bestTimeInRussiaForHuman' => 'Лучшее время в России',
-			'bestAthleteInRussia'      => 'Рекордсмен в России',
-			'useForClassesCalculate'   => 'Использовать для расчета классов',
-			'severalRecords'           => 'Рекорд был обновлён'
+			'title'                    => \Yii::t('app', 'Название'),
+			'description'              => \Yii::t('app', 'Описание'),
+			'file'                     => \Yii::t('app', 'Файл'),
+			'picture'                  => \Yii::t('app', 'Фото трассы'),
+			'photoFile'                => \Yii::t('app', 'Фото трассы'),
+			'bestTime'                 => \Yii::t('app', 'Эталонное время'),
+			'bestTimeForHuman'         => \Yii::t('app', 'Эталонное время'),
+			'bestAthlete'              => \Yii::t('app', 'Мировой рекордсмен'),
+			'bestTimeInRussia'         => \Yii::t('app', 'Лучшее время в России'),
+			'bestTimeInRussiaForHuman' => \Yii::t('app', 'Лучшее время в России'),
+			'bestAthleteInRussia'      => \Yii::t('app', 'Рекордсмен в России'),
+			'useForClassesCalculate'   => \Yii::t('app', 'Использовать для расчета классов'),
+			'severalRecords'           => \Yii::t('app', 'Мировой рекорд был обновлён')
 		];
 	}
 	

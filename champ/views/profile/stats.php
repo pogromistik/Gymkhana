@@ -44,8 +44,8 @@ use yii\bootstrap\Html;
 						<?php } ?>
 						<?php if ($result->recordType && $result->recordStatus == \common\models\FigureTime::NEW_RECORD_APPROVE) { ?>
 							<?= \yii\bootstrap\Html::img('/img/crown.png', [
-								'title' => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!',
-								'alt'   => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!'
+								'title' => \Yii::t('app', \common\models\FigureTime::$recordsTitle[$result->recordType]) . '!',
+								'alt'   => \Yii::t('app', \common\models\FigureTime::$recordsTitle[$result->recordType]) . '!'
 							]) ?>
 						<?php } ?>
                     </td>

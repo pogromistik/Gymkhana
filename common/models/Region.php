@@ -43,8 +43,8 @@ class Region extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'        => 'ID',
-			'title'     => 'Название',
-			'countryId' => 'Страна'
+			'title'     => \Yii::t('app', 'Название'),
+			'countryId' => \Yii::t('app', 'Страна')
 		];
 	}
 	

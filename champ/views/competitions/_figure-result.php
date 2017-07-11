@@ -46,8 +46,8 @@
 						<?= $item->resultTimeForHuman ?>
 						<?php if ($item->recordType && $item->recordStatus == \common\models\FigureTime::NEW_RECORD_APPROVE) { ?>
 							<?= \yii\bootstrap\Html::img('/img/crown.png', [
-								'title' => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!',
-								'alt'   => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!'
+								'title' => \Yii::t('app', \common\models\FigureTime::$recordsTitle[$item->recordType]) . '!',
+								'alt'   => \Yii::t('app', \common\models\FigureTime::$recordsTitle[$item->recordType]) . '!'
 							]) ?>
 						<?php } ?>
 						<?php if ($item->videoLink) { ?>

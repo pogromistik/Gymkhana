@@ -34,7 +34,7 @@ $countParticipants = count($participantsByInternalClasses) + count($tmpParticipa
                 <h4><?= $stage->title ?>
                     , <?= $stage->city->title ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
                     <span class="label <?= ($stage->status == Stage::STATUS_CANCEL) ?
-						'label-danger' : 'label-success' ?>"><?= Stage::$statusesTitle[$stage->status] ?></span></h4>
+						'label-danger' : 'label-success' ?>"><?= \Yii::t('app', Stage::$statusesTitle[$stage->status]) ?></span></h4>
 				<?php if ($stage->location) { ?>
                     <p>Место проведения этапа: <?= $stage->location ?></p>
 				<?php } ?>

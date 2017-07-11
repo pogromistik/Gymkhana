@@ -48,11 +48,11 @@ class AthletesClass extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'title'       => 'Название',
-			'percent'     => 'Процент',
-			'sort'        => 'Сортировка',
-			'description' => 'Описание',
-			'coefficient' => 'Коэффициент'
+			'title'       => \Yii::t('app', 'Название'),
+			'percent'     => \Yii::t('app', 'Процент'),
+			'sort'        => \Yii::t('app', 'Сортировка'),
+			'description' => \Yii::t('app', 'Описание'),
+			'coefficient' => \Yii::t('app', 'Коэффициент')
 		];
 	}
 	

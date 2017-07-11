@@ -44,9 +44,9 @@ class Country extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'             => 'ID',
-			'title'          => 'Название на русском',
-			'title_en'       => 'Название на английском',
-			'title_original' => 'Оригинальное название'
+			'title'          => \Yii::t('app', 'Название на русском'),
+			'title_en'       => \Yii::t('app', 'Название на английском'),
+			'title_original' => \Yii::t('app', 'Оригинальное название')
 		];
 	}
 	

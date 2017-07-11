@@ -77,7 +77,8 @@ use common\models\TmpFigureResult;
 			[
 				'label'  => 'Статус',
 				'format' => 'raw',
-				'filter' => Html::activeDropDownList($searchModel, 'status', TmpFigureResult::$statusesTitle,
+				'filter' => Html::activeDropDownList($searchModel, 'status',
+                    \common\helpers\TranslateHelper::translateArray(TmpFigureResult::$statusesTitle),
 					['class' => 'form-control', 'prompt' => 'Выберите статус']),
 				'value'  => function (TmpFigureResult $figureResult) {
 					if ($figureResult->isNew) {

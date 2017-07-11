@@ -227,7 +227,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				 $html = '';
 				 if ($item->recordType) {
 					 $html = '<div class="small text-center">';
-					 $html .= \common\models\FigureTime::$recordsTitle[$item->recordType];
+					 $html .= \Yii::t('app', \common\models\FigureTime::$recordsTitle[$item->recordType]);
 					 $html .= '</div>';
 					 if ($item->recordStatus == \common\models\FigureTime::NEW_RECORD_NEED_CHECK) {
 						 if ($item->recordStatus == \common\models\FigureTime::NEW_RECORD_NEED_CHECK) {

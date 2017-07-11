@@ -41,7 +41,7 @@ class RegionalGroup extends BaseActiveRecord
 	{
 		return [
 			'id'    => 'ID',
-			'title' => 'Название',
+			'title' => \Yii::t('app', 'Название'),
 		];
 	}
 }

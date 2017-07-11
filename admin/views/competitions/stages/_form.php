@@ -175,7 +175,7 @@ use dosamigos\ckeditor\CKEditor;
 			\common\models\AthletesClass::find()->andWhere(['status' => \common\models\AthletesClass::STATUS_ACTIVE])->orderBy(['sort' => SORT_ASC])->all(), 'id', 'title'
 		), ['prompt' => 'Укажите класс']) ?>
 	
-	<?= $form->field($model, 'status')->dropDownList(\common\models\Stage::$statusesTitle) ?>
+	<?= $form->field($model, 'status')->dropDownList(\common\helpers\TranslateHelper::translateArray(\common\models\Stage::$statusesTitle)) ?>
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

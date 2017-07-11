@@ -56,12 +56,12 @@ class Notice extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'        => 'ID',
-			'athleteId' => 'Получатель',
-			'text'      => 'Текст',
-			'link'      => 'Ссылка',
-			'status'    => 'Статус',
-			'dateAdded' => 'Дата',
-			'senderId'  => 'Отправитель'
+			'athleteId' => \Yii::t('app', 'Получатель'),
+			'text'      => \Yii::t('app', 'Текст'),
+			'link'      => \Yii::t('app', 'Ссылка'),
+			'status'    => \Yii::t('app', 'Статус'),
+			'dateAdded' => \Yii::t('app', 'Дата'),
+			'senderId'  => \Yii::t('app', 'Отправитель')
 		];
 	}
 	
