@@ -52,6 +52,18 @@ return [
 		'authManager'  => [
 			'class' => 'yii\rbac\DbManager',
 		],
+		'i18n'         => [
+			'translations' => [
+				'app*' => [
+					'class'              => 'yii\i18n\DbMessageSource',
+					'messageTable'       => \common\models\TranslateMessage::tableName(),
+					'sourceMessageTable' => \common\models\TranslateMessageSource::tableName(),
+					'enableCaching'      => true,
+					'cachingDuration'    => 10,
+					'forceTranslation'   => true,
+				],
+			],
+		],
 	],
 	'params'              => $params,
 ];
