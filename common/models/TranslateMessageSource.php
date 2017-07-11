@@ -39,7 +39,7 @@ class TranslateMessageSource extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['message'], 'string'],
+			[['message', 'comment'], 'string'],
 			[['status'], 'integer'],
 			[['category'], 'string', 'max' => 255],
 			[['message'], 'messageCheck'],
@@ -57,6 +57,7 @@ class TranslateMessageSource extends \yii\db\ActiveRecord
 			'category' => 'Категория',
 			'message'  => 'Сообщение',
 			'status'   => 'Статус',
+			'comment'  => 'Комментарий для переводчика'
 		];
 	}
 	
@@ -81,6 +82,7 @@ class TranslateMessageSource extends \yii\db\ActiveRecord
 	
 	/**
 	 * @param $language
+	 *
 	 * @return TranslateMessage
 	 */
 	public function getMessageForm($language)
@@ -91,12 +93,14 @@ class TranslateMessageSource extends \yii\db\ActiveRecord
 			$form->id = $this->id;
 			$form->language = $language;
 		}
+		
 		return $form;
 	}
 	
 	public function beforeValidate()
 	{
 		$this->message = trim($this->message);
+		
 		return parent::beforeValidate();
 	}
 	

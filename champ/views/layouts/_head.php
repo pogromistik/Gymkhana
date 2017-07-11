@@ -26,7 +26,7 @@ use yii\helpers\Url;
                             <div class="text">
                             </div>
                             <div class="show-all text-center pt-10">
-				                <?= \yii\bootstrap\Html::a('Показать все уведомления', ['/notices/all']) ?>
+				                <?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать все уведомления'), ['/notices/all']) ?>
                             </div>
                         </div>
                     </div>
@@ -35,12 +35,12 @@ use yii\helpers\Url;
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><span class="fa fa-user"></span></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/profile/index">Профиль</a></li>
-                                <li><a href="/profile/stats">Статистика</a></li>
-                                <li><a href="/profile/info">Заявки на участие</a></li>
-                                <li><a href="/figures/send-result">Отправить результат</a></li>
-                                <li><a href="/profile/change-class">Смена класса</a></li>
-                                <li><a href="/site/logout">Выход</a></li>
+                                <li><a href="/profile/index"><?= \Yii::t('app', 'Профиль') ?></a></li>
+                                <li><a href="/profile/stats"><?= \Yii::t('app', 'Статистика') ?></a></li>
+                                <li><a href="/profile/info"><?= \Yii::t('app', 'Заявки на участие') ?></a></li>
+                                <li><a href="/figures/send-result"><?= \Yii::t('app', 'Отправить результат') ?></a></li>
+                                <li><a href="/profile/change-class"><?= \Yii::t('app', 'Смена класса') ?></a></li>
+                                <li><a href="/site/logout"><?= \Yii::t('app', 'Выход') ?></a></li>
                             </ul>
                         </li>
                     </ul>
