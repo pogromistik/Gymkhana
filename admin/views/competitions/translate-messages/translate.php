@@ -45,6 +45,7 @@ $listView = new \yii\widgets\ListView([
 				<?= $dataProvider->sort->link('message') ?>
 				<?= $form->field($searchModel, 'message')->textInput()->label(false) ?>
 			</th>
+            <th>Комментарий для переводчика</th>
 			<th>
 				Язык
 			</th>

@@ -23,6 +23,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
 
 ]);
 ?>
+<td><?= $model->comment ?></td>
 <td>
 	<?= $form->field($translateForm, 'id')->label(false)->hiddenInput()->error(false) ?>
 	<?= $form->field($translateForm, 'language')->label(false)->hiddenInput()->error(false) ?>
