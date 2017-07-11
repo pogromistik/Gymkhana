@@ -441,7 +441,10 @@ class Championship extends BaseActiveRecord
 	}
 	
 	/**
-	 * @return null|Region[]
+	 * @param bool $asString
+	 * @param bool $asArray
+	 *
+	 * @return array|null|string|static[]
 	 */
 	public function getRegionsFor($asString = false, $asArray = false)
 	{

@@ -55,6 +55,12 @@ class TranslateMessage extends \yii\db\ActiveRecord
 		];
 	}
 	
+	public function beforeValidate()
+	{
+		$this->translation = trim($this->translation);
+		return parent::beforeValidate();
+	}
+	
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
