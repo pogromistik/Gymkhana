@@ -13,20 +13,20 @@ use kartik\widgets\DepDrop;
  * @var \common\models\TmpAthlete $registration
  */
 ?>
-<h2>Регистрация в личном кабинете</h2>
+<h2><?= \Yii::t('app', 'Регистрация в личном кабинете') ?></h2>
 <?php $form = ActiveForm::begin(['options' => ['class' => 'registrationAthlete']]) ?>
 <div class="registration-form">
 
-    <h4 class="text-center">Укажите информацию о себе</h4>
-	<?= $form->field($registration, 'lastName')->textInput(['placeholder' => 'Ваша фамилия']) ?>
-	<?= $form->field($registration, 'firstName')->textInput(['placeholder' => 'Полное имя']) ?>
+    <h4 class="text-center"><?= \Yii::t('app', 'Укажите информацию о себе') ?></h4>
+	<?= $form->field($registration, 'lastName')->textInput(['placeholder' => \Yii::t('app', 'Ваша фамилия')]) ?>
+	<?= $form->field($registration, 'firstName')->textInput(['placeholder' => \Yii::t('app', 'Полное имя')]) ?>
 	<?php if (!$registration->countryId) { ?>
 		<?php $registration->countryId = 1 ?>
 	<?php } ?>
 	<?= $form->field($registration, 'countryId')->widget(Select2::classname(), [
 		'data'    => Country::getAll(true),
 		'options' => [
-			'placeholder' => 'Выберите страну...',
+			'placeholder' => \Yii::t('app', 'Выберите страну...'),
 			'id'          => 'country-id',
 		],
 	]); ?>
@@ -42,7 +42,7 @@ use kartik\widgets\DepDrop;
         <div id="city-list">
 			<?= $form->field($registration, 'cityId')->widget(DepDrop::classname(), [
 				'data'           => $registration,
-				'options'        => ['placeholder' => 'Выберите город ...'],
+				'options'        => ['placeholder' => \Yii::t('app', 'Выберите город...')],
 				'type'           => DepDrop::TYPE_SELECT2,
 				'select2Options' => [
 					'pluginOptions' => [
@@ -64,48 +64,48 @@ use kartik\widgets\DepDrop;
 				'pluginOptions'  => [
 					'depends'     => ['country-id'],
 					'url'         => Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
-					'loadingText' => 'Для выбранной страны нет городов...',
-					'placeholder' => 'Выберите город...',
+					'loadingText' => \Yii::t('app', 'Для выбранной страны нет городов...'),
+					'placeholder' => \Yii::t('app', 'Выберите город...'),
 				]
 			]); ?>
         </div>
         <div class="small">
-            <a href="#" class="list" id="cityNotFound">Нажмите, если вашего города нет в списке</a>
+            <a href="#" class="list" id="cityNotFound"><?= \Yii::t('app', 'Нажмите, если вашего города нет в списке') ?></a>
         </div>
         <div id="city-text" class="inactive">
-			<?= $form->field($registration, 'city')->textInput(['placeholder' => 'Введите Ваш город и регион', 'id' => 'city-text-input']) ?>
+			<?= $form->field($registration, 'city')->textInput(['placeholder' => \Yii::t('app', 'Введите Ваш город и регион'), 'id' => 'city-text-input']) ?>
         </div>
     </div>
 	
-	<?= $form->field($registration, 'phone')->textInput(['placeholder' => 'Номер телефона']) ?>
+	<?= $form->field($registration, 'phone')->textInput(['placeholder' => \Yii::t('app', 'Номер телефона')]) ?>
 	
-	<?= $form->field($registration, 'email')->textInput(['placeholder' => 'Email']) ?>
+	<?= $form->field($registration, 'email')->textInput(['placeholder' => \Yii::t('app', 'Email')]) ?>
 
-    <h4 class="text-center">Укажите мотоцикл</h4>
+    <h4 class="text-center"><?= \Yii::t('app', 'Укажите мотоцикл') ?></h4>
 	<?php $i = 0; ?>
     <div class="row motorcycles">
         <div class="col-sm-6 col-xs-12">
             <div class="form-group field-tmpathlete-mark has-success">
-                <label class="control-label" for="tmpathlete-mark">Марка</label>
-				<?= Html::input('text', 'mark[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Марка, напр. kawasaki']) ?>
+                <label class="control-label" for="tmpathlete-mark"><?= \Yii::t('app', 'Марка') ?></label>
+				<?= Html::input('text', 'mark[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => \Yii::t('app', 'Марка, напр. kawasaki')]) ?>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
             <div class="form-group field-tmpathlete-model has-success">
-                <label class="control-label" for="tmpathlete-model">Модель</label>
-				<?= Html::input('text', 'model[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Модель, напр. ER6-F']) ?>
+                <label class="control-label" for="tmpathlete-model"><?= \Yii::t('app', 'Модель') ?></label>
+				<?= Html::input('text', 'model[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => \Yii::t('app', 'Модель, напр. ER6-F')]) ?>
             </div>
         </div>
     </div>
 
-    <a href="#" class="appendMotorcycle" data-i = <?= $i ?>>Добавить ещё один мотоцикл</a>
+    <a href="#" class="appendMotorcycle" data-i = <?= $i ?>><?= \Yii::t('app', 'Добавить ещё один мотоцикл') ?></a>
 
     <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
     <div class="modal-footer">
         <div class="form-text"></div>
         <div class="button">
-			<?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-lg btn-block btn-dark']) ?>
+			<?= Html::submitButton(\Yii::t('app', 'Зарегистрироваться'), ['class' => 'btn btn-lg btn-block btn-dark']) ?>
         </div>
     </div>
 </div>
