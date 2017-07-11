@@ -32,7 +32,7 @@ use common\models\TmpFigureResult;
 						'allowClear' => true
 					],
 					'options'       => [
-						'placeholder' => 'Выберите фигуру...',
+						'placeholder' => \Yii::t('app', 'Выберите фигуру...'),
 					]
 				]),
 				'value'     => function (TmpFigureResult $figureResult) {
@@ -75,19 +75,19 @@ use common\models\TmpFigureResult;
 				}
 			],
 			[
-				'label'  => 'Статус',
+				'label'  => \Yii::t('app', 'Статус'),
 				'format' => 'raw',
 				'filter' => Html::activeDropDownList($searchModel, 'status',
                     \common\helpers\TranslateHelper::translateArray(TmpFigureResult::$statusesTitle),
-					['class' => 'form-control', 'prompt' => 'Выберите статус']),
+					['class' => 'form-control', 'prompt' => \Yii::t('app', 'Выберите статус')]),
 				'value'  => function (TmpFigureResult $figureResult) {
 					if ($figureResult->isNew) {
-						return 'На рассмотерении';
+						return \Yii::t('app', 'На рассмотрении');
 					} else {
 						if ($figureResult->cancelReason) {
-							return 'Отклонена';
+							return \Yii::t('app', 'Отклонена');
 						} else {
-							return 'Подтверждена';
+							return \Yii::t('app', 'Подтверждена');
 						}
 					}
 				}

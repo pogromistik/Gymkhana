@@ -11,7 +11,7 @@ use yii\bootstrap\Html;
  */
 ?>
 
-<h2>Статистика</h2>
+<h2><?= \Yii::t('app', 'Статистика') ?></h2>
 
 <div class="compareWithBlock">
 	<?= $this->render('compareWith') ?>
@@ -20,7 +20,7 @@ use yii\bootstrap\Html;
 
 <div class="figures pt-10">
     <h4>
-        Результаты базовых фигур<br>
+        <?= \Yii::t('app', 'Результаты базовых фигур') ?><br>
         <small>Представлены только лучшие результаты. Для просмотра истории по конкретной фигуре, нажмите на
             её название
         </small>

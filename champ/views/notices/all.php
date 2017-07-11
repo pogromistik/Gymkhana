@@ -8,22 +8,22 @@ use common\models\Notice;
 /* @var $searchModel common\models\search\NoticesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Уведомления';
+$this->title = \Yii::t('app', 'Уведомления');
 ?>
-<h2>Уведомления</h2>
+<h2><?= \Yii::t('app', 'Уведомления') ?></h2>
 <div class="notice-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'columns'      => [
 			[
-				'label'  => 'Дата',
+				'label'  => \Yii::t('app', 'Дата'),
 				'format' => 'raw',
 				'value'  => function (Notice $notice) {
 					return date("d.m.Y, H:i", $notice->dateAdded);
 				}
 			],
 			[
-				'label'  => 'Сообщение',
+				'label'  => \Yii::t('app', 'Сообщение'),
 				'format' => 'raw',
 				'value'  => function (Notice $notice) {
 					return $notice->text . '<br><a href="' . $notice->link . '">' . $notice->link . '</a>';
