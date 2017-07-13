@@ -10,7 +10,7 @@ return [
 	'id'                  => 'app-admin',
 	'language'            => 'ru_RU',
 	'timeZone'            => 'Asia/Yekaterinburg',
-	'name'                => 'gymkhana74',
+	'name'                => 'GymkhanaCup',
 	'basePath'            => dirname(__DIR__),
 	'defaultRoute'        => 'help/index',
 	'controllerNamespace' => 'admin\controllers',
