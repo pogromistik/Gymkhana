@@ -21,7 +21,7 @@ if ($city->timezone) {
 }
 
 $championship = $stage->championship;
-$countParticipants = count($participantsByInternalClasses) + count($tmpParticipants) + count($stage->outParticipants);
+$countParticipants = count($participantsByJapan) + count($tmpParticipants) + count($stage->outParticipants);
 ?>
 
     <div class="row stage">
