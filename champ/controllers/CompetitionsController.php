@@ -515,7 +515,7 @@ class CompetitionsController extends BaseController
 		}
 		$results = $results->all();
 		
-		$response['data'] = $this->renderAjax('_figure-result', ['results' => $results]);
+		$response['data'] = $this->renderAjax('_figure-result', ['results' => $results, 'figure' => $figure]);
 		
 		return $response;
 	}
