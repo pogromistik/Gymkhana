@@ -16,6 +16,8 @@ $document = new \common\models\OverallFile();
 	
 	<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 	
+	<?= $form->field($model, 'id')->hiddenInput()->error(false)->label(false) ?>
+
     <?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'заголовок']) ?>
     <?php } ?>
