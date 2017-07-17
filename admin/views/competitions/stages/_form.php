@@ -94,6 +94,21 @@ use dosamigos\ckeditor\CKEditor;
 			'format'    => 'dd.mm.yyyy',
 		]
 	]) ?>
+
+	<?= $form->field($model, 'documentId',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Предварительно необходимо загрузить нужный регламент в раздел "'
+			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
+                ['target' => '_blank']) . '".</div>{input}</div>'])
+		->widget(Select2::classname(), [
+			'data'    => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
+			'options' => [
+				'placeholder' => 'Выберите регламент...'
+			],
+            'pluginOptions' => [
+	            'allowClear'         => true,
+            ]
+		]) ?>
 	
 	<?= $form->field($model, 'startRegistrationHuman',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
@@ -150,21 +165,6 @@ use dosamigos\ckeditor\CKEditor;
 </div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 		<?= $form->field($model, 'trackPhotoStatus')->checkbox() ?>
 	<?php } ?>
-	
-	<?= $form->field($model, 'documentId',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">
- Предварительно необходимо загрузить нужный регламент в раздел "'
-			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
-                ['target' => '_blank']) . '".</div>{input}</div>'])
-		->widget(Select2::classname(), [
-			'data'    => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
-			'options' => [
-				'placeholder' => 'Выберите регламент...'
-			],
-            'pluginOptions' => [
-	            'allowClear'         => true,
-            ]
-		]) ?>
 	
 	<?= $form->field($model, 'class',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">
