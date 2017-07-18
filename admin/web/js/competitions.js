@@ -1132,3 +1132,21 @@ $(document).on("submit", '#sendMessagesForm', function (e) {
         }
     });
 });
+
+$('.freeNumbersList').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    $.get('/competitions/stages/get-free-numbers', {
+        stageId: id
+    }).done(function (data) {
+        if (data['success'] == true) {
+            $('.free-numbers .list').html(data['numbers']);
+            $('.free-numbers').slideToggle();
+        } else {
+            alert(data['error']);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});

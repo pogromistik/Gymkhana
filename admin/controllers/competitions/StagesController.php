@@ -20,6 +20,7 @@ use yii\base\UserException;
 use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * StagesController implements the CRUD actions for Stage model.
@@ -438,5 +439,40 @@ class StagesController extends BaseController
 			return true;
 		}
 		return 'При начислении баллов за этап возникла ошибка. Свяжитесь с разработчиком.';
+	}
+	
+	public function actionGetFreeNumbers($stageId)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$result = [
+			'success' => false,
+			'error'   => false,
+			'numbers' => null
+		];
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			$result['error'] = 'Этап не найден';
+			
+			return $result;
+		}
+		$numbers = Championship::getFreeNumbers($stage);
+		
+		$result['success'] = true;
+		if (!$numbers) {
+			$result['numbers'] = 'Свободных номеров нет';
+		} else {
+			$result['numbers'] = '<div class="row">';
+			$count = ceil(count($numbers) / 3);
+			foreach (array_chunk($numbers, $count) as $numbersChunk) {
+				$result['numbers'] .= '<div class="col-xs-3">';
+				foreach ($numbersChunk as $number) {
+					$result['numbers'] .= $number . '<br>';
+				}
+				$result['numbers'] .= '</div>';
+			}
+			$result['numbers'] .= '</div>';
+		}
+		
+		return $result;
 	}
 }
