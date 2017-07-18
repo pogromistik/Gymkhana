@@ -30,6 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
     Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
     <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
 </div>
+<a href="#" class="freeNumbersList btn btn-info" data-id = "<?= $stage->id ?>">Посмотреть список свободных номеров</a>
+<div class="free-numbers" style="display: none">
+    <hr>
+    <h4>Свободные номера</h4>
+    <div class="list"></div>
+    <hr>
+</div>
 <?= $this->render('_form', [
 	'model'             => $participant,
 	'championship'      => $championship,
