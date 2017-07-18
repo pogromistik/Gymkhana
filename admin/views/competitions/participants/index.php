@@ -33,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <a href="#" class="freeNumbersList btn btn-info" data-id = "<?= $stage->id ?>">Посмотреть список свободных номеров</a>
 <div class="free-numbers" style="display: none">
     <hr>
-    <h4>Свободные номера</h4>
     <div class="list"></div>
     <hr>
 </div>

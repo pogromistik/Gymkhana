@@ -243,8 +243,8 @@ class StagesController extends BaseController
 						$figureTime->percent = 100;
 					}
 					
-					$oldResult = FigureTime::findOne(['athleteId' => $participant->athleteId, 'motorcycleId' => $figureTime->motorcycleId,
-						'resultTime' => $figureTime->resultTime]);
+					$oldResult = FigureTime::findOne(['athleteId'  => $participant->athleteId, 'motorcycleId' => $figureTime->motorcycleId,
+					                                  'resultTime' => $figureTime->resultTime]);
 					
 					//новый класс
 					$athlete = $participant->athlete;
@@ -271,8 +271,7 @@ class StagesController extends BaseController
 								$figureTime->newClassForParticipant = $newClass->id;
 								$figureTime->newClassTitle = $newClass->title;
 							}
-						}
-						else {
+						} else {
 							$figureTime->newClassForParticipant = $newClass->id;
 							$figureTime->newClassTitle = $newClass->title;
 						}
@@ -287,7 +286,7 @@ class StagesController extends BaseController
 			'figureTime' => $figureTime,
 			'error'      => $error,
 			'athlete'    => $athlete,
-			'oldResult' => $oldResult
+			'oldResult'  => $oldResult
 		]);
 	}
 	
@@ -393,11 +392,13 @@ class StagesController extends BaseController
 						$athleteClass = $athlete->athleteClass;
 						if ($athleteClass && $athleteClass->percent > $newClass->percent) {
 							$transaction->rollBack();
+							
 							return '<div class="alert alert-error">Класс спортсмена не может быть ниже класса участника</div>';
 						}
 						$participantClass = $participant->athleteClass;
 						if ($participantClass->percent < $newClass->percent) {
 							$transaction->rollBack();
+							
 							return '<div class="alert alert-error">Нельзя понизить класс участника</div>';
 						}
 						if ($participant->athleteClassId != $newClass->id) {
@@ -438,6 +439,7 @@ class StagesController extends BaseController
 		if ($stage->calculatePoints()) {
 			return true;
 		}
+		
 		return 'При начислении баллов за этап возникла ошибка. Свяжитесь с разработчиком.';
 	}
 	
@@ -459,9 +461,10 @@ class StagesController extends BaseController
 		
 		$result['success'] = true;
 		if (!$numbers) {
-			$result['numbers'] = 'Свободных номеров нет';
+			$result['numbers'] = '<h4>Свободных номеров нет</h4>';
 		} else {
-			$result['numbers'] = '<div class="row">';
+			$result['numbers'] = '<h4>Свободные номера (' . count($numbers) . ')</h4>';
+			$result['numbers'] .= '<div class="row">';
 			$count = ceil(count($numbers) / 3);
 			foreach (array_chunk($numbers, $count) as $numbersChunk) {
 				$result['numbers'] .= '<div class="col-xs-3">';
