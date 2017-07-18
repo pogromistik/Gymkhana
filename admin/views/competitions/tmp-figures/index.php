@@ -18,6 +18,13 @@ $this->title = 'Результаты фигур, требующие одобре
         установить новые рекорды.</b>
 </div>
 
+<div class="alert alert-info">
+    Мы принимаем только результаты, для которых есть видео заезда (при этом обязательно должна быть электронная
+    телеметрия! результаты, засеченные телефоном не могут считаться официальными и не принимаются на сайт) или
+    этот результат есть в группе <a href="https://vk.com/motogymkhana_ru" target="_blank">Мото Джимхана [Sport]</a>
+    (или  <a href="https://vk.com/topic-35972290_30425335?offset=0" target="_blank">МотоДжимхана</a> для GP8)
+</div>
+
 <div class="tmp-participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
