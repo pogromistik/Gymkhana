@@ -154,7 +154,7 @@ class Stage extends BaseActiveRecord
 			'photoFile'              => 'Фото трассы',
 			'trackPhotoStatus'       => 'Опубликовать трассу',
 			'countryId'              => 'Страна',
-			'documentIds'            => 'Регламент',
+			'documentIds'            => 'Документы',
 			'participantsLimit'      => 'Допустимое количество участников',
 			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа'
 		];
