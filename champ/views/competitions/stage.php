@@ -60,12 +60,18 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         Регламент: <?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
                     </div>
 				<?php } ?>
-				
-				<?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
+	
+	            <?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
                     <div>
                         Классы награждения: <?= $internalClassesTitle ?>
                     </div>
-				<?php } ?>
+	            <?php } ?>
+	
+	            <?php if ($stage->participantsLimit) { ?>
+                    <div>
+                        Допустимое количество участников в зачёте: <?= $stage->participantsLimit ?>. Цифра может быть изменена организатором.
+                    </div>
+	            <?php } ?>
 
                 <div class="pb-10">
 					<?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
