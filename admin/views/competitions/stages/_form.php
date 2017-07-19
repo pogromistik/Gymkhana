@@ -94,20 +94,21 @@ use dosamigos\ckeditor\CKEditor;
 			'format'    => 'dd.mm.yyyy',
 		]
 	]) ?>
-
-	<?= $form->field($model, 'documentId',
+	
+	<?= $form->field($model, 'documentIds',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">
  Предварительно необходимо загрузить нужный регламент в раздел "'
 			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
-                ['target' => '_blank']) . '".</div>{input}</div>'])
+				['target' => '_blank']) . '".</div>{input}</div>'])
 		->widget(Select2::classname(), [
-			'data'    => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
-			'options' => [
-				'placeholder' => 'Выберите регламент...'
+			'data'          => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
+			'options'       => [
+				'placeholder' => 'Выберите регламент...',
+				'multiple'    => true
 			],
-            'pluginOptions' => [
-	            'allowClear'         => true,
-            ]
+			'pluginOptions' => [
+				'allowClear' => true,
+			]
 		]) ?>
 	
 	<?= $form->field($model, 'startRegistrationHuman',

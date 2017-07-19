@@ -55,9 +55,14 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         <p>Регистрация на этап завершена</p>
 					<?php } ?>
 				<?php } ?>
-				<?php if ($stage->documentId) { ?>
+				<?php if ($stage->documentIds) { ?>
                     <div class="regulations">
-                        Регламент: <?= Html::a($stage->document->title, ['/base/download', 'id' => $stage->documentId]) ?>
+                        Документы:
+                        <ul>
+                            <?php foreach ($stage->getDocuments() as $document) { ?>
+	                            <li><?= Html::a($document->title, ['/base/download', 'id' => $document->id]) ?></li>
+                            <?php } ?>
+                        </ul>
                     </div>
 				<?php } ?>
 	
