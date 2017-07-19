@@ -29,7 +29,7 @@ use yii\web\UploadedFile;
  * @property string        $trackPhoto
  * @property integer       $trackPhotoStatus
  * @property integer       $countryId
- * @property integer       $documentId
+ * @property string        $documentIds
  * @property integer       $participantsLimit
  * @property integer       $fastenClassFor
  *
@@ -40,7 +40,6 @@ use yii\web\UploadedFile;
  * @property Participant[] $activeParticipants
  * @property Participant[] $outParticipants
  * @property Participant[] $participantsForRaces
- * @property OverallFile   $document
  */
 class Stage extends BaseActiveRecord
 {
@@ -112,12 +111,12 @@ class Stage extends BaseActiveRecord
 				'regionId',
 				'trackPhotoStatus',
 				'countryId',
-				'documentId',
 				'participantsLimit',
 				'fastenClassFor'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
-			['description', 'string'],
+			[['description'], 'string'],
+			[['documentIds'], 'safe'],
 			[['countRace'], 'integer', 'max' => 5],
 			[['countRace'], 'integer', 'min' => 1],
 			[['participantsLimit'], 'integer', 'min' => 3],
@@ -155,7 +154,7 @@ class Stage extends BaseActiveRecord
 			'photoFile'              => 'Фото трассы',
 			'trackPhotoStatus'       => 'Опубликовать трассу',
 			'countryId'              => 'Страна',
-			'documentId'             => 'Регламент',
+			'documentIds'            => 'Регламент',
 			'participantsLimit'      => 'Допустимое количество участников',
 			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа'
 		];
@@ -167,6 +166,12 @@ class Stage extends BaseActiveRecord
 			$this->dateAdded = time();
 		}
 		$this->dateUpdated = time();
+		if ($this->documentIds && is_array($this->documentIds)) {
+			$this->documentIds = json_encode($this->documentIds);
+		}
+		if (!$this->documentIds) {
+			$this->documentIds = null;
+		}
 		
 		$defaultTimeZone = HelpModel::DEFAULT_TIME_ZONE;
 		$city = City::findOne($this->cityId);
@@ -242,6 +247,9 @@ class Stage extends BaseActiveRecord
 			$sec = str_pad(floor(($this->referenceTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
 			$mls = str_pad(round(($this->referenceTime - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
 			$this->referenceTimeHuman = $min . ':' . $sec . '.' . $mls;
+		}
+		if ($this->documentIds) {
+			$this->documentIds = $this->getDocumentIds();
 		}
 	}
 	
@@ -481,8 +489,28 @@ LIMIT 1) order by "bestTime" asc) n'])
 		return true;
 	}
 	
-	public function getDocument()
+	public function getDocumentIds()
 	{
-		return $this->hasOne(OverallFile::className(), ['id' => 'documentId']);
+		if ($this->documentIds) {
+			return json_decode($this->documentIds, true);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @return OverallFile[]
+	 */
+	public function getDocuments()
+	{
+		if (!$this->documentIds) {
+			return null;
+		}
+		if (is_array($this->documentIds)) {
+			$documentIds = $this->documentIds;
+		} else {
+			$documentIds = $this->getDocumentIds();
+		}
+		return OverallFile::find()->where(['id' => $documentIds])->orderBy(['id' => SORT_ASC])->all();
 	}
 }
