@@ -31,7 +31,10 @@ $listView = new \yii\widgets\ListView([
 ]);
 ?>
 
-<h2>Спортсмены</h2>
+<h2 class="title">
+    Спортсмены<br>
+    <small><?= Html::a('Статистика по регионам', ['/athletes/stats-by-regions']) ?></small>
+</h2>
 
 <?php $form = \yii\bootstrap\ActiveForm::begin([
 	'id'                     => 'search',
