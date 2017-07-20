@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
     Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
     <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
 </div>
-<a href="#" class="freeNumbersList btn btn-info" data-id = "<?= $stage->id ?>">Посмотреть список свободных номеров</a>
+<a href="#" class="freeNumbersList btn btn-info" data-id="<?= $stage->id ?>">Посмотреть список свободных номеров</a>
 <div class="free-numbers" style="display: none">
     <hr>
     <div class="list"></div>
@@ -98,9 +98,17 @@ $this->params['breadcrumbs'][] = $this->title;
 				]),
 				'value'     => function (\common\models\Participant $item) {
 					$athlete = $item->athlete;
-					
-					return Html::a($athlete->getFullName() . ', ' . $athlete->city->title,
+					$title = $athlete->getFullName() . ', ' . $athlete->city->title;
+					$html = Html::a($title,
 							['/competitions/athlete/view', 'id' => $item->athleteId]) . '<br>' . $item->motorcycle->getFullTitle();
+					if (!$item->bestTime && $item->stage->status != \common\models\Stage::STATUS_PAST) {
+						$html .= '<div class="small">
+<a href="#" class="deleteParticipant red-button" data-id="' . $item->id . '" data-name="' . $athlete->getFullName() . ', ' . $athlete->city->title . '">
+Полностью удалить заявку
+</a></div>';
+					}
+					
+					return $html;
 				}
 			],
 			/*[

@@ -1150,3 +1150,54 @@ $('.freeNumbersList').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$('.deleteParticipant').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var name = elem.data('name');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Удаление заявки спортсмена',
+        message: '<p>Уверены, что хотите полностью удалить из системы заявку спортсмена ' +
+        '<span style="color: gray"> ' + name + '</span>? ' +
+        'Совершайте это действие только в том случае, если спортсмен был ошибочно зарегистрирован на этап. ' +
+        'Если спортсмен просто решил не участвовать - отмените его заявку, нажав на красную кнопку с крестиком.</p>' +
+        '<p><span class="red">ОБРАТИТЕ ВНИМАНИЕ!</span> Это действие необратимо, заявка будет полностью удалена. В дальнейшем можно будет лишь заново' +
+        ' зарегистрировать спортсмена.</p>',
+        className: 'danger',
+        buttons: {
+            cancel: {
+                label: 'Отмена',
+                className: "btn-danger",
+                callback: function () {
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Удалить заявку',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/participants/delete', {
+                        id: id
+                    }).done(function (data) {
+                        if (data == true) {
+                            hideBackDrop();
+                            $('<div class="text-with-backdrop">Заявка успешно удалена</div>').appendTo(document.body);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            hideBackDrop();
+                            alert(data);
+                        }
+                    }).fail(function (error) {
+                        hideBackDrop();
+                        alert(error.responseText);
+                    });
+                }
+            }
+        }
+    });
+});
