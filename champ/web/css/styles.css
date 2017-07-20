@@ -1022,3 +1022,7 @@ table.results small.red {
 .dark-border {
     border-bottom: 2px solid #4b4e53;
 }
+
+h2.title small {
+    font-size: 14px;
+}

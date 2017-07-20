@@ -3,11 +3,15 @@
 namespace champ\controllers;
 
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\Region;
 use common\models\search\AthleteSearch;
 use Yii;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\web\NotFoundHttpException;
 
 class AthletesController extends BaseController
@@ -67,5 +71,47 @@ class AthletesController extends BaseController
 			'figuresResult' => $figuresResult,
 			'history'       => $history,
 		]);
+	}
+	
+	public function actionStatsByRegions()
+	{
+		$this->pageTitle = 'Статистика по регионам';
+		$this->description = 'Статистика спортсменов по регионам';
+		
+		$query = new Query();
+		$query->from(['a' => Athlete::tableName(), 'b' => Region::tableName(), 'c' => AthletesClass::tableName()]);
+		$query->select(['count("a"."id")', '"b"."title" as "region"', '"c"."title" as "class"']);
+		$query->where(new Expression('"a"."athleteClassId" = "c"."id"'))
+			->andWhere(new Expression('"a"."regionId" = "b"."id"'));
+		$query->orderBy(['"b"."title"' => SORT_ASC, '"c"."title"' => SORT_ASC]);
+		$query->groupBy(['"b"."title"', '"c"."title"']);
+		$items = $query->all();
+		
+		$stats = [];
+		$totalClasses = [];
+		$totalClasses['total'] = 0;
+		$classes = AthletesClass::find()->select('title')->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])
+			->asArray()->column();
+		foreach ($items as $item) {
+			if (!isset($stats[$item['region']])) {
+				$stats[$item['region']] = [
+					'total'  => 0,
+					'groups' => []
+				];
+				foreach ($classes as $class) {
+					$stats[$item['region']]['groups'][$class] = 0;
+				}
+			}
+			if (!isset($totalClasses[$item['class']])) {
+				$totalClasses[$item['class']] = 0;
+			}
+			$totalClasses[$item['class']] += $item['count'];
+			$totalClasses['total'] += $item['count'];
+			$stats[$item['region']]['groups'][$item['class']] = $item['count'];
+			$stats[$item['region']]['total'] += $item['count'];
+		}
+		
+		
+		return $this->render('stats-by-regions', ['stats' => $stats, 'classes' => $classes, 'totalClasses' => $totalClasses]);
 	}
 }
