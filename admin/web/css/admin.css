@@ -432,3 +432,14 @@ tr.gray {
 .field-translatemessage-id, .field-translatemessage-language {
     margin: 0;
 }
+
+a.red-button {
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+.red {
+    color: #d9534f;
+}

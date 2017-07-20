@@ -41,21 +41,6 @@ class ParticipantsController extends BaseController
 		];
 	}
 	
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'verbs' => [
-				'class'   => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-				],
-			],
-		];
-	}
-	
 	public function actionIndex($stageId)
 	{
 		$this->can('competitions');
@@ -759,5 +744,32 @@ class ParticipantsController extends BaseController
 		$result['success'] = true;
 		
 		return $result;
+	}
+	
+	public function actionDelete($id)
+	{
+		$this->can('competitions');
+		
+		$participant = Participant::findOne($id);
+		if (!$participant) {
+			return 'Спортсмен не найден';
+		}
+		$stage = $participant->stage;
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
+		if ($stage->status == Stage::STATUS_PAST) {
+			return 'Этап завершен, изменение данных невозможно';
+		}
+		if ($participant->times) {
+			return 'Для участника уже установлено время, удаление невозможно';
+		}
+		if ($participant->delete()) {
+			return true;
+		}
+		
+		return 'Произошла ошибка при удалении. Обратитесь к разработчику';
 	}
 }
