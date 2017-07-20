@@ -66,6 +66,10 @@ $this->title = 'Обработанные заявки на участие в э�
 						$result .= $participant->country->title;
 						$result .= '<br>';
 						$result .= '<small>' . ($participant->phone ? $participant->phone : '') . '</small>';
+						if ($participant->email) {
+							$result .= '<br>';
+							$result .= '<small>' . $participant->email. '</small>';
+						}
 						
 						return $result;
 					}
