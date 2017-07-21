@@ -222,7 +222,7 @@ class Championship extends BaseActiveRecord
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_CHAMPIONSHIP, $this);
 		}
-		if (array_key_exists('useCheScheme', $changedAttributes)) {
+		if (array_key_exists('useCheScheme', $changedAttributes) && $changedAttributes['useCheScheme'] != $this->useCheScheme) {
 			if ($this->useCheScheme) {
 				$oldIds = $this->getInternalClasses()->select('cheId')->andWhere(['not', ['cheId' => null]])->asArray()->column();
 				if ($oldIds) {
