@@ -188,8 +188,10 @@ class ChampionshipsController extends BaseController
 			return 'Статус не существует';
 		}
 		$championship = Championship::findOne($class->championshipId);
-		if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
-			return 'Доступ запрещен';
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
 		}
 		if ($status == InternalClass::STATUS_INACTIVE) {
 			if (!Participant::findOne(['championshipId' => $class->championshipId, 'internalClassId' => $class->id])) {
