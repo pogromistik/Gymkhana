@@ -75,7 +75,7 @@ class AthletesController extends BaseController
 	
 	public function actionStatsByRegions()
 	{
-		$this->pageTitle = 'Статистика по регионам';
+		$this->pageTitle = \Yii::t('app', 'Статистика по регионам');
 		$this->description = 'Статистика спортсменов по регионам';
 		
 		$query = new Query();
