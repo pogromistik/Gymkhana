@@ -9,8 +9,5 @@
            # use index.php as index file
            DirectoryIndex index.php
 
-           RewriteCond %{HTTP_HOST} ^www.gymkhana-cup.ru$ [NC]
-           RewriteRule ^(.*)$ http://gymkhana-cup.ru/$1 [R=301,L]
-
 php_value post_max_size 32M
 php_value upload_max_filesize 32M
