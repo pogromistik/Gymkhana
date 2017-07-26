@@ -478,15 +478,15 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		$participants = Participant::findAll(['stageId' => $stageId, 'status' => [Participant::STATUS_ACTIVE]]);
+		$participants = Participant::findAll(['stageId' => $stageId, 'status' => [Participant::STATUS_ACTIVE], 'isArrived' => 1]);
 		if ($participants) {
 			$classIds = Participant::find()->select('athleteClassId')
-				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])->distinct()->asArray()->column();
+				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])->distinct()->asArray()->column();
 			$class = null;
 			while ($classIds) {
 				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
 				$presumablyClass = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
-				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE])
+				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])
 						->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3
 				) {
 					$class = $presumablyClass;
