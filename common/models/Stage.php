@@ -218,6 +218,9 @@ class Stage extends BaseActiveRecord
 				}
 			}
 		}
+		if ($this->documentIds && is_array($this->documentIds)) {
+			$this->documentIds = json_encode($this->documentIds);
+		}
 		
 		return parent::beforeSave($insert);
 	}

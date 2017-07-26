@@ -18,6 +18,7 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
+<?php if ($stage->class) { ?><h4>Класс соревнования: <?= $stage->classModel->title ?></h4><?php } ?>
 <?php if ($stage->referenceTime) { ?><h4>Эталонное время: <?= $stage->referenceTimeHuman ?></h4><?php } ?>
 
 <?php if ($newClasses) { ?>
@@ -84,7 +85,7 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                 <td>
 					<?php if ($first->isFail) { ?>
                         <strike><?= $first->timeForHuman ?></strike>
-                    <?php } else { ?>
+					<?php } else { ?>
 						<?= $first->timeForHuman ?>
 					<?php } ?>
                 </td>
@@ -130,11 +131,11 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
                     <td>
-	                    <?php if ($next->isFail) { ?>
+						<?php if ($next->isFail) { ?>
                             <strike><?= $next->timeForHuman ?></strike>
-	                    <?php } else { ?>
-		                    <?= $next->timeForHuman ?>
-	                    <?php } ?>
+						<?php } else { ?>
+							<?= $next->timeForHuman ?>
+						<?php } ?>
                     </td>
                     <td><?= $next->fine ?></td>
 				<?php } else { ?>
