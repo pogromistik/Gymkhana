@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use admin\models\PasswordForm;
 use common\helpers\UserHelper;
 use common\models\AthletesClass;
 use common\models\City;
@@ -110,6 +111,13 @@ class AthleteController extends BaseController
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
 		}
 		
+		$password = new PasswordForm();
+		if (\Yii::$app->user->can('developer')) {
+			if ($password->load(Yii::$app->request->post()) && $password->savePassw()) {
+				return $this->redirect(['update', 'id' => $model->id, 'success' => true]);
+			}
+		}
+		
 		if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
 			\Yii::$app->response->format = Response::FORMAT_JSON;
 			
@@ -123,7 +131,8 @@ class AthleteController extends BaseController
 		return $this->render('update', [
 			'model'      => $model,
 			'success'    => $success,
-			'motorcycle' => $motorcycle
+			'motorcycle' => $motorcycle,
+			'password'   => $password
 		]);
 	}
 	
