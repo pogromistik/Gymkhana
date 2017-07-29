@@ -266,7 +266,6 @@ nav .navbar-toggle .icon-bar {
 .list .item .toggle .title {
     color: #4b4e53;
     padding: 5px 10px;
-    height: 30px;
     z-index: 10;
     cursor: pointer;
     position: relative;

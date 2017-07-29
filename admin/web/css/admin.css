@@ -443,3 +443,7 @@ a.red-button {
 .red {
     color: #d9534f;
 }
+
+.navbar .dropdown-user a{
+	color: #000!important;
+}
