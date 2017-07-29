@@ -30,7 +30,7 @@ class ExportController extends BaseController
 				}
 				$participants = $stage->getParticipants()
 					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]]);
-				if (Participant::find()->where(['stage' => $stage->id, 'isArrived' => 1])) {
+				if (Participant::find()->where(['stage' => $stage->id, 'isArrived' => 1])->one()) {
 					$participants = $participants->andWhere(['isArrived' => 1]);
 				}
 				$participants = $participants->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
