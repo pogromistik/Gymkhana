@@ -28,8 +28,12 @@ class ExportController extends BaseController
 				if (!$stage) {
 					throw new NotFoundHttpException('Этап не найден');
 				}
-				$participants = $stage->getParticipants()->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]])
-					->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				$participants = $stage->getParticipants()
+					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]]);
+				if (Participant::find()->where(['stage' => $stage->id, 'isArrived' => 1])) {
+					$participants = $participants->andWhere(['isArrived' => 1]);
+				}
+				$participants = $participants->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
 				$name = $stage->title . '-результаты';
 				$xlsFile = self::getStageResult($participants);
 				break;
