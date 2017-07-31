@@ -1356,6 +1356,7 @@ class RunController extends Controller
 	
 	public function actionAddQualifications()
 	{
+		FigureTime::updateAll(['stageId' => null]);
 		/** @var Stage[] $stages */
 		$stages = Stage::find()->all();
 		foreach ($stages as $stage) {
@@ -1369,8 +1370,6 @@ class RunController extends Controller
 				if (!Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
 				                                 'stageId'   => $stage->id])
 				) {
-					continue;
-				} else {
 					$item->stageId = $stage->id;
 					$item->save(false);
 					$count++;
