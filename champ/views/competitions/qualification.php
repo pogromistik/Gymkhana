@@ -28,6 +28,7 @@ $championship = $stage->championship;
 
 			<?php if ($qualification) { ?>
                 <h3>Результаты квалификационных заездов</h3>
+                <p>На усмотрение организаторов, у участников может быть несколько попыток или не быть вовсе.</p>
 				<?= $this->render('_figure-result-for-stage', ['results' => $qualification['results']]) ?>
 				<?= \yii\helpers\Html::a('Вернуться к этапу', ['/competitions/stage', 'id' => $stage->id]) ?>
 			<?php } else { ?>
