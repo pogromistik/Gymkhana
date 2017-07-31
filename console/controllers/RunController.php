@@ -1367,8 +1367,8 @@ class RunController extends Controller
 			$figureTimes = FigureTime::find()
 				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
 			foreach ($figureTimes as $item) {
-				if (!Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
-				                                 'stageId'   => $stage->id])
+				if (Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
+				                                 'stageId'   => $stage->id])->all()
 				) {
 					$item->stageId = $stage->id;
 					$item->save(false);
