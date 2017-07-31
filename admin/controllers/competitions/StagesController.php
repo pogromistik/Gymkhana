@@ -10,6 +10,7 @@ use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\HelpModel;
 use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Year;
@@ -352,6 +353,13 @@ class StagesController extends BaseController
 					$newTime->percent = $figureTime->percent;
 					$newTime->resultTime = $figureTime->resultTime;
 					$newTime->needClassCalculate = false;
+					
+					$dateOfThe = (new \DateTime(date("d.m.Y", time()), new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
+						->setTime(6, 0, 0)->getTimestamp();
+					if ($dateOfThe >= $stage->dateOfThe) {
+						$newTime->stageId = $stage->id;
+					}
+					
 					$transaction = \Yii::$app->db->beginTransaction();
 					if ($correctNewClass) {
 						$newTime->newAthleteClassId = $figureTime->newClassId;
