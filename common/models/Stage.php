@@ -516,4 +516,15 @@ LIMIT 1) order by "bestTime" asc) n'])
 		}
 		return OverallFile::find()->where(['id' => $documentIds])->orderBy(['id' => SORT_ASC])->all();
 	}
+	
+	public function getQualificationResults()
+	{
+		$results = FigureTime::find()->where(['stageId' => $this->id])->orderBy(['figureId' => SORT_ASC, 'resultTime' => SORT_ASC])->all();
+		if (!$results) {
+			return null;
+		}
+		$figureIds = array_unique(ArrayHelper::getColumn($results, 'figureId'));
+		$figureTitles = Figure::find()->select('title')->where(['id' => $figureIds])->asArray()->column();
+		return ['results' => $results, 'figureIds' => $figureIds, 'figureTitles' => $figureTitles];
+	}
 }

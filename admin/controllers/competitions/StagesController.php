@@ -354,8 +354,7 @@ class StagesController extends BaseController
 					$newTime->resultTime = $figureTime->resultTime;
 					$newTime->needClassCalculate = false;
 					
-					$dateOfThe = (new \DateTime(date("d.m.Y", time()), new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
-						->setTime(6, 0, 0)->getTimestamp();
+					$dateOfThe = time();
 					if ($dateOfThe >= $stage->dateOfThe) {
 						$newTime->stageId = $stage->id;
 					}
