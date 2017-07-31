@@ -190,6 +190,8 @@ class CompetitionsController extends BaseController
 		$this->keywords = 'Этапы соревнования, ' . $stage->title;
 		$this->layout = 'full-content';
 		
+		$qualification = $stage->getQualificationResults();
+		
 		$participantsQuery = Participant::find();
 		$statuses[] = Participant::STATUS_ACTIVE;
 		$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
@@ -349,7 +351,25 @@ class CompetitionsController extends BaseController
 			'tmpParticipants'               => $tmpParticipants,
 			'needTime'                      => $needTime,
 			'outCompetitionParticipants'    => $outCompetitionParticipants,
-			'addOut'                        => $addOut
+			'addOut'                        => $addOut,
+			'qualification'                 => $qualification
+		]);
+	}
+	
+	public function actionQualification($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$this->pageTitle = $stage->title . ': квалификация';
+		$this->description = $stage->title . ': квалификация';
+		$this->keywords = 'Квалификационные заезды, ' . $stage->title;
+		$this->layout = 'full-content';
+		
+		return $this->render('qualification', [
+			'stage'         => $stage,
+			'qualification' => $stage->getQualificationResults()
 		]);
 	}
 	

@@ -11,6 +11,7 @@ use yii\bootstrap\Html;
  * @var \common\models\TmpParticipant[] $tmpParticipants
  * @var array                           $needTime
  * @var \common\models\Participant[]    $outCompetitionParticipants
+ * @var array | null                    $qualification
  */
 $time = time();
 $city = $stage->city;
@@ -59,24 +60,25 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                     <div class="regulations">
                         Документы:
                         <ul>
-                            <?php foreach ($stage->getDocuments() as $document) { ?>
-	                            <li><?= Html::a($document->title, ['/base/download', 'id' => $document->id]) ?></li>
-                            <?php } ?>
+							<?php foreach ($stage->getDocuments() as $document) { ?>
+                                <li><?= Html::a($document->title, ['/base/download', 'id' => $document->id]) ?></li>
+							<?php } ?>
                         </ul>
                     </div>
 				<?php } ?>
-	
-	            <?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
+				
+				<?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
                     <div>
                         Классы награждения: <?= $internalClassesTitle ?>
                     </div>
-	            <?php } ?>
-	
-	            <?php if ($stage->participantsLimit) { ?>
+				<?php } ?>
+				
+				<?php if ($stage->participantsLimit) { ?>
                     <div>
-                        Допустимое количество участников в зачёте: <?= $stage->participantsLimit ?>. Цифра может быть изменена организатором.
+                        Допустимое количество участников в зачёте: <?= $stage->participantsLimit ?>. Цифра может быть
+                        изменена организатором.
                     </div>
-	            <?php } ?>
+				<?php } ?>
 
                 <div class="pb-10">
 					<?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
@@ -145,6 +147,14 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php if ($stage->class) { ?>
                     <div>
                         Класс соревнования: <?= $stage->classModel->title ?>
+                    </div>
+				<?php } ?>
+				
+				<?php if ($qualification && isset($qualification['figureTitles'])) { ?>
+                    <div>
+						<h4><?= Html::a('Нажмите, чтобы посмотреть результаты квалификации
+                        (' . implode($qualification['figureTitles'], ', ') . ')', ['/competitions/qualification', 'stageId' => $stage->id]) ?>
+                        </h4>
                     </div>
 				<?php } ?>
 				
