@@ -1316,9 +1316,10 @@ class RunController extends Controller
 		$stage = Stage::findOne($stageId);
 		if (!$stage) {
 			echo 'Stage not found' . PHP_EOL;
+			
 			return false;
 		}
-		$stage->referenceTime = round($stage->referenceTime/10)*10;
+		$stage->referenceTime = round($stage->referenceTime / 10) * 10;
 		$participants = $stage->participants;
 		foreach ($participants as $participant) {
 			if ($participant->percent) {
@@ -1351,5 +1352,33 @@ class RunController extends Controller
 			$figure->severalRecords = 1;
 			$figure->save(false);
 		}
+	}
+	
+	public function actionAddQualifications()
+	{
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->all();
+		foreach ($stages as $stage) {
+			$count = 0;
+			$dateStart = $stage->dateOfThe;
+			$dateEnd = $stage->dateOfThe + 12 * 3600;
+			/** @var FigureTime[] $figureTimes */
+			$figureTimes = FigureTime::find()
+				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
+			foreach ($figureTimes as $item) {
+				if (!Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
+				                                 'stageId'   => $stage->id])
+				) {
+					continue;
+				} else {
+					$item->stageId = $stage->id;
+					$item->save(false);
+					$count++;
+				}
+			}
+			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
+		}
+		
+		return true;
 	}
 }

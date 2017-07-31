@@ -150,14 +150,6 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                     </div>
 				<?php } ?>
 				
-				<?php if ($qualification && isset($qualification['figureTitles'])) { ?>
-                    <div>
-						<h4><?= Html::a('Нажмите, чтобы посмотреть результаты квалификации
-                        (' . implode($qualification['figureTitles'], ', ') . ')', ['/competitions/qualification', 'stageId' => $stage->id]) ?>
-                        </h4>
-                    </div>
-				<?php } ?>
-				
 				<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
                     <div class="track-photo">
                         <div class="toggle">
@@ -168,6 +160,16 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         </div>
                     </div>
 				<?php } ?>
+	
+	            <?php if ($qualification && isset($qualification['figureTitles'])) { ?>
+                    <div>
+                        <h5><?= Html::a('Нажмите, чтобы посмотреть результаты квалификации
+                        (' . implode($qualification['figureTitles'], ', ') . ')',
+					            ['/competitions/qualification', 'stageId' => $stage->id],
+					            ['class' => 'qualification-link']) ?>
+                        </h5>
+                    </div>
+	            <?php } ?>
 				
 				<?php if ($stage->status == Stage::STATUS_CANCEL) { ?>
                     <div class="warning">
