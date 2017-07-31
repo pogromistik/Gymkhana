@@ -28,6 +28,7 @@ use Yii;
  * @property integer       $recordInMoment
  * @property string        $videoLink
  * @property double        $actualPercent
+ * @property integer       $stageId
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -80,7 +81,7 @@ class FigureTime extends BaseActiveRecord
 				'percent', 'timeForHuman', 'dateAdded', 'dateUpdated', 'resultTime'], 'required'],
 			[['figureId', 'athleteId', 'motorcycleId', 'yearId', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'date', 'time', 'fine', 'dateAdded',
-				'dateUpdated', 'resultTime', 'recordType', 'recordStatus', 'recordInMoment'], 'integer'],
+				'dateUpdated', 'resultTime', 'recordType', 'recordStatus', 'recordInMoment', 'stageId'], 'integer'],
 			[['dateForHuman', 'timeForHuman', 'videoLink'], 'string'],
 			[['percent', 'actualPercent'], 'number'],
 			[['fine'], 'default', 'value' => 0],
@@ -125,7 +126,8 @@ class FigureTime extends BaseActiveRecord
 			'resultTimeForHuman'    => 'Итоговое время',
 			'recordInMoment'        => 'Эталонное время на тот момент',
 			'videoLink'             => 'Видео',
-			'actualPercent'         => 'Актуальный рейтинг'
+			'actualPercent'         => 'Актуальный рейтинг',
+			'stageId'               => 'Этап, на котором установлен результат'
 		];
 	}
 	
