@@ -36,7 +36,7 @@ class TmpFiguresController extends BaseController
 	public function init()
 	{
 		parent::init();
-		$this->can('projectOrganizer');
+		$this->can('canApproveFigureResults');
 	}
 	
 	/**

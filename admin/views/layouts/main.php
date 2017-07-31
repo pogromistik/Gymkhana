@@ -69,7 +69,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 					<?php } ?>
 				<?php } ?>
 				
-				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+				<?php if (\Yii::$app->user->can('canApproveFigureResults')) { ?>
 					<?php $countNewFigure = \common\models\TmpFigureResult::find()
 						->where(['isNew' => 1])->count() ?>
 					<?php if ($countNewFigure) { ?>
