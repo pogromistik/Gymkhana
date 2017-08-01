@@ -5,6 +5,7 @@ use common\models\Championship;
  * @var \yii\web\View                $this
  * @var \common\models\Stage         $stage
  * @var \common\models\Participant[] $participants
+ * @var integer                      $orderBy
  */
 
 $championship = $stage->championship;
@@ -38,14 +39,21 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
     </div>
 <?php } ?>
 
+<?= \yii\helpers\Html::beginForm(['result', 'stageId' => $stage->id], 'get') ?>
+<?= \yii\helpers\Html::dropDownList('orderBy', $orderBy, \common\models\Stage::$orderByTitles,
+	['prompt' => 'Сортировка', 'onchange' => 'this.form.submit()', 'class' => 'form-control']) ?>
+<button type="submit" style="visibility: hidden;" title="Сохранить"></button>
+<?= \yii\helpers\Html::endForm() ?>
+
 <div class="color-div out-participant"></div>
 - участники вне зачета
 <table class="table results">
     <thead>
     <tr>
-        <th>Место вне класса</th>
+        <th class="<?= !$orderBy ? 'bg-gray' : '' ?>">Место вне класса</th>
         <th>Группа</th>
-        <th>Место в группе</th>
+        <th class="<?= ($orderBy == \common\models\Stage::ORDER_BY_ATHLETE_CLASS) ? 'bg-gray' : '' ?>">Место в группе
+        </th>
         <th>№</th>
         <th>Участник</th>
         <th>Мотоцикл</th>
@@ -54,7 +62,9 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
         <th>Штраф</th>
         <th>Лучшее время</th>
         <th>Класс награждения</th>
-        <th>Место в классе награждения</th>
+        <th class="<?= ($orderBy == \common\models\Stage::ORDER_BY_INTERNAL_CLASS) ? 'bg-gray' : '' ?>">Место в классе
+            награждения
+        </th>
         <th>Рейтинг</th>
         <th>Новый класс</th>
         <th>Баллы за этап</th>
@@ -72,11 +82,27 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 		if ($participant->status == \common\models\Participant::STATUS_OUT_COMPETITION) {
 			$class = 'out-participant';
 		}
+		
+		$athleteCssClass = 'default';
+		$internalCssClass = 'default';
+		if ($participant->athleteClassId) {
+			$participantClass = $participant->athleteClass;
+			if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+				$athleteCssClass = 'result-' . \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+			}
+		}
+		if ($participant->internalClassId) {
+			$internalCssClass = 'bg-' . $participant->internalClassId % 10;
+		}
 		?>
         <tr class="<?= $class ?>">
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfAthleteClass ?></td>
+            <td rowspan="<?= $stage->countRace ?>" class="<?= !$orderBy ? 'bg-gray' : '' ?>">
+				<?= $participant->place ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= $athleteCssClass ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= ($orderBy == \common\models\Stage::ORDER_BY_ATHLETE_CLASS) ? 'bg-gray' : '' ?>">
+				<?= $participant->placeOfAthleteClass ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
@@ -96,8 +122,11 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                 <td></td>
 			<?php } ?>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfClass ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= $internalCssClass ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= ($orderBy == \common\models\Stage::ORDER_BY_INTERNAL_CLASS) ? 'bg-gray' : '' ?>">
+				<?= $participant->placeOfClass ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
             <td rowspan="<?= $stage->countRace ?>" class="newClass">
 				<?php if ($participant->newAthleteClassId) { ?>
