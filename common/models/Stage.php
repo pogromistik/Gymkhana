@@ -73,6 +73,16 @@ class Stage extends BaseActiveRecord
 		self::STATUS_CANCEL             => 'Этап отменён'
 	];
 	
+	const ORDER_BY_PLACES = 0;
+	const ORDER_BY_ATHLETE_CLASS = 1;
+	const ORDER_BY_INTERNAL_CLASS = 2;
+	
+	public static $orderByTitles = [
+		self::ORDER_BY_PLACES         => 'По местам вне классов',
+		self::ORDER_BY_ATHLETE_CLASS  => 'По местам в классе спортсменов',
+		self::ORDER_BY_INTERNAL_CLASS => 'По местам в классе награждения'
+	];
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -514,6 +524,7 @@ LIMIT 1) order by "bestTime" asc) n'])
 		} else {
 			$documentIds = $this->getDocumentIds();
 		}
+		
 		return OverallFile::find()->where(['id' => $documentIds])->orderBy(['id' => SORT_ASC])->all();
 	}
 	
@@ -525,6 +536,7 @@ LIMIT 1) order by "bestTime" asc) n'])
 		}
 		$figureIds = array_unique(ArrayHelper::getColumn($results, 'figureId'));
 		$figureTitles = Figure::find()->select('title')->where(['id' => $figureIds])->asArray()->column();
+		
 		return ['results' => $results, 'figureIds' => $figureIds, 'figureTitles' => $figureTitles];
 	}
 }

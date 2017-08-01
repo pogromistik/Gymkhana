@@ -131,18 +131,33 @@ class StagesController extends BaseController
 		}
 	}
 	
-	public function actionResult($stageId)
+	public function actionResult($stageId, $orderBy = null)
 	{
 		$this->can('competitions');
 		
 		$stage = $this->findModel($stageId);
 		$participants = $stage->getParticipants()
-			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION, Participant::STATUS_OUT_COMPETITION]])
-			->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC])->all();
+			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION,
+				Participant::STATUS_OUT_COMPETITION]]);
+		switch ($orderBy) {
+			case Stage::ORDER_BY_PLACES:
+				$participants = $participants->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC]);
+				break;
+			case Stage::ORDER_BY_INTERNAL_CLASS:
+				$participants = $participants->orderBy(['status' => SORT_ASC, 'internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC]);
+				break;
+			case Stage::ORDER_BY_ATHLETE_CLASS:
+				$participants = $participants->orderBy(['status' => SORT_ASC, 'athleteClassId' => SORT_ASC, 'bestTime' => SORT_ASC]);
+				break;
+			default:
+				$participants = $participants->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC]);
+		};
+		$participants = $participants->all();
 		
 		return $this->render('result', [
 			'stage'        => $stage,
-			'participants' => $participants
+			'participants' => $participants,
+			'orderBy'      => $orderBy
 		]);
 	}
 	
