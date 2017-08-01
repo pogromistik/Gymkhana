@@ -77,6 +77,8 @@ class AthletesController extends BaseController
 	{
 		$this->pageTitle = \Yii::t('app', 'Статистика по регионам');
 		$this->description = 'Статистика спортсменов по регионам';
+		$this->layout = 'main-with-img';
+		$this->background = 'background7.png';
 		
 		$query = new Query();
 		$query->from(['a' => Athlete::tableName(), 'b' => Region::tableName(), 'c' => AthletesClass::tableName()]);
