@@ -171,6 +171,7 @@ class CompetitionsController extends BaseController
 							ksort($results);
 						}
 					}
+					$this->background = 'background8.png';
 					
 					return $this->render('regional-result', ['results' => $results]);
 			}
