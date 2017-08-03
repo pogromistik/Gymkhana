@@ -923,6 +923,10 @@ a.deletePhoto {
     padding: 0 !important;
 }
 
+.schedule table tr.future {
+    background: #ecf7e6;
+}
+
 .change-type {
     margin-bottom: 20px;
     text-align: right;

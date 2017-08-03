@@ -71,7 +71,11 @@ use yii\bootstrap\Html;
                             </th>
                         </tr>
 						<?php foreach ($stages as $stage) { ?>
-                            <tr>
+							<?php if ($stage->dateOfThe+86400 < time()) { ?>
+	                            <tr>
+	                        <?php } else {?>
+	                        	<tr class="future">
+	                        <?php } ?>
                                 <td>
                                     <div class="row item">
                                         <div class="col-md-2 col-sm-3 col-xs-4">
