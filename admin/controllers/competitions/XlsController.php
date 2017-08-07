@@ -244,7 +244,15 @@ class XlsController extends BaseController
 				}
 			}
 			$sheet->getCell("J" . $rowIndex)->setValue($participant->bestTime ? $participant->humanBestTime : '');
-			$sheet->getCell("K" . $rowIndex)->setValue($participant->internalClassId ? $participant->internalClass->title : '');
+			if ($participant->status == Participant::STATUS_OUT_COMPETITION) {
+				$sheet->getCell("K" . $rowIndex)->setValue(
+					$participant->internalClassId ? $participant->internalClass->title . 'Вне зачёта' : 'Вне зачёта'
+				);
+			} else {
+				$sheet->getCell("K" . $rowIndex)->setValue(
+					$participant->internalClassId ? $participant->internalClass->title : ''
+				);
+			}
 			$sheet->getCell("L" . $rowIndex)->setValue($participant->placeOfClass);
 			$sheet->getCell("M" . $rowIndex)->setValue($participant->percent . '%');
 			$sheet->getStyleByColumnAndRow(0, $rowIndex, 12, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
