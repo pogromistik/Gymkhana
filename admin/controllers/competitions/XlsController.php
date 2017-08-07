@@ -26,14 +26,14 @@ class XlsController extends BaseController
 		$this->can('competitions');
 	}
 	
-	public function actionGetXls($type)
+	public function actionGetXls($type, $stageId)
 	{
 		if (!array_key_exists($type, self::$typesTitle)) {
 			throw new NotFoundHttpException();
 		}
 		$name = 'Список участников';
 		$xlsFile = null;
-		$participants = Participant::find();
+		$participants = Participant::find()->andWhere(['stageId' => $stageId]);
 		switch ($type) {
 			case self::TYPE_ALL:
 				$name .= '-все участники';

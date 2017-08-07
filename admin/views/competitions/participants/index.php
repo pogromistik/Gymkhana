@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </button>
             <ul class="dropdown-menu">
                 <?php foreach (\admin\controllers\competitions\XlsController::$typesTitle as $type => $title) { ?>
-                    <li><?= Html::a($title, ['/competitions/xls/get-xls', 'type' => $type]) ?></li>
+                    <li><?= Html::a($title, ['/competitions/xls/get-xls', 'type' => $type, 'stageId' => $stage->id]) ?></li>
                 <?php } ?>
             </ul>
         </div>
