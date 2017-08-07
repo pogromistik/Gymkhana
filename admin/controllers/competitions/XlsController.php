@@ -97,7 +97,7 @@ class XlsController extends BaseController
 		}
 		$sheet->getStyleByColumnAndRow(0, $rowIndex, 6, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$col = 0;
-		$rows = count($participants+1);
+		$rows = count($participants)+1;
 		while ($col < 7) {
 			$sheet->getStyleByColumnAndRow($col, 1, $col, $rows)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 			$col++;
