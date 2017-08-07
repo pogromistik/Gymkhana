@@ -167,12 +167,12 @@ class XlsController extends BaseController
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
-		$name = 'Список участников';
+		$name = $stage->title;
 		$xlsFile = null;
 		$participants = Participant::find()->andWhere(['stageId' => $stageId])
-			->andWhere(['status' => Participant::STATUS_ACTIVE])->andWhere(['isArrived' => 1])
+			->andWhere(['isArrived' => 1])->andWhere(['isArrived' => 1])
 			->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
-		$name .= $stage->title . '-результаты';
+		$name .= '-результаты';
 		$name .= '.xlsx';
 		$xlsFile = self::getXlsResults($participants);
 		\Yii::$app->response->sendFile($xlsFile, $name);
