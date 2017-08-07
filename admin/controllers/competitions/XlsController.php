@@ -74,31 +74,33 @@ class XlsController extends BaseController
 		$sheet = $obj->createSheet();
 		$sheet->setTitle('Результаты');
 		
-		$sheet->getCell("A1")->setValue('Порядок выступления')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("B1")->setValue('Участник')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("C1")->setValue('Город')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("D1")->setValue('Мотоцикл')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("E1")->setValue('Класс спортсмена')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("F1")->setValue('Класс награждения')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("G1")->setValue('№')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getStyle('A1:G1')->getFont()->setBold(true);
-		$sheet->getStyleByColumnAndRow(0, 1, 6, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("A1")->setValue('ID')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("B1")->setValue('Порядок выступления')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("C1")->setValue('Участник')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("D1")->setValue('Город')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("E1")->setValue('Мотоцикл')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("F1")->setValue('Класс спортсмена')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("G1")->setValue('Класс награждения')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("H1")->setValue('№')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getStyle('A1:H1')->getFont()->setBold(true);
+		$sheet->getStyleByColumnAndRow(0, 1, 7, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$rowIndex = 2;
 		foreach ($participants as $participant) {
 			$athlete = $participant->athlete;
-			$sheet->getCell("A" . $rowIndex)->setValue($participant->sort);
-			$sheet->getCell("B" . $rowIndex)->setValue($athlete->getFullName());
-			$sheet->getCell("C" . $rowIndex)->setValue($athlete->city->title);
-			$sheet->getCell("D" . $rowIndex)->setValue($participant->motorcycle->getFullTitle());
-			$sheet->getCell("E" . $rowIndex)->setValue($participant->athleteClassId ? $participant->athleteClass->title : null);
-			$sheet->getCell("F" . $rowIndex)->setValue($participant->internalClassId ? $participant->internalClass->title : null);
-			$sheet->getCell("G" . $rowIndex)->setValue($participant->number);
+			$sheet->getCell("A" . $rowIndex)->setValue($participant->id);
+			$sheet->getCell("B" . $rowIndex)->setValue($participant->sort);
+			$sheet->getCell("C" . $rowIndex)->setValue($athlete->getFullName());
+			$sheet->getCell("D" . $rowIndex)->setValue($athlete->city->title);
+			$sheet->getCell("E" . $rowIndex)->setValue($participant->motorcycle->getFullTitle());
+			$sheet->getCell("F" . $rowIndex)->setValue($participant->athleteClassId ? $participant->athleteClass->title : null);
+			$sheet->getCell("G" . $rowIndex)->setValue($participant->internalClassId ? $participant->internalClass->title : null);
+			$sheet->getCell("H" . $rowIndex)->setValue($participant->number);
 			$rowIndex++;
 		}
-		$sheet->getStyleByColumnAndRow(0, $rowIndex, 6, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getStyleByColumnAndRow(0, $rowIndex, 7, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$col = 0;
 		$rows = count($participants)+1;
-		while ($col < 7) {
+		while ($col < 8) {
 			$sheet->getStyleByColumnAndRow($col, 1, $col, $rows)->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 			$col++;
 		}
@@ -110,6 +112,7 @@ class XlsController extends BaseController
 		$sheet->getStyle("E2:E" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 		$sheet->getStyle("F2:F" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 		$sheet->getStyle("G2:G" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+		$sheet->getStyle("H2:H" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 		
 		$sheet->getColumnDimension('A')
 			->setAutoSize(true);
@@ -125,8 +128,12 @@ class XlsController extends BaseController
 			->setAutoSize(true);
 		$sheet->getColumnDimension('G')
 			->setAutoSize(true);
+		$sheet->getColumnDimension('H')
+			->setAutoSize(true);
 		
 		$sheet->getColumnDimension('A')
+			->setWidth(10);
+		$sheet->getColumnDimension('B')
 			->setWidth(10);
 		$sheet->getColumnDimension('E')
 			->setWidth(20);
