@@ -15,6 +15,7 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Participant;
 use common\models\search\ParticipantSearch;
+use yii\base\ErrorException;
 use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
@@ -24,6 +25,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * ParticipantsController implements the CRUD actions for Participant model.
@@ -169,6 +171,104 @@ class ParticipantsController extends BaseController
 		}
 		
 		return $this->render('sort', ['participantsArray' => $participantsArray, 'stage' => $stage]);
+	}
+	
+	public function actionSortUpload($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
+		
+		return $this->render('sort-upload', ['stage' => $stage, 'errors' => null]);
+	}
+	
+	public function actionSortUploadProcessed($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
+		
+		$file = UploadedFile::getInstanceByName('file');
+		if (!$file) {
+			throw new ErrorException('No file');
+		}
+		$path = '/tmp/' . $file->name;
+		$file->saveAs($path);
+		$objPHPExcel = \PHPExcel_IOFactory::load($path);
+		$records = [];
+		$recordId = 0;
+		$columns = [];
+		$columnsId = [];
+		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
+		
+		foreach ($worksheet->getRowIterator() as $i => $row) {
+			$cellIterator = $row->getCellIterator();
+			/**
+			 * @var \PHPExcel_Cell $cell
+			 */
+			if ($i == 1) {
+				foreach ($cellIterator as $j => $cell) {
+					$columnName = trim($cell->getFormattedValue());
+					if ($columnName) {
+						$columns[$j] = $columnName;
+						$columnsId[] = $j;
+					}
+				}
+			} else {
+				foreach ($cellIterator as $j => $cell) {
+					if (!array_key_exists($j, $columns)) {
+						continue;
+					}
+					if (!is_null($cell)) {
+						$value = trim($cell->getFormattedValue());
+						if ($value != '') {
+							$records[$recordId][$j] = $value;
+						}
+						
+					}
+				}
+			}
+			$recordId++;
+		}
+		die (var_dump($records));
+		
+		/*$errors = [];
+		$success = [];
+		foreach ($records as $i => $record) {
+			$transportOperation = TransportOperation::findOne(['internalOrderId' => $record['A']]);
+			if (!$transportOperation) {
+				$errors[] = 'Заказ ' . $record['A'] . ' не найден';
+				continue;
+			}
+			if (TransportOperation::findOne(['trackingId' => $record['B']])) {
+				$errors[] = 'Номер ' . $record['B'] . ' уже используется в системе';
+				continue;
+			}
+			$transportOperation->trackingId = $record['B'];
+			if (!$transportOperation->save()) {
+				$errors = $transportOperation->getStringErrors();
+			}
+			$success[] = ['orderId' => $record['A'], 'trackingId' => $record['B']];
+		}*/
+		
+		
+		return $this->redirect(['index', 'stageId' => $stageId]);
 	}
 	
 	public function actionChangeSort()
