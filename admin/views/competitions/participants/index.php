@@ -71,8 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div>
 	<?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
 		['class' => 'btn btn-info']) ?>
-	<?= Html::a('Загрузить порядок выступления', ['/competitions/participants/sort-upload', 'stageId' => $stage->id],
-		['class' => 'btn btn-info']) ?>
+
 </div>
 
 <div class="small">
