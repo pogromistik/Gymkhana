@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<?php if ($stage->status != \common\models\Stage::STATUS_PAST && $stage->status == \common\models\Stage::STATUS_CALCULATE_RESULTS) { ?>
+<?php if ($stage->status != \common\models\Stage::STATUS_PAST && $stage->status != \common\models\Stage::STATUS_CALCULATE_RESULTS) { ?>
     <div>
 		<?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
 			['class' => 'btn btn-info']) ?>
