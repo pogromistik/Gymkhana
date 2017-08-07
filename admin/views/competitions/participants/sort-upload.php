@@ -4,7 +4,6 @@ use yii\bootstrap\Html;
 /**
  * @var \yii\web\View        $this
  * @var \common\models\Stage $stage
- * @var string               $errors
  */
 
 $this->title = 'Загрузить порядок выступления участников';
@@ -32,8 +31,5 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?= Html::label('Файл', 'file') ?>
 	<?= Html::fileInput('file') ?> <br/>
 </div>
-<?php if ($errors) { ?>
-    <div class="alert alert-danger"><?= $errors ?></div>
-<?php } ?>
 <?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary']) ?>
 <?= Html::endForm(); ?>

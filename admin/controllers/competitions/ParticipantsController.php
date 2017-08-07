@@ -148,6 +148,9 @@ class ParticipantsController extends BaseController
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			throw new UserException('Этап завершен, изменение данных невозможно');
+		}
 		
 		$query = new Query();
 		$query->from(['a' => Participant::tableName(), 'd' => AthletesClass::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
@@ -186,8 +189,11 @@ class ParticipantsController extends BaseController
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			throw new UserException('Этап завершен, изменение данных невозможно');
+		}
 		
-		return $this->render('sort-upload', ['stage' => $stage, 'errors' => null]);
+		return $this->render('sort-upload', ['stage' => $stage]);
 	}
 	
 	public function actionSortUploadProcessed($stageId)
@@ -203,12 +209,16 @@ class ParticipantsController extends BaseController
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			throw new UserException('Этап завершен, изменение данных невозможно');
+		}
 		
 		$file = UploadedFile::getInstanceByName('file');
 		if (!$file) {
 			throw new ErrorException('No file');
 		}
-		$path = '/tmp/' . $file->name;
+		//$path = '/tmp/' . $file->name;
+		$path = $file->name;
 		$file->saveAs($path);
 		$objPHPExcel = \PHPExcel_IOFactory::load($path);
 		$records = [];
@@ -217,6 +227,8 @@ class ParticipantsController extends BaseController
 		$columnsId = [];
 		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
 		
+		$errors = [];
+		$success = [];
 		foreach ($worksheet->getRowIterator() as $i => $row) {
 			$cellIterator = $row->getCellIterator();
 			/**
@@ -240,35 +252,53 @@ class ParticipantsController extends BaseController
 						if ($value != '') {
 							$records[$recordId][$j] = $value;
 						}
-						
+					}
+				}
+				if (isset($records[$recordId]) && (isset($records[$recordId]['A']) || $records[$recordId]['C'])) {
+					if (!isset($records[$recordId]['A'])) {
+						$errors[] = 'Строка ' . $recordId . ': не указан ID';
+					}
+					if (!isset($records[$recordId]['C'])) {
+						$errors[] = 'Строка ' . $recordId . ': не указаны ФИО';
 					}
 				}
 			}
 			$recordId++;
 		}
-		die (var_dump($records));
 		
-		/*$errors = [];
-		$success = [];
-		foreach ($records as $i => $record) {
-			$transportOperation = TransportOperation::findOne(['internalOrderId' => $record['A']]);
-			if (!$transportOperation) {
-				$errors[] = 'Заказ ' . $record['A'] . ' не найден';
-				continue;
+		if (!$errors) {
+			foreach ($records as $i => $record) {
+				$participant = Participant::findOne($record['A']);
+				if (!$participant) {
+					$errors[] = 'Участник ' . $record['A'] . ' ' . $record['C'] . ' не найден';
+					continue;
+				}
+				if ($participant->stageId != $stageId) {
+					$errors[] = $record['A'] . ' ' . $record['C'] . ' не участвует в этапе "' . $stage->title . '"';
+					continue;
+				}
+				if ($participant->athlete->getFullName() != $record['C']) {
+					$errors[] = 'ID ' . $record['A'] . ' не соответствует спортсмену ' . $record['C'];
+					continue;
+				}
+				$sort = null;
+				if (isset($record['B'])) {
+					$sort = $record['B'];
+				}
+				$participant->sort = $sort;
+				$participant->save(false);
+				$success[$sort] = $record['C'];
 			}
-			if (TransportOperation::findOne(['trackingId' => $record['B']])) {
-				$errors[] = 'Номер ' . $record['B'] . ' уже используется в системе';
-				continue;
-			}
-			$transportOperation->trackingId = $record['B'];
-			if (!$transportOperation->save()) {
-				$errors = $transportOperation->getStringErrors();
-			}
-			$success[] = ['orderId' => $record['A'], 'trackingId' => $record['B']];
-		}*/
+			ksort($success);
+		} else {
+			$errors[] = '<b>Изменения не были загружены, исправьте ошибки и попробуйте снова</b>';
+		}
 		
-		
-		return $this->redirect(['index', 'stageId' => $stageId]);
+		return $this->render('upload-sort-success', [
+			'stage'   => $stage,
+			'errors'  => $errors,
+			'success' => $success
+		]);
 	}
 	
 	public function actionChangeSort()
