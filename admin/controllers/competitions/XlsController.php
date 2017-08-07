@@ -82,7 +82,7 @@ class XlsController extends BaseController
 		$sheet->getCell("F1")->setValue('Класс награждения')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getCell("G1")->setValue('№')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getStyle('A1:G1')->getFont()->setBold(true);
-		$sheet->getStyleByColumnAndRow(0, 1, 7, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getStyleByColumnAndRow(0, 1, 6, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$rowIndex = 2;
 		foreach ($participants as $participant) {
 			$athlete = $participant->athlete;
@@ -95,7 +95,13 @@ class XlsController extends BaseController
 			$sheet->getCell("G" . $rowIndex)->setValue($participant->number);
 			$rowIndex++;
 		}
-		$sheet->getStyleByColumnAndRow(0, $rowIndex, 12, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getStyleByColumnAndRow(0, $rowIndex, 6, $rowIndex)->getBorders()->getTop()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$col = 0;
+		$rows = count($participants+1);
+		while ($col < 7) {
+			$sheet->getStyleByColumnAndRow($col, 1, $col, $rows)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+			$col++;
+		}
 		
 		$sheet->getStyle("A1:A" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 		$sheet->getStyle("B2:B" . $rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
