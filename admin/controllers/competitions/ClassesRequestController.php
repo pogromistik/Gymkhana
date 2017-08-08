@@ -17,7 +17,7 @@ class ClassesRequestController extends BaseController
 {
     public function init()
     {
-    	$this->can('projectOrganizer');
+    	$this->can('canChangeClass');
 	    parent::init();
     }
 	
@@ -102,6 +102,7 @@ class ClassesRequestController extends BaseController
 				    Notice::add($request->athleteId, $text, $link);
 			    	break;
 		    }
+		    \Yii::$app->mutex->release('ClassesRequest-' . $request->id);
 	    } else {
 		    \Yii::$app->mutex->release('ClassesRequest-' . $request->id);
 		    return 'Информация устарела. Пожалуйста, перезагрузите страницу';
