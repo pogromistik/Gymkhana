@@ -19,7 +19,14 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
-<?= \yii\helpers\Html::a('Скачать в xls', ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-success']) ?>
+<div class="row">
+    <div class="col-sm-6">
+		<?= \yii\helpers\Html::a('Скачать в xls', ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-success']) ?>
+    </div>
+    <div class="col-sm-6 text-right">
+		<?= \yii\helpers\Html::a('Добавить видео заездов', ['/competitions/stages/add-video', 'stageId' => $stage->id], ['class' => 'btn btn-warning']) ?>
+    </div>
+</div>
 
 <?php if ($stage->class) { ?><h4>Класс соревнования: <?= $stage->classModel->title ?></h4><?php } ?>
 <?php if ($stage->referenceTime) { ?><h4>Эталонное время: <?= $stage->referenceTimeHuman ?></h4><?php } ?>
