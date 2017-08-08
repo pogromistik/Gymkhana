@@ -58,7 +58,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                     </li>
 				<?php } ?>
 				
-				<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
+				<?php if (\Yii::$app->user->can('canChangeClass')) { ?>
 					<?php $countNewClassesRequest = \common\models\ClassesRequest::find()
 						->where(['status' => \common\models\ClassesRequest::STATUS_NEW])->count() ?>
 					<?php if ($countNewClassesRequest) { ?>
