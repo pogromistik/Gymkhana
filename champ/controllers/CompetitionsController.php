@@ -52,12 +52,12 @@ class CompetitionsController extends BaseController
 		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
-		$background = '#58a1b1';
 		$color = '#fff';
 		$dates = [];
 		$notDate = [];
 		/** @var Stage[] $stages */
 		foreach ($stages as $stage) {
+			$background = '#a9a9a9';
 			if (!$stage->dateOfThe) {
 				$notDate[] = $stage;
 			} else {
@@ -69,6 +69,9 @@ class CompetitionsController extends BaseController
 					$dates[$month] = [];
 				}
 				$dates[$month][] = $stage;
+				if ($stage->dateOfThe + 86400 > time()) {
+					$background = '#5cb85c';
+				}
 			}
 			$event = new Event();
 			$event->id = $stage->id;
@@ -171,6 +174,7 @@ class CompetitionsController extends BaseController
 							ksort($results);
 						}
 					}
+					$this->background = 'background8.png';
 					
 					return $this->render('regional-result', ['results' => $results]);
 			}

@@ -46,9 +46,37 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
-<h3>Список участников</h3>
-<?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
-	['class' => 'btn btn-info']) ?>
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Список участников</h3>
+    </div>
+    <div class="col-sm-6 text-right download">
+        <div class="btn-group">
+            <button type="button"
+                    class="btn btn-success">Скачать список участников
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+				<?php foreach (\admin\controllers\competitions\XlsController::$typesTitle as $type => $title) { ?>
+                    <li><?= Html::a($title, ['/competitions/xls/get-xls', 'type' => $type, 'stageId' => $stage->id]) ?></li>
+				<?php } ?>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<?php if ($stage->status != \common\models\Stage::STATUS_PAST && $stage->status != \common\models\Stage::STATUS_CALCULATE_RESULTS) { ?>
+    <div>
+		<?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
+			['class' => 'btn btn-info']) ?>
+		<?= Html::a('Загрузить порядок выступления', ['/competitions/participants/sort-upload', 'stageId' => $stage->id],
+			['class' => 'btn btn-info']) ?>
+    </div>
+<?php } ?>
 
 <div class="small">
     <div class="color-div need-clarification-participant"></div>

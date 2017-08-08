@@ -15,6 +15,7 @@ use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Participant;
 use common\models\search\ParticipantSearch;
+use yii\base\ErrorException;
 use yii\base\UserException;
 use yii\db\Expression;
 use yii\db\Query;
@@ -24,6 +25,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * ParticipantsController implements the CRUD actions for Participant model.
@@ -146,6 +148,9 @@ class ParticipantsController extends BaseController
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			throw new UserException('Этап завершен, изменение данных невозможно');
+		}
 		
 		$query = new Query();
 		$query->from(['a' => Participant::tableName(), 'd' => AthletesClass::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
@@ -169,6 +174,131 @@ class ParticipantsController extends BaseController
 		}
 		
 		return $this->render('sort', ['participantsArray' => $participantsArray, 'stage' => $stage]);
+	}
+	
+	public function actionSortUpload($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			throw new UserException('Этап завершен, изменение данных невозможно');
+		}
+		
+		return $this->render('sort-upload', ['stage' => $stage]);
+	}
+	
+	public function actionSortUploadProcessed($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				throw new ForbiddenHttpException('Доступ запрещен');
+			}
+		}
+		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+			throw new UserException('Этап завершен, изменение данных невозможно');
+		}
+		
+		$file = UploadedFile::getInstanceByName('file');
+		if (!$file) {
+			throw new ErrorException('No file');
+		}
+		//$path = '/tmp/' . $file->name;
+		$path = $file->name;
+		$file->saveAs($path);
+		$objPHPExcel = \PHPExcel_IOFactory::load($path);
+		$records = [];
+		$recordId = 0;
+		$columns = [];
+		$columnsId = [];
+		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
+		
+		$errors = [];
+		$success = [];
+		foreach ($worksheet->getRowIterator() as $i => $row) {
+			$cellIterator = $row->getCellIterator();
+			/**
+			 * @var \PHPExcel_Cell $cell
+			 */
+			if ($i == 1) {
+				foreach ($cellIterator as $j => $cell) {
+					$columnName = trim($cell->getFormattedValue());
+					if ($columnName) {
+						$columns[$j] = $columnName;
+						$columnsId[] = $j;
+					}
+				}
+			} else {
+				foreach ($cellIterator as $j => $cell) {
+					if (!array_key_exists($j, $columns)) {
+						continue;
+					}
+					if (!is_null($cell)) {
+						$value = trim($cell->getFormattedValue());
+						if ($value != '') {
+							$records[$recordId][$j] = $value;
+						}
+					}
+				}
+				if (isset($records[$recordId]) && (isset($records[$recordId]['A']) || $records[$recordId]['C'])) {
+					if (!isset($records[$recordId]['A'])) {
+						$errors[] = 'Строка ' . $recordId . ': не указан ID';
+					}
+					if (!isset($records[$recordId]['C'])) {
+						$errors[] = 'Строка ' . $recordId . ': не указаны ФИО';
+					}
+				}
+			}
+			$recordId++;
+		}
+		
+		if (!$errors) {
+			foreach ($records as $i => $record) {
+				$participant = Participant::findOne($record['A']);
+				if (!$participant) {
+					$errors[] = 'Участник ' . $record['A'] . ' ' . $record['C'] . ' не найден';
+					continue;
+				}
+				if ($participant->stageId != $stageId) {
+					$errors[] = $record['A'] . ' ' . $record['C'] . ' не участвует в этапе "' . $stage->title . '"';
+					continue;
+				}
+				if ($participant->athlete->getFullName() != $record['C']) {
+					$errors[] = 'ID ' . $record['A'] . ' не соответствует спортсмену ' . $record['C'];
+					continue;
+				}
+				$sort = null;
+				if (isset($record['B'])) {
+					$sort = $record['B'];
+				}
+				$participant->sort = $sort;
+				$participant->save(false);
+				$success[$sort] = $record['C'];
+			}
+			ksort($success);
+		} else {
+			$errors[] = '<b>Изменения не были загружены, исправьте ошибки и попробуйте снова</b>';
+		}
+		
+		return $this->render('upload-sort-success', [
+			'stage'   => $stage,
+			'errors'  => $errors,
+			'success' => $success
+		]);
 	}
 	
 	public function actionChangeSort()

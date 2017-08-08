@@ -512,3 +512,7 @@ a.red-button {
 .bg-9 {
     background: #bdd4bc;
 }
+
+.download .dropdown-menu > li > a:hover {
+    background-color: #e6e6e6;
+}
