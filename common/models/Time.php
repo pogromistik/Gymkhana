@@ -16,6 +16,7 @@ use Yii;
  * @property integer     $resultTime
  * @property integer     $attemptNumber
  * @property integer     $isFail
+ * @property string      $videoLink
  *
  * @property Participant $participant
  * @property Stage       $stage
@@ -67,7 +68,8 @@ class Time extends BaseActiveRecord
 			'fine'          => 'Штраф',
 			'resultTime'    => 'Итоговое время заезда',
 			'attemptNumber' => 'Номер попытки',
-			'isFail'        => 'Незачет'
+			'isFail'        => 'Незачет',
+			'videoLink'     => 'Ссылка на видео заезда'
 		];
 	}
 	
@@ -105,6 +107,12 @@ class Time extends BaseActiveRecord
 		}
 		$this->resultTime = $this->time + $this->fine * 1000;
 		
+		if ($this->videoLink) {
+			if (strpos($this->videoLink, 'http://') === false && strpos($this->videoLink, 'https://') === false) {
+				$this->videoLink = 'http://' . $this->videoLink;
+			}
+		}
+		
 		return parent::beforeValidate();
 	}
 	
@@ -130,8 +138,10 @@ class Time extends BaseActiveRecord
 		if (!$bestTime) {
 			$bestTime = null;
 		}
-		$participant->bestTime = $bestTime;
-		$participant->save();
+		if ($participant->bestTime != $bestTime) {
+			$participant->bestTime = $bestTime;
+			$participant->save();
+		}
 	}
 	
 	public function getParticipant()
