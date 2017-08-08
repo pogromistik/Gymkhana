@@ -30,15 +30,12 @@ use yii\web\Response;
  */
 class StagesController extends BaseController
 {
-	public function actions()
+	public function actionAddVideoLink($stageId)
 	{
-		return [
-			'add-video-link' => [
-				'class'       => EditableAction::className(),
-				'modelClass'  => Time::className(),
-				'forceCreate' => false
-			]
-		];
+		$this->findModel($stageId);
+		$model = new EditableAction('add-video-link', 'StagesController', ['modelClass' => Time::className()]);
+		$model->modelClass = Time::className();
+		$model->run();
 	}
 	
 	public function actionView($id)

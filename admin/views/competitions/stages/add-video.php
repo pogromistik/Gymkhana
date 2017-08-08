@@ -63,7 +63,7 @@ $place = 1;
 						'value'         => $first->videoLink,
 						'type'          => 'text',
 						'mode'          => 'inline',
-						'url'           => 'add-video-link',
+						'url'           => ['add-video-link', 'stageId' => $stage->id],
 						'clientOptions' => [
 							'pk'        => $first->id,
 							'value'     => $first->videoLink,
@@ -102,7 +102,7 @@ $place = 1;
 							'value'         => $next->videoLink,
 							'type'          => 'text',
 							'mode'          => 'inline',
-							'url'           => 'add-video-link',
+							'url'           => ['add-video-link', 'stageId' => $stage->id],
 							'clientOptions' => [
 								'pk'          => $next->id,
 								'placeholder' => $next->videoLink,
