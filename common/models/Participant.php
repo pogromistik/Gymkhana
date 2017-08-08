@@ -333,7 +333,7 @@ class Participant extends BaseActiveRecord
 	
 	public function getTimes()
 	{
-		return $this->hasMany(Time::className(), ['participantId' => 'id']);
+		return $this->hasMany(Time::className(), ['participantId' => 'id'])->addOrderBy(['attemptNumber' => SORT_ASC]);
 	}
 	
 	public function getStage()

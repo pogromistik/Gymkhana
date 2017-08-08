@@ -63,6 +63,11 @@
 							<?php } else { ?>
 								<?= $first->timeForHuman ?>
 							<?php } ?>
+	                        <?php if ($first->videoLink) { ?>
+                                <a href="<?= $first->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
                         </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
@@ -95,6 +100,11 @@
 								<?php } else { ?>
 									<?= $next->timeForHuman ?>
 								<?php } ?>
+	                            <?php if ($next->videoLink) { ?>
+                                    <a href="<?= $next->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+	                            <?php } ?>
                             </td>
                             <td><?= $next->fine ?></td>
 						<?php } else { ?>
@@ -199,6 +209,11 @@
 							<?php } else { ?>
 								<?= $first->timeForHuman ?>
 							<?php } ?>
+	                        <?php if ($first->videoLink) { ?>
+                                <a href="<?= $first->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
                         </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
@@ -231,6 +246,11 @@
 								<?php } else { ?>
 									<?= $next->timeForHuman ?>
 								<?php } ?>
+	                            <?php if ($next->videoLink) { ?>
+                                    <a href="<?= $next->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+	                            <?php } ?>
                             </td>
                             <td><?= $next->fine ?></td>
 						<?php } else { ?>
@@ -302,6 +322,7 @@
                         </small>
                     </td>
                     <td>
+	                    <?php $video = null; ?>
 						<?php foreach ($times as $time) { ?>
 							<?php if ($time->isFail) { ?>
                                 <strike>
@@ -316,12 +337,20 @@
                                     <span class="red"> +<?= $time->fine ?></span>
 								<?php } ?>
 							<?php } ?>
+							<?php
+							if ($time->videoLink) {
+								$video .= '<a href="' . $time->videoLink . '" target="_blank"><i class="fa fa-youtube"></i></a> ';
+							}
+							?>
                             <br>
 						<?php } ?>
 						<?php if ($participant->bestTime) { ?>
                             <span class="green"><?= $participant->humanBestTime ?></span>
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
+	                    <?php if ($video) { ?>
+                            <br><?= $video ?>
+	                    <?php } ?>
                     </td>
                     <td><?= $participant->percent ?>%
 						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
@@ -387,6 +416,7 @@
                         </small>
                     </td>
                     <td>
+	                    <?php $video = null; ?>
 						<?php foreach ($times as $time) { ?>
 							<?php if ($time->isFail) { ?>
                                 <strike>
@@ -401,12 +431,20 @@
                                     <span class="red"> +<?= $time->fine ?></span>
 								<?php } ?>
 							<?php } ?>
+							<?php
+							if ($time->videoLink) {
+								$video .= '<a href="' . $time->videoLink . '" target="_blank"><i class="fa fa-youtube"></i></a> ';
+							}
+							?>
                             <br>
 						<?php } ?>
 						<?php if ($outParticipant->bestTime) { ?>
                             <span class="green"><?= $participant->humanBestTime ?></span>
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
+	                    <?php if ($video) { ?>
+                            <br><?= $video ?>
+	                    <?php } ?>
                     </td>
                     <td><?= $outParticipant->percent ?>%
 						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
