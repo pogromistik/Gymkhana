@@ -13,7 +13,9 @@ use common\models\FigureTime;
 use common\models\HelpModel;
 use common\models\MoscowPoint;
 use common\models\Participant;
+use common\models\Time;
 use common\models\Year;
+use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Stage;
 use common\models\search\StageSearch;
@@ -28,6 +30,17 @@ use yii\web\Response;
  */
 class StagesController extends BaseController
 {
+	public function actions()
+	{
+		return [
+			'add-video-link' => [
+				'class'       => EditableAction::className(),
+				'modelClass'  => Time::className(),
+				'forceCreate' => false
+			]
+		];
+	}
+	
 	public function actionView($id)
 	{
 		$this->can('refereeOfCompetitions');
@@ -158,6 +171,21 @@ class StagesController extends BaseController
 			'stage'        => $stage,
 			'participants' => $participants,
 			'orderBy'      => $orderBy
+		]);
+	}
+	
+	public function actionAddVideo($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = $this->findModel($stageId);
+		$participants = $stage->getParticipants()
+			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION,
+				Participant::STATUS_OUT_COMPETITION]])->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC])->all();
+		
+		return $this->render('add-video', [
+			'stage'        => $stage,
+			'participants' => $participants
 		]);
 	}
 	

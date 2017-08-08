@@ -217,8 +217,8 @@ class ParticipantsController extends BaseController
 		if (!$file) {
 			throw new ErrorException('No file');
 		}
-		//$path = '/tmp/' . $file->name;
-		$path = $file->name;
+		$path = '/tmp/' . $file->name;
+		//$path = $file->name;
 		$file->saveAs($path);
 		$objPHPExcel = \PHPExcel_IOFactory::load($path);
 		$records = [];
