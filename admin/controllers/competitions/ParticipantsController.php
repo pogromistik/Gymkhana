@@ -265,6 +265,7 @@ class ParticipantsController extends BaseController
 			}
 			$recordId++;
 		}
+		unlink($path);
 		
 		if (!$errors) {
 			foreach ($records as $i => $record) {
