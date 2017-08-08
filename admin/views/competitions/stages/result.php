@@ -177,6 +177,9 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 						<?php } else { ?>
 							<?= $next->timeForHuman ?>
 						<?php } ?>
+	                    <?php if ($next->videoLink) { ?>
+                            <a href="<?= $next->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
+	                    <?php } ?>
                     </td>
                     <td><?= $next->fine ?></td>
 				<?php } else { ?>
