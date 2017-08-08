@@ -29,9 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php } ?>
 
 <?php if ($success) { ?>
-    <ul>
-		<?php foreach ($success as $sort => $name) { ?>
-            <li><?= $sort ?> - <?= $name ?></li>
-		<?php } ?>
-    </ul>
+    <div class="alert alert-success">
+        <b>Порядок выступления успешно изменён</b>
+        <ul>
+			<?php foreach ($success as $sort => $name) { ?>
+                <li><?= $sort ?> - <?= $name ?></li>
+			<?php } ?>
+        </ul>
+    </div>
 <?php } ?>
