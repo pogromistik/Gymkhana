@@ -19,7 +19,7 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
-<div class="row">
+<div class="row pb-10">
     <div class="col-sm-6">
 		<?= \yii\helpers\Html::a('Скачать в xls', ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-success']) ?>
     </div>
