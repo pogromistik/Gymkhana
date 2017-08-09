@@ -64,6 +64,10 @@
         padding-bottom: 0;
     }
 
+    .pt-10-md {
+        padding-top: 0;
+    }
+
     table.results {
         font-size: 10px;
     }
