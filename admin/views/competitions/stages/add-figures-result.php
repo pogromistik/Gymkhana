@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'data'    => ArrayHelper::map($participants, 'id', function (\common\models\Participant $item) {
 				$athlete = $item->athlete;
 				
-				return $athlete->getFullName() . '  (' . $athlete->city->title . '), ' . $item->motorcycle->getFullTitle();
+				return $item->number . ' ' . $athlete->getFullName() . '  (' . $athlete->city->title . '), ' . $item->motorcycle->getFullTitle();
 			}),
 			'options' => [
 				'placeholder' => 'Выберите участника...',
