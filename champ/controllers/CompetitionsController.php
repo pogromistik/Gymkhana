@@ -489,6 +489,7 @@ class CompetitionsController extends BaseController
 		$classIds = \Yii::$app->request->post('classIds');
 		$yearId = \Yii::$app->request->post('yearId');
 		$showAll = \Yii::$app->request->post('showAll');
+		$date = \Yii::$app->request->post('date');
 		$year = null;
 		if ($countryId && !$regionIds) {
 			$regionIds = Region::find()->select('id')->where(['countryId' => $countryId])->asArray()->column();
@@ -514,6 +515,11 @@ class CompetitionsController extends BaseController
 			if ($classIds) {
 				$results->andWhere(['"FigureTimes"."athleteClassId"' => $classIds]);
 			}
+			if ($date) {
+				$dateStart = (new \DateTime($date, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+				$dateEnd = $dateStart+86400;
+				$results->andWhere(['>=', '"FigureTimes"."date"', $dateStart])->andWhere(['<=', '"FigureTimes"."date"', $dateEnd]);
+			}
 			$results->orderBy(['"FigureTimes"."resultTime"' => SORT_ASC]);
 		} else {
 			$subQuery->select('*, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n');
@@ -522,6 +528,11 @@ class CompetitionsController extends BaseController
 				$subQuery->where(['athleteClassId' => $classIds]);
 			}
 			$subQuery->andWhere(['figureId' => $figureId]);
+			if ($date) {
+				$dateStart = (new \DateTime($date, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+				$dateEnd = $dateStart+86400;
+				$subQuery->andWhere(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd]);
+			}
 			$results->from(['Athletes',
 				'(' . $subQuery->createCommand()->rawSql . ') A']);
 			
