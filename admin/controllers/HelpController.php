@@ -14,9 +14,7 @@ class HelpController extends BaseController
 {
 	public function actionIndex()
 	{
-		if (\Yii::$app->user->can('admin')) {
-			return $this->render('help');
-		} elseif (\Yii::$app->user->can('competitions')) {
+		if (\Yii::$app->user->can('admin') || \Yii::$app->user->can('competitions')) {
 			return $this->render('help-competitions');
 		}
 		
