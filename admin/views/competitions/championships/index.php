@@ -76,8 +76,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 							if ($stage->dateOfThe) {
 								$title .= ', ' . $stage->dateOfTheHuman;
 							}
-							$html .= '<li>' . Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id],
-									['target' => '_blank']) . '</li>';
+							$html .= '<li>' . Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]) . '</li>';
 						}
 						$html .= '</ul>';
 					}
