@@ -205,6 +205,23 @@ $time = time();
 						]);
 						?>
                     </div>
+                    <div class="col-md-12 col-sm-12 pt-10-md input-with-sm-pt">
+						<?= \kartik\widgets\DatePicker::widget([
+							'name'          => 'date',
+							'type'          => \kartik\widgets\DatePicker::TYPE_INPUT,
+							'value'         => null,
+							'options'       => ['placeholder' => 'Выберите дату...'],
+							'readonly'      => true,
+							'pluginOptions' => [
+								'autoclose' => true,
+								'format'    => 'dd.mm.yyyy'
+							],
+							'pluginEvents'  => [
+								'change' => 'function(e){
+				figureFilters();
+			}'],
+						]); ?>
+                    </div>
                 </div>
 				<?php \yii\bootstrap\Html::endForm() ?>
             </div>
@@ -230,17 +247,18 @@ $time = time();
 						<?php } ?>
                     </div>
                 </div>
-                
-                <?php if ($figure->severalRecords) { ?>
+				
+				<?php if ($figure->severalRecords) { ?>
                     С момента добавления результатов мировой рекорд по фигуре <?= $figure->title ?>
                     был обновлён. В связи с этим, в таблице выводится два рейтинга:<br>
                     — "Начальный рейтинг" - рейтинг на момент добавления результата<br>
                     — "Актуальный рейтинг" - процент отставания от текущего мирового рекорда<br>
                     <div class="show-pk">
-                        При наведении на начальный рейтинг показывается рекорд, который был в момент добавления результата на сайт.
+                        При наведении на начальный рейтинг показывается рекорд, который был в момент добавления
+                        результата на сайт.
                     </div>
-                <?php } ?>
-                
+				<?php } ?>
+
                 <div class="small text-right">
 					<?php $count = count($results); ?>
 					<?php if ($count == 30) { ?>
