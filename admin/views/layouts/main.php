@@ -210,6 +210,19 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                             </ul>
                         </li>
 					<?php } ?>
+                    <?php if (\Yii::$app->user->can('developer')) { ?>
+                    <li>
+                        <a href="#"><i class="fa fa-cogs fa-fw"></i> РАЗРАБОТЧИКУ<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?= Url::to(['/competitions/developer/repeat-athletes']) ?>"> Повторы спортсменов</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/competitions/developer/repeat-figures-time']) ?>"> Повторы спортсменов</a>
+                            </li>
+                        </ul>
+                    <?php } ?>
 					<?php if (\Yii::$app->user->can('competitions')) { ?>
                         <li class="competitions active">
                             <a href="#"><i class="fa fa-motorcycle fa-fw"></i> СОРЕВНОВАНИЯ<span
