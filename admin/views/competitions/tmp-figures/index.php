@@ -14,7 +14,8 @@ $this->title = 'Результаты фигур, требующие одобре
 ?>
 
 <div class="alert alert-danger">
-    <b>После добавления результатов зайдите на страницу фигуры, чтобы подтвердить переходы спортсменов в новые классы и при необходимости
+    <b>После добавления результатов зайдите на страницу фигуры, чтобы подтвердить переходы спортсменов в новые классы и
+        при необходимости
         установить новые рекорды.</b>
 </div>
 
@@ -22,7 +23,7 @@ $this->title = 'Результаты фигур, требующие одобре
     Мы принимаем только результаты, для которых есть видео заезда (при этом обязательно должна быть электронная
     телеметрия! результаты, засеченные телефоном не могут считаться официальными и не принимаются на сайт) или
     этот результат есть в группе <a href="https://vk.com/motogymkhana_ru" target="_blank">Мото Джимхана [Sport]</a>
-    (или  <a href="https://vk.com/topic-35972290_30425335?offset=0" target="_blank">МотоДжимхана</a> для GP8)
+    (или <a href="https://vk.com/topic-35972290_30425335?offset=0" target="_blank">МотоДжимхана</a> для GP8)
 </div>
 
 <div class="tmp-participant-index">
@@ -48,7 +49,21 @@ $this->title = 'Результаты фигур, требующие одобре
 					]
 				]),
 				'value'     => function (TmpFigureResult $figureResult) {
-					return $figureResult->figure->title;
+					return Editable::widget([
+						'name'          => 'figureId',
+						'value'         => $figureResult->figure->title,
+						'url'           => 'update',
+						'type'          => 'select',
+						'mode'          => 'pop',
+						'clientOptions' => [
+							'pk'        => $figureResult->id,
+							'placement' => 'right',
+							'select'    => [
+								'width' => '124px'
+							],
+							'source'    => \yii\helpers\ArrayHelper::map(\common\models\Figure::getAll(), 'id', 'title'),
+						]
+					]);
 				}
 			],
 			[
