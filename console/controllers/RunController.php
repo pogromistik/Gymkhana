@@ -798,6 +798,20 @@ class RunController extends Controller
 			}
 		}
 		
+		//чемпионат завершился и снова начался
+		$year = Year::findOne(['year' => date('Y')]);
+		if ($year) {
+			$championships = Championship::findAll(['status' => Championship::STATUS_PAST, 'yearId' => $year->id]);
+			foreach ($championships as $championship) {
+				if (Stage::find()->where(['championshipId' => $championship->id])
+					->andWhere(['>=', 'dateOfThe', $time])->one()) {
+					$championship->status = Championship::STATUS_PRESENT;
+					$championship->save();
+					$count++;
+				}
+			}
+		}
+		
 		echo 'Change ' . $count . ' items';
 		
 		return true;
