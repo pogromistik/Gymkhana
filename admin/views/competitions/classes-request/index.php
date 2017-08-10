@@ -32,6 +32,14 @@ $this->title = 'Запросы на изменение класса';
 				}
 			],
 			[
+				'attribute' => 'newClassId',
+				'format'    => 'raw',
+				'filter'    => false,
+				'value'     => function (\common\models\ClassesRequest $item) {
+					return $item->class->title;
+				}
+			],
+			[
 				'attribute' => 'comment',
 				'format'    => 'raw',
 				'filter'    => false,
