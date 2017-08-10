@@ -3,7 +3,7 @@
  * @var \yii\web\View               $this
  * @var \common\models\FigureTime[] $items
  */
-$this->title = 'Повторы спортсменов по фамилии';
+$this->title = 'Повторы результатов базовых фигур';
 ?>
 
 <div class="row pb-10">
