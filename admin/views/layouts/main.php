@@ -219,7 +219,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                                 <a href="<?= Url::to(['/competitions/developer/repeat-athletes']) ?>"> Повторы спортсменов</a>
                             </li>
                             <li>
-                                <a href="<?= Url::to(['/competitions/developer/repeat-figures-time']) ?>"> Повторы спортсменов</a>
+                                <a href="<?= Url::to(['/competitions/developer/repeat-figures-time']) ?>"> Повторы времени фигур</a>
                             </li>
                         </ul>
                     <?php } ?>
