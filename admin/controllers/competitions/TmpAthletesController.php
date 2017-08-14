@@ -350,6 +350,11 @@ class TmpAthletesController extends BaseController
 		if (!$tmpAthlete->cityId) {
 			return 'Необходимо выбрать город из списка';
 		}
+		if ($tmpAthlete->email && $tmpAthlete->email != '') {
+			if (Athlete::findOne(['email' => $tmpAthlete->email])) {
+				return 'Указанный email занят';
+			}
+		}
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$athlete = new Athlete();
