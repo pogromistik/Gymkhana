@@ -224,11 +224,15 @@ class Participant extends BaseActiveRecord
 				$this->percent = round($this->bestTime / $stage->referenceTime * 100, 2);
 				if ($stage->class && isset($this->getOldAttributes()["bestTime"])
 					&& $this->bestTime != $this->getOldAttributes()["bestTime"]
+					&& $this->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_APPROVE
 				) {
 					$newClassId = self::getNewClass($stage->classModel, $this);
 					if ($newClassId) {
 						$this->newAthleteClassId = $newClassId;
 						$this->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+					} elseif ($this->newAthleteClassId) {
+						$this->newAthleteClassId = null;
+						$this->newAthleteClassStatus = null;
 					}
 				}
 			}
