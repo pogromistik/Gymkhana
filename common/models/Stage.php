@@ -404,11 +404,14 @@ class Stage extends BaseActiveRecord
 				}
 				
 				//Рассчёт класса
-				if ($this->class) {
+				if ($this->class && $participant->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_APPROVE) {
 					$newClassId = Participant::getNewClass($this->classModel, $participant);
 					if ($newClassId) {
 						$participant->newAthleteClassId = $newClassId;
 						$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+					} else {
+						$participant->newAthleteClassId = null;
+						$participant->newAthleteClassStatus = null;
 					}
 				}
 				
