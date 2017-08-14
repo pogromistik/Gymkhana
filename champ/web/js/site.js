@@ -97,7 +97,11 @@ $(document).ready(function () {
 });
 
 $('.toggle .title').click(function () {
-    $(this).parent().find('.toggle-content').slideToggle();
+    var elem = $(this);
+    if (elem.parent().find('.toggle-content').find('img').length > 0) {
+        elem.parent().find('.toggle-content').find('img').css({'max-height': $(window).height()-65});
+    }
+    elem.parent().find('.toggle-content').slideToggle();
 });
 
 $('#cityNotFound').click(function (e) {

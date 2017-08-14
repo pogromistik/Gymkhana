@@ -178,31 +178,37 @@ $('.change-status').click(function (e) {
     });
 });
 
+var clickCount = 0;
 $(document).on("submit", '.raceTimeForm', function (e) {
+    clickCount++;
     e.preventDefault();
-    showBackDrop();
-    var form = $(this);
-    $.ajax({
-        url: '/competitions/participants/add-time',
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            if (result['success'] == true) {
-                form.find('.row').addClass('result-line');
-                form.find('.timeId').val(result['id']);
-                var next = form.next();
-                next.find('input[name="Time[timeForHuman]"]').focus();
+    if (clickCount === 1) {
+        showBackDrop();
+        var form = $(this);
+        $.ajax({
+            url: '/competitions/participants/add-time',
+            type: "POST",
+            data: form.serialize(),
+            success: function (result) {
+                clickCount = 0;
+                if (result['success'] == true) {
+                    form.find('.row').addClass('result-line');
+                    form.find('.timeId').val(result['id']);
+                    var next = form.next();
+                    next.find('input[name="Time[timeForHuman]"]').focus();
+                    hideBackDrop();
+                } else {
+                    hideBackDrop();
+                    BootboxError(result['error']);
+                }
+            },
+            error: function (result) {
+                clickCount = 0;
                 hideBackDrop();
-            } else {
-                hideBackDrop();
-                BootboxError(result['error']);
+                BootboxError(result);
             }
-        },
-        error: function (result) {
-            hideBackDrop();
-            BootboxError(result);
-        }
-    });
+        });
+    }
 });
 
 $('.saveAllStageResult').click(function (e) {

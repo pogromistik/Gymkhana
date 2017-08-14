@@ -83,6 +83,7 @@ class FiguresController extends BaseController
 		$searchModel = new FigureTimeSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['figureId' => $model->id]);
+		$dataProvider->query->orderBy(['newAthleteClassStatus' => SORT_ASC, 'yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'dateAdded' => SORT_DESC]);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['update', 'id' => $model->id, 'success' => true]);

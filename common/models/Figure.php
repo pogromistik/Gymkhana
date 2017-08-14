@@ -161,7 +161,7 @@ class Figure extends \yii\db\ActiveRecord
 	/**
 	 * @return Figure[]
 	 */
-	public static function getAll($withoutId)
+	public static function getAll($withoutId = null)
 	{
 		$result = self::find()->orderBy(['title' => SORT_ASC]);
 		if ($withoutId) {
