@@ -1,6 +1,7 @@
 <?php
 namespace admin\models;
 use common\models\AthletesClass;
+use common\models\HelpModel;
 use common\models\Time;
 use yii\base\Model;
 
@@ -40,11 +41,9 @@ class ReferenceTimeForm extends Model
 		}
 		
 		$athleteClass = AthletesClass::findOne($this->class);
-		$this->referenceTime = round($this->time / $athleteClass->coefficient);
-		$min = str_pad(floor($this->referenceTime / 60000), 2, '0', STR_PAD_LEFT);
-		$sec = str_pad(floor(($this->referenceTime - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
-		$mls = str_pad(round(($this->referenceTime - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
-		$this->referenceTimeForHuman = $min . ':' . $sec . '.' . $mls;
+		$time = floor($this->time / $athleteClass->coefficient);
+		$this->referenceTime = ((int)($time / 10)) * 10;
+		$this->referenceTimeForHuman = HelpModel::convertTimeToHuman($this->referenceTime);
 		
 		return true;
 	}
