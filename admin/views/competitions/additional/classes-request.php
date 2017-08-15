@@ -49,7 +49,16 @@ $this->title = 'Обработанные заявки на смену класс
 						return ClassesRequest::$statusesTitle[$item->status];
 					}
 				],
-				'feedback'
+				'feedback',
+				[
+					'format'  => 'raw',
+					'value'   => function (ClassesRequest $item) {
+						return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
+							'modelClass' => ClassesRequest::class,
+							'modelId'    => $item->id
+						]);
+					}
+				]
 			],
 		]); ?>
 	</div>

@@ -40,3 +40,9 @@ use yii\helpers\Html;
 		]) ?>
 	<?php } ?>
 </div>
+<?php if (\Yii::$app->user->can('developer')) { ?>
+    <div class="pt-10">
+        <?= Html::a('Логи', ['/competitions/developer/logs', 'modelClass' => Stage::class,
+            'modelId' => $model->id], ['class' => 'btn btn-default']) ?>
+    </div>
+<?php } ?>

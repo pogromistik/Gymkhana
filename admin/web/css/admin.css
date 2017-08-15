@@ -516,3 +516,17 @@ a.red-button {
 .download .dropdown-menu > li > a:hover {
     background-color: #e6e6e6;
 }
+
+.changes .old {
+    background: #de7f77;
+    border-radius: 2px;
+}
+
+.changes .new {
+    background: #99e499;
+    border-radius: 2px;
+}
+
+.pb-1 {
+    padding-bottom: 1px;
+}

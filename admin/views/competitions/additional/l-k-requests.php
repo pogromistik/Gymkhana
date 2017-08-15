@@ -54,6 +54,15 @@ $this->title = 'Обработанные заявки на регистраци�
 					return implode('<br>', $titles);
 				}
 			],
+			[
+				'format'  => 'raw',
+				'value'   => function (\common\models\TmpAthlete $athlete) {
+					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
+						'modelClass' => \common\models\TmpAthlete::class,
+						'modelId'    => $athlete->id
+					]);
+				}
+			]
 		],
 	]); ?>
 </div>
