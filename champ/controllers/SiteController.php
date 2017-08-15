@@ -89,6 +89,9 @@ class SiteController extends BaseController
 			return $this->goHome();
 		}
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'login.png';
+		
 		$model = new LoginForm();
 		if ($model->load(Yii::$app->request->post()) && $model->login()) {
 			return $this->redirect(['/profile/info']);
