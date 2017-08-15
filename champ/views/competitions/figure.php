@@ -266,6 +266,7 @@ $time = time();
 					<?php } else { ?>
                         Количество результатов: <?= $count ?>
 					<?php } ?>
+                    <br><small>для просмотра прогресса по фигуре нажмите на итоговое время</small>
                 </div>
 				
 				<?php if ($figure->useForClassesCalculate) { ?>
