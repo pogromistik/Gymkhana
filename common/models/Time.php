@@ -101,7 +101,7 @@ class Time extends BaseActiveRecord
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
 			$this->time = ($min * 60000) + round($secs * 1000);
-			if ($this->time > self::FAIL_TIME) {
+			if ($this->time > self::FAIL_TIME || $this->time === (float)0) {
 				$this->time = self::FAIL_TIME;
 			}
 		}
