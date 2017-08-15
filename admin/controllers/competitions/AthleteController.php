@@ -328,9 +328,12 @@ class AthleteController extends BaseController
 		if (!$newClass) {
 			return 'Класс не найден';
 		}
-		if ($athlete->athleteClass->percent < $newClass->percent || $athlete->athleteClassId == $newClass->id) {
-			return 'Данный функционал позволяет только повышать класс спортсмену';
+		if ($athlete->athleteClassId == $newClass->id) {
+			return 'У спортсмена итак установлен выбранный класс';
 		}
+		/*if ($athlete->athleteClass->percent < $newClass->percent || $athlete->athleteClassId == $newClass->id) {
+			return 'Данный функционал позволяет только повышать класс спортсмену';
+		}*/
 		$history->oldClassId = $athlete->athleteClassId;
 		$transaction = \Yii::$app->db->beginTransaction();
 		if (!$history->save()) {
@@ -371,9 +374,12 @@ class AthleteController extends BaseController
 		$this->can('competitions');
 		
 		$athlete = Athlete::findOne($athleteId);
-		$class = $athlete->athleteClass;
+		/* $class = $athlete->athleteClass;
 		
-		return AthletesClass::find()->select(['id', '"title" as "name"'])->where(['<=', 'percent', $class->percent])
-			->andWhere(['not', ['id' => $class->id]])->asArray()->all();
+		return AthletesClass::find()->select(['id', '"title" as "name"'])->where(['not', 'id', $class->percent])
+			->andWhere(['not', ['id' => $class->id]])->asArray()->all(); */
+		
+		return AthletesClass::find()->select(['id', '"title" as "name"'])
+			->where(['not', ['id' => $athlete->athleteClassId]])->asArray()->all();
 	}
 }
