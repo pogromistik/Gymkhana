@@ -44,7 +44,10 @@ use yii\bootstrap\Html;
     <div class="figures pt-10">
         <h4>
             Результаты базовых фигур<br>
-            <small>представлены только лучшие результаты</small>
+            <small>представлены только лучшие результаты</small><br>
+            <span class="small">
+                <small>для просмотра прогресса по фигуре нажмите на время</small>
+            </span>
         </h4>
 		<?php if (!$figuresResult) { ?>
             Информация отсутствует
@@ -60,7 +63,8 @@ use yii\bootstrap\Html;
                         <td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
                         <td class="show-pk"><?= $result->motorcycle->getFullTitle() ?></td>
                         <td>
-							<?= $result->resultTimeForHuman ?>
+	                        <?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
+		                        'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
 							<?php if ($result->fine) { ?>
                                 <small> (<?= $result->timeForHuman ?> +<?= $result->fine ?>)</small>
 							<?php } ?>

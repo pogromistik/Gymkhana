@@ -43,7 +43,8 @@
                     <td><?= $item->timeForHuman ?></td>
                     <td><?= $item->fine ?></td>
                     <td>
-						<?= $item->resultTimeForHuman ?>
+	                    <?= \yii\helpers\Html::a($item->resultTimeForHuman, ['/competitions/progress',
+		                    'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
 						<?php if ($item->recordType && $item->recordStatus == \common\models\FigureTime::NEW_RECORD_APPROVE) { ?>
 							<?= \yii\bootstrap\Html::img('/img/crown.png', [
 								'title' => \common\models\FigureTime::$recordsTitle[$item->recordType] . '!',
@@ -113,7 +114,9 @@
                                 <span class="red"> +<?= $item->fine ?></span>
 							<?php } ?>
                             <br>
-                            <span class="green"><?= $item->resultTimeForHuman ?></span>
+                            <span class="green">
+                            <?= \yii\helpers\Html::a($item->resultTimeForHuman, ['/competitions/progress',
+	                            'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?></span>
 							<?php if ($item->videoLink) { ?>
                                 <br>
                                 <a href="<?= $item->videoLink ?>" target="_blank">

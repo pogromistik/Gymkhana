@@ -465,6 +465,33 @@ class CompetitionsController extends BaseController
 		]);
 	}
 	
+	public function actionProgress($figureId, $athleteId)
+	{
+		$figure = Figure::findOne($figureId);
+		if (!$figure) {
+			throw new NotFoundHttpException('Фигура не найдена');
+		}
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			throw new NotFoundHttpException('Спортсмен не найден');
+		}
+		$results = FigureTime::find()->where(['figureId' => $figureId, 'athleteId' => $athleteId])
+			->orderBy(['date' => SORT_ASC, 'resultTime' => SORT_ASC])->all();
+		
+		$this->pageTitle = $athlete->getFullName() . ': прогресс по ' . $figure->title;
+		$this->description = $athlete->getFullName() . ': прогресс по фигуре ' . $figure->title;
+		
+		$backgroundItem = rand(1, 7);
+		$this->layout = 'main-with-img';
+		$this->background = 'rand' . $backgroundItem . '.png';
+		
+		return $this->render('progress', [
+			'figure'  => $figure,
+			'athlete' => $athlete,
+			'results' => $results
+		]);
+	}
+	
 	public function actionFigureResultsWithFilters()
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
@@ -517,7 +544,7 @@ class CompetitionsController extends BaseController
 			}
 			if ($date) {
 				$dateStart = (new \DateTime($date, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
-				$dateEnd = $dateStart+86400;
+				$dateEnd = $dateStart + 86400;
 				$results->andWhere(['>=', '"FigureTimes"."date"', $dateStart])->andWhere(['<=', '"FigureTimes"."date"', $dateEnd]);
 			}
 			$results->orderBy(['"FigureTimes"."resultTime"' => SORT_ASC]);
@@ -530,7 +557,7 @@ class CompetitionsController extends BaseController
 			$subQuery->andWhere(['figureId' => $figureId]);
 			if ($date) {
 				$dateStart = (new \DateTime($date, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
-				$dateEnd = $dateStart+86400;
+				$dateEnd = $dateStart + 86400;
 				$subQuery->andWhere(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd]);
 			}
 			$results->from(['Athletes',
