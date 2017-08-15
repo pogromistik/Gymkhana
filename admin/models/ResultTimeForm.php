@@ -54,7 +54,8 @@ class ResultTimeForm extends Model
 		
 		$resultClass = AthletesClass::find()->where(['>', 'percent', $this->percent])
 			->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
-		if ($resultClass && $resultClass->id != $this->class) {
+		$oldClass = AthletesClass::findOne($this->class);
+		if ($resultClass && $resultClass->id != $this->class && $resultClass->percent < $oldClass->percent) {
 			$this->newClass = $resultClass->title;
 		}
 		

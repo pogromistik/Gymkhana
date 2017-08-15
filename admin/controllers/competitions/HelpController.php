@@ -415,12 +415,47 @@ class HelpController extends BaseController
 	{
 		$this->can('competitions');
 		$model = new ReferenceTimeForm();
+		/** @var AthletesClass[] $classes */
 		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		$needTime = [];
 		if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
 			$model->calculate();
+			if ($model->referenceTime) {
+				/** @var AthletesClass $prev */
+				$prev = null;
+				$last = null;
+				$prevTime = 0;
+				foreach ($classes as $class) {
+					if (!$prev || $prev->percent == $class->percent) {
+						$startTime = '00:00.00';
+					} else {
+						$time = $prevTime + 10;
+						$startTime = HelpModel::convertTimeToHuman($time);
+					}
+					$time = floor($model->referenceTime * ($class->percent) / 100);
+					$time = ((int)($time / 10)) * 10;
+					if (round($time / $model->referenceTime * 100, 2) >= $class->percent) {
+						$time -= 10;
+					}
+					$prevTime = $time;
+					$endTime = HelpModel::convertTimeToHuman($time);
+					$needTime[$class->id] = [
+						'classModel' => $class,
+						'startTime'  => $startTime,
+						'endTime'    => $endTime,
+						'percent'    => $class->percent
+					];
+					$prev = $class;
+					$last = $class->id;
+				}
+				$needTime[$last]['endTime'] = '59:59.59';
+				if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+					$needTime[$last]['percent'] = '> ' . $prev->percent;
+				}
+			}
 		}
 		
-		return $this->render('time-calculate', ['model' => $model, 'classes' => $classes]);
+		return $this->render('time-calculate', ['model' => $model, 'classes' => $classes, 'needTime' => $needTime]);
 	}
 	
 	public function actionResultCalculate()
