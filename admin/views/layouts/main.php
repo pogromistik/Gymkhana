@@ -350,7 +350,7 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 	                            <?php } ?>
 	                            <?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                                     <li>
-                                        <a href="<?= Url::to(['/competitions/athlete/change-class']) ?>">Повысить класс спортсмену</a>
+                                        <a href="<?= Url::to(['/competitions/athlete/change-class']) ?>">Изменить класс спортсмену</a>
                                     </li>
 	                            <?php } ?>
 	                            <?php if (\Yii::$app->user->can('canSendMessages')) { ?>
