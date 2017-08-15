@@ -48,7 +48,8 @@
 					<td><?= $item->timeForHuman ?></td>
 					<td><?= $item->fine ?></td>
 					<td>
-						<?= $item->resultTimeForHuman ?>
+						<?= \yii\helpers\Html::a($item->resultTimeForHuman, ['/competitions/progress',
+							'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
 					</td>
 					<td><?= $item->percent ?>%</td>
 					<td><?= ($item->newAthleteClassId &&
@@ -107,7 +108,10 @@
 								<span class="red"> +<?= $item->fine ?></span>
 							<?php } ?>
 							<br>
-							<span class="green"><?= $item->resultTimeForHuman ?></span>
+							<span class="green">
+                            <?= \yii\helpers\Html::a($item->resultTimeForHuman, ['/competitions/progress',
+	                            'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
+                            </span>
 						</td>
 						<td>
 							<?= $item->percent ?>%
