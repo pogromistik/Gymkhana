@@ -481,7 +481,7 @@ class CompetitionsController extends BaseController
 		$this->pageTitle = $athlete->getFullName() . ': прогресс по ' . $figure->title;
 		$this->description = $athlete->getFullName() . ': прогресс по фигуре ' . $figure->title;
 		
-		$backgroundItem = rand(1, 7);
+		$backgroundItem = rand(1, 8);
 		$this->layout = 'main-with-img';
 		$this->background = 'rand' . $backgroundItem . '.png';
 		

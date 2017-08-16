@@ -142,6 +142,9 @@ class SiteController extends BaseController
 			return $this->goHome();
 		}
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'register.png';
+		
 		$registration = new TmpAthlete();
 		
 		return $this->render('registration', [
@@ -234,6 +237,9 @@ class SiteController extends BaseController
 	{
 		$this->pageTitle = 'Восстановление пароля';
 		$model = new PasswordResetRequestForm();
+		
+		$this->layout = 'main-with-img';
+		$this->background = 'reset-psw.png';
 		
 		return $this->render('reset-password', ['model' => $model]);
 	}
