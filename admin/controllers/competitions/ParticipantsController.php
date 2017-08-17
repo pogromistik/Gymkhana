@@ -634,6 +634,8 @@ class ParticipantsController extends BaseController
 			if (!$stage->save()) {
 				return 'Не удалось установить класс соревнований';
 			}
+		} else {
+			return 'В списке нет ни одного участника, приехавшего на этап';
 		}
 		
 		return true;
