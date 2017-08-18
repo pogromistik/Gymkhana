@@ -177,7 +177,7 @@ class TmpFiguresController extends BaseController
 		if (!$text) {
 			return 'Необходимо указать причину';
 		}
-		if (mb_strlen($text) > 255) {
+		if (mb_strlen($text, 'UTF-8') > 255) {
 			return 'Причина должна содержать не более 255 символов';
 		}
 		$tmp = TmpFigureResult::findOne($id);
