@@ -78,7 +78,7 @@ use yii\bootstrap\Html;
 							<small><?= $result->motorcycle->getFullTitle() ?></small>
 							</div>
                         </td>
-                        <td><?= $result->actualPercent ? $result->percent : null ?>%</td>
+                        <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%</td>
                     </tr>
 				<?php } ?>
             </table>
