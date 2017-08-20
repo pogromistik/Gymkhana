@@ -777,19 +777,13 @@ class ParticipantsController extends BaseController
 				того, как оставил заявку на участие в чемпионате. Понижение класса невозможно';
 		}*/
 		if ($athlete->athleteClass->percent <= $participant->newAthleteClass->percent) {
-			if (!Participant::find()->where(['stageId' => $participant->stageId])->andWhere(['not', ['id' => $participant->id]])
-					->andWhere(['athleteId' => $participant->athleteId])->one()
-				&& date('d.m.Y', $stage->dateOfThe) == date('d.m.Y', time())
-			) {
-			
-			} else {
-				$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
-				if (!$participant->save()) {
-					
-					return 'Невозможно сохранить изменения для участника. Свяжитесь с разработчиком.';
-				}
-				return true;
+			$participant->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
+			if (!$participant->save()) {
+				
+				return 'Невозможно сохранить изменения для участника. Свяжитесь с разработчиком.';
 			}
+			
+			return true;
 		}
 		
 		if ($athlete->athleteClassId != $participant->newAthleteClassId) {
