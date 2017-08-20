@@ -780,6 +780,8 @@ class ParticipantsController extends BaseController
 			if (!Participant::find()->where(['stageId' => $participant->stageId])->andWhere(['not', ['id' => $participant->id]])
 					->andWhere(['athleteId' => $participant->athleteId])->one()
 				&& date('d.m.Y', $stage->dateOfThe) == date('d.m.Y', time())
+				&& ClassHistory::find()->where(['athleteId' => $participant->athleteId])
+				->andWhere(['newClassId' => $athlete->athleteClassId])->andWhere(['>=', 'date', $stage->dateOfThe])->one()
 			) {
 			
 			} else {
