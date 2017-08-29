@@ -325,15 +325,17 @@ class Stage extends BaseActiveRecord
 		$transaction = \Yii::$app->db->beginTransaction();
 		/** @var Participant $best */
 		$best = $this->getActiveParticipants()->andWhere(['athleteClassId' => $this->class])->orderBy(['bestTime' => SORT_ASC])->one();
-		if (!$best) {
-			$transaction->rollBack();
-			
-			return 'Неправильно указан класс соревнований: нет ни одного результата в классе ' . $this->classModel->title;
-		}
-		if (!$best->bestTime || $best->bestTime == 0) {
-			$transaction->rollBack();
-			
-			return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
+		if ($this->classModel->percent != 1000) {
+			if (!$best) {
+				$transaction->rollBack();
+				
+				return 'Неправильно указан класс соревнований: нет ни одного результата в классе ' . $this->classModel->title;
+			}
+			if (!$best->bestTime || $best->bestTime == 0) {
+				$transaction->rollBack();
+				
+				return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
+			}
 		}
 		$referenceTime = floor($best->bestTime / $best->athleteClass->coefficient);
 		$referenceTime = ((int)($referenceTime / 10)) * 10;;
