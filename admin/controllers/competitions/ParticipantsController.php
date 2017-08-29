@@ -417,7 +417,7 @@ class ParticipantsController extends BaseController
 		]);
 	}
 	
-	public function actionAddTime()
+	public function actionAddTime($checkTime = true)
 	{
 		$this->can('competitions');
 		
@@ -433,7 +433,19 @@ class ParticipantsController extends BaseController
 		if (isset($params['Time']['id']) && $params['Time']['id'] != '') {
 			$time = Time::findOne($params['Time']['id']);
 		} else {
-			$time = new Time();
+			if (isset($params['Time']['stageId']) && isset($params['Time']['attemptNumber']) &&
+				isset($params['Time']['participantId'])
+			) {
+				$time = Time::findOne(['attemptNumber' => $params['Time']['attemptNumber'],
+				                       'stageId'       => $params['Time']['stageId'],
+				                       'participantId' => $params['Time']['participantId']
+				]);
+				if (!$time) {
+					$time = new Time();
+				}
+			} else {
+				$time = new Time();
+			}
 		}
 		if ($time->load(\Yii::$app->request->post())) {
 			$stage = Stage::findOne($time->stageId);
@@ -449,9 +461,13 @@ class ParticipantsController extends BaseController
 				if ($time->isFail == Time::IS_FAIL_YES) {
 					$time->timeForHuman = Time::FAIL_TIME_FOR_HUMAN;
 				} else {
-					$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
-					
-					return $result;
+					if ($checkTime) {
+						$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
+						return $result;
+					} else {
+						$result['success'] = true;
+						return $result;
+					}
 				}
 			}
 			trim($time->timeForHuman, '_');

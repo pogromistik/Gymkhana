@@ -222,7 +222,7 @@ $('.saveAllStageResult').click(function (e) {
 
 function AddAllResults(form) {
     $.ajax({
-        url: '/competitions/participants/add-time',
+        url: '/competitions/participants/add-time?checkTime=0',
         type: "POST",
         data: form.serialize(),
         success: function (result) {
