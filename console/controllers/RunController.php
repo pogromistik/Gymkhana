@@ -804,7 +804,8 @@ class RunController extends Controller
 			$championships = Championship::findAll(['status' => Championship::STATUS_PAST, 'yearId' => $year->id]);
 			foreach ($championships as $championship) {
 				if (Stage::find()->where(['championshipId' => $championship->id])
-					->andWhere(['>=', 'dateOfThe', $time])->one()) {
+					->andWhere(['>=', 'dateOfThe', $time])->one()
+				) {
 					$championship->status = Championship::STATUS_PRESENT;
 					$championship->save();
 					$count++;
@@ -1382,7 +1383,7 @@ class RunController extends Controller
 				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
 			foreach ($figureTimes as $item) {
 				if (Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
-				                                 'stageId'   => $stage->id])->one()
+				                                'stageId'   => $stage->id])->one()
 				) {
 					$item->stageId = $stage->id;
 					$item->save(false);
