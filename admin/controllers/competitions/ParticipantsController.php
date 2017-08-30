@@ -417,7 +417,7 @@ class ParticipantsController extends BaseController
 		]);
 	}
 	
-	public function actionAddTime()
+	public function actionAddTime($checkTime = true)
 	{
 		$this->can('competitions');
 		
@@ -433,7 +433,19 @@ class ParticipantsController extends BaseController
 		if (isset($params['Time']['id']) && $params['Time']['id'] != '') {
 			$time = Time::findOne($params['Time']['id']);
 		} else {
-			$time = new Time();
+			if (isset($params['Time']['stageId']) && isset($params['Time']['attemptNumber']) &&
+				isset($params['Time']['participantId'])
+			) {
+				$time = Time::findOne(['attemptNumber' => $params['Time']['attemptNumber'],
+				                       'stageId'       => $params['Time']['stageId'],
+				                       'participantId' => $params['Time']['participantId']
+				]);
+				if (!$time) {
+					$time = new Time();
+				}
+			} else {
+				$time = new Time();
+			}
 		}
 		if ($time->load(\Yii::$app->request->post())) {
 			$stage = Stage::findOne($time->stageId);
@@ -449,9 +461,15 @@ class ParticipantsController extends BaseController
 				if ($time->isFail == Time::IS_FAIL_YES) {
 					$time->timeForHuman = Time::FAIL_TIME_FOR_HUMAN;
 				} else {
-					$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
-					
-					return $result;
+					if ($checkTime) {
+						$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
+						
+						return $result;
+					} else {
+						$result['success'] = true;
+						
+						return $result;
+					}
 				}
 			}
 			trim($time->timeForHuman, '_');
@@ -616,9 +634,16 @@ class ParticipantsController extends BaseController
 			$class = null;
 			while ($classIds) {
 				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
-				$presumablyClass = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
-				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])
-						->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3
+				/** @var AthletesClass $presumablyClass */
+				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
+				if (Participant::find()
+						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
+			from "Participants" WHERE "stageId"='.$stage->id.') b'))
+						->where(new Expression('n=1'))
+						->andWhere(['a.stageId' => $stageId, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
+						->andWhere(['a.athleteClassId' => $presumablyClass->id])
+						->andWhere(new Expression('"a"."id"="b"."id"'))
+						->count() >= 3
 				) {
 					$class = $presumablyClass;
 					break;
@@ -634,6 +659,9 @@ class ParticipantsController extends BaseController
 			if (!$stage->save()) {
 				return 'Не удалось установить класс соревнований';
 			}
+		} else {
+			return 'В списке нет ни одного участника, приехавшего на этап. Возможно, вы забывали отмечать пункт
+			"участник приехал на этап" на странице со списком участников.';
 		}
 		
 		return true;

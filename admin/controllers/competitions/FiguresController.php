@@ -371,8 +371,9 @@ class FiguresController extends BaseController
 			return 'Запись уже была обработана';
 		}
 		if ($athlete->athleteClassId && $athlete->athleteClass->percent < $item->newAthleteClass->percent) {
-			return 'Вы пытаетесь понизить спортсмену ' . $item->athlete->getFullName() . ' класс с ' . $athlete->athleteClass->title . ' на '
-				. $item->newAthleteClass->title . '. Понижение класса невозможно';
+			return 'Для спортсмена ' .$item->athlete->getFullName(). ' уже установлен класс ' . $athlete->athleteClass->title . ',
+			который вы пытаетесь понизить до ' . $item->newAthleteClass->title. '. Если класс ' . $athlete->athleteClass->title . '
+			был установлен ошибочно, вы можете изменить его в разделе "Изменить класс спортсмену" или в профиле спортсмена';
 		}
 		if ($athlete->athleteClassId && $athlete->athleteClass->percent == $item->newAthleteClass->percent) {
 			$item->newAthleteClassStatus = FigureTime::NEW_CLASS_STATUS_APPROVE;

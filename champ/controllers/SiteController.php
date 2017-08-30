@@ -89,6 +89,9 @@ class SiteController extends BaseController
 			return $this->goHome();
 		}
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'login.png';
+		
 		$model = new LoginForm();
 		if ($model->load(Yii::$app->request->post()) && $model->login()) {
 			return $this->redirect(['/profile/info']);
@@ -138,6 +141,9 @@ class SiteController extends BaseController
 		if (!\Yii::$app->user->isGuest) {
 			return $this->goHome();
 		}
+		
+		$this->layout = 'main-with-img';
+		$this->background = 'register.png';
 		
 		$registration = new TmpAthlete();
 		
@@ -231,6 +237,9 @@ class SiteController extends BaseController
 	{
 		$this->pageTitle = 'Восстановление пароля';
 		$model = new PasswordResetRequestForm();
+		
+		$this->layout = 'main-with-img';
+		$this->background = 'reset-psw.png';
 		
 		return $this->render('reset-password', ['model' => $model]);
 	}
