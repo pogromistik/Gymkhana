@@ -463,9 +463,11 @@ class ParticipantsController extends BaseController
 				} else {
 					if ($checkTime) {
 						$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
+						
 						return $result;
 					} else {
 						$result['success'] = true;
+						
 						return $result;
 					}
 				}
@@ -632,9 +634,16 @@ class ParticipantsController extends BaseController
 			$class = null;
 			while ($classIds) {
 				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
-				$presumablyClass = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
-				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])
-						->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3
+				/** @var AthletesClass $presumablyClass */
+				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
+				if (Participant::find()
+						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
+			from "Participants" WHERE "stageId"='.$stage->id.') b'))
+						->where(new Expression('n=1'))
+						->andWhere(['a.stageId' => $stageId, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
+						->andWhere(['a.athleteClassId' => $presumablyClass->id])
+						->andWhere(new Expression('"a"."id"="b"."id"'))
+						->count() >= 3
 				) {
 					$class = $presumablyClass;
 					break;
