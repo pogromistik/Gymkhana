@@ -40,6 +40,13 @@ $attempt = 0;
     </div>
 <?php } ?>
 
+<?php if (!$participants) { ?>
+    <div class="alert alert-danger">
+        Нет ни одного участника. Возможно, Вы забывали отметить пункт "участник приехал на этап" на странице со
+		<?= Html::a('списком участников', ['/competitions/participants/index', 'stageId' => $stage->id]) ?>
+    </div>
+<?php } ?>
+
 <?php if (!$stage->class) { ?>
     <div class="alert alert-danger">
         <b>Не установлен класс соревнования.</b>
