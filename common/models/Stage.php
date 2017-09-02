@@ -423,6 +423,16 @@ class Stage extends BaseActiveRecord
 					return $participant->athlete->getFullName() . var_dump($participant->errors);
 				}
 				$prevResult = $participant;
+			} elseif ($participant->percent) {
+				$participant->percent = null;
+				$participant->newAthleteClassId = null;
+				$participant->newAthleteClassStatus = null;
+				$participant->points = null;
+				if (!$participant->save()) {
+					$transaction->rollBack();
+					
+					return $participant->athlete->getFullName() . var_dump($participant->errors);
+				}
 			}
 		}
 		
