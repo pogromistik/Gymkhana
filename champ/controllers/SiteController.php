@@ -32,8 +32,8 @@ class SiteController extends BaseController
 	public function actionIndex()
 	{
 		$this->layout = 'main-with-img';
-		$this->pageTitle = 'Мотоджимхана: события';
-		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
+		$this->pageTitle = \Yii::t('app', 'Мотоджимхана: события');
+		$this->description = \Yii::t('app', 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.');
 		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
 		
 		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
@@ -53,9 +53,12 @@ class SiteController extends BaseController
 	{
 		$news = AssocNews::findOne($id);
 		if (!$news || $news->datePublish > time()) {
-			throw new NotFoundHttpException('Новость не найдена');
+			throw new NotFoundHttpException(\Yii::t('app', 'Новость не найдена'));
 		}
-		$this->pageTitle = $news->title ? $news->title : 'Новость от ' . date("d.m.Y", $news->datePublish);
+		$this->pageTitle = $news->title ? $news->title :
+			\Yii::t('app', 'Новость от {date}', [
+				'date' => date("d.m.Y", $news->datePublish)
+				]);
 		$this->layout = 'main-with-img';
 		
 		return $this->render('news', [
@@ -65,8 +68,8 @@ class SiteController extends BaseController
 	
 	public function actionDocuments()
 	{
-		$this->pageTitle = 'Документы';
-		$this->description = 'Документы, относящиеся к мото джимхане';
+		$this->pageTitle = \Yii::t('app', 'Документы');
+		$this->description = \Yii::t('app', 'Документы, относящиеся к мото джимхане');
 		$this->keywords = 'регламент соревнований, регламент мото джимхана, правила проведения соревнований, мото джимхана правила, 
 		мото джимхана классы, классы мото джимханы, мото джимхана регламент';
 		
@@ -82,7 +85,7 @@ class SiteController extends BaseController
 	
 	public function actionLogin()
 	{
-		$this->pageTitle = 'Вход в личный кабинет';
+		$this->pageTitle = \Yii::t('app', 'Вход в личный кабинет');
 		$this->keywords = 'джимхана кап, gymkhana cup';
 		
 		if (!Yii::$app->user->isGuest) {
@@ -116,16 +119,16 @@ class SiteController extends BaseController
 		$form->load(\Yii::$app->request->post());
 		$form->validate();
 		if (!$form->email && !$form->phone && !$form->athleteId) {
-			return 'Укажите корректные контакты для связи!';
+			return \Yii::t('app', 'Укажите корректные контакты для связи!');
 		}
 		if ($form->phoneOrMail && !$form->phone && !$form->email) {
-			return 'Указаны некорректные контакты для связи';
+			return \Yii::t('app', 'Указаны некорректные контакты для связи');
 		}
 		if (!$form->text) {
-			return 'Укажите текст сообщения';
+			return \Yii::t('app', 'Введите текст сообщения');
 		}
 		if (!$form->username) {
-			return 'Укажите ваше имя';
+			return \Yii::t('app', 'Укажите ваше имя');
 		}
 		if ($form->save()) {
 			return true;
@@ -136,7 +139,7 @@ class SiteController extends BaseController
 	
 	public function actionRegistration()
 	{
-		$this->pageTitle = 'Регистрация в личном кабинете';
+		$this->pageTitle = \Yii::t('app', 'Регистрация в личном кабинете');
 		
 		if (!\Yii::$app->user->isGuest) {
 			return $this->goHome();
@@ -159,13 +162,13 @@ class SiteController extends BaseController
 			$marks = \Yii::$app->request->post('mark');
 			$models = \Yii::$app->request->post('model');
 			if (!$marks) {
-				return 'Необходимо указать марку мотоцикла';
+				return \Yii::t('app', 'Необходимо указать марку мотоцикла');
 			}
 			if (!$models) {
-				return 'Необходимо указать модель мотоцикла';
+				return \Yii::t('app', 'Необходимо указать модель мотоцикла');
 			}
 			if (count($marks) != count($models)) {
-				return 'Для каждого мотоцикла необходимо указать марку и модель';
+				return \Yii::t('app', 'Для каждого мотоцикла необходимо указать марку и модель');
 			}
 			$motorcycles = [];
 			foreach ($marks as $i => $mark) {
@@ -173,7 +176,7 @@ class SiteController extends BaseController
 					continue;
 				}
 				if (!$mark || !$models[$i]) {
-					return 'Для каждого мотоцикла необходимо указать марку и модель';
+					return \Yii::t('app', 'Для каждого мотоцикла необходимо указать марку и модель');
 				}
 				$motorcycles[] = [
 					'mark'  => (string)$mark,
@@ -181,22 +184,22 @@ class SiteController extends BaseController
 				];
 			}
 			if (!$motorcycles) {
-				return 'Необходимо указать минимум один мотоцикл';
+				return \Yii::t('app', 'Необходимо указать минимум один мотоцикл');
 			}
 			$form->motorcycles = json_encode($motorcycles);
 			if (!$form->cityId && !$form->city) {
-				return 'Необходимо указать город';
+				return \Yii::t('app', 'Необходимо указать город');
 			}
 			if (!$form->email) {
-				return 'Необходимо указать email';
+				return \Yii::t('app', 'Необходимо указать email');
 			}
 			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])
 				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
 			->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()) {
-				return 'Указанный email занят';
+				return \Yii::t('app', 'Указанный email занят');
 			}
 			if (!$form->validate()) {
-				return 'Необходимо заполнить все поля, кроме номера телефона';
+				return \Yii::t('app', 'Необходимо заполнить все поля, кроме номера телефона');
 			}
 			if ($form->save(false)) {
 				if (YII_ENV != 'dev') {
@@ -222,10 +225,10 @@ class SiteController extends BaseController
 				return true;
 			}
 			
-			return 'Возникла ошибка при сохранении данных';
+			return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 		}
 		
-		return 'Возникла ошибка при регистрации';
+		return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 	}
 	
 	public function actionAppendMotorcycle($i)
@@ -235,7 +238,7 @@ class SiteController extends BaseController
 	
 	public function actionResetPassword()
 	{
-		$this->pageTitle = 'Восстановление пароля';
+		$this->pageTitle = \Yii::t('app', 'Восстановление пароля');
 		$model = new PasswordResetRequestForm();
 		
 		$this->layout = 'main-with-img';
@@ -260,13 +263,13 @@ class SiteController extends BaseController
 					return true;
 				}
 				
-				return 'Возникла ошибка при отправке данных. Попробуйте позже.';
+				return \Yii::t('app', 'Возникла ошибка при отправке данных. Попробуйте позже.');
 			}
 			
-			return 'Пользователь не найден. Проверьте правильность введённых данных.';
+			return \Yii::t('app', 'Пользователь не найден. Проверьте правильность введённых данных.');
 		}
 		
-		return 'Возникла ошибка при отправке данных.';
+		return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 	}
 	
 	public function actionNewPassword($token)
@@ -277,7 +280,7 @@ class SiteController extends BaseController
 			return $this->goHome();
 		}
 		
-		$this->pageTitle = 'Восстановление пароля';
+		$this->pageTitle = \Yii::t('app', 'Восстановление пароля');
 		
 		if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
 			return $this->redirect(['/profile/info']);

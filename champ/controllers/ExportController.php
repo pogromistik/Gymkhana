@@ -26,7 +26,7 @@ class ExportController extends BaseController
 			case self::TYPE_STAGE:
 				$stage = Stage::findOne($modelId);
 				if (!$stage) {
-					throw new NotFoundHttpException('Этап не найден');
+					throw new NotFoundHttpException(\Yii::t('app', 'Этап не найден'));
 				}
 				$participants = $stage->getParticipants()
 					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]]);
@@ -34,26 +34,32 @@ class ExportController extends BaseController
 					$participants = $participants->andWhere(['isArrived' => 1]);
 				}
 				$participants = $participants->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
-				$name = $stage->title . '-результаты';
+				$name = \Yii::t('app', '{title}-результаты', [
+					'title' => $stage->title
+				]);
 				$xlsFile = self::getStageResult($participants);
 				break;
 			case self::TYPE_CHAMPIONSHIP:
 				$championship = Championship::findOne($modelId);
 				if (!$championship) {
-					throw new NotFoundHttpException('Чемпионат не найден');
+					throw new NotFoundHttpException(\Yii::t('app', 'Чемпионат не найден'));
 				}
 				$stages = $championship->stages;
 				$results = $results = $championship->getResults($showAll);
-				$name = $championship->title . '-результаты';
+				$name = \Yii::t('app', '{title}-результаты', [
+					'title' => $championship->title
+				]);
 				if ($showAll) {
-					$name = $championship->title . '-все участники-результаты';
+					$name = \Yii::t('app', '{title}-все участники-результаты', [
+						'title' => $championship->title
+					]);
 				}
 				$xlsFile = self::getChampionshipResult($results, $stages);
 				break;
 			case self::TYPE_FIGURE:
 				$figure = Figure::findOne($modelId);
 				if (!$figure) {
-					throw new NotFoundHttpException('Фигура не найдена');
+					throw new NotFoundHttpException(\Yii::t('app', 'Фигура не найдена'));
 				}
 				$results = $figure->getResults();
 				if ($yearId) {
@@ -61,7 +67,9 @@ class ExportController extends BaseController
 				}
 				$results = $results
 					->orderBy(['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'date' => SORT_DESC, 'dateAdded' => SORT_DESC])->all();
-				$name = $figure->title . '-результаты';
+				$name = \Yii::t('app', '{title}-результаты', [
+					'title' => $figure->title
+				]);
 				$xlsFile = self::getFigureResult($results);
 				break;
 		}
@@ -88,25 +96,25 @@ class ExportController extends BaseController
 		}
 		
 		$sheet = $obj->createSheet();
-		$sheet->setTitle('Результаты');
+		$sheet->setTitle(\Yii::t('app', 'Результаты'));
 		
-		$sheet->getCell("A1")->setValue('Место в абсолюте')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("A1")->setValue(\Yii::t('app', 'Место в абсолюте'))->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("A1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("B1")->setValue('Класс спортсмена')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->setValue(\Yii::t('app', 'Класс спортсмена'))->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("B1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("C1")->setValue('Место в классе спортсмена')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("C1")->setValue(\Yii::t('app', 'Место в классе спортсмена'))->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("C1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getCell("D1")->setValue('№')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("E1")->setValue('Участник')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("F1")->setValue('Мотоцикл')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("G1")->setValue('Попытка')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("H1")->setValue('Время')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("I1")->setValue('Штраф')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("J1")->setValue('Лучшее время')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("K1")->setValue('Класс награждения')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("L1")->setValue('Место в классе награждения')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("E1")->setValue(\Yii::t('app', 'Участник'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("F1")->setValue(\Yii::t('app', 'Мотоцикл'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("G1")->setValue(\Yii::t('app', 'Попытка'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("H1")->setValue(\Yii::t('app', 'Время'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("I1")->setValue(\Yii::t('app', 'Штраф'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("J1")->setValue(\Yii::t('app', 'Лучшее время'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("K1")->setValue(\Yii::t('app', 'Класс награждения'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("L1")->setValue(\Yii::t('app', 'Место в классе награждения'))->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("L1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("M1")->setValue('Рейтинг')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("M1")->setValue(\Yii::t('app', 'Рейтинг'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getStyle('A1:M1')->getFont()->setBold(true);
 		$sheet->getStyleByColumnAndRow(0, 1, 12, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$rowIndex = 2;
@@ -214,18 +222,18 @@ class ExportController extends BaseController
 		}
 		
 		$sheet = $obj->createSheet();
-		$sheet->setTitle('Результаты');
+		$sheet->setTitle(\Yii::t('app', 'Результаты'));
 		
-		$sheet->getCell("A1")->setValue('Дата')->getStyle()->getAlignment()->setWrapText(true);
-		$sheet->getCell("B1")->setValue('Класс спортсмена')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("A1")->setValue(\Yii::t('app', 'Дата'))->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->setValue(\Yii::t('app', 'Класс спортсмена'))->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("B1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("C1")->setValue('Город')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("D1")->setValue('Участник')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("E1")->setValue('Мотоцикл')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("F1")->setValue('Время')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("G1")->setValue('Штраф')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("H1")->setValue('Итоговое время')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("I1")->setValue('Рейтинг')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("C1")->setValue(\Yii::t('app', 'Город'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("D1")->setValue(\Yii::t('app', 'Участник'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("E1")->setValue(\Yii::t('app', 'Мотоцикл'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("F1")->setValue(\Yii::t('app', 'Время'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("G1")->setValue(\Yii::t('app', 'Штраф'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("H1")->setValue(\Yii::t('app', 'Итоговое время'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("I1")->setValue(\Yii::t('app', 'Рейтинг'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getStyle('A1:I1')->getFont()->setBold(true);
 		$sheet->getStyleByColumnAndRow(0, 1, 8, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$rowIndex = 2;
@@ -301,13 +309,13 @@ class ExportController extends BaseController
 		}
 		
 		$sheet = $obj->createSheet();
-		$sheet->setTitle('Итоги');
+		$sheet->setTitle(\Yii::t('app', 'Итоги'));
 		
-		$sheet->getCell("A1")->setValue('Место')->getStyle()->getAlignment()->setWrapText(true);
-		$sheet->getCell("B1")->setValue('Класс спортсмена')->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("A1")->setValue(\Yii::t('app', 'Место'))->getStyle()->getAlignment()->setWrapText(true);
+		$sheet->getCell("B1")->setValue(\Yii::t('app', 'Класс спортсмена'))->getStyle()->getAlignment()->setWrapText(true);
 		$sheet->getCell("B1")->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("C1")->setValue('Город')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-		$sheet->getCell("D1")->setValue('Спортсмен')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("C1")->setValue(\Yii::t('app', 'Город'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCell("D1")->setValue(\Yii::t('app', 'Спортсмен'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$col = 4;
 		$place = 0;
 		$prevPoints = 0;
@@ -315,7 +323,7 @@ class ExportController extends BaseController
 		foreach ($stages as $stage) {
 			$sheet->getCellByColumnAndRow($col++, 1)->setValue($stage->title)->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		}
-		$sheet->getCellByColumnAndRow($col, 1)->setValue('Итого')->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+		$sheet->getCellByColumnAndRow($col, 1)->setValue(\Yii::t('app', 'Итого'))->getStyle()->getBorders()->getRight()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$sheet->getStyleByColumnAndRow(0, 1, $col, 1)->getFont()->setBold(true);
 		$sheet->getStyleByColumnAndRow(0, 1, $col, 1)->getBorders()->getBottom()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		$rowIndex = 2;

@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use common\models\Notice;
@@ -20,7 +21,7 @@ class NoticesController extends AccessController
 		$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
 		
-		$this->pageTitle = 'Уведомления';
+		$this->pageTitle = \Yii::t('app', 'Уведомления');
 		
 		return $this->render('all', [
 			'searchModel'  => $searchModel,
@@ -32,9 +33,9 @@ class NoticesController extends AccessController
 	{
 		/** @var $notices $notices */
 		$notices = Notice::find()->where(['athleteId' => \Yii::$app->user->id,
-		'status' => Notice::STATUS_NEW])->orderBy(['dateAdded' => SORT_DESC])->limit(17)->all();
+		                                  'status'    => Notice::STATUS_NEW])->orderBy(['dateAdded' => SORT_DESC])->limit(17)->all();
 		if (!$notices) {
-			return '<div class="text-center">Новых уведомлений нет</div>';
+			return '<div class="text-center">' . \Yii::t('app', 'Новых уведомлений нет') . '</div>';
 		}
 		Notice::updateAll(['status' => Notice::STATUS_DONE],
 			['athleteId' => \Yii::$app->user->id, 'status' => Notice::STATUS_NEW]);
