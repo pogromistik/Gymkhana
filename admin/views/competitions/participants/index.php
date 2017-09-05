@@ -25,17 +25,27 @@ $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competit
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<h3>Зарегистрировать участника на этап</h3>
-<div class="alert alert-info">
-    Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
-    <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
-</div>
 <a href="#" class="freeNumbersList btn btn-info" data-id="<?= $stage->id ?>">Посмотреть список свободных номеров</a>
 <div class="free-numbers" style="display: none">
     <hr>
     <div class="list"></div>
     <hr>
 </div>
+
+<h3>Зарегистрировать участника на этап</h3>
+<div class="alert alert-info">
+    Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
+    <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
+</div>
+<?php if (\common\models\Stage::find()->where(['<', 'dateOfThe', $stage->dateOfThe])
+	->andWhere(['championshipId' => $stage->championshipId])->one()
+) { ?>
+    <div>
+        <a href="#" class="btn btn-warning" id="prepareParticipantsForImport" data-stage-id="<?= $stage->id ?>">
+            Импортировать участников с предыдущих этапов</a>
+        <div class="modalList"></div>
+    </div>
+<?php } ?>
 <?= $this->render('_form', [
 	'model'             => $participant,
 	'championship'      => $championship,
