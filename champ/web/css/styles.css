@@ -733,6 +733,10 @@ a.deletePhoto {
     text-transform: uppercase;
 }
 
+.list-nav ul li:nth-child(2n) a {
+    color: #6d6f73;
+}
+
 .registration-city {
     margin-bottom: 15px;
 }
