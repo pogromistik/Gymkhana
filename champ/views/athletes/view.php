@@ -93,7 +93,7 @@ use yii\bootstrap\Html;
            Участие в этапах<br>
             <small>показано не более 30 последних записей</small>
         </h4>
-        <table class="table">
+        <table class="table table-bordered">
             <tr>
                 <th>Этап</th>
                 <th>Мотоцикл</th>
