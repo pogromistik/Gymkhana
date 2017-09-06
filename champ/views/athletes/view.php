@@ -90,16 +90,16 @@ use yii\bootstrap\Html;
     <?php if ($participants) { ?>
     <div class="history pt-10">
         <h4>
-           Участие в этапах<br>
-            <small>показано не более 30 последних записей</small>
+           <?= \Yii::t('app', 'Участие в этапах') ?><br>
+            <small><?= \Yii::t('app', 'показано не более 30 последних записей') ?></small>
         </h4>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <tr>
-                    <th>Этап</th>
-                    <th>Мотоцикл</th>
-                    <th>Рейтинг</th>
-                    <th>Место в абсолюте</th>
+                    <th><?= \Yii::t('app', 'Этап') ?></th>
+                    <th><?= \Yii::t('app', 'Мотоцикл') ?></th>
+                    <th><?= \Yii::t('app', 'Рейтинг') ?></th>
+                    <th><?= \Yii::t('app', 'Место в абсолюте') ?></th>
                 </tr>
 		        <?php foreach ($participants as $participant) { ?>
                     <tr>
