@@ -23,16 +23,16 @@ use yii\bootstrap\Html;
         <h3><?= $athlete->getFullName() ?><?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></h3>
         <div class="info">
             <div class="item">
-                <b>Город: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
+                <b><?= \Yii::t('app', 'Город') ?>: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
             </div>
 			<?php if ($athlete->athleteClassId) { ?>
                 <div class="item">
-                    <b>Класс: </b><?= $athlete->athleteClass->title ?>
+                    <b><?= \Yii::t('app', 'Класс') ?>: </b><?= $athlete->athleteClass->title ?>
                 </div>
 			<?php } ?>
         </div>
         <div class="motorcycles pt-10">
-            <h4>Мотоциклы:</h4>
+            <h4><?= \Yii::t('app', 'Мотоциклы') ?>:</h4>
 			<?php /** @var \common\models\Motorcycle[] $motorcycles */
 			$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all();
 			foreach ($motorcycles as $motorcycle) { ?>
@@ -43,14 +43,15 @@ use yii\bootstrap\Html;
 
     <div class="figures pt-10">
         <h4>
-            Результаты базовых фигур<br>
-            <small>представлены только лучшие результаты</small><br>
+			<?= \Yii::t('app', 'Результаты базовых фигур') ?><br>
+            <small><?= \Yii::t('app', 'представлены только лучшие результаты') ?></small>
+            <br>
             <span class="small">
-                <small>для просмотра прогресса по фигуре нажмите на время</small>
+                <small><?= \Yii::t('app', 'для просмотра прогресса по фигуре нажмите на время') ?></small>
             </span>
         </h4>
 		<?php if (!$figuresResult) { ?>
-            Информация отсутствует
+			<?= \Yii::t('app', 'Информация отсутствует') ?>
 		<?php } else { ?>
             <table class="table table-bordered">
 				<?php foreach ($figuresResult as $data) { ?>
@@ -63,8 +64,8 @@ use yii\bootstrap\Html;
                         <td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
                         <td class="show-pk"><?= $result->motorcycle->getFullTitle() ?></td>
                         <td>
-	                        <?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
-		                        'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
+							<?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
+								'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
 							<?php if ($result->fine) { ?>
                                 <small> (<?= $result->timeForHuman ?> +<?= $result->fine ?>)</small>
 							<?php } ?>
@@ -74,9 +75,9 @@ use yii\bootstrap\Html;
 									'alt'   => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!'
 								]) ?>
 							<?php } ?>
-							<div class="show-mobile">
-							<small><?= $result->motorcycle->getFullTitle() ?></small>
-							</div>
+                            <div class="show-mobile">
+                                <small><?= $result->motorcycle->getFullTitle() ?></small>
+                            </div>
                         </td>
                         <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%</td>
                     </tr>
@@ -88,15 +89,15 @@ use yii\bootstrap\Html;
 	<?php if ($history) { ?>
         <div class="history pt-10">
             <h4>
-                История переходов между классами<br>
-                <small>показано не более 15 последних записей</small>
+				<?= \Yii::t('app', 'История переходов между классами') ?><br>
+                <small><?= \Yii::t('app', 'показано не более 15 последних записей') ?></small>
             </h4>
             <table class="table">
                 <tr>
-                    <th>Дата</th>
-                    <th>Старый класс</th>
-                    <th>Новый класс</th>
-                    <th>Событие</th>
+                    <th><?= \Yii::t('app', 'Дата') ?></th>
+                    <th><?= \Yii::t('app', 'Старый класс') ?></th>
+                    <th><?= \Yii::t('app', 'Новый класс') ?></th>
+                    <th><?= \Yii::t('app', 'Событие') ?></th>
                 </tr>
 				<?php foreach ($history as $item) { ?>
                     <tr>
@@ -111,4 +112,4 @@ use yii\bootstrap\Html;
 	<?php } ?>
 </div>
 
-<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"> Вернуться к спортсменам </a>
+<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"><?= \Yii::t('app', 'Вернуться к спортсменам') ?></a>

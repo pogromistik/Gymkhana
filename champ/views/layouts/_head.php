@@ -26,7 +26,7 @@ use yii\helpers\Url;
                             <div class="text">
                             </div>
                             <div class="show-all text-center pt-10">
-				                <?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать все уведомления'), ['/notices/all']) ?>
+				                <?= \yii\bootstrap\Html::a(\Yii::t('app', \Yii::t('app', 'Показать все уведомления')), ['/notices/all']) ?>
                             </div>
                         </div>
                     </div>

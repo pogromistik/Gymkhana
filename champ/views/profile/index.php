@@ -15,18 +15,18 @@ use yii\web\JsExpression;
  */
 ?>
 
-<h2>Редактирование профиля</h2>
+<h2><?= \Yii::t('app', 'Редактирование профиля') ?></h2>
 <div class="row">
     <div class="col-bg-7 col-lg-9 col-md-10 col-sm-10-col-xs-12">
 		<?php if ($success) { ?>
-            <div class="alert alert-success">Изменения успешно сохранены</div>
+            <div class="alert alert-success"><?= \Yii::t('app', 'Изменения успешно сохранены') ?></div>
 		<?php } ?>
 
-        <h3>Изменение пароля</h3>
+        <h3><?= \Yii::t('app', 'Изменение пароля') ?></h3>
 		<?php $form = ActiveForm::begin() ?>
-		<?= $form->field($password, 'pass')->passwordInput()->label('Пароль'); ?>
-		<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
-		<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
+		<?= $form->field($password, 'pass')->passwordInput()->label(\Yii::t('app', 'Пароль')); ?>
+		<?= $form->field($password, 'pass_repeat')->passwordInput()->label(\Yii::t('app', 'Подтвердите пароль')) ?>
+		<?= Html::submitButton(\Yii::t('app', 'изменить'), ['class' => 'btn btn-success']) ?>
 		<?php $form->end() ?>
 
 
@@ -35,8 +35,8 @@ use yii\web\JsExpression;
 			<?php $form = ActiveForm::begin(['enableAjaxValidation' => true, 'options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
 
             <div class="help-for-athlete">
-                <small>Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg.
-                    Необходимые пропорции: 3x4 (300x400 pixels)
+                <small>
+					<?= \Yii::t('app', 'Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg. Необходимые пропорции: 3x4 (300x400 pixels)') ?>
                 </small>
             </div>
 			<?php if ($athlete->photo) { ?>
@@ -44,7 +44,7 @@ use yii\web\JsExpression;
                     <div class="col-md-2 col-sm-4 img-in-profile">
 						<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
                         <br>
-                        <a href="#" class="btn btn-default btn-block deletePhoto">удалить</a>
+                        <a href="#" class="btn btn-default btn-block deletePhoto"><?= \Yii::t('app', 'удалить') ?></a>
                         <br>
                     </div>
                     <div class="col-md-10 col-sm-8">
@@ -56,13 +56,13 @@ use yii\web\JsExpression;
 			<?php } ?>
 
             <div class="help-for-athlete">
-                <small>Информация, обязательная для заполнения:</small>
+                <small><?= \Yii::t('app', 'Информация, обязательная для заполнения:') ?></small>
             </div>
 			
 			<?= $form->field($athlete, 'countryId')->widget(Select2::classname(), [
 				'data'    => Country::getAll(true),
 				'options' => [
-					'placeholder' => 'Выберите страну...',
+					'placeholder' => \Yii::t('app', 'Выберите страну') . '...',
 					'id'          => 'country-id',
 				],
 			]); ?>
@@ -82,14 +82,14 @@ use yii\web\JsExpression;
 			<?php $url = \yii\helpers\Url::to(['/help/city-list']); ?>
 			<?= $form->field($athlete, 'cityId')->widget(DepDrop::classname(), [
 				'data'           => $cities,
-				'options'        => ['placeholder' => 'Выберите город ...'],
+				'options'        => ['placeholder' => \Yii::t('app', 'Выберите город') . '...'],
 				'type'           => DepDrop::TYPE_SELECT2,
 				'select2Options' => [
 					'pluginOptions' => [
 						'allowClear'         => true,
 						'minimumInputLength' => 3,
 						'language'           => [
-							'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+							'errorLoading' => new JsExpression("function () { return '" . \Yii::t('app', 'Поиск результатов') . "...'; }"),
 						],
 						'ajax'               => [
 							'url'      => $url,
@@ -104,8 +104,8 @@ use yii\web\JsExpression;
 				'pluginOptions'  => [
 					'depends'     => ['country-id'],
 					'url'         => Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
-					'loadingText' => 'Для выбранной страны нет городов...',
-					'placeholder' => 'Выберите город...',
+					'loadingText' => \Yii::t('app', 'Для выбранной страны не найдено городов') . '...',
+					'placeholder' => \Yii::t('app', 'Выберите город') . '...',
 				]
 			]); ?>
 
@@ -119,10 +119,8 @@ use yii\web\JsExpression;
             </div>
 
             <div class="help-for-athlete">
-                <small>Информация, не обязательная для заполнения. Настоятельно рекомендуем заполнить хотя бы одно поле.
-                    Ваши
-                    контакты будут видны
-                    только уполномоченным людям.
+                <small>
+					<?= \Yii::t('app', 'Информация, не обязательная для заполнения. Настоятельно рекомендуем заполнить хотя бы одно поле. Ваши контакты будут видны только уполномоченным людям.') ?>
                 </small>
             </div>
             <div class="row">
@@ -135,37 +133,28 @@ use yii\web\JsExpression;
             </div>
 
             <div class="help-for-athlete">
-                <small>Вы можете указать свой персональный номер. Под этим номером вы будете выступать на всех
-                    чемпионатах
-                    своей
-                    области.
-                    В одной области не может быть несколько участников с одним номером.
+                <small>
+					<?= \Yii::t('app', 'Вы можете указать свой персональный номер. Под этим номером вы будете выступать на всех чемпионатах своего региона. В одном регионе не может быть несколько участников с одним номером.') ?>
                 </small>
             </div>
 			<?= $form->field($athlete, 'number')->textInput() ?>
 
             <div class="form-group complete">
-				<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
+				<?= Html::submitButton(\Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
             </div>
 			
 			<?php ActiveForm::end(); ?>
 
         </div>
 
-        <h3>Мотоциклы</h3>
+        <h3><?= \Yii::t('app', 'Мотоциклы') ?></h3>
         <div class="help-for-athlete">
             <small>
-                Вы можете добавить ещё один мотоцикл или удалить (заблокировать) старый (при необходимости его можно
-                будет
-                вернуть). При
-                удалении мотоцикла все результаты, показынные на нём, сохраняются, но возможность зарегистрироваться на
-                нём
-                на этап
-                исчезает.<br>
-                При необходимости внести изменения в созданный мотоцикл (напр. при опечатке или если перепутаны местами
-                марка и модель),
-                пожалуйста,
-                <a href="#" data-toggle="modal" data-target="#feedbackForm">свяжитесь с администрацией</a>.
+				<?= \Yii::t('app', 'Вы можете добавить ещё один мотоцикл или удалить (заблокировать) старый (при необходимости его можно будет вернуть). При удалении мотоцикла все результаты, показынные на нём, сохраняются, но возможность зарегистрироваться на нём на этап исчезает.') ?>
+                <br>
+				<?= \Yii::t('app', 'При необходимости внести изменения в созданный мотоцикл (напр. при опечатке или если перепутаны местами марка и модель), пожалуйста, {text}',
+					['text' => '<a href="#" data-toggle="modal" data-target="#feedbackForm">' . \Yii::t('app', 'свяжитесь с администрацией') . '</a>']) ?>
+                .
             </small>
         </div>
 		<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
@@ -173,9 +162,8 @@ use yii\web\JsExpression;
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Марка и модель</th>
-                    <th class="show-pk">Статус</th>
-                    <th class="show-pk">Добавлен</th>
+                    <th><?= \Yii::t('app', 'Марка и модель') ?></th>
+                    <th class="show-pk"><?= \Yii::t('app', 'Статус') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -186,23 +174,20 @@ use yii\web\JsExpression;
                         <td class="show-pk">
 							<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
                         </td>
-                        <td class="show-pk">
-							<?= date("d.m.Y, H:i", $motorcycleInfo->dateAdded) ?>
-                        </td>
                         <td>
 							<?php
 							if ($motorcycleInfo->status) {
 								echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
 									'class'   => 'btn btn-danger changeMotorcycleStatus',
 									'data-id' => $motorcycleInfo->id,
-									'title'   => 'Удалить'
+									'title'   => \Yii::t('app', 'Удалить')
 								]);
 							} else {
 								echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status',
 									'id' => $motorcycleInfo->id], [
 									'class'   => 'btn btn-warning changeMotorcycleStatus',
 									'data-id' => $motorcycleInfo->id,
-									'title'   => 'Вернуть в работу'
+									'title'   => \Yii::t('app', 'Вернуть в работу')
 								]);
 							}
 							?>

@@ -10,14 +10,14 @@ use yii\helpers\Url;
 use yii\bootstrap\Html;
 
 ?>
-<h2>Новости</h2>
+<h2><?= \Yii::t('app', 'Новости') ?></h2>
 <div class="z-100">
     <div class="news">
 		<?php foreach ($news as $item) { ?>
             <div class="item">
 				<?php if ($item->title) { ?>
                     <div class="title-with-bg">
-                        <?= $item->title ?>
+						<?= $item->title ?>
                     </div>
                     <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
 				<?php } else { ?>
@@ -36,7 +36,7 @@ use yii\bootstrap\Html;
 					}
 					?>
                     <div class="text-left">
-						<?= Html::a('Читать далее ...', $link, ['target' => $target]) ?>
+						<?= Html::a(\Yii::t('app', 'Читать далее') . '...', $link, ['target' => $target]) ?>
                     </div>
 				<?php } ?>
             </div>

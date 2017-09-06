@@ -179,9 +179,9 @@
 		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
-                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <b class="text-uppercase"><?= \Yii::t('app', 'Следующие участники едут вне зачёта') ?></b>
                     <div class="small text-right">
-						<?= \yii\helpers\Html::a('добавить в общий список', [
+						<?= \yii\helpers\Html::a(\Yii::t('app', 'добавить в общий список'), [
 							'stage',
 							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
                     </div>
@@ -270,7 +270,7 @@
     </table>
 	<?php if ($addOut) { ?>
         <div class="small text-right">
-			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'убрать из списка тех, кто вне зачёта'), [
 				'stage',
 				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
         </div>
@@ -281,10 +281,10 @@
     <table class="table results">
         <thead>
         <tr>
-            <th>Место вне класса /<br>Место в классе</th>
-            <th>Участник</th>
-            <th>Время</th>
-            <th>Рейтинг</th>
+            <th><?= \Yii::t('app', 'Место вне класса') ?> /<br><?= \Yii::t('app', 'Место в классе') ?></th>
+            <th><?= \Yii::t('app', 'Участник') ?></th>
+            <th><?= \Yii::t('app', 'Время') ?></th>
+            <th><?= \Yii::t('app', 'Рейтинг') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -387,9 +387,9 @@
 		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
-                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <b class="text-uppercase"><?= \Yii::t('app', 'Следующие участники едут вне зачёта') ?></b>
                     <div class="small text-right">
-						<?= \yii\helpers\Html::a('добавить в общий список', [
+						<?= \yii\helpers\Html::a(\Yii::t('app', 'добавить в общий список'), [
 							'stage',
 							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
                     </div>
@@ -466,7 +466,7 @@
     </table>
 	<?php if ($addOut) { ?>
         <div class="small text-right">
-			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'убрать из списка тех, кто вне зачёта'), [
 				'stage',
 				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
         </div>

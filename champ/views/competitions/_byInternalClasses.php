@@ -63,11 +63,11 @@
 							<?php } else { ?>
 								<?= $first->timeForHuman ?>
 							<?php } ?>
-	                        <?php if ($first->videoLink) { ?>
+							<?php if ($first->videoLink) { ?>
                                 <a href="<?= $first->videoLink ?>" target="_blank">
                                     <i class="fa fa-youtube"></i>
                                 </a>
-	                        <?php } ?>
+							<?php } ?>
                         </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
@@ -100,11 +100,11 @@
 								<?php } else { ?>
 									<?= $next->timeForHuman ?>
 								<?php } ?>
-	                            <?php if ($next->videoLink) { ?>
+								<?php if ($next->videoLink) { ?>
                                     <a href="<?= $next->videoLink ?>" target="_blank">
                                         <i class="fa fa-youtube"></i>
                                     </a>
-	                            <?php } ?>
+								<?php } ?>
                             </td>
                             <td><?= $next->fine ?></td>
 						<?php } else { ?>
@@ -176,9 +176,9 @@
 		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
-                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <b class="text-uppercase"><?= \Yii::t('app', 'Следующие участники едут вне зачёта') ?></b>
                     <div class="small text-right">
-						<?= \yii\helpers\Html::a('добавить в общий список', [
+						<?= \yii\helpers\Html::a(\Yii::t('app', 'добавить в общий список'), [
 							'stage',
 							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
                     </div>
@@ -209,11 +209,11 @@
 							<?php } else { ?>
 								<?= $first->timeForHuman ?>
 							<?php } ?>
-	                        <?php if ($first->videoLink) { ?>
+							<?php if ($first->videoLink) { ?>
                                 <a href="<?= $first->videoLink ?>" target="_blank">
                                     <i class="fa fa-youtube"></i>
                                 </a>
-	                        <?php } ?>
+							<?php } ?>
                         </td>
                         <td><?= $first->fine ?></td>
 					<?php } else { ?>
@@ -246,11 +246,11 @@
 								<?php } else { ?>
 									<?= $next->timeForHuman ?>
 								<?php } ?>
-	                            <?php if ($next->videoLink) { ?>
+								<?php if ($next->videoLink) { ?>
                                     <a href="<?= $next->videoLink ?>" target="_blank">
                                         <i class="fa fa-youtube"></i>
                                     </a>
-	                            <?php } ?>
+								<?php } ?>
                             </td>
                             <td><?= $next->fine ?></td>
 						<?php } else { ?>
@@ -267,7 +267,7 @@
     </table>
 	<?php if ($addOut) { ?>
         <div class="small text-right">
-			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'убрать из списка тех, кто вне зачёта'), [
 				'stage',
 				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
         </div>
@@ -278,10 +278,10 @@
     <table class="table results">
         <thead>
         <tr>
-            <th>Место вне класса /<br>Место в классе</th>
-            <th>Участник</th>
-            <th>Время</th>
-            <th>Рейтинг</th>
+            <th><?= \Yii::t('app', 'Место вне класса') ?> /<br><?= \Yii::t('app', 'Место в классе') ?></th>
+            <th><?= \Yii::t('app', 'Участник') ?></th>
+            <th><?= \Yii::t('app', 'Время') ?></th>
+            <th><?= \Yii::t('app', 'Рейтинг') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -322,7 +322,7 @@
                         </small>
                     </td>
                     <td>
-	                    <?php $video = null; ?>
+						<?php $video = null; ?>
 						<?php foreach ($times as $time) { ?>
 							<?php if ($time->isFail) { ?>
                                 <strike>
@@ -348,9 +348,9 @@
                             <span class="green"><?= $participant->humanBestTime ?></span>
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
-	                    <?php if ($video) { ?>
+						<?php if ($video) { ?>
                             <br><?= $video ?>
-	                    <?php } ?>
+						<?php } ?>
                     </td>
                     <td><?= $participant->percent ?>%
 						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
@@ -379,9 +379,9 @@
 		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
-                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <b class="text-uppercase"><?= \Yii::t('app', 'Следующие участники едут вне зачёта') ?></b>
                     <div class="small text-right">
-						<?= \yii\helpers\Html::a('добавить в общий список', [
+						<?= \yii\helpers\Html::a(\Yii::t('app', 'добавить в общий список'), [
 							'stage',
 							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
                     </div>
@@ -416,7 +416,7 @@
                         </small>
                     </td>
                     <td>
-	                    <?php $video = null; ?>
+						<?php $video = null; ?>
 						<?php foreach ($times as $time) { ?>
 							<?php if ($time->isFail) { ?>
                                 <strike>
@@ -442,9 +442,9 @@
                             <span class="green"><?= $participant->humanBestTime ?></span>
                             <span class="green fa fa-thumbs-o-up"></span>
 						<?php } ?>
-	                    <?php if ($video) { ?>
+						<?php if ($video) { ?>
                             <br><?= $video ?>
-	                    <?php } ?>
+						<?php } ?>
                     </td>
                     <td><?= $outParticipant->percent ?>%
 						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
@@ -458,7 +458,7 @@
     </table>
 	<?php if ($addOut) { ?>
         <div class="small text-right">
-			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'убрать из списка тех, кто вне зачёта'), [
 				'stage',
 				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
         </div>

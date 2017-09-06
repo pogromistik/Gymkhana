@@ -6,13 +6,13 @@ use yii\bootstrap\Html;
  * @var array         $results
  */
 ?>
-<h2>Чемпионаты России</h2>
+<h2><?= \Yii::t('app', 'Чемпионаты России') ?></h2>
 <div class="list">
     <div class="item">
         <div class="toggle">
             <div class="background"></div>
 			<?php if (!isset($results)) { ?>
-                В данном разделе пока нет соревнований.
+                <?= \Yii::t('app', 'В данном разделе пока нет соревнований.') ?>
 			<?php } else { ?>
 				<?php foreach ($results as $yearId => $yearInfo) { ?>
                     <div class="title-with-bg">
@@ -23,16 +23,16 @@ use yii\bootstrap\Html;
 					$stages = $yearInfo['stages'];
 					if (!$stages) { ?>
                         <div class="pl-10">
-                            Для чемпионата пока не создано ни одного этапа.
+                            <?= \Yii::t('app', 'Для чемпионата пока не создано ни одного этапа.') ?>
                         </div>
 					<?php } else { ?>
                         <div class="pl-10">
 							<?php if ($yearInfo['showResults']) { ?>
 								<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-									<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+									<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                     <br>
 								<?php } else { ?>
-									<?= Html::a('Предварительные итоги чемпионата',
+									<?= Html::a(\Yii::t('app', 'Предварительные итоги чемпионата'),
 										['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                     <br>
 								<?php } ?>

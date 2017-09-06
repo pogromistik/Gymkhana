@@ -24,15 +24,15 @@ $championship = $stage->championship;
             <h4><?= $stage->title ?>
                 , <?= $stage->city->title ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
             </h4>
-            <?= \yii\helpers\Html::a('Вернуться к этапу', ['/competitions/stage', 'id' => $stage->id], ['class' => 'btn btn-dark']) ?>
+            <?= \yii\helpers\Html::a(\Yii::t('app', 'Вернуться к этапу'), ['/competitions/stage', 'id' => $stage->id], ['class' => 'btn btn-dark']) ?>
 
 			<?php if ($qualification) { ?>
-                <h3>Результаты квалификационных заездов</h3>
-                <p>На усмотрение организаторов, у участников может быть несколько попыток или не быть вовсе.</p>
+                <h3><?= \Yii::t('app', 'Результаты квалификационных заездов') ?></h3>
+                <p><?= \Yii::t('app', 'На усмотрение организаторов, у участников может быть несколько попыток или не быть вовсе.') ?></p>
 				<?= $this->render('_figure-result-for-stage', ['results' => $qualification['results']]) ?>
-				<?= \yii\helpers\Html::a('Вернуться к этапу', ['/competitions/stage', 'id' => $stage->id]) ?>
+				<?= \yii\helpers\Html::a(\Yii::t('app', 'Вернуться к этапу'), ['/competitions/stage', 'id' => $stage->id]) ?>
 			<?php } else { ?>
-                <h3>Результаты квалификационных заездов отсутствуют</h3>
+                <h3><?= \Yii::t('app', 'Результаты квалификационных заездов отсутствуют') ?></h3>
             <?php } ?>
         </div>
     </div>
