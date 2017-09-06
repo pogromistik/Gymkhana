@@ -7,6 +7,7 @@ use yii\bootstrap\Html;
  * @var \common\models\FigureTime     $result
  * @var \common\models\Figure         $figure
  * @var \common\models\ClassHistory[] $history
+ * @var \common\models\Participant[]  $participants
  */
 ?>
 
@@ -44,7 +45,8 @@ use yii\bootstrap\Html;
     <div class="figures pt-10">
         <h4>
             Результаты базовых фигур<br>
-            <small>представлены только лучшие результаты</small><br>
+            <small>представлены только лучшие результаты</small>
+            <br>
             <span class="small">
                 <small>для просмотра прогресса по фигуре нажмите на время</small>
             </span>
@@ -63,8 +65,8 @@ use yii\bootstrap\Html;
                         <td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
                         <td class="show-pk"><?= $result->motorcycle->getFullTitle() ?></td>
                         <td>
-	                        <?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
-		                        'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
+							<?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
+								'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
 							<?php if ($result->fine) { ?>
                                 <small> (<?= $result->timeForHuman ?> +<?= $result->fine ?>)</small>
 							<?php } ?>
@@ -74,9 +76,9 @@ use yii\bootstrap\Html;
 									'alt'   => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!'
 								]) ?>
 							<?php } ?>
-							<div class="show-mobile">
-							<small><?= $result->motorcycle->getFullTitle() ?></small>
-							</div>
+                            <div class="show-mobile">
+                                <small><?= $result->motorcycle->getFullTitle() ?></small>
+                            </div>
                         </td>
                         <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%</td>
                     </tr>
@@ -84,6 +86,34 @@ use yii\bootstrap\Html;
             </table>
 		<?php } ?>
     </div>
+    
+    <?php if ($participants) { ?>
+    <div class="history pt-10">
+        <h4>
+           Участие в этапах<br>
+            <small>показано не более 30 последних записей</small>
+        </h4>
+        <table class="table">
+            <tr>
+                <th>Этап</th>
+                <th>Мотоцикл</th>
+                <th>Рейтинг</th>
+                <th>Место в абсолюте</th>
+            </tr>
+	        <?php foreach ($participants as $participant) { ?>
+                <tr>
+                    <td>
+		                <?php $stage = $participant->stage; ?>
+		                <?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+                        <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
+                    </td>
+                    <td><?= $participant->motorcycle->getFullTitle() ?></td>
+                    <td><?= $participant->percent ?>%</td>
+                    <td><?= $participant->place ?></td>
+                </tr>
+	        <?php } ?>
+        </table>
+    <?php } ?>
 	
 	<?php if ($history) { ?>
         <div class="history pt-10">
