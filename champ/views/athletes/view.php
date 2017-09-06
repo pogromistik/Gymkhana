@@ -7,6 +7,7 @@ use yii\bootstrap\Html;
  * @var \common\models\FigureTime     $result
  * @var \common\models\Figure         $figure
  * @var \common\models\ClassHistory[] $history
+ * @var \common\models\Participant[]  $participants
  */
 ?>
 
@@ -85,6 +86,36 @@ use yii\bootstrap\Html;
             </table>
 		<?php } ?>
     </div>
+    
+    <?php if ($participants) { ?>
+    <div class="history pt-10">
+        <h4>
+           Участие в этапах<br>
+            <small>показано не более 30 последних записей</small>
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Этап</th>
+                    <th>Мотоцикл</th>
+                    <th>Рейтинг</th>
+                    <th>Место в абсолюте</th>
+                </tr>
+		        <?php foreach ($participants as $participant) { ?>
+                    <tr>
+                        <td>
+					        <?php $stage = $participant->stage; ?>
+					        <?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
+                        </td>
+                        <td><?= $participant->motorcycle->getFullTitle() ?></td>
+                        <td><?= $participant->percent ?>%</td>
+                        <td><?= $participant->place ?></td>
+                    </tr>
+		        <?php } ?>
+            </table>
+        </div>
+    <?php } ?>
 	
 	<?php if ($history) { ?>
         <div class="history pt-10">

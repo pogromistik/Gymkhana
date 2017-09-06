@@ -14,11 +14,17 @@
     .col-bg-4 {
         width: 33.33333333%;
     }
+    .col-bg-4.list-nav ul {
+        max-width: 33.33333333%;
+    }
 }
 
 @media (max-width: 1512px) {
     .list-nav ul{
         right: 20px;
+    }
+    .col-lg-3.list-nav ul {
+        max-width: 25%;
     }
 }
 
@@ -48,7 +54,7 @@
         font-size: 12px;
     }
 
-    .list-nav ul {
+    .col-md-2.list-nav ul {
         right: 10px;
         font-size: 12px;
         max-width: 20%;
@@ -94,7 +100,7 @@
     .list-nav ul {
         padding-left: 15px;
         position: static;
-        max-width: 100%;
+        max-width: 100%!important;
     }
 
     .list-nav ul li:before {

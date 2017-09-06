@@ -516,3 +516,8 @@ a.red-button {
 .download .dropdown-menu > li > a:hover {
     background-color: #e6e6e6;
 }
+
+#importParticipants label {
+    font-weight: normal;
+    display: block;
+}

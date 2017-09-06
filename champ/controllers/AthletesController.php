@@ -7,6 +7,7 @@ use common\models\AthletesClass;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\Participant;
 use common\models\Region;
 use common\models\search\AthleteSearch;
 use Yii;
@@ -63,6 +64,10 @@ class AthletesController extends BaseController
 		}
 		$history = $history->all();
 		
+		$participants = Participant::find()->where(['athleteId' => $athlete->id])
+			->andWhere(['status' => [Participant::STATUS_OUT_COMPETITION, Participant::STATUS_ACTIVE]])
+			->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();
+		
 		$this->pageTitle = \Yii::t('app', 'Спортсмены') .': ' . $athlete->getFullName();
 		$this->description = $athlete->getFullName();
 		
@@ -70,6 +75,7 @@ class AthletesController extends BaseController
 			'athlete'       => $athlete,
 			'figuresResult' => $figuresResult,
 			'history'       => $history,
+			'participants'  => $participants
 		]);
 	}
 	
