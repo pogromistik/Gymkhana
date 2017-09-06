@@ -93,26 +93,28 @@ use yii\bootstrap\Html;
            Участие в этапах<br>
             <small>показано не более 30 последних записей</small>
         </h4>
-        <table class="table table-bordered">
-            <tr>
-                <th>Этап</th>
-                <th>Мотоцикл</th>
-                <th>Рейтинг</th>
-                <th>Место в абсолюте</th>
-            </tr>
-	        <?php foreach ($participants as $participant) { ?>
+        <div class="table-responsive">
+            <table class="table table-bordered">
                 <tr>
-                    <td>
-		                <?php $stage = $participant->stage; ?>
-		                <?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
-                        <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
-                    </td>
-                    <td><?= $participant->motorcycle->getFullTitle() ?></td>
-                    <td><?= $participant->percent ?>%</td>
-                    <td><?= $participant->place ?></td>
+                    <th>Этап</th>
+                    <th>Мотоцикл</th>
+                    <th>Рейтинг</th>
+                    <th>Место в абсолюте</th>
                 </tr>
-	        <?php } ?>
-        </table>
+		        <?php foreach ($participants as $participant) { ?>
+                    <tr>
+                        <td>
+					        <?php $stage = $participant->stage; ?>
+					        <?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
+                        </td>
+                        <td><?= $participant->motorcycle->getFullTitle() ?></td>
+                        <td><?= $participant->percent ?>%</td>
+                        <td><?= $participant->place ?></td>
+                    </tr>
+		        <?php } ?>
+            </table>
+        </div>
     <?php } ?>
 	
 	<?php if ($history) { ?>
