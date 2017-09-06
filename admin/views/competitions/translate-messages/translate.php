@@ -7,6 +7,7 @@ use common\models\TranslateMessageSource;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\TranslateMessageSourceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $letter string */
 
 $this->title = 'Переводы';
 
@@ -32,7 +33,17 @@ $listView = new \yii\widgets\ListView([
 			<?= $listView->renderSummary() ?>
 		</div>
 	</div>
-	
+	<div>
+		<?= \yii\helpers\Html::beginForm(['/competitions/translate-messages/translate'], 'get') ?>
+		<?= \yii\helpers\Html::dropDownList('letter', $letter, [
+		        '{' => '{', 'А' => 'А', 'Б' => 'Б', 'В' => 'В', 'Г' => 'Г', 'Д' => 'Д', 'Е' => 'Е', 'Ё' => 'Ё', 'Ж' => 'Ж',
+			'З' =>'З', 'И' => 'И', 'К' => 'К', 'Л' => 'Л', 'М' => 'М', 'Н' => 'Н', 'О' => 'О', 'П' => 'П', 'Р' => 'Р', 'С' => 'С',
+            'Т' => 'Т', 'У' => 'У', 'Ф' => 'Ф', 'Х' => 'Х', 'Ц' => 'Ц', 'Ч' => 'Ч', 'Ш' => 'Ш', 'Щ' => 'Щ', 'Э' => 'Э', 'Ю' => 'Ю', 'Я' => 'Я'
+        ],
+			['prompt' => 'Выберите начальный символ', 'onchange' => 'this.form.submit()', 'class' => 'form-control']) ?>
+        <button type="submit" style="visibility: hidden;" title="Сохранить"></button>
+		<?= \yii\helpers\Html::endForm() ?>
+    </div>
 	<table class="table table-striped table-bordered">
 		<?php $form = \yii\bootstrap\ActiveForm::begin([
 			'id'                     => 'search',
