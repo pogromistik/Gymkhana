@@ -21,9 +21,9 @@ class PasswordForm extends Model
 	public function rules()
 	{
 		return [
-			[['pass', 'pass_repeat'], 'required', 'message' => 'Поле не может быть пустым'],
-			['pass', 'string', 'min' => 6, 'message' => 'Пароль не может быть менее 6 символов'],
-			['pass_repeat', 'compare', 'compareAttribute'=>'pass', 'message' => 'Пароли не совпадают'],
+			[['pass', 'pass_repeat'], 'required', 'message' => \Yii::t('app', 'Поле не может быть пустым')],
+			['pass', 'string', 'min' => 6, 'message' => \Yii::t('app', 'Пароль не может быть менее 6 символов')],
+			['pass_repeat', 'compare', 'compareAttribute'=>'pass', 'message' => \Yii::t('app', 'Пароли не совпадают')],
 		];
 	}
 	
