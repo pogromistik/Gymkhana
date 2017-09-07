@@ -123,7 +123,7 @@ $listView = new \yii\widgets\ListView([
 			'model'         => $searchModel,
 			'attribute'     => 'id',
 			'data'          => ArrayHelper::map(\common\models\Athlete::getActiveAthletes(), 'id', function (\common\models\Athlete $item) {
-				return $item->lastName . ' ' . $item->firstName;
+				return $item->getFullName();
 			}),
 			'pluginOptions' => [
 				'allowClear' => true
