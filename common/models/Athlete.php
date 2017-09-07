@@ -37,6 +37,7 @@ use yii\web\UploadedFile;
  * @property integer       $photo
  * @property integer       $countryId
  * @property integer       $creatorUserId
+ * @property string        $language
  *
  * @property Motorcycle[]  $motorcycles
  * @property Motorcycle[]  $motorcyclesForEdit
@@ -166,7 +167,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status',
 				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId',
 				'creatorUserId'], 'integer'],
-			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
+			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo', 'language'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
 			[['email'], 'unique'],
@@ -175,7 +176,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['number', 'integer', 'min' => 1],
 			['number', 'integer', 'max' => 999],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 307200,
-			                      'tooBig'     => 'Размер файла не должен превышать 300KB']
+			                      'tooBig'     => 'Размер файла не должен превышать 300KB'],
+			['language', 'default', 'value' => TranslateMessage::LANGUAGE_RU]
 		];
 	}
 	
@@ -254,7 +256,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			'regionId'           => 'Регион',
 			'photo'              => 'Фотография',
 			'photoFile'          => 'Фотография',
-			'countryId'          => 'Страна'
+			'countryId'          => 'Страна',
+			'language'           => 'Язык'
 		];
 	}
 	
@@ -269,6 +272,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 			}
 			$this->creatorUserId = UserHelper::getUserId();
+			if (!$this->language) {
+				$this->language = \Yii::$app->language;
+			}
 		}
 		$this->email = trim(mb_strtolower($this->email));
 		$this->updatedAt = time();
@@ -312,7 +318,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 					['fastenClassFor' => null],
 					['fastenClassFor' => 0],
 					new Expression('"dateOfThe"-"fastenClassFor"*86400 >= ' . $time)
-					])
+				])
 				->asArray()->column();
 			if ($stageIds) {
 				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);

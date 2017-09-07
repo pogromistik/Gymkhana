@@ -137,7 +137,9 @@ use yii\web\JsExpression;
 					<?= \Yii::t('app', 'Вы можете указать свой персональный номер. Под этим номером вы будете выступать на всех чемпионатах своего региона. В одном регионе не может быть несколько участников с одним номером.') ?>
                 </small>
             </div>
-			<?= $form->field($athlete, 'number')->textInput() ?>
+	        <?= $form->field($athlete, 'number')->textInput() ?>
+	
+	        <?= $form->field($athlete, 'language')->dropDownList(\common\models\TranslateMessage::$languagesTitle) ?>
 
             <div class="form-group complete">
 				<?= Html::submitButton(\Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
