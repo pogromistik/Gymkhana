@@ -11,7 +11,6 @@ use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\Url;
 use yii\web\IdentityInterface;
-use php_rutils\RUtils;
 
 /**
  * This is the model class for table "athletes".
