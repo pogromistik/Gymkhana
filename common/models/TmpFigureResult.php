@@ -71,19 +71,19 @@ class TmpFigureResult extends BaseActiveRecord
 	{
 		return [
 			'id'           => 'ID',
-			'athleteId'    => 'Спортсмен',
-			'motorcycleId' => 'Мотоцикл',
-			'figureId'     => 'Фигура',
-			'date'         => 'Дата заезда',
-			'time'         => 'Время (без учёта штрафных секунд)',
-			'dateForHuman' => 'Дата заезда',
-			'timeForHuman' => 'Время (без учёта штрафных секунд)',
-			'fine'         => 'Штраф',
-			'videoLink'    => 'Ссылка с подтверждением результата',
+			'athleteId'    => \Yii::t('app', 'Спортсмен'),
+			'motorcycleId' => \Yii::t('app', 'Мотоцикл'),
+			'figureId'     => \Yii::t('app', 'Фигура'),
+			'date'         => \Yii::t('app', 'Дата заезда'),
+			'time'         => \Yii::t('app', 'Время (без учёта штрафных секунд)'),
+			'dateForHuman' => \Yii::t('app', 'Дата заезда'),
+			'timeForHuman' => \Yii::t('app', 'Время (без учёта штрафных секунд)'),
+			'fine'         => \Yii::t('app', 'Штраф'),
+			'videoLink'    => \Yii::t('app', 'Ссылка с подтверждением результата'),
 			'isNew'        => 'Is New',
 			'dateAdded'    => 'Дата добавления',
 			'dateUpdated'  => 'Дата редактирования',
-			'cancelReason' => 'Причина отказа'
+			'cancelReason' => \Yii::t('app', 'Причина отказа')
 		];
 	}
 	

@@ -36,6 +36,7 @@ class BaseController extends Controller
 			$user = Athlete::findOne(\Yii::$app->user->id);
 			$user->lastActivityDate = time();
 			$user->save();
+			\Yii::$app->language = $user->language;
 		}
 		//\Yii::$app->language = 'en-US';
 	}

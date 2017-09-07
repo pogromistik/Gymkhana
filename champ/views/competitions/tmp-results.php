@@ -15,7 +15,7 @@ use yii\bootstrap\Html;
                 <div class="toggle">
                     <div class="background"></div>
                     <div class="title">
-						<?= $title ?>
+						<?= \Yii::t('app', $title) ?>
                     </div>
                     <div class="info">
 						<?php if (!isset($results[$group])) { ?>

@@ -55,9 +55,9 @@ class Feedback extends BaseActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'username'    => 'Имя',
-			'phone'       => 'Телефон',
-			'email'       => 'Email',
+			'username'    => \Yii::t('app', 'Имя'),
+			'phone'       => \Yii::t('app', 'Телефон'),
+			'email'       => \Yii::t('app', 'Email'),
 			'text'        => 'Текст',
 			'dateAdded'   => 'Дата добавления',
 			'dateUpdated' => 'Дата редактирования',

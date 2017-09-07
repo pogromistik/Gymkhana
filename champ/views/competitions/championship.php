@@ -13,7 +13,8 @@ $this->title = $championship->title;
 <div class="row">
     <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
         <b><?= \Yii::t('app', '{year} год', ['year' => $championship->year->year]) ?></b>
-        <span class="label label-info"><?= \common\models\Championship::$statusesTitle[$championship->status] ?></span>
+        <span class="label label-info"><?= \Yii::t('app',
+		        \common\models\Championship::$statusesTitle[$championship->status]) ?></span>
 		<?php if ($championship->regionId) { ?>
             <div class="pb-10">
 				<?= \Yii::t('app', 'Регион проведения: {regionTitle}', ['regionTitle' => $championship->region->title]) ?>

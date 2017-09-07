@@ -236,27 +236,27 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		return [
 			'id'                 => 'ID',
-			'login'              => 'Логин',
-			'firstName'          => 'Имя',
-			'lastName'           => 'Фамилия',
-			'phone'              => 'Телефон',
-			'email'              => 'Почта',
-			'cityId'             => 'Город',
-			'athleteClassId'     => 'Класс',
-			'number'             => 'Номер',
+			'login'              => \Yii::t('app', 'Логин'),
+			'firstName'          => \Yii::t('app', 'Имя'),
+			'lastName'           => \Yii::t('app', 'Фамилия'),
+			'phone'              => \Yii::t('app', 'Телефон'),
+			'email'              => \Yii::t('app', 'Email'),
+			'cityId'             => \Yii::t('app', 'Город'),
+			'athleteClassId'     => \Yii::t('app', 'Класс'),
+			'number'             => \Yii::t('app', 'Номер'),
 			'authKey'            => 'Auth Key',
 			'passwordHash'       => 'Password Hash',
 			'passwordResetToken' => 'Password Reset Token',
-			'status'             => 'Статус',
+			'status'             => \Yii::t('app', 'Статус'),
 			'createdAt'          => 'Создан',
 			'updatedAt'          => 'Обновлен',
 			'hasAccount'         => 'Аккаунт создан?',
 			'lastActivityDate'   => 'Дата последней активности',
-			'regionId'           => 'Регион',
-			'photo'              => 'Фотография',
-			'photoFile'          => 'Фотография',
-			'countryId'          => 'Страна',
-			'language'           => 'Язык'
+			'regionId'           => \Yii::t('app', 'Регион'),
+			'photo'              => \Yii::t('app', 'Фотография'),
+			'photoFile'          => \Yii::t('app', 'Фотография'),
+			'countryId'          => \Yii::t('app', 'Страна'),
+			'language'           => \Yii::t('app', 'Язык')
 		];
 	}
 	
