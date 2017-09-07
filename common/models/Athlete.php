@@ -305,7 +305,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			if ($this->hasAccount) {
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
-				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
+				$text = \Yii::t('app', 'Ваш класс изменен с {oldClass} на {newClass}',
+					['oldClass' => $oldClass->title, 'newClass' => $newClass->title], $this->language);
 				if ($history && (mb_strlen($history->event, 'UTF-8') <= (252 - mb_strlen($text, 'UTF-8')))) {
 					$text .= ' (' . $history->event . ')';
 				}
@@ -326,7 +327,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		}
 		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
 			$link = Url::to(['/profile/help']);
-			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.', $link);
+			Notice::add($this->id,
+				\Yii::t('app', 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.',
+					[], $this->language), $link);
 		}
 		parent::afterSave($insert, $changedAttributes);
 	}
@@ -424,7 +427,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
 				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-				->setSubject('gymkhana-cup: регистрация на сайте')
+				->setSubject('gymkhana-cup: ' . \Yii::t('app', 'регистрация на сайте', [], $this->language))
 				->send();
 		}
 		
@@ -512,7 +515,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
 					->setTo($this->email)
 					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-					->setSubject('gymkhana-cup: восстановление пароля')
+					->setSubject('gymkhana-cup: ' . \Yii::t('app', 'восстановление пароля', [], $this->language))
 					->send();
 			}
 			

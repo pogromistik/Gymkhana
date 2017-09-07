@@ -530,8 +530,8 @@ class ParticipantsController extends BaseController
 				return $result;
 			}
 			if ($athlete->hasAccount) {
-				$text = 'Ваша заявка на этап "' . $stage->title
-					. '" чемпионата "' . $stage->championship->title . '" подтверждена';
+				$text = \Yii::t('app', 'Ваша заявка на этап "{stageTitle}" чемпионата "{champTitle}" подтверждена',
+					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title], $athlete->language);
 				Notice::add($participant->athleteId, $text);
 			}
 		} elseif ($status == Participant::STATUS_CANCEL_ADMINISTRATION && $stage->participantsLimit > 0
@@ -539,26 +539,26 @@ class ParticipantsController extends BaseController
 			&& $stage->dateOfThe > time()
 		) {
 			if ($athlete->hasAccount) {
-				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
+				$text = \Yii::t('app', 'Ваша заявка на этап "{stageTitle}" чемпионата "{champTitle}" отклонена',
+					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title], $athlete->language);
 				Notice::add($participant->athleteId, $text);
 			}
 			if (YII_ENV != 'dev' && $athlete->email) {
-				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата 
-				"' . $stage->championship->title . '" на мотоцикле '
-					. $participant->motorcycle->getFullTitle() . ' отклонена, так как на этап уже зарегистрировано максимальное
-					количество участников. Для уточнения подробностей можете связаться с
-					организатором соревнования.';
+				$text = \Yii::t('app', 'Ваша заявка на этап "{stageTitle}" чемпионата "{champTitle}" на мотоцикле {motorcycle} отклонена, так как на этап уже зарегистрировано максимальное количество участников. Для уточнения подробностей можете связаться с организатором соревнования.',
+					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title, 'motorcycle' => $participant->motorcycle->getFullTitle()],
+					$athlete->language);
 				if (YII_ENV != 'dev') {
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo($athlete->email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup: регистрация на этап отклонена')
+						->setSubject('gymkhana-cup: ' . \Yii::t('app', 'регистрация на этап отклонена', [], $athlete->language))
 						->send();
 				}
 			}
 		} elseif ($status == Participant::STATUS_OUT_COMPETITION && $participant->status != Participant::STATUS_OUT_COMPETITION) {
 			if ($athlete->hasAccount) {
-				$text = 'Вы допущены на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" вне зачёта';
+				$text = \Yii::t('app', 'Вы допущены на этап "{stageTitle}" чемпионата "{champTitle}" вне зачёта',
+					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title], $athlete->language);
 				Notice::add($participant->athleteId, $text);
 			}
 		}

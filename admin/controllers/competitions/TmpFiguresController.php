@@ -153,7 +153,8 @@ class TmpFiguresController extends BaseController
 			$sec = str_pad(floor(($figureResult->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
 			$mls = str_pad(($figureResult->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
 			$timeForHuman = $min . ':' . $sec . '.' . $mls;
-			$text = 'Ваш результат ' . $timeForHuman . ' для фигуры ' . $figure->title . ' подтверждён.';
+			$text = \Yii::t('app', 'Ваш результат {time} для фигуры {title} подтверждён.',
+				['time' => $timeForHuman, 'title' => $figure->title], $tmp->athlete->language);
 			
 			Notice::add($tmp->athleteId, $text, $link);
 			
@@ -198,7 +199,8 @@ class TmpFiguresController extends BaseController
 			
 			$figure = $tmp->figure;
 			$link = Url::to(['/figures/requests', 'status' => TmpFigureResult::STATUS_CANCEL]);
-			$text = 'Ваш результат для фигуры ' . $figure->title . ' отклонён. Чтобы узнать подробности, перейдите по ссылке.';
+			$text = \Yii::t('app', 'Ваш результат для фигуры {title} отклонён. Чтобы узнать подробности, перейдите по ссылке.',
+				['title' => $figure->title], $tmp->athlete->language);
 			
 			Notice::add($tmp->athleteId, $text, $link);
 		} else {
