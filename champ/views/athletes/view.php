@@ -86,11 +86,11 @@ use yii\bootstrap\Html;
             </table>
 		<?php } ?>
     </div>
-    
-    <?php if ($participants) { ?>
+	
+	<?php if ($participants) { ?>
     <div class="history pt-10">
         <h4>
-           Участие в этапах<br>
+            Участие в этапах<br>
             <small>показано не более 30 последних записей</small>
         </h4>
         <div class="table-responsive">
@@ -101,46 +101,73 @@ use yii\bootstrap\Html;
                     <th>Рейтинг</th>
                     <th>Место в абсолюте</th>
                 </tr>
-		        <?php foreach ($participants as $participant) { ?>
+				<?php foreach ($participants as $participant) { ?>
                     <tr>
                         <td>
-					        <?php $stage = $participant->stage; ?>
-					        <?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+							<?php $stage = $participant->stage; ?>
+							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
                             <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
-                        <td><?= $participant->percent ?>%</td>
-                        <td><?= $participant->place ?></td>
-                    </tr>
-		        <?php } ?>
-            </table>
-        </div>
-    <?php } ?>
-	
-	<?php if ($history) { ?>
-        <div class="history pt-10">
-            <h4>
-                История переходов между классами<br>
-                <small>показано не более 15 последних записей</small>
-            </h4>
-            <table class="table">
-                <tr>
-                    <th>Дата</th>
-                    <th>Старый класс</th>
-                    <th>Новый класс</th>
-                    <th>Событие</th>
-                </tr>
-				<?php foreach ($history as $item) { ?>
-                    <tr>
-                        <td><?= $item->dateForHuman ?></td>
-                        <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
-                        <td><?= $item->newClass->title ?></td>
-                        <td><?= $item->event ?></td>
+                        <td>
+	                        <?php if ($participant->percent) {
+		                        echo $participant->percent . '%';
+	                        } else {
+		                        if ($stage->referenceTime) {
+			                        ?>
+                                    <span class="fa fa-remove remove"></span>
+			                        <?php
+		                        } else {
+		                            ?>
+                                    <span class="green">...</span>
+                            <?php
+                                }
+	                        } ?>
+                        <td>
+							<?php if ($participant->place) {
+								echo $participant->place;
+							} else {
+								if ($stage->referenceTime) {
+									?>
+                                    <span class="fa fa-remove remove"></span>
+									<?php
+								} else {
+									?>
+                                    <span class="green">...</span>
+									<?php
+								}
+							} ?>
+                        </td>
                     </tr>
 				<?php } ?>
             </table>
         </div>
-	<?php } ?>
-</div>
+		<?php } ?>
+		
+		<?php if ($history) { ?>
+            <div class="history pt-10">
+                <h4>
+                    История переходов между классами<br>
+                    <small>показано не более 15 последних записей</small>
+                </h4>
+                <table class="table">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Старый класс</th>
+                        <th>Новый класс</th>
+                        <th>Событие</th>
+                    </tr>
+					<?php foreach ($history as $item) { ?>
+                        <tr>
+                            <td><?= $item->dateForHuman ?></td>
+                            <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
+                            <td><?= $item->newClass->title ?></td>
+                            <td><?= $item->event ?></td>
+                        </tr>
+					<?php } ?>
+                </table>
+            </div>
+		<?php } ?>
+    </div>
 
-<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"> Вернуться к спортсменам </a>
+    <a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"> Вернуться к спортсменам </a>
