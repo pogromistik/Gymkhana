@@ -443,6 +443,15 @@ span.red {
     font-size: 10px;
 }
 
+span.remove {
+    color: #dc0004;
+}
+
+span.green {
+    color: #56a025;
+    font-size: 18px;
+}
+
 span.green, td.green {
     color: #56a025;
 }
