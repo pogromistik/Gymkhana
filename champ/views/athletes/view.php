@@ -101,18 +101,45 @@ use yii\bootstrap\Html;
                     <th><?= \Yii::t('app', 'Рейтинг') ?></th>
                     <th><?= \Yii::t('app', 'Место в абсолюте') ?></th>
                 </tr>
-		        <?php foreach ($participants as $participant) { ?>
+				<?php foreach ($participants as $participant) { ?>
                     <tr>
                         <td>
-					        <?php $stage = $participant->stage; ?>
-					        <?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+							<?php $stage = $participant->stage; ?>
+							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
                             <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
-                        <td><?= $participant->percent ?>%</td>
-                        <td><?= $participant->place ?></td>
+                        <td>
+	                        <?php if ($participant->percent) {
+		                        echo $participant->percent . '%';
+	                        } else {
+		                        if ($stage->referenceTime) {
+			                        ?>
+                                    <span class="fa fa-remove remove"></span>
+			                        <?php
+		                        } else {
+		                            ?>
+                                    <span class="green">...</span>
+                            <?php
+                                }
+	                        } ?>
+                        <td>
+							<?php if ($participant->place) {
+								echo $participant->place;
+							} else {
+								if ($stage->referenceTime) {
+									?>
+                                    <span class="fa fa-remove remove"></span>
+									<?php
+								} else {
+									?>
+                                    <span class="green">...</span>
+									<?php
+								}
+							} ?>
+                        </td>
                     </tr>
-		        <?php } ?>
+				<?php } ?>
             </table>
         </div>
     <?php } ?>
