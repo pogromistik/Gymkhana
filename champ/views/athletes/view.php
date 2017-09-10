@@ -119,7 +119,7 @@ use yii\bootstrap\Html;
 			                        <?php
 		                        } else {
 		                            ?>
-                                    <span class="green">...</span>
+                                    <span class="green wait">...</span>
                             <?php
                                 }
 	                        } ?>
@@ -133,7 +133,7 @@ use yii\bootstrap\Html;
 									<?php
 								} else {
 									?>
-                                    <span class="green">...</span>
+                                    <span class="green wait">...</span>
 									<?php
 								}
 							} ?>
