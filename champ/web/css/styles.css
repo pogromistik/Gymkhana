@@ -447,7 +447,7 @@ span.remove {
     color: #dc0004;
 }
 
-span.green {
+.wait {
     color: #56a025;
     font-size: 18px;
 }
