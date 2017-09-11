@@ -80,7 +80,13 @@ use yii\bootstrap\Html;
                                 <small><?= $result->motorcycle->getFullTitle() ?></small>
                             </div>
                         </td>
-                        <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%</td>
+                        <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%
+	                        <?php if ($result->videoLink) { ?>
+                                <a href="<?= $result->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
+                        </td>
                     </tr>
 				<?php } ?>
             </table>
