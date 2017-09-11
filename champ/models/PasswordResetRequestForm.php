@@ -1,6 +1,7 @@
 <?php
 namespace champ\models;
 
+use common\components\XED;
 use common\models\Athlete;
 use Yii;
 use yii\base\Model;
@@ -25,7 +26,7 @@ class PasswordResetRequestForm extends Model
 	public function validateLogin($attribute, $params)
 	{
 		if (!$this->hasErrors()) {
-			$athlete = Athlete::findOne(['email' => $this->login]);
+			$athlete = Athlete::findOne(['email' => XED::encrypt($this->login, Athlete::$hash)]);
 			if (!$athlete) {
 				$login = preg_replace('~\D+~','',$this->login);
 				if($login == $this->login) {

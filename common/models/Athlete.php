@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\XED;
 use common\helpers\UserHelper;
 use Yii;
 use yii\base\NotSupportedException;
@@ -48,6 +49,8 @@ use yii\web\UploadedFile;
  */
 class Athlete extends BaseActiveRecord implements IdentityInterface
 {
+	public static $hash = 'R3lta2hhbmFDdXAg0L7RgtC70LjRh9C90YvQuSDRgdCw0LnRgiE=';
+	
 	protected static $enableLogging = true;
 	protected static $ignoredAttributes = [
 		'authKey',
@@ -127,7 +130,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if ($notEmail === $login) {
 			$athlete = static::findOne(['login' => $login, 'status' => self::STATUS_ACTIVE]);
 		} else {
-			$athlete = static::findOne(['upper("email")' => mb_strtoupper($login), 'status' => self::STATUS_ACTIVE]);
+			$athlete = static::findOne(['email' => XED::encrypt(mb_strtolower($login), Athlete::$hash), 'status' => self::STATUS_ACTIVE]);
 		}
 		
 		return $athlete;
@@ -169,7 +172,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
-			[['email'], 'unique'],
+			[['email'], 'unique', 'message' => 'указанный email занят'],
 			[['passwordResetToken'], 'unique'],
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
@@ -270,7 +273,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			}
 			$this->creatorUserId = UserHelper::getUserId();
 		}
-		$this->email = trim(mb_strtolower($this->email));
+		$this->email = XED::encrypt($this->email, self::$hash);
 		$this->updatedAt = time();
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
@@ -281,6 +284,12 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function afterFind()
+	{
+		parent::afterFind();
+		$this->email = XED::decrypt($this->email, self::$hash);
 	}
 	
 	public function afterSave($insert, $changedAttributes)

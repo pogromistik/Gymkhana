@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\components\XED;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -1392,6 +1393,28 @@ class RunController extends Controller
 			}
 			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
 		}
+		
+		return true;
+	}
+	
+	public function actionTest()
+	{
+		$athlete = Athlete::find()->one();
+		var_dump($athlete);
+		return false;
+	}
+	
+	public function actionEncode()
+	{
+		/** @var Athlete $athlete */
+		$athletes = Athlete::find()->where(['not', ['email' => null]])->all();
+		$count = 0;
+		foreach ($athletes as $athlete) {
+			$athlete->email = XED::encrypt($athlete->email, Athlete::$hash);
+			$athlete->save();
+			$count++;
+		}
+		echo 'Change ' . $count . ' items';
 		
 		return true;
 	}

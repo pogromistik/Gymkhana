@@ -4,6 +4,7 @@ namespace champ\controllers;
 use champ\models\LoginForm;
 use champ\models\PasswordResetRequestForm;
 use champ\models\ResetPasswordForm;
+use common\components\XED;
 use common\models\AssocNews;
 use common\models\Athlete;
 use common\models\DocumentSection;
@@ -190,7 +191,8 @@ class SiteController extends BaseController
 			if (!$form->email) {
 				return 'Необходимо указать email';
 			}
-			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])
+			$ecEmail = XED::encrypt(mb_strtolower($form->email), Athlete::$hash);
+			if (Athlete::findOne(['email' => $ecEmail, 'hasAccount' => 1])
 				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
 			->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()) {
 				return 'Указанный email занят';
@@ -248,7 +250,7 @@ class SiteController extends BaseController
 	{
 		$model = new PasswordResetRequestForm();
 		if ($model->load(\Yii::$app->request->post())) {
-			$athlete = Athlete::findOne(['email' => $model->login]);
+			$athlete = Athlete::findOne(['email' => XED::encrypt(mb_strtolower($model->login), Athlete::$hash)]);
 			if (!$athlete) {
 				$login = preg_replace('~\D+~', '', $model->login);
 				if ($login == $model->login) {
