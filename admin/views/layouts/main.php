@@ -394,7 +394,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 	                            } ?>
                             </ul>
                         </li>
-					<?php } ?>
+					<?php } elseif (\Yii::$app->user->can('translate')) {
+						?>
+                        <li>
+                            <a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>">Переводы</a>
+                        </li>
+						<?php
+					} ?>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
