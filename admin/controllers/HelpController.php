@@ -16,6 +16,8 @@ class HelpController extends BaseController
 	{
 		if (\Yii::$app->user->can('admin') || \Yii::$app->user->can('competitions')) {
 			return $this->render('help-competitions');
+		} elseif (\Yii::$app->user->can('translate')) {
+			return $this->redirect('/competitions/translate-messages/translate');
 		}
 		
 		throw new ForbiddenHttpException();
