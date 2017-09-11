@@ -112,7 +112,7 @@ use yii\bootstrap\Html;
                         <td>
 							<?php $stage = $participant->stage; ?>
 							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
-                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
+                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman . ', ' . $stage->city->title : $stage->city->title ?></small>
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
                         <td>
