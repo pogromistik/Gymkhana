@@ -80,7 +80,13 @@ use yii\bootstrap\Html;
                                 <small><?= $result->motorcycle->getFullTitle() ?></small>
                             </div>
                         </td>
-                        <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%</td>
+                        <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%
+	                        <?php if ($result->videoLink) { ?>
+                                <a href="<?= $result->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
+                        </td>
                     </tr>
 				<?php } ?>
             </table>
@@ -106,12 +112,18 @@ use yii\bootstrap\Html;
                         <td>
 							<?php $stage = $participant->stage; ?>
 							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
-                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman : '' ?></small>
+                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman . ', ' . $stage->city->title : $stage->city->title ?></small>
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
                         <td>
 	                        <?php if ($participant->percent) {
 		                        echo $participant->percent . '%';
+		                        $bestTime = $participant->getBestTimeItem();
+		                        if ($bestTime && $bestTime->videoLink) { ?>
+                                    <a href="<?= $bestTime->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+		                        <?php }
 	                        } else {
 		                        if ($stage->referenceTime) {
 			                        ?>
