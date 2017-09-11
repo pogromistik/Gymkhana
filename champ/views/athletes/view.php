@@ -118,6 +118,12 @@ use yii\bootstrap\Html;
                         <td>
 	                        <?php if ($participant->percent) {
 		                        echo $participant->percent . '%';
+		                        $bestTime = $participant->getBestTimeItem();
+		                        if ($bestTime && $bestTime->videoLink) { ?>
+                                    <a href="<?= $bestTime->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+		                        <?php }
 	                        } else {
 		                        if ($stage->referenceTime) {
 			                        ?>
