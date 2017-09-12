@@ -210,12 +210,9 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
 					<?php } ?>
 					
-					<?php if (($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING
-						|| $time >= $stage->dateOfThe) && (
-							$championship->year->year <= date("Y") ||
-                            ($stage->startRegistration && $time >= $stage->startRegistration)
-                            || $time >= $stage->dateOfThe
-                        )) { ?>
+					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
+						|| $time >= $stage->dateOfThe
+					) { ?>
 
                         <div class="results pt-20">
                             <div class="pb-10">
