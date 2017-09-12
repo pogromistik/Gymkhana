@@ -171,6 +171,12 @@ img {
     font-weight: bold;
 }
 
+.navbar-default.sidebar ul li.translate-bg > a {
+    color: #fff676;
+    background: #464644;
+    font-weight: bold;
+}
+
 .none-block {
     display: none;
 }
