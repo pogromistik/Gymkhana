@@ -397,8 +397,8 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 				<?php } elseif (\Yii::$app->user->can('translate')) {
 					?>
                     <li class="translate-bg">
-                        <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
-                        &nbsp;<a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>">ПЕРЕВОД</a>
+                        <a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>"><i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+                            &nbsp;ПЕРЕВОД</a>
                     </li>
 					<?php
 				} ?>
