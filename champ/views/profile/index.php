@@ -189,7 +189,7 @@ use yii\web\JsExpression;
 									'id' => $motorcycleInfo->id], [
 									'class'   => 'btn btn-warning changeMotorcycleStatus',
 									'data-id' => $motorcycleInfo->id,
-									'title'   => \Yii::t('app', 'Вернуть в работу')
+									'title'   => \Yii::t('app', 'Вернуть')
 								]);
 							}
 							?>
