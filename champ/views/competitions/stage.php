@@ -212,7 +212,8 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 					
 					<?php if (($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING
 						|| $time >= $stage->dateOfThe) && (
-							$championship->year->year <= date("Y") || $time >= $stage->startRegistration
+							$championship->year->year <= date("Y") ||
+                            ($stage->startRegistration && $time >= $stage->startRegistration)
                             || $time >= $stage->dateOfThe
                         )) { ?>
 
