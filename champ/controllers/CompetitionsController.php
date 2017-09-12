@@ -47,8 +47,9 @@ class CompetitionsController extends BaseController
 		if (!$currentYear) {
 			throw new UserException();
 		}
+		$yearIds = Year::find()->select('id')->where(['>=', 'year', $currentYear->year]);
 		$championshipIds = Championship::find()->select('id')
-			->andWhere(['yearId' => $currentYear->id])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+			->andWhere(['yearId' => $yearIds])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
 		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
