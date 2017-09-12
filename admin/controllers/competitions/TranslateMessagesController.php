@@ -141,6 +141,14 @@ class TranslateMessagesController extends BaseController
 		}
 	}
 	
+	public function actionDelete($id)
+	{
+		$this->can('developer');
+		$message = $this->findModel($id);
+		$message->delete();
+		return true;
+	}
+	
 	/**
 	 * Finds the SourceMessage model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
