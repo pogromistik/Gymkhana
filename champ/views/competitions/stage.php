@@ -46,16 +46,16 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                     <p><?= $stage->description ?></p>
 				<?php } ?>
 				<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
-					<?php if ($stage->startRegistration) { ?>
+					<?php if ($stage->startRegistration || $stage->endRegistration) { ?>
                         <p>
-							<?= \Yii::t('app', 'Начало регистрации:') ?> <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+							<?php if ($stage->startRegistration) { ?>
+								<?= \Yii::t('app', 'Начало регистрации:') ?> <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+							<?php } ?>
 							<?php if ($stage->endRegistration) { ?>
                                 <br>
 								<?= \Yii::t('app', 'Завершение регистрации:') ?> <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
 							<?php } ?>
                         </p>
-					<?php } else { ?>
-                        <p><?= \Yii::t('app', 'Регистрация на этап завершена') ?></p>
 					<?php } ?>
 				<?php } ?>
 				<?php if ($stage->documentIds) { ?>
@@ -211,7 +211,9 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         <div class="warning text-center text-uppercase"><?= \Yii::t('app', 'Предварительная регистрация на этап завершена') ?></div>
 					<?php } ?>
 					
-					<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
+					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
+						|| $time >= $stage->dateOfThe
+					) { ?>
 
                         <div class="results pt-20">
                             <div class="pb-10">
