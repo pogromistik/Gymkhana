@@ -44,16 +44,16 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                     <p><?= $stage->description ?></p>
 				<?php } ?>
 				<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
-					<?php if ($stage->startRegistration) { ?>
+					<?php if ($stage->startRegistration || $stage->endRegistration) { ?>
                         <p>
-                            Начало регистрации: <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+							<?php if ($stage->startRegistration) { ?>
+                                Начало регистрации: <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+							<?php } ?>
 							<?php if ($stage->endRegistration) { ?>
                                 <br>
                                 Завершение регистрации: <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
 							<?php } ?>
                         </p>
-					<?php } else { ?>
-                        <p>Регистрация на этап завершена</p>
 					<?php } ?>
 				<?php } ?>
 				<?php if ($stage->documentIds) { ?>
@@ -160,16 +160,16 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         </div>
                     </div>
 				<?php } ?>
-	
-	            <?php if ($qualification && isset($qualification['figureTitles'])) { ?>
+				
+				<?php if ($qualification && isset($qualification['figureTitles'])) { ?>
                     <div>
                         <h5><?= Html::a('Нажмите, чтобы посмотреть результаты квалификации
                         (' . implode($qualification['figureTitles'], ', ') . ')',
-					            ['/competitions/qualification', 'stageId' => $stage->id],
-					            ['class' => 'qualification-link']) ?>
+								['/competitions/qualification', 'stageId' => $stage->id],
+								['class' => 'qualification-link']) ?>
                         </h5>
                     </div>
-	            <?php } ?>
+				<?php } ?>
 				
 				<?php if ($stage->status == Stage::STATUS_CANCEL) { ?>
                     <div class="warning">
