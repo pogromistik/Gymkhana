@@ -527,3 +527,7 @@ a.red-button {
     font-weight: normal;
     display: block;
 }
+
+.tr-success {
+    border: 2px solid #5cb85c!important;
+}

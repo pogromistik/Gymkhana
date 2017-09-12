@@ -136,6 +136,7 @@ $(document).on("submit", '.TranslateMessagesForm', function (e) {
             if (result == true) {
                 btn.removeClass('btn-primary');
                 btn.addClass('btn-success');
+                form.parent('tr').addClass('tr-success');
                 hideBackDrop();
             }
             else {
