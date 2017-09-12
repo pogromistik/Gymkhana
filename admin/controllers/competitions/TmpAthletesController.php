@@ -92,6 +92,9 @@ class TmpAthletesController extends BaseController
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$oldAthlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->language) {
+				$oldAthlete->language = $tmpAthlete->language;
+			}
 			if ($tmpAthlete->phone) {
 				$oldAthlete->phone = $tmpAthlete->phone;
 			}
@@ -242,6 +245,9 @@ class TmpAthletesController extends BaseController
 				if ($tmpAthlete->phone) {
 					$oldAthlete->phone = $tmpAthlete->phone;
 				}
+				if ($tmpAthlete->language) {
+					$oldAthlete->language = $tmpAthlete->language;
+				}
 				if (!$oldAthlete->save()) {
 					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
 					
@@ -365,6 +371,9 @@ class TmpAthletesController extends BaseController
 				$athlete->phone = $tmpAthlete->phone;
 			}
 			$athlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->language) {
+				$athlete->language = $tmpAthlete->language;
+			}
 			$athlete->countryId = $tmpAthlete->countryId;
 			$transaction = \Yii::$app->db->beginTransaction();
 			if (!$athlete->save()) {

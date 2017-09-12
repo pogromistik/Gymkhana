@@ -5,6 +5,7 @@ use common\models\Athlete;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\OverallFile;
+use common\models\TranslateMessage;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -31,6 +32,15 @@ class BaseController extends Controller
 	public function init()
 	{
 		parent::init();
+		
+		$hostName = \Yii::$app->request->getHostName();
+		switch ($hostName) {
+			case 'gymkhana-cup.com':
+				\Yii::$app->language = TranslateMessage::LANGUAGE_EN;
+				break;
+			default:
+				\Yii::$app->language = TranslateMessage::LANGUAGE_RU;
+		}
 		
 		if(!\Yii::$app->user->isGuest) {
 			$user = Athlete::findOne(\Yii::$app->user->id);

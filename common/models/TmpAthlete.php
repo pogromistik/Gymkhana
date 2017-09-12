@@ -22,6 +22,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $status
  * @property integer $dateAdded
  * @property integer $dateUpdated
+ * @property string  $language
  *
  * @property Country $country
  * @property City    $cityModel
@@ -48,7 +49,7 @@ class TmpAthlete extends BaseActiveRecord
 		return [
 			[['athleteId', 'countryId', 'cityId', 'status', 'dateAdded', 'dateUpdated'], 'integer'],
 			[['firstName', 'lastName', 'email', 'countryId', 'motorcycles', 'dateAdded', 'dateUpdated'], 'required'],
-			[['motorcycles'], 'string'],
+			[['motorcycles', 'language'], 'string'],
 			[['firstName', 'lastName', 'phone', 'email', 'city'], 'string', 'max' => 255],
 			['email', 'email'],
 		];
@@ -73,6 +74,7 @@ class TmpAthlete extends BaseActiveRecord
 			'status'      => \Yii::t('app', 'Статус'),
 			'dateAdded'   => 'Дата добавления',
 			'dateUpdated' => 'Дата редактирования',
+			'language'    => 'Язык'
 		];
 	}
 	
@@ -84,6 +86,14 @@ class TmpAthlete extends BaseActiveRecord
 				$this->city = $this->cityModel->title;
 			} elseif ($this->city && $this->cityId) {
 				$this->cityId = null;
+			}
+			$hostName = \Yii::$app->request->getHostName();
+			switch ($hostName) {
+				case 'gymkhana-cup.com':
+					$this->language = TranslateMessage::LANGUAGE_EN;
+					break;
+				default:
+					$this->language = TranslateMessage::LANGUAGE_RU;
 			}
 		}
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));
