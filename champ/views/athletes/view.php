@@ -182,4 +182,4 @@ use yii\bootstrap\Html;
 	<?php } ?>
 </div>
 
-<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"><?= \Yii::t('app', 'Вернуться к спортсменам') ?></a>
+<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"><?= \Yii::t('app', 'Вернуться к списку спортсменов') ?></a>
