@@ -27,6 +27,8 @@ $listView = new \yii\widgets\ListView([
 ]);
 ?>
 
+<h4>Всего непереведенных фраз: <?= TranslateMessageSource::find()->count() - \common\models\TranslateMessage::find()->count() ?></h4>
+
 <div class="translate">
     <div class="row table">
         <div class="col-md-12">
