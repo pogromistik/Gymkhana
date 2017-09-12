@@ -139,7 +139,7 @@ use yii\web\JsExpression;
             </div>
 	        <?= $form->field($athlete, 'number')->textInput() ?>
 	
-	        <?= $form->field($athlete, 'language')->dropDownList(\common\models\TranslateMessage::$languagesTitle) ?>
+	        <?= $form->field($athlete, 'language')->dropDownList(\common\helpers\FormatHelper::replace(\common\models\TranslateMessage::$languagesTitle)) ?>
 
             <div class="form-group complete">
 				<?= Html::submitButton(\Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>

@@ -10,5 +10,7 @@ class FormatHelper
 		foreach ($array as $key => $item) {
 			$result[$key] = \Yii::t('app', $item);
 		}
+		
+		return $result;
 	}
 }

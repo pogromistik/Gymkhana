@@ -7,8 +7,8 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = \Yii::t('app', 'Вход в личный кабинет') ?>;
-?>
+$this->title = \Yii::t('app', 'Вход в личный кабинет') ?>
+
 <h2><?= \Yii::t('app', 'Вход в личный кабинет') ?></h2>
 <div class="site-login">
     <div class="row">
