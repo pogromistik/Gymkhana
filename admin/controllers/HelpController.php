@@ -27,11 +27,14 @@ class HelpController extends BaseController
 	
 	public function actionDownloadTranslate()
 	{
+		$this->can('developer');
+		
+		$res = '';
 		/** @var TranslateMessageSource[] $items */
 		$items = TranslateMessageSource::find()->all();
 		foreach ($items as $item) {
 			$message =  TranslateMessage::findOne(['id' => $item->id]);
-			$res = $item->message . ';';
+			$res .= $item->message . ';';
 			if ($message && $message->translation) {
 				$res .= $message->translation;
 			}
