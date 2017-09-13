@@ -3,6 +3,8 @@
 namespace admin\controllers;
 
 use admin\models\SignupForm;
+use common\models\TranslateMessage;
+use common\models\TranslateMessageSource;
 use Yii;
 use common\models\User;
 use yii\web\ForbiddenHttpException;
@@ -21,5 +23,20 @@ class HelpController extends BaseController
 		}
 		
 		throw new ForbiddenHttpException();
+	}
+	
+	public function actionDownloadTranslate()
+	{
+		/** @var TranslateMessageSource[] $items */
+		$items = TranslateMessageSource::find()->all();
+		foreach ($items as $item) {
+			$message =  TranslateMessage::findOne(['id' => $item->id]);
+			$res = $item->message . ';';
+			if ($message && $message->translation) {
+				$res .= $message->translation;
+			}
+			$res .= PHP_EOL;
+		}
+		return $res;
 	}
 }
