@@ -21,7 +21,10 @@ class AthletesController extends BaseController
 	{
 		$this->pageTitle = \Yii::t('app', 'Спортсмены');
 		$this->description = \Yii::t('app', 'Спортсмены, хоть раз поучаствовавшие в соревнованиях по мотоджимхане');
-		$this->keywords = 'Мотоджимхана, спортсмены, спорт, список спортсменов, мотоциклисты, рейтинг спортсменов';
+		$this->keywords = \Yii::t('app', 'мотоджимхана') . ', ' . \Yii::t('app', 'спортсмены')
+			. ', ' . \Yii::t('app', 'список спортсменов') . ', '
+			. \Yii::t('app', 'мотоциклисты') . ', '
+			. \Yii::t('app', 'рейтинг спортсменов');
 		$this->layout = 'full-content';
 		
 		$searchModel = new AthleteSearch();

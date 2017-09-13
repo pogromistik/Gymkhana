@@ -40,7 +40,11 @@ class CompetitionsController extends BaseController
 	{
 		$this->pageTitle = \Yii::t('app', 'Расписание соревнований');
 		$this->description = \Yii::t('app', 'Расписание соревнований по мотоджимхане за текущий год');
-		$this->keywords = 'Соревнования, календарь, календарь мотоджимханы, календарь соревнований по мотоджимхане, чемпионаты, чемпионат России';
+		$this->keywords = \Yii::t('app', 'Соревнования') . ', '
+			. \Yii::t('app', 'календарь') . ', '
+			. \Yii::t('app', 'календарь соревнований по мотоджимхане') . ', '
+			. \Yii::t('app', 'чемпионаты') . ', '
+			. \Yii::t('app', 'чемпионат России');
 		
 		$events = [];
 		$currentYear = Year::getCurrent();
@@ -96,7 +100,12 @@ class CompetitionsController extends BaseController
 	{
 		$this->pageTitle = \Yii::t('app', 'Итоги соревнований');
 		$this->description = \Yii::t('app', 'Результаты соревнований  по мотоджимхане за всё время');
-		$this->keywords = 'Соревнования, чемпионаты, результаты, мотоджимхана результаты, мото джимхана, базовые фигуры';
+		$this->keywords = \Yii::t('app', 'Соревнования') . ', '
+			. \Yii::t('app', 'чемпионаты') . ', '
+			. \Yii::t('app', 'результаты') . ', '
+			. \Yii::t('app', 'мотоджимхана') . ', '
+			. \Yii::t('app', 'базовые фигуры') . ', '
+			. \Yii::t('app', 'мотоджимхана результаты');
 		
 		$this->layout = 'main-with-img';
 		$this->background = 'background3.png';
@@ -369,7 +378,7 @@ class CompetitionsController extends BaseController
 		}
 		$this->pageTitle = $stage->title . ': ' . \Yii::t('app', 'Квалификационные заезды');
 		$this->description = $stage->title . ': ' . \Yii::t('app', 'Квалификационные заезды');
-		$this->keywords = 'Квалификационные заезды, ' . $stage->title;
+		$this->keywords = \Yii::t('app', 'Квалификационные заезды') . ', ' . $stage->title;
 		$this->layout = 'full-content';
 		
 		return $this->render('qualification', [
@@ -456,7 +465,8 @@ class CompetitionsController extends BaseController
 		$this->description = \Yii::t('app', 'Результаты заездов по фигуре {figureTitle}', [
 			'figureTitle' => $figure->title
 		]);
-		$this->keywords = 'Фигуры мотоджимханы, базовые фигуры, ' . $figure->title;
+		$this->keywords = \Yii::t('app', 'Фигуры мотоджимханы') .
+			', ' . \Yii::t('app', 'базовые фигуры') . ', ' . $figure->title;
 		$this->layout = 'full-content';
 		
 		return $this->render('figure', [

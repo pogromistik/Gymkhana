@@ -34,7 +34,10 @@ class SiteController extends BaseController
 		$this->layout = 'main-with-img';
 		$this->pageTitle = \Yii::t('app', 'Мотоджимхана: события');
 		$this->description = \Yii::t('app', 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.');
-		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
+		$this->keywords = \Yii::t('app', 'мотоджимхана') .
+			', motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, '
+			. \Yii::t('app', 'новости мото джимханы') . ', '
+			. \Yii::t('app', 'события мото джимханы');
 		
 		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
 		$pagination = new Pagination([
@@ -70,8 +73,10 @@ class SiteController extends BaseController
 	{
 		$this->pageTitle = \Yii::t('app', 'Документы');
 		$this->description = \Yii::t('app', 'Документы, относящиеся к мото джимхане');
-		$this->keywords = 'регламент соревнований, регламент мото джимхана, правила проведения соревнований, мото джимхана правила, 
-		мото джимхана классы, классы мото джимханы, мото джимхана регламент';
+		$this->keywords = \Yii::t('app', 'регламент соревнований') . ', '
+		. \Yii::t('app', 'правила проведения соревнований') . ', '
+			. \Yii::t('app', 'классы мотоджимханы') . ', '
+			. \Yii::t('app', 'мотоджимхана правила');
 		
 		$this->layout = 'main-with-img';
 		$this->background = 'background4.png';
