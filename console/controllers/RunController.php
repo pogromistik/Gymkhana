@@ -25,6 +25,8 @@ use common\models\Time;
 use common\models\TmpAthlete;
 use common\models\TmpFigureResult;
 use common\models\TmpParticipant;
+use common\models\TranslateMessage;
+use common\models\TranslateMessageSource;
 use common\models\Year;
 use yii\console\Controller;
 use yii\db\Expression;
@@ -1393,6 +1395,22 @@ class RunController extends Controller
 			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
 		}
 		
+		return true;
+	}
+	
+	public function actionDownloadTranslate()
+	{
+		/** @var TranslateMessageSource[] $items */
+		$items = TranslateMessageSource::find()->all();
+		foreach ($items as $item) {
+			$message =  TranslateMessage::findOne(['id' => $item->id]);
+			$res = $item->message . ';';
+			if ($message && $message->translation) {
+				$res .= $message->translation;
+			}
+			$res .= PHP_EOL;
+			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
+		}
 		return true;
 	}
 }
