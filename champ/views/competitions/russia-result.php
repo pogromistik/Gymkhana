@@ -6,7 +6,7 @@ use yii\bootstrap\Html;
  * @var array         $results
  */
 ?>
-<h2>Чемпионаты России</h2>
+<h2>Чемпионаты России и мира</h2>
 <div class="list">
     <div class="item">
         <div class="toggle">

@@ -71,7 +71,7 @@ use yii\helpers\Url;
                                                 <?= \Yii::t('app', 'Базовые фигуры') ?>
                                             </a> </li>
                                         <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">
-                                                <?= \Yii::t('app', 'Чемпионаты России') ?>
+                                                <?= \Yii::t('app', 'Чемпионаты России и мира') ?>
                                             </a></li>
                                         <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">
                                                 <?= \Yii::t('app', 'Региональные соревнования') ?>
