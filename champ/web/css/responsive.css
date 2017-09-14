@@ -159,6 +159,7 @@
     .header {
         position: relative;
         background: #f4f4f4;
+        height: 60px;
     }
     .content {
         padding-top: 0;
@@ -183,12 +184,15 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .navbar-mobile-items {
         display: block;
     }
     .pk-menu-items {
         display: none!important;
+    }
+    .header {
+        height: auto;
     }
     .header .white-menu {
         height: auto;

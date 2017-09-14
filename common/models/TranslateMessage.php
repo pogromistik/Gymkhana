@@ -27,6 +27,11 @@ class TranslateMessage extends \yii\db\ActiveRecord
 		self::LANGUAGE_EN => 'Английский'
 	];
 	
+	public static $smallLanguagesTitle = [
+		self::LANGUAGE_RU => 'RU',
+		self::LANGUAGE_EN => 'EN'
+	];
+	
 	/**
 	 * @inheritdoc
 	 */

@@ -1051,3 +1051,8 @@ table.results small.red {
 h2.title small {
     font-size: 14px;
 }
+
+.mobile-language {
+    display: inline-block;
+    padding-left: 10px;
+}
