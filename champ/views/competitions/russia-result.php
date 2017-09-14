@@ -18,36 +18,38 @@ use yii\bootstrap\Html;
                     <div class="title-with-bg">
 						<?= $yearInfo['year'] ?>
                     </div>
-					<?php
-					/** @var \common\models\Stage[] $stages */
-					$stages = $yearInfo['stages'];
-					if (!$stages) { ?>
-                        <div class="pl-10">
-                            Для чемпионата пока не создано ни одного этапа.
-                        </div>
-					<?php } else { ?>
-                        <div class="pl-10">
-							<?php if ($yearInfo['showResults']) { ?>
-								<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-									<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
-                                    <br>
-								<?php } else { ?>
-									<?= Html::a('Предварительные итоги чемпионата',
-										['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+					<?php foreach ($yearInfo['data'] as $data) { ?>
+						<?php
+						/** @var \common\models\Stage[] $stages */
+						$stages = $data['stages'];
+						if (!$stages) { ?>
+                            <div class="pl-10">
+                                Для чемпионата пока не создано ни одного этапа.
+                            </div>
+						<?php } else { ?>
+                            <div class="pl-10">
+								<?php if ($data['showResults']) { ?>
+									<?php if ($data['status'] == \common\models\Championship::STATUS_PAST) { ?>
+										<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+                                        <br>
+									<?php } else { ?>
+										<?= Html::a('Предварительные итоги чемпионата',
+											['/competitions/championship-result', 'championshipId' => $data['id'], 'showAll' => 1]) ?>
+                                        <br>
+									<?php } ?>
+								<?php } ?>
+								<?php foreach ($stages as $stage) { ?>
+									<?php
+									$title = $stage->title . ', ' . $stage->city->title;
+									if ($stage->dateOfThe) {
+										$title .= ' ' . $stage->dateOfTheHuman;
+									}
+									?>
+									<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
                                     <br>
 								<?php } ?>
-							<?php } ?>
-							<?php foreach ($stages as $stage) { ?>
-								<?php
-								$title = $stage->title . ', ' . $stage->city->title;
-								if ($stage->dateOfThe) {
-									$title .= ' ' . $stage->dateOfTheHuman;
-								}
-								?>
-								<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
-                                <br>
-							<?php } ?>
-                        </div>
+                            </div>
+						<?php } ?>
 					<?php } ?>
 				<?php }
 				?>
