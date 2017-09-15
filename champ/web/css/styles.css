@@ -1051,3 +1051,12 @@ table.results small.red {
 h2.title small {
     font-size: 14px;
 }
+
+.href-menu ul li {
+    display: inline-block;
+}
+
+.href-menu ul li:before {
+    content: "\2022";
+    padding-right: 5px;
+}

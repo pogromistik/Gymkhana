@@ -171,3 +171,30 @@ $('.deletePhoto').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$('#subscriptionNews').click(function () {
+    $('.subscription-info').slideToggle();
+});
+
+$(document).on("submit", '#newslettersForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+
+    $.ajax({
+        url: "/profile/subscriptions",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(result);
+            }
+        },
+        error: function (error) {
+            alert(error.responseText);
+            hideBackDrop();
+        }
+    });
+});

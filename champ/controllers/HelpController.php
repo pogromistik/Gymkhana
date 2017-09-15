@@ -120,4 +120,21 @@ class HelpController extends Controller
 		}
 		return $out;
 	}
+	
+	public function actionRegionsList($title = null, $countryId = null) {
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$out = ['results' => ['id' => '', 'text' => '']];
+		if (!is_null($title)) {
+			$query = new Query();
+			$query->select('id, title AS text')
+				->from(Region::tableName())
+				->where(['like', 'title', $title])
+				->andWhere(['countryId' => $countryId])
+				->limit(20);
+			$command = $query->createCommand();
+			$data = $command->queryAll();
+			$out['results'] = array_values($data);
+		}
+		return $out;
+	}
 }

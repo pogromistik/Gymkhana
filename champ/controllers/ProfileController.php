@@ -11,6 +11,7 @@ use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
+use common\models\NewsSubscription;
 use common\models\Participant;
 use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
@@ -80,7 +81,19 @@ class ProfileController extends AccessController
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
-		return $this->render('index', ['athlete' => $athlete, 'success' => $success, 'password' => $password]);
+		$subscription = NewsSubscription::findOne(['athleteId' => $athlete->id, 'isActive' => NewsSubscription::IS_ACTIVE_YES]);
+		if (!$subscription) {
+			$subscription = new NewsSubscription();
+		} else {
+			$subscription->regionIds = $subscription->getRegionIds();
+		}
+		
+		return $this->render('index', [
+			'athlete'      => $athlete,
+			'success'      => $success,
+			'password'     => $password,
+			'subscription' => $subscription
+		]);
 	}
 	
 	public function actionChangeStatus($id)
@@ -519,5 +532,40 @@ class ProfileController extends AccessController
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
+	}
+	
+	public function actionSubscriptions()
+	{
+		$athlete = Athlete::findOne(\Yii::$app->user->identity->id);
+		if (!$athlete) {
+			throw new NotFoundHttpException('Ошибка! Спортсмен не найден');
+		}
+		$isActive = \Yii::$app->request->post('subscription');
+		$subscription = NewsSubscription::findOne(['athleteId' => $athlete->id, 'isActive' => NewsSubscription::IS_ACTIVE_YES]);
+		if (!$isActive && !$subscription) {
+			return true;
+		}
+		if (!$subscription) {
+			$subscription = new NewsSubscription();
+		} elseif (!$isActive) {
+			$subscription->isActive = NewsSubscription::IS_ACTIVE_NO;
+			$subscription->dateEnd = time();
+			if (!$subscription->save()) {
+				return var_dump($subscription->errors);
+			}
+			
+			return true;
+		}
+		$subscription->load(\Yii::$app->request->post());
+		if ($subscription->regionIds) {
+			$subscription->regionIds = json_encode($subscription->regionIds);
+		} else {
+			$subscription->regionIds = null;
+		}
+		if (!$subscription->save()) {
+			return var_dump($subscription->errors);
+		}
+		
+		return true;
 	}
 }
