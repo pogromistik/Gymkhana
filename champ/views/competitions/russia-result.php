@@ -28,13 +28,13 @@ use yii\bootstrap\Html;
 							</div>
 						<?php } else { ?>
 							<div class="pl-10">
-								<?php if ($yearInfo['showResults']) { ?>
-									<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
+								<?php if ($data['showResults']) { ?>
+									<?php if ($data['status'] == \common\models\Championship::STATUS_PAST) { ?>
 										<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
 										<br>
 									<?php } else { ?>
 										<?= Html::a(\Yii::t('app', 'Предварительные итоги чемпионата'),
-											['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
+											['/competitions/championship-result', 'championshipId' => $data['id'], 'showAll' => 1]) ?>
 										<br>
 									<?php } ?>
 								<?php } ?>
