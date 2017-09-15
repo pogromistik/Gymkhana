@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "NewsSubscriptions".
@@ -14,6 +15,7 @@ use Yii;
  * @property integer $type
  * @property integer $isActive
  * @property integer $dateEnd
+ * @property string  $countryIds
  */
 class NewsSubscription extends \yii\db\ActiveRecord
 {
@@ -45,7 +47,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		return [
 			[['athleteId', 'dateAdded'], 'required'],
 			[['athleteId', 'dateAdded', 'type', 'dateEnd', 'isActive'], 'integer'],
-			[['regionIds'], 'safe'],
+			[['regionIds', 'countryIds'], 'safe'],
 			[['isActive'], 'default', 'value' => 1]
 		];
 	}
@@ -56,13 +58,14 @@ class NewsSubscription extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id'        => 'ID',
-			'athleteId' => 'Спортсмен',
-			'regionIds' => 'Регионы',
-			'dateAdded' => 'Дата начала подписки',
-			'dateEnd'   => 'Дата окончания подписки',
-			'type'      => 'Тип',
-			'isActive'  => 'Активность'
+			'id'         => 'ID',
+			'athleteId'  => 'Спортсмен',
+			'regionIds'  => 'Регионы',
+			'dateAdded'  => 'Дата начала подписки',
+			'dateEnd'    => 'Дата окончания подписки',
+			'type'       => 'Тип',
+			'isActive'   => 'Активность',
+			'countryIds' => 'Страны'
 		];
 	}
 	
@@ -85,17 +88,26 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		return null;
 	}
 	
+	public function getRegions($isArray = false)
+	{
+		if (!$this->regionIds || is_array($this->regionIds)) {
+			$regionIds = $this->regionIds;
+		} else {
+			$regionIds = $this->getRegionIds();
+		}
+		if ($regionIds && $isArray) {
+			return ArrayHelper::map(
+				Region::findAll(['id' => $regionIds]), 'id', 'title');
+		}
+		return [];
+	}
+	
 	public function getCountryIds()
 	{
-		if ($this->regionIds && !is_array($this->regionIds)) {
-			$regionIds = $this->getRegionIds();
-		} else {
-			$regionIds = $this->regionIds;
-		}
-		if (!$regionIds) {
-			return null;
+		if ($this->countryIds) {
+			return json_decode($this->countryIds, true);
 		}
 		
-		return Region::find()->select('countryId')->where(['id' => $regionIds])->distinct()->asArray()->column();
+		return null;
 	}
 }

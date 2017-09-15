@@ -238,7 +238,12 @@ use yii\web\JsExpression;
             <div class="help-for-athlete">
                 <small>
                     Подписываясь на новости, вы даёте согласие на отправку писем, содержащих информацию о
-                    предстоящих этапах, на ваш email (<?= $athlete->email ?>).
+                    предстоящих этапах, на ваш email (<?= $athlete->email ?>).<br>
+                    Вы можете подписаться на все новости всех регионов (просто отметив пункт "Подписаться на новостную рассылку");
+                    можете выбрать  страны и регионы, новости которых вас интересуют; можете выбрать тип новостей. (Поля для выбора
+                    появятся после выбора пункта "Подписаться на новостную рассылку").
+                    Если вы выберите страну, но не укажите ни одного региона, вам будут приходить все новости этой страны.<br>
+                    В любой момент вы можете отписаться от рассылки, сняв отметку в личном кабинете.
                 </small>
             </div>
             <div class="form pt-10">
@@ -256,33 +261,18 @@ use yii\web\JsExpression;
 						->dropDownList(\common\models\NewsSubscription::$typesTitle)->label(false) ?>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-							<?=
-							Select2::widget([
-								'name'          => 'subscriptionCountryId',
-								'data'          => \common\models\Country::getAll(true),
-								'value'         => $subscription->getCountryIds(),
-								'options'       => [
-									'placeholder' => 'Выберите страну...',
-									'multiple'    => true,
-									'id'          => 'subscriptionCountryId',
-								],
-								'pluginOptions' => [
-									'tags' => true
-								],
-							])
-							?>
+	                        <?= $form->field($subscription, 'countryIds')->widget(Select2::classname(), [
+		                        'data'    => Country::getAll(true),
+		                        'options' => [
+			                        'placeholder' => 'Выберите страну...',
+			                        'id'          => 'subscript-country-id',
+                                    'multiple' => true,
+		                        ],
+	                        ])->label('Выберите страны'); ?>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <?php
-                            if ($subscription->regionIds) {
-	                            $regions = ArrayHelper::map(
-		                            \common\models\Region::findAll(['id' => $subscription->regionIds]), 'id', 'title');
-                            } else {
-                                $regions = [];
-                            }
-                            ?>
 							<?= $form->field($subscription, 'regionIds')->widget(DepDrop::classname(), [
-								'data'           => $regions,
+								'data'           => $subscription->getRegions(true),
 								'options'        => ['placeholder' => 'Выберите регионы...'],
 								'type'           => DepDrop::TYPE_SELECT2,
 								'select2Options' => [
@@ -296,7 +286,7 @@ use yii\web\JsExpression;
 										'ajax'               => [
 											'url'      => \yii\helpers\Url::to(['/help/regions-list']),
 											'dataType' => 'json',
-											'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#country-id").val()}; }')
+											'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#subscript-country-id").val()}; }')
 										],
 										'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
 										'templateResult'     => new JsExpression('function(region) { return region.text; }'),
@@ -304,12 +294,12 @@ use yii\web\JsExpression;
 									],
 								],
 								'pluginOptions'  => [
-									'depends'     => ['subscriptionCountryId'],
+									'depends'     => ['subscript-country-id'],
 									'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
 									'loadingText' => 'Для выбранной страны нет регионов...',
 									'placeholder' => 'Выберите регион...'
 								]
-							])->label(false); ?>
+							])->label('Выберите регионы'); ?>
                         </div>
                     </div>
                 </div>

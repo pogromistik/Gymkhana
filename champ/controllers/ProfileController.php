@@ -86,6 +86,7 @@ class ProfileController extends AccessController
 			$subscription = new NewsSubscription();
 		} else {
 			$subscription->regionIds = $subscription->getRegionIds();
+			$subscription->countryIds = $subscription->getCountryIds();
 		}
 		
 		return $this->render('index', [
@@ -561,6 +562,11 @@ class ProfileController extends AccessController
 			$subscription->regionIds = json_encode($subscription->regionIds);
 		} else {
 			$subscription->regionIds = null;
+		}
+		if ($subscription->countryIds) {
+			$subscription->countryIds = json_encode($subscription->countryIds);
+		} else {
+			$subscription->countryIds = null;
 		}
 		if (!$subscription->save()) {
 			return var_dump($subscription->errors);

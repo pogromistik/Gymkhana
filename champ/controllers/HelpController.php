@@ -121,7 +121,7 @@ class HelpController extends Controller
 		return $out;
 	}
 	
-	public function actionRegionsList($title = null, $countryId = null) {
+	public function actionRegionsList($title = null, array $countryId = []) {
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$out = ['results' => ['id' => '', 'text' => '']];
 		if (!is_null($title)) {

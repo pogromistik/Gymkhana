@@ -13,13 +13,14 @@ class m170915_071227_create_NewsSubscriptions_table extends PGMigration
 	public function up()
 	{
 		$this->createTable('NewsSubscriptions', [
-			'id'        => $this->primaryKey(),
-			'athleteId' => $this->integer()->notNull(),
-			'regionIds' => $this->jsonb(),
-			'dateAdded' => $this->integer()->notNull(),
-			'type'      => $this->integer()->notNull()->defaultValue(1),
-			'dateEnd'   => $this->integer(),
-			'isActive'  => $this->integer()->notNull()->defaultValue(1)
+			'id'         => $this->primaryKey(),
+			'athleteId'  => $this->integer()->notNull(),
+			'regionIds'  => $this->jsonb(),
+			'countryIds' => $this->jsonb(),
+			'dateAdded'  => $this->integer()->notNull(),
+			'type'       => $this->integer()->notNull()->defaultValue(1),
+			'dateEnd'    => $this->integer(),
+			'isActive'   => $this->integer()->notNull()->defaultValue(1)
 		]);
 	}
 	
