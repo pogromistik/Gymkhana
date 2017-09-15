@@ -90,7 +90,7 @@ use yii\helpers\Url;
                                             </a></li>
                                         <li>
                                             <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">
-												<?= \Yii::t('app', 'Чемпионаты России') ?>
+												<?= \Yii::t('app', 'Чемпионаты России и мира') ?>
                                             </a></li>
                                         <li>
                                             <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">

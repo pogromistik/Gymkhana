@@ -62,7 +62,7 @@ class Championship extends BaseActiveRecord
 	];
 	
 	public static $groupsTitle = [
-		self::GROUPS_RUSSIA   => 'Чемпионаты России',
+		self::GROUPS_RUSSIA   => 'Чемпионаты России и мира',
 		self::GROUPS_REGIONAL => 'Региональные чемпионаты'
 	];
 	
