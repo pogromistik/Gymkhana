@@ -7,6 +7,7 @@ use kartik\widgets\DepDrop;
 use common\models\Country;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use karpoff\icrop\CropImageUpload;
 
 /**
  * @var \common\models\Athlete     $athlete
@@ -14,7 +15,6 @@ use yii\web\JsExpression;
  * @var \champ\models\PasswordForm $password
  */
 ?>
-
 <h2>Редактирование профиля</h2>
 <div class="row">
     <div class="col-bg-7 col-lg-9 col-md-10 col-sm-10-col-xs-12">
@@ -29,6 +29,45 @@ use yii\web\JsExpression;
 		<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
 		<?php $form->end() ?>
 
+        <h3>Изменение фотографии</h3>
+	    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+	    <?php if ($athlete->photo) { ?>
+            <div class="row">
+                <div class="col-md-2 col-sm-4 img-in-profile">
+				    <?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
+                    <br>
+                    <a href="#" class="btn btn-default btn-block deletePhoto">удалить</a>
+                    <br>
+                </div>
+                <div class="col-md-10 col-sm-8">
+				    <?= $form->field($athlete, 'photo')->widget(\sadovojav\cutter\Cutter::className(), [
+					    'cropperOptions'        => [
+						    'aspectRatio' => 3 / 4,
+					    ],
+					    'defaultCropperOptions' => [
+						    'rotatable' => false,
+						    'zoomable'  => false,
+						    'movable'   => false,
+					    ]
+				    ]) ?>
+                </div>
+            </div>
+	    <?php } else { ?>
+		    <?= $form->field($athlete, 'photo')->widget(\sadovojav\cutter\Cutter::className(), [
+			    'cropperOptions'        => [
+				    'aspectRatio' => 3 / 4
+			    ],
+			    'defaultCropperOptions' => [
+				    'rotatable' => false,
+				    'zoomable'  => false,
+				    'movable'   => false,
+			    ]
+		    ]) ?>
+	    <?php } ?>
+        <div class="form-group">
+		    <?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary']) ?>
+        </div>
+	    <?php ActiveForm::end(); ?>
 
         <h3><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h3>
         <div class="athlete-form">
@@ -39,21 +78,6 @@ use yii\web\JsExpression;
                     Необходимые пропорции: 3x4 (300x400 pixels)
                 </small>
             </div>
-			<?php if ($athlete->photo) { ?>
-                <div class="row">
-                    <div class="col-md-2 col-sm-4 img-in-profile">
-						<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
-                        <br>
-                        <a href="#" class="btn btn-default btn-block deletePhoto">удалить</a>
-                        <br>
-                    </div>
-                    <div class="col-md-10 col-sm-8">
-						<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
-                    </div>
-                </div>
-			<?php } else { ?>
-				<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
-			<?php } ?>
 
             <div class="help-for-athlete">
                 <small>Информация, обязательная для заполнения:</small>

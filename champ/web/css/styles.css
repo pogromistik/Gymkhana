@@ -1050,3 +1050,11 @@ table.results small.red {
 h2.title small {
     font-size: 14px;
 }
+
+.image-cutter .dropzone {
+    min-height: 100px;
+}
+.image-cutter .dropzone .img-container .preview-image {
+    height: 150px;
+    width: auto;
+}

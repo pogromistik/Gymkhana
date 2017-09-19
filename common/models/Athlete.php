@@ -3,7 +3,10 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\Cropper;
 use common\helpers\UserHelper;
+use Imagine\Filter\Basic\Crop;
+use sadovojav\cutter\behaviors\CutterBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -166,7 +169,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status',
 				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId',
 				'creatorUserId'], 'integer'],
-			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo'], 'string', 'max' => 255],
+			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
 			[['email'], 'unique'],
@@ -174,8 +177,21 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
 			['number', 'integer', 'max' => 999],
-			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 307200,
-			                      'tooBig'     => 'Размер файла не должен превышать 300KB']
+			['photo', 'file', 'extensions' => 'jpg, jpeg, png', 'mimeTypes' => 'image/jpeg, image/png',
+			                  'maxFiles'   => 1, 'maxSize' => 512000,
+			                  'tooBig'     => 'Размер файла не должен превышать 500KB'],
+		];
+	}
+	
+	public function behaviors()
+	{
+		return [
+			'image' => [
+				'class'      => Cropper::className(),
+				'attributes' => 'photo',
+				'baseDir'    => 'athletes',
+				'basePath'   => '@files'
+			],
 		];
 	}
 	
@@ -216,11 +232,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 								->one();
 						}
 						if ($busy) {
-							$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
-						"' . $busy->stage->title . '" 
+							$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап
+						"' . $busy->stage->title . '"
 						чемпионата "' . $busy->championship->title . '"');
 						} else {
-							
+						
 						}
 					}
 				}
@@ -312,7 +328,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 					['fastenClassFor' => null],
 					['fastenClassFor' => 0],
 					new Expression('"dateOfThe"-"fastenClassFor"*86400 >= ' . $time)
-					])
+				])
 				->asArray()->column();
 			if ($stageIds) {
 				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);
