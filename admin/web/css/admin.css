@@ -536,6 +536,9 @@ a.red-button {
     background: #b72824;
     color: #fff;
     padding: 10px;
+    box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
+    0 3px 5px rgba(0, 1, 6, .6),
+    0 0 1px 1px rgba(0, 1, 6, .2);
 }
 
 .alert-errors ul {
@@ -666,7 +669,7 @@ a.red-button {
     color: #fff;
 }
 
-.btn-gray{
+.btn-gray {
     background: #5e5f63;
     background: linear-gradient(to top, #48494d, #5e5f63);
     color: #fff;
@@ -678,7 +681,7 @@ a.red-button {
     color: #fff;
 }
 
-.btn-boggy{
+.btn-boggy {
     background: #919100;
     background: linear-gradient(to top, #727200, #919100);
     color: #fff;
@@ -690,7 +693,7 @@ a.red-button {
     color: #fff;
 }
 
-.btn-light-aquamarine{
+.btn-light-aquamarine {
     background: #3cc7b2;
     background: linear-gradient(to top, #2db59a, #3cc7b2);
     color: #fff;
@@ -702,7 +705,7 @@ a.red-button {
     color: #fff;
 }
 
-.btn-peach{
+.btn-peach {
     background: #f2a95d;
     background: linear-gradient(to top, #ee8e47, #f2a95d);
     color: #fff;
