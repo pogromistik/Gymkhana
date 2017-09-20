@@ -2,7 +2,7 @@
 
 namespace admin\controllers\competitions;
 
-use admin\controllers\BaseController;
+use admin\components\BaseStageController;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -23,14 +23,13 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
  * ParticipantsController implements the CRUD actions for Participant model.
  */
-class ParticipantsController extends BaseController
+class ParticipantsController extends BaseStageController
 {
 	public function actions()
 	{
@@ -47,16 +46,7 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = Stage::findOne($stageId);
-		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
-		}
-		
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new ForbiddenHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
 		
 		$error = null;
 		$needClarification = false;
@@ -124,6 +114,8 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
+		$this->layout = 'stages';
+		
 		return $this->render('index', [
 			'searchModel'       => $searchModel,
 			'dataProvider'      => $dataProvider,
@@ -139,15 +131,8 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = Stage::findOne($stageId);
-		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
-		}
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new ForbiddenHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
+		
 		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
 			throw new UserException('Этап завершен, изменение данных невозможно');
 		}
@@ -395,12 +380,7 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = Stage::findOne($stageId);
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new ForbiddenHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
 		
 		$error = false;
 		
@@ -409,6 +389,8 @@ class ParticipantsController extends BaseController
 		}
 		
 		$participants = $stage->getParticipantsForRaces()->andWhere(['isArrived' => 1])->all();
+		
+		$this->layout = 'stages';
 		
 		return $this->render('races', [
 			'stage'        => $stage,
@@ -627,35 +609,9 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		$participants = Participant::findAll(['stageId' => $stageId, 'status' => [Participant::STATUS_ACTIVE], 'isArrived' => 1]);
-		if ($participants) {
-			$classIds = Participant::find()->select('athleteClassId')
-				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])->distinct()->asArray()->column();
-			$class = null;
-			while ($classIds) {
-				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
-				/** @var AthletesClass $presumablyClass */
-				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
-				if (Participant::find()
-						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
-			from "Participants" WHERE "stageId"=' . $stage->id . ') b'))
-						->where(new Expression('n=1'))
-						->andWhere(['a.stageId' => $stageId, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
-						->andWhere(['a.athleteClassId' => $presumablyClass->id])
-						->andWhere(new Expression('"a"."id"="b"."id"'))
-						->count() >= 3
-				) {
-					$class = $presumablyClass;
-					break;
-				}
-				$key = array_search($presumablyClass->id, $classIds);
-				unset($classIds[$key]);
-			}
-			if (!$class) {
-				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
-					->orderBy(['percent' => SORT_DESC])->one();
-			}
-			$stage->class = $class->id;
+		$stageClass = $stage->classCalculate();
+		if ($stageClass) {
+			$stage->class = $stageClass->id;
 			if (!$stage->save()) {
 				return 'Не удалось установить класс соревнований';
 			}
@@ -1031,6 +987,7 @@ class ParticipantsController extends BaseController
 			}
 			if (!$new->save()) {
 				$transaction->rollBack();
+				
 				return 'Ошибка. Свяжитесь с разработчиком.';
 			}
 		}

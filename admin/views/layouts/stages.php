@@ -75,6 +75,16 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 				'links'    => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 			]) ?>
         </div>
+		<?php if ($this->context->errors) { ?>
+            <div class="alert alert-errors">
+                <ul>
+                    <b>Внимание! Обнаружены неточности в работе по этапу:</b>
+					<?php foreach ($this->context->errors as $error) { ?>
+                        <li><?= $error ?></li>
+					<?php } ?>
+                </ul>
+            </div>
+		<?php } ?>
 		<?= $content ?>
     </div>
     <!-- /#page-wrapper -->

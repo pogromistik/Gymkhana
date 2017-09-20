@@ -47,12 +47,6 @@ $attempt = 0;
     </div>
 <?php } ?>
 
-<?php if (!$stage->class) { ?>
-    <div class="alert alert-danger">
-        <b>Не установлен класс соревнования.</b>
-    </div>
-<?php } ?>
-
 <?php while ($attempt++ < $stage->countRace) { ?>
     <h3>Заезд №<?= $attempt ?></h3>
     <div class="row">

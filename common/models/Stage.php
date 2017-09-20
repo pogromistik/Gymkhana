@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\components\BaseActiveRecord;
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
@@ -556,5 +557,44 @@ LIMIT 1) order by "bestTime" asc) n'])
 		$figureTitles = Figure::find()->select('title')->where(['id' => $figureIds])->asArray()->column();
 		
 		return ['results' => $results, 'figureIds' => $figureIds, 'figureTitles' => $figureTitles];
+	}
+	
+	/**
+	 * @return AthletesClass | null
+	 */
+	public function classCalculate()
+	{
+		$participants = Participant::findAll(['stageId' => $this->id, 'status' => [Participant::STATUS_ACTIVE], 'isArrived' => 1]);
+		if ($participants) {
+			$classIds = Participant::find()->select('athleteClassId')
+				->where(['stageId' => $this->id, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])->distinct()->asArray()->column();
+			$class = null;
+			while ($classIds) {
+				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
+				/** @var AthletesClass $presumablyClass */
+				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
+				if (Participant::find()
+						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
+			from "Participants" WHERE "stageId"=' . $this->id . ') b'))
+						->where(new Expression('n=1'))
+						->andWhere(['a.stageId' => $this->id, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
+						->andWhere(['a.athleteClassId' => $presumablyClass->id])
+						->andWhere(new Expression('"a"."id"="b"."id"'))
+						->count() >= 3
+				) {
+					$class = $presumablyClass;
+					break;
+				}
+				$key = array_search($presumablyClass->id, $classIds);
+				unset($classIds[$key]);
+			}
+			if (!$class) {
+				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
+					->orderBy(['percent' => SORT_DESC])->one();
+			}
+			return $class;
+		} else {
+			return null;
+		}
 	}
 }

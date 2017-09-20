@@ -531,3 +531,12 @@ a.red-button {
 .tr-success {
     border: 2px solid #5cb85c!important;
 }
+
+.alert-errors {
+    background: #b72824;
+    color: #fff;
+    padding: 10px;
+}
+.alert-errors ul {
+    padding-left: 20px;
+}
