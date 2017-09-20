@@ -21,7 +21,7 @@ class BaseStageController extends BaseController
 				->andWhere(['internalClassId' => null])
 				->count();
 			if ($participants > 0) {
-				$this->errors[] = 'Для некоторых спортсменов (' . $participants . ') не установлен класс
+				$this->errors[] = 'Для некоторых спортсменов (' . $participants . ' чел.) не установлен класс
 				награждения.';
 			}
 		}
