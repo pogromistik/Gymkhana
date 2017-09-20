@@ -15,24 +15,10 @@ $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="stage-update">
-	
-	<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-success']) ?>
-	<?php if ($model->status != Stage::STATUS_CALCULATE_RESULTS && $model->status != Stage::STATUS_PAST) { ?>
-		<?= Html::a('Добавить время по фигурам',
-			['/competitions/stages/add-figures-results', 'stageId' => $model->id], ['class' => 'btn btn-info-light']) ?>
-	<?php } ?>
-	<?= Html::a('Установить классы участникам', ['/competitions/participants/set-classes', 'stageId' => $model->id],
-		[
-			'class'   => 'btn btn-danger setParticipantsClasses',
-			'data-id' => $model->id
-		]) ?>
-	<?= Html::a('Заезды', ['/competitions/participants/races', 'stageId' => $model->id], ['class' => 'btn btn-info']) ?>
-	<?= Html::a('Пересчитать результаты', ['/competitions/stages/calculation-result', 'stageId' => $model->id],
-		[
-			'class'   => 'btn btn-default stageCalcResult',
-			'data-id' => $model->id
-		]) ?>
-	<?= Html::a('Итоги', ['/competitions/stages/result', 'stageId' => $model->id], ['class' => 'btn btn-warning']) ?>
+
+    <div class="buttons">
+		<?= $this->render('_buttons', ['model' => $model, 'championship' => $championship]) ?>
+    </div>
 	
 	<?= $this->render('_form', [
 		'model' => $model,

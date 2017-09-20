@@ -166,7 +166,7 @@ class ChampionshipsController extends BaseController
 		$class = new InternalClass();
 		if ($class->load(\Yii::$app->request->post()) && $class->validate()) {
 			$championship = Championship::findOne($class->championshipId);
-			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
+			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId && !\Yii::$app->user->can('globalWorkWithCompetitions')) {
 				return 'Доступ запрещен';
 			}
 			$class->save();
@@ -188,8 +188,10 @@ class ChampionshipsController extends BaseController
 			return 'Статус не существует';
 		}
 		$championship = Championship::findOne($class->championshipId);
-		if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
-			return 'Доступ запрещен';
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($championship->regionId && $championship->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
 		}
 		if ($status == InternalClass::STATUS_INACTIVE) {
 			if (!Participant::findOne(['championshipId' => $class->championshipId, 'internalClassId' => $class->id])) {
@@ -227,8 +229,8 @@ class ChampionshipsController extends BaseController
 					];
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
-					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
-					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['stages'][$stage->id] = $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+					$results[$participant->athleteId]['points'] += $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
 					$results[$participant->athleteId]['countStages'] += 1;
 					if (!$results[$participant->athleteId]['cityId']) {
 						$results[$participant->athleteId]['cityId'] = $stage->cityId;

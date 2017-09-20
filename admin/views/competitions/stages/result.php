@@ -1,9 +1,11 @@
 <?php
 use common\models\Championship;
+
 /**
  * @var \yii\web\View                $this
  * @var \common\models\Stage         $stage
  * @var \common\models\Participant[] $participants
+ * @var integer                      $orderBy
  */
 
 $championship = $stage->championship;
@@ -13,10 +15,20 @@ $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' 
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = 'Итоги';
 $place = 1;
-$newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClassId' => null]])
+$newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteClassId' => null]])
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
+<div class="row pb-10">
+    <div class="col-sm-6">
+		<?= \yii\helpers\Html::a('Скачать в xls', ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-success']) ?>
+    </div>
+    <div class="col-sm-6 text-right">
+		<?= \yii\helpers\Html::a('Добавить видео заездов', ['/competitions/stages/add-video', 'stageId' => $stage->id], ['class' => 'btn btn-warning']) ?>
+    </div>
+</div>
+
+<?php if ($stage->class) { ?><h4>Класс соревнования: <?= $stage->classModel->title ?></h4><?php } ?>
 <?php if ($stage->referenceTime) { ?><h4>Эталонное время: <?= $stage->referenceTimeHuman ?></h4><?php } ?>
 
 <?php if ($newClasses) { ?>
@@ -36,12 +48,21 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
     </div>
 <?php } ?>
 
+<?= \yii\helpers\Html::beginForm(['result', 'stageId' => $stage->id], 'get') ?>
+<?= \yii\helpers\Html::dropDownList('orderBy', $orderBy, \common\models\Stage::$orderByTitles,
+	['prompt' => 'Сортировка', 'onchange' => 'this.form.submit()', 'class' => 'form-control']) ?>
+<button type="submit" style="visibility: hidden;" title="Сохранить"></button>
+<?= \yii\helpers\Html::endForm() ?>
+
+<div class="color-div out-participant"></div>
+- участники вне зачета
 <table class="table results">
     <thead>
     <tr>
-        <th>Место вне класса</th>
-        <th>Класс спортсмена</th>
-        <th>Место в классе спортсмена</th>
+        <th class="<?= !$orderBy ? 'bg-gray' : '' ?>">Место вне класса</th>
+        <th>Группа</th>
+        <th class="<?= ($orderBy == \common\models\Stage::ORDER_BY_ATHLETE_CLASS) ? 'bg-gray' : '' ?>">Место в группе
+        </th>
         <th>№</th>
         <th>Участник</th>
         <th>Мотоцикл</th>
@@ -50,7 +71,9 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
         <th>Штраф</th>
         <th>Лучшее время</th>
         <th>Класс награждения</th>
-        <th>Место в классе награждения</th>
+        <th class="<?= ($orderBy == \common\models\Stage::ORDER_BY_INTERNAL_CLASS) ? 'bg-gray' : '' ?>">Место в классе
+            награждения
+        </th>
         <th>Рейтинг</th>
         <th>Новый класс</th>
         <th>Баллы за этап</th>
@@ -64,17 +87,46 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 		if ($times) {
 			$first = reset($times);
 		}
+		$class = 'default';
+		if ($participant->status == \common\models\Participant::STATUS_OUT_COMPETITION) {
+			$class = 'out-participant';
+		}
+		
+		$athleteCssClass = 'default';
+		$internalCssClass = 'default';
+		if ($participant->athleteClassId) {
+			$participantClass = $participant->athleteClass;
+			if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+				$athleteCssClass = 'result-' . \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+			}
+		}
+		if ($participant->internalClassId) {
+			$internalCssClass = 'bg-' . $participant->internalClassId % 10;
+		}
 		?>
-        <tr>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->place ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfAthleteClass ?></td>
+        <tr class="<?= $class ?>">
+            <td rowspan="<?= $stage->countRace ?>" class="<?= !$orderBy ? 'bg-gray' : '' ?>">
+				<?= $participant->place ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= $athleteCssClass ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= ($orderBy == \common\models\Stage::ORDER_BY_ATHLETE_CLASS) ? 'bg-gray' : '' ?>">
+				<?= $participant->placeOfAthleteClass ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $athlete->getFullName() ?><br><?= $athlete->city->title ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 			<?php if ($first) { ?>
                 <td>1.</td>
-                <td><?= $first->timeForHuman ?></td>
+                <td>
+					<?php if ($first->isFail) { ?>
+                        <strike><?= $first->timeForHuman ?></strike>
+					<?php } else { ?>
+						<?= $first->timeForHuman ?>
+					<?php } ?>
+                    <?php if ($first->videoLink) { ?>
+                        <a href="<?= $first->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
+                    <?php } ?>
+                </td>
                 <td><?= $first->fine ?></td>
 			<?php } else { ?>
                 <td>1.</td>
@@ -82,8 +134,11 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
                 <td></td>
 			<?php } ?>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->placeOfClass ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= $internalCssClass ?>"><?= $participant->internalClass ? $participant->internalClass->title : null ?></td>
+            <td rowspan="<?= $stage->countRace ?>"
+                class="<?= ($orderBy == \common\models\Stage::ORDER_BY_INTERNAL_CLASS) ? 'bg-gray' : '' ?>">
+				<?= $participant->placeOfClass ?></td>
             <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%</td>
             <td rowspan="<?= $stage->countRace ?>" class="newClass">
 				<?php if ($participant->newAthleteClassId) { ?>
@@ -103,7 +158,7 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 					<?php } ?>
 				<?php } ?>
             </td>
-            <td rowspan="<?= $stage->countRace ?>"><?= $participant->points ?></td>
+            <td rowspan="<?= $stage->countRace ?>"><?= $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points ?></td>
         </tr>
 		<?php
 		$attempt = 1;
@@ -113,10 +168,19 @@ $newClasses = $stage->getActiveParticipants()->andWhere(['not', ['newAthleteClas
 				$next = next($times);
 			}
 			?>
-            <tr>
+            <tr class="<?= $class ?>">
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
-                    <td><?= $next->timeForHuman ?></td>
+                    <td>
+						<?php if ($next->isFail) { ?>
+                            <strike><?= $next->timeForHuman ?></strike>
+						<?php } else { ?>
+							<?= $next->timeForHuman ?>
+						<?php } ?>
+	                    <?php if ($next->videoLink) { ?>
+                            <a href="<?= $next->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
+	                    <?php } ?>
+                    </td>
                     <td><?= $next->fine ?></td>
 				<?php } else { ?>
                     <td></td>

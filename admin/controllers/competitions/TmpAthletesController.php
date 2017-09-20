@@ -89,9 +89,6 @@ class TmpAthletesController extends BaseController
 		if (!$athleteId) {
 			return 'Спортсмен не найден';
 		}
-		if ($oldAthlete->hasAccount) {
-			return 'У спортсмена уже есть личный кабинет';
-		}
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$oldAthlete->email = $tmpAthlete->email;
@@ -155,11 +152,11 @@ class TmpAthletesController extends BaseController
 			
 			return $result;
 		}
-		if ($oldAthlete->hasAccount) {
+		/*if ($oldAthlete->hasAccount) {
 			$result['error'] = 'У спортсмена уже есть личный кабинет';
 			
 			return $result;
-		}
+		}*/
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$oldAthlete->email = $tmpAthlete->email;
@@ -353,6 +350,11 @@ class TmpAthletesController extends BaseController
 		}
 		if (!$tmpAthlete->cityId) {
 			return 'Необходимо выбрать город из списка';
+		}
+		if ($tmpAthlete->email && $tmpAthlete->email != '') {
+			if (Athlete::findOne(['email' => $tmpAthlete->email])) {
+				return 'Указанный email занят';
+			}
 		}
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {

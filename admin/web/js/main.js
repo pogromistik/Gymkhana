@@ -69,9 +69,9 @@ $(document).ready(function () {
     //$('li.competitions').addClass('active');
 });
 
-(function() {
+(function () {
     var current = '/' + window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2];
-    $( ".nav a" ).each(function() {
+    $(".nav a").each(function () {
         var elem = $(this);
         if (elem.data('addr') == current) {
             var ul = elem.closest('ul');
@@ -83,3 +83,85 @@ $(document).ready(function () {
         }
     });
 })();
+
+$(document).on("submit", '.messageForTranslateForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+
+    $.ajax({
+        url: "/competitions/translate-messages/update",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                var tr = form.closest('.order-row');
+                tr.addClass('handbook-green');
+                hideBackDrop();
+            }
+            else {
+                hideBackDrop();
+                alert(result);
+            }
+        }
+    });
+});
+
+function changeMessageStatus(id) {
+    showBackDrop();
+    $.get("/competitions/translate-messages/change-status", {id: id}).done(function (data) {
+        if (data == true) {
+            location.reload(true);
+        }
+        else {
+            hideBackDrop();
+            alert(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        alert(error.responseText);
+    });
+}
+
+function deleteMessage(id) {
+    showBackDrop();
+    if (confirm('Точно удалить?')) {
+        $.get("/competitions/translate-messages/delete", {id: id}).done(function (data) {
+            if (data == true) {
+                location.reload(true);
+            }
+            else {
+                hideBackDrop();
+                alert(data);
+            }
+        }).fail(function (error) {
+            hideBackDrop();
+            alert(error.responseText);
+        });
+        hideBackDrop();
+    }
+}
+
+$(document).on("submit", '.TranslateMessagesForm', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    var btn = $(document.activeElement);
+    $.ajax({
+        url: "/competitions/translate-messages/add-translate",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                btn.removeClass('btn-primary');
+                btn.addClass('btn-success');
+                form.parent('tr').addClass('tr-success');
+                hideBackDrop();
+            }
+            else {
+                hideBackDrop();
+                alert(result);
+            }
+        }
+    });
+});

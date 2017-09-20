@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use common\models\Athlete;
@@ -7,6 +8,8 @@ use common\models\Championship;
 use common\models\City;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\HelpModel;
+use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
@@ -18,6 +21,7 @@ use yii\base\UserException;
 use yii\data\Pagination;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -43,17 +47,18 @@ class CompetitionsController extends BaseController
 		if (!$currentYear) {
 			throw new UserException();
 		}
+		$yearIds = Year::find()->select('id')->where(['>=', 'year', $currentYear->year]);
 		$championshipIds = Championship::find()->select('id')
-			->andWhere(['yearId' => $currentYear->id])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+			->andWhere(['yearId' => $yearIds])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
 		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
-		$background = '#58a1b1';
 		$color = '#fff';
 		$dates = [];
 		$notDate = [];
 		/** @var Stage[] $stages */
 		foreach ($stages as $stage) {
+			$background = '#a9a9a9';
 			if (!$stage->dateOfThe) {
 				$notDate[] = $stage;
 			} else {
@@ -65,6 +70,9 @@ class CompetitionsController extends BaseController
 					$dates[$month] = [];
 				}
 				$dates[$month][] = $stage;
+				if ($stage->dateOfThe + 86400 > time()) {
+					$background = '#5cb85c';
+				}
 			}
 			$event = new Event();
 			$event->id = $stage->id;
@@ -121,11 +129,19 @@ class CompetitionsController extends BaseController
 						->orderBy(['dateAdded' => SORT_DESC])->all();
 					$results = [];
 					foreach ($championships as $championship) {
-						$results[$championship->yearId] = [
-							'year'   => $championship->year->year,
-							'stages' => $championship->stages,
-							'status' => $championship->status,
-							'id'     => $championship->id
+						if (!isset($results[$championship->yearId])) {
+							$results[$championship->yearId] =
+								[
+									'data' => [],
+									'year' => $championship->year->year
+								];
+						}
+						$results[$championship->yearId]['data'][] = [
+							'year'        => $championship->year->year,
+							'stages'      => $championship->stages,
+							'status'      => $championship->status,
+							'id'          => $championship->id,
+							'showResults' => $championship->showResults
 						];
 					}
 					if (isset($results)) {
@@ -144,7 +160,6 @@ class CompetitionsController extends BaseController
 					$query->andWhere(new Expression('"a"."yearId" = "c"."id"'));
 					$query->orderBy(['a."regionGroupId"' => SORT_ASC, 'a."dateAdded"' => SORT_DESC]);
 					$championships = $query->asArray()->all();
-					
 					foreach ($championships as $item) {
 						if (!isset($results[$item['regionGroupId']])) {
 							$results[$item['regionGroupId']] = [
@@ -153,11 +168,12 @@ class CompetitionsController extends BaseController
 							];
 						}
 						$results[$item['regionGroupId']]['years'][$item['yearId']] = [
-							'year'   => $item['year'],
-							'stages' => Stage::find()->where(['championshipId' => $item['id']])
+							'year'        => $item['year'],
+							'stages'      => Stage::find()->where(['championshipId' => $item['id']])
 								->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_ASC])->all(),
-							'status' => $item['status'],
-							'id'     => $item['id']
+							'status'      => $item['status'],
+							'id'          => $item['id'],
+							'showResults' => $item['showResults']
 						];
 						
 						if (isset($results)) {
@@ -165,6 +181,7 @@ class CompetitionsController extends BaseController
 							ksort($results);
 						}
 					}
+					$this->background = 'background8.png';
 					
 					return $this->render('regional-result', ['results' => $results]);
 			}
@@ -173,7 +190,7 @@ class CompetitionsController extends BaseController
 		return $this->render('results', ['by' => $by]);
 	}
 	
-	public function actionStage($id, $sortBy = null, $showByClasses = false)
+	public function actionStage($id, $sortBy = null, $showByClasses = false, $addOut = false)
 	{
 		$stage = Stage::findOne($id);
 		if (!$stage) {
@@ -184,50 +201,155 @@ class CompetitionsController extends BaseController
 		$this->keywords = 'Этапы соревнования, ' . $stage->title;
 		$this->layout = 'full-content';
 		
+		$qualification = $stage->getQualificationResults();
+		
 		$participantsQuery = Participant::find();
-		$participantsQuery->select('b.*');
+		$statuses[] = Participant::STATUS_ACTIVE;
+		$outCompetitionParticipants = $stage->getOutParticipants()->orderBy(['bestTime' => SORT_ASC])->all();
+		if ($addOut) {
+			$statuses[] = Participant::STATUS_OUT_COMPETITION;
+			$participantsQuery->select(['b.*',
+				'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (partition by "athleteClassId" order by "bestTime" asc)
+				 END AS "tmpPlaceInAthleteClass"',
+				'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (order by "bestTime" asc)
+				 END AS "tmpPlace"',
+				'CASE WHEN "bestTime" IS NULL THEN 1 ELSE 2 END AS time_alias']);
+		} else {
+			$participantsQuery->select('b.*');
+		}
 		$participantsQuery->from(['b' => Participant::tableName(), 'c' => AthletesClass::tableName()]);
 		$participantsQuery->where(['b.stageId' => $stage->id]);
 		$participantsQuery->andWhere(new Expression('"b"."athleteClassId" = "c"."id"'));
 		if ($stage->participantsLimit > 0) {
-			$participantsQuery->andWhere(['b.status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
-		} else {
-			$participantsQuery->andWhere(['b.status' => Participant::STATUS_ACTIVE]);
+			$statuses[] = Participant::STATUS_NEED_CLARIFICATION;
 		}
+		$participantsQuery->andWhere(['b.status' => $statuses]);
 		if ($sortBy) {
-			$participantsByJapan = $participantsQuery
-				->orderBy([
-					'b."status"'   => SORT_DESC,
-					'b."bestTime"' => SORT_ASC,
-					'b."sort"'     => SORT_ASC,
-					'b."id"'       => SORT_ASC
-				])
-				->all();
+			if ($addOut) {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'"time_alias"' => SORT_DESC,
+						'b."bestTime"' => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			} else {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'b."status"'   => SORT_DESC,
+						'b."bestTime"' => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			}
 		} else {
-			$participantsByJapan = $participantsQuery
-				->orderBy([
-					'b."status"'   => SORT_DESC,
-					'c."percent"'  => SORT_ASC,
-					'b."bestTime"' => SORT_ASC,
-					'b."sort"'     => SORT_ASC,
-					'b."id"'       => SORT_ASC
-				])
-				->all();
+			if ($addOut) {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'"time_alias"' => SORT_DESC,
+						'c."percent"'  => SORT_ASC,
+						'b."bestTime"' => SORT_ASC,
+						'"tmpPlace"'   => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			} else {
+				$participantsByJapan = $participantsQuery
+					->orderBy([
+						'b."status"'   => SORT_DESC,
+						'c."percent"'  => SORT_ASC,
+						'b."bestTime"' => SORT_ASC,
+						'b."sort"'     => SORT_ASC,
+						'b."id"'       => SORT_ASC
+					])
+					->all();
+			}
 		}
 		
 		$participantsByInternalClasses = [];
 		if ($stage->championship->internalClasses) {
-			$participantsByInternalClasses = Participant::find()->where(['stageId' => $stage->id]);
+			$participantsByInternalClasses = Participant::find();
+			if ($addOut) {
+				$participantsByInternalClasses->select(['*',
+					'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (partition by "internalClassId" order by "bestTime" asc)
+				END AS "tmpPlaceInInternalClass"',
+					'CASE WHEN "bestTime" IS NULL THEN null
+				ELSE row_number() over (order by "bestTime" asc)
+				 END AS "tmpPlace"']);
+			}
+			$participantsByInternalClasses->where(['stageId' => $stage->id]);
 			if ($stage->participantsLimit > 0) {
 				$participantsByInternalClasses = $participantsByInternalClasses
-					->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_NEED_CLARIFICATION]]);
-			}else {
-				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => Participant::STATUS_ACTIVE]);
+					->andWhere(['status' => $statuses]);
+			} else {
+				$participantsByInternalClasses = $participantsByInternalClasses->andWhere(['status' => $statuses]);
 			}
 			if ($sortBy) {
-				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				if ($addOut) {
+					$participantsByInternalClasses = $participantsByInternalClasses
+						->orderBy(['bestTime' => SORT_ASC, '"tmpPlace"' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				} else {
+					$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				}
 			} else {
-				$participantsByInternalClasses = $participantsByInternalClasses->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				if ($addOut) {
+					$participantsByInternalClasses = $participantsByInternalClasses
+						->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, '"tmpPlace"' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				} else {
+					$participantsByInternalClasses = $participantsByInternalClasses
+						->orderBy(['internalClassId' => SORT_ASC, 'bestTime' => SORT_ASC, 'sort' => SORT_ASC, 'id' => SORT_ASC])->all();
+				}
+			}
+		}
+		
+		$tmpParticipants = null;
+		if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION
+			|| $stage->status == Stage::STATUS_END_REGISTRATION
+		) {
+			$tmpParticipants = TmpParticipant::find()->where(['status' => TmpParticipant::STATUS_NEW])
+				->andWhere(['stageId' => $stage->id])->all();
+		}
+		
+		$needTime = [];
+		if ($stage->referenceTime) {
+			/** @var AthletesClass[] $allClasses */
+			$allClasses = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+			/** @var AthletesClass $prev */
+			$prev = null;
+			$last = null;
+			$prevTime = 0;
+			foreach ($allClasses as $class) {
+				if (!$prev || $prev->percent == $class->percent) {
+					$startTime = '00:00.00';
+				} else {
+					$time = $prevTime + 10;
+					$startTime = HelpModel::convertTimeToHuman($time);
+				}
+				$time = floor($stage->referenceTime * ($class->percent) / 100);
+				$time = ((int)($time / 10)) * 10;
+				if (round($time / $stage->referenceTime * 100, 2) >= $class->percent) {
+					$time -= 10;
+				}
+				$prevTime = $time;
+				$endTime = HelpModel::convertTimeToHuman($time);
+				$needTime[$class->id] = [
+					'classModel' => $class,
+					'startTime'  => $startTime,
+					'endTime'    => $endTime,
+					'percent'    => $class->percent
+				];
+				$prev = $class;
+				$last = $class->id;
+			}
+			$needTime[$last]['endTime'] = '59:59.59';
+			if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+				$needTime[$last]['percent'] = '> ' . $prev->percent;
 			}
 		}
 		
@@ -236,7 +358,29 @@ class CompetitionsController extends BaseController
 			'participantsByJapan'           => $participantsByJapan,
 			'participantsByInternalClasses' => $participantsByInternalClasses,
 			'sortBy'                        => $sortBy,
-			'showByClasses'                 => $showByClasses
+			'showByClasses'                 => $showByClasses,
+			'tmpParticipants'               => $tmpParticipants,
+			'needTime'                      => $needTime,
+			'outCompetitionParticipants'    => $outCompetitionParticipants,
+			'addOut'                        => $addOut,
+			'qualification'                 => $qualification
+		]);
+	}
+	
+	public function actionQualification($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$this->pageTitle = $stage->title . ': квалификация';
+		$this->description = $stage->title . ': квалификация';
+		$this->keywords = 'Квалификационные заезды, ' . $stage->title;
+		$this->layout = 'full-content';
+		
+		return $this->render('qualification', [
+			'stage'         => $stage,
+			'qualification' => $stage->getQualificationResults()
 		]);
 	}
 	
@@ -278,16 +422,80 @@ class CompetitionsController extends BaseController
 			$results = $results->all();
 		}
 		
+		$needTime = [];
+		if ($figure->useForClassesCalculate) {
+			if ($figure->bestTime) {
+				/** @var AthletesClass[] $allClasses */
+				$allClasses = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+				/** @var AthletesClass $prev */
+				$prev = null;
+				$last = null;
+				$prevTime = 0;
+				foreach ($allClasses as $class) {
+					if (!$prev || $prev->percent == $class->percent) {
+						$startTime = '00:00.00';
+					} else {
+						$time = $prevTime + 10;
+						$startTime = HelpModel::convertTimeToHuman($time);
+					}
+					$time = floor($figure->bestTime * ($class->percent) / 100);
+					$time = ((int)($time / 10)) * 10;
+					$prevTime = $time;
+					$endTime = HelpModel::convertTimeToHuman($time);
+					$needTime[$class->id] = [
+						'classModel' => $class,
+						'startTime'  => $startTime,
+						'endTime'    => $endTime,
+						'percent'    => $class->percent
+					];
+					$prev = $class;
+					$last = $class->id;
+				}
+				$needTime[$last]['endTime'] = '59:59.59';
+				if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+					$needTime[$last]['percent'] = '> ' . $prev->percent;
+				}
+			}
+		}
+		
 		$this->pageTitle = $figure->title;
 		$this->description = 'Результаты заездов по фигуре ' . $figure->title;
 		$this->keywords = 'Фигуры мотоджимханы, базовые фигуры, ' . $figure->title;
 		$this->layout = 'full-content';
 		
 		return $this->render('figure', [
+			'figure'   => $figure,
+			'results'  => $results,
+			'year'     => $yearModel,
+			'showAll'  => $showAll,
+			'needTime' => $needTime
+		]);
+	}
+	
+	public function actionProgress($figureId, $athleteId)
+	{
+		$figure = Figure::findOne($figureId);
+		if (!$figure) {
+			throw new NotFoundHttpException('Фигура не найдена');
+		}
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			throw new NotFoundHttpException('Спортсмен не найден');
+		}
+		$results = FigureTime::find()->where(['figureId' => $figureId, 'athleteId' => $athleteId])
+			->orderBy(['date' => SORT_ASC, 'resultTime' => SORT_ASC])->all();
+		
+		$this->pageTitle = $athlete->getFullName() . ': прогресс по ' . $figure->title;
+		$this->description = $athlete->getFullName() . ': прогресс по фигуре ' . $figure->title;
+		
+		$backgroundItem = rand(1, 8);
+		$this->layout = 'main-with-img';
+		$this->background = 'rand' . $backgroundItem . '.png';
+		
+		return $this->render('progress', [
 			'figure'  => $figure,
-			'results' => $results,
-			'year'    => $yearModel,
-			'showAll' => $showAll
+			'athlete' => $athlete,
+			'results' => $results
 		]);
 	}
 	
@@ -315,6 +523,7 @@ class CompetitionsController extends BaseController
 		$classIds = \Yii::$app->request->post('classIds');
 		$yearId = \Yii::$app->request->post('yearId');
 		$showAll = \Yii::$app->request->post('showAll');
+		$date = \Yii::$app->request->post('date');
 		$year = null;
 		if ($countryId && !$regionIds) {
 			$regionIds = Region::find()->select('id')->where(['countryId' => $countryId])->asArray()->column();
@@ -340,6 +549,11 @@ class CompetitionsController extends BaseController
 			if ($classIds) {
 				$results->andWhere(['"FigureTimes"."athleteClassId"' => $classIds]);
 			}
+			if ($date) {
+				$dateStart = (new \DateTime($date, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+				$dateEnd = $dateStart + 86400;
+				$results->andWhere(['>=', '"FigureTimes"."date"', $dateStart])->andWhere(['<=', '"FigureTimes"."date"', $dateEnd]);
+			}
 			$results->orderBy(['"FigureTimes"."resultTime"' => SORT_ASC]);
 		} else {
 			$subQuery->select('*, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n');
@@ -348,6 +562,11 @@ class CompetitionsController extends BaseController
 				$subQuery->where(['athleteClassId' => $classIds]);
 			}
 			$subQuery->andWhere(['figureId' => $figureId]);
+			if ($date) {
+				$dateStart = (new \DateTime($date, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
+				$dateEnd = $dateStart + 86400;
+				$subQuery->andWhere(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd]);
+			}
 			$results->from(['Athletes',
 				'(' . $subQuery->createCommand()->rawSql . ') A']);
 			
@@ -365,7 +584,7 @@ class CompetitionsController extends BaseController
 		}
 		$results = $results->all();
 		
-		$response['data'] = $this->renderAjax('_figure-result', ['results' => $results]);
+		$response['data'] = $this->renderAjax('_figure-result', ['results' => $results, 'figure' => $figure]);
 		
 		return $response;
 	}
@@ -427,6 +646,10 @@ class CompetitionsController extends BaseController
 			return 'Регистрация на этап завершилась.';
 		}
 		
+		if ($stage->status == Stage::STATUS_CANCEL) {
+			return 'Этап отменён';
+		}
+		
 		$championship = $stage->championship;
 		$athlete = Athlete::findOne($form->athleteId);
 		if ($championship->isClosed) {
@@ -445,7 +668,7 @@ class CompetitionsController extends BaseController
 			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
 				return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
 			}
-			if ($old->status != Participant::STATUS_ACTIVE) {
+			if ($old->status == Participant::STATUS_CANCEL_ATHLETE) {
 				if ($old->number != $form->number) {
 					if ($form->number) {
 						$freeNumbers = Championship::getFreeNumbers($stage, $form->athleteId);
@@ -457,7 +680,7 @@ class CompetitionsController extends BaseController
 						$old->number = $athlete->number;
 					}
 				}
-				$old->status = Participant::STATUS_ACTIVE;
+				$old->status = Participant::STATUS_NEED_CLARIFICATION;
 				if ($old->save()) {
 					return true;
 				}
@@ -485,6 +708,7 @@ class CompetitionsController extends BaseController
 			\Yii::$app->mutex->release('setNumber' . $stage->id);
 			if ($form->save()) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				$this->sendConfirmEmail($championship, $stage, $form);
 				
 				return true;
 			} else {
@@ -514,6 +738,10 @@ class CompetitionsController extends BaseController
 		
 		if ($stage->endRegistration && time() > $stage->endRegistration) {
 			return 'Регистрация на этап завершилась.';
+		}
+		
+		if ($stage->status == Stage::STATUS_CANCEL) {
+			return 'Этап отменён';
 		}
 		
 		if (!$form->city && !$form->cityId) {
@@ -549,10 +777,11 @@ class CompetitionsController extends BaseController
 				}
 			}
 			if (!$form->validate()) {
-				return 'Необходимо указать имя, фамилию, город, марку, модель и объём мотоцикла.';
+				return 'Необходимо указать имя, фамилию, город, email, а так же марку и модель мотоцикла.';
 			}
 			if ($form->save(false)) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
+				$this->sendConfirmEmail($championship, $stage, null, $form);
 				
 				return true;
 			} else {
@@ -566,11 +795,41 @@ class CompetitionsController extends BaseController
 		return 'Внутренняя ошибка. Пожалуйста, попробуйте позже.';
 	}
 	
+	private function sendConfirmEmail(Championship $championship, Stage $stage, Participant $participant = null, TmpParticipant $tmpParticipant = null)
+	{
+		$email = null;
+		if ($tmpParticipant && $tmpParticipant->email) {
+			$email = $tmpParticipant->email;
+		} elseif ($participant) {
+			$athlete = $participant->athlete;
+			$email = $athlete->email;
+		}
+		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '@', null, 'UTF-8')) {
+			if (YII_ENV != 'dev') {
+				\Yii::$app->mailer->compose('confirm-request', [
+					'championship'   => $championship,
+					'stage'          => $stage,
+					'tmpParticipant' => $tmpParticipant,
+					'participant'    => $participant
+				])
+					->setTo($email)
+					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+					->setSubject('gymkhana-cup: предварительная регистрация на этап')
+					->send();
+			}
+		}
+		
+		return true;
+	}
+	
 	public function actionChampionshipResult($championshipId, $showAll = null)
 	{
 		$championship = Championship::findOne($championshipId);
 		if (!$championship) {
 			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		if (!$championship->showResults) {
+			throw new UserException('Для данного чемпионата не ведётся подсчёт итогов');
 		}
 		$this->pageTitle = $championship->title . ': итоги';
 		$this->description = 'Итоги соревнования: ' . $championship->title;
@@ -597,5 +856,20 @@ class CompetitionsController extends BaseController
 		$this->layout = 'full-content';
 		
 		return $this->render('championship', ['championship' => $championship]);
+	}
+	
+	public function actionMoscowScheme()
+	{
+		$this->pageTitle = 'Московская схема начисления баллов';
+		$this->description = 'Схема начисления баллов за этап в Москве';
+		
+		$points = (new Query())->select('*')
+			->from(['a' => MoscowPoint::tableName(), 'b' => AthletesClass::tableName()])
+			->where(new Expression('"a"."class" = "b"."id"'))
+			->orderBy(['b."percent"' => SORT_ASC, 'b."title"' => SORT_ASC, 'a."place"' => SORT_ASC])->all();
+		$items = ArrayHelper::map($points,
+			'place', 'point', 'title');
+		
+		return $this->render('moscow-scheme', ['items' => $items]);
 	}
 }

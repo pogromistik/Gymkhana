@@ -27,6 +27,8 @@ use Yii;
  * @property integer       $recordStatus
  * @property integer       $recordInMoment
  * @property string        $videoLink
+ * @property double        $actualPercent
+ * @property integer       $stageId
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -46,6 +48,7 @@ class FigureTime extends BaseActiveRecord
 	public $timeForHuman;
 	public $resultTimeForHuman;
 	public $dateForHuman;
+	public $recordInMomentHuman;
 	
 	public $needClassCalculate = true;
 	
@@ -78,9 +81,9 @@ class FigureTime extends BaseActiveRecord
 				'percent', 'timeForHuman', 'dateAdded', 'dateUpdated', 'resultTime'], 'required'],
 			[['figureId', 'athleteId', 'motorcycleId', 'yearId', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'date', 'time', 'fine', 'dateAdded',
-				'dateUpdated', 'resultTime', 'recordType', 'recordStatus', 'recordInMoment'], 'integer'],
+				'dateUpdated', 'resultTime', 'recordType', 'recordStatus', 'recordInMoment', 'stageId'], 'integer'],
 			[['dateForHuman', 'timeForHuman', 'videoLink'], 'string'],
-			[['percent'], 'number'],
+			[['percent', 'actualPercent'], 'number'],
 			[['fine'], 'default', 'value' => 0],
 			['videoLink', 'validateVideoLink']
 		];
@@ -90,7 +93,8 @@ class FigureTime extends BaseActiveRecord
 	{
 		if (!$this->hasErrors() && $this->videoLink) {
 			if (mb_strstr($this->videoLink, 'http://', 'UTF-8') === false
-				&& mb_strstr($this->videoLink, 'https://', 'UTF-8') === false) {
+				&& mb_strstr($this->videoLink, 'https://', 'UTF-8') === false
+			) {
 				$this->addError($attribute, 'Ссылка на видео должна содержать http:// или https://');
 			}
 		}
@@ -121,7 +125,9 @@ class FigureTime extends BaseActiveRecord
 			'resultTime'            => 'Итоговое время',
 			'resultTimeForHuman'    => 'Итоговое время',
 			'recordInMoment'        => 'Эталонное время на тот момент',
-			'videoLink'             => 'Видео'
+			'videoLink'             => 'Видео',
+			'actualPercent'         => 'Актуальный рейтинг',
+			'stageId'               => 'Этап, на котором установлен результат'
 		];
 	}
 	
@@ -134,7 +140,7 @@ class FigureTime extends BaseActiveRecord
 		}
 		if ($this->timeForHuman) {
 			list($min, $secs) = explode(':', $this->timeForHuman);
-			$this->time = ($min * 60000) + $secs * 1000;
+			$this->time = ($min * 60000) + round($secs * 1000);
 		}
 		$this->resultTime = $this->time + $this->fine * 1000;
 		if ($this->dateForHuman) {
@@ -161,6 +167,9 @@ class FigureTime extends BaseActiveRecord
 			}
 		} else {
 			$this->percent = 100;
+		}
+		if (!$this->actualPercent) {
+			$this->actualPercent = $this->percent;
 		}
 		
 		return parent::beforeValidate();
@@ -215,6 +224,10 @@ class FigureTime extends BaseActiveRecord
 			$sec = str_pad(floor(($this->time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
 			$mls = str_pad(($this->time - $min * 60000 - $sec * 1000) / 10, 2, '0', STR_PAD_LEFT);
 			$this->timeForHuman = $min . ':' . $sec . '.' . $mls;
+		}
+		
+		if ($this->recordInMoment) {
+			$this->recordInMomentHuman = HelpModel::convertTimeToHuman($this->recordInMoment);
 		}
 		
 		if ($this->resultTime) {

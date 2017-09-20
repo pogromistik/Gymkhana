@@ -171,6 +171,12 @@ img {
     font-weight: bold;
 }
 
+.navbar-default.sidebar ul li.translate-bg > a {
+    color: #fff676;
+    background: #464644;
+    font-weight: bold;
+}
+
 .none-block {
     display: none;
 }
@@ -178,11 +184,14 @@ img {
 .input-with-description .text {
     background: #f1f1f1;
     margin-bottom: 2px;
-    padding: 5px;
     font-size: 12px;
     border-radius: 4px;
     color: #6a6a6a;
     font-weight: bold;
+}
+
+.pt-5 {
+    padding-top: 5px;
 }
 
 .pt-10 {
@@ -219,6 +228,10 @@ img {
 
 .pb-40 {
     padding-bottom: 40px;
+}
+
+.pb-45 {
+    padding-bottom: 45px;
 }
 
 .pb-50 {
@@ -311,6 +324,22 @@ img {
     background-color: #56a025;
 }
 
+.text-with-backdrop {
+    position: fixed;
+    top: calc(50% - 150px);
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    height: 200px;
+    left: calc(50% - 100px);
+    z-index: 1020;
+    background: #7dff65;
+    text-align: center;
+    padding-top: 80px;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
 .bg-blue {
     background: #73afe8;
     color: #fff;
@@ -338,7 +367,7 @@ small.very {
 }
 
 .is-delivery-2 {
-    background: #dff0d8!important;
+    background: #dff0d8 !important;
 }
 
 .calculate-result {
@@ -347,19 +376,158 @@ small.very {
 }
 
 .inactive-participant {
-    background: #efe2e2!important;
+    background: #efe2e2 !important;
+}
+
+.inactive-participant2 {
+    background: #dbdfef !important;
+}
+
+.out-participant {
+    background: #cfefea !important;
 }
 
 .need-clarification-participant {
-    background: #fffdba!important;
+    background: #fffdba !important;
 }
 
 tr.gray {
-    background: #e2e2e2!important;
+    background: #e2e2e2 !important;
 }
 
 .color-div {
     width: 20px;
     height: 10px;
     display: inline-block;
+}
+
+.result-green {
+    background: #b5e4b6;
+}
+
+.result-red {
+    background: #ffe7ee;
+}
+
+.result-blue {
+    background: #d7edff;
+}
+
+.result-yellow {
+    background: #f8ff8a;
+}
+
+.result-white {
+    background: #ffffff;
+    color: #000000;
+}
+
+.dark-border {
+    border-bottom: 2px solid #4b4e53;
+}
+
+.buttons {
+    padding-bottom: 15px;
+}
+
+.buttons > a {
+    margin-right: 4px;
+}
+
+.field-translationhandbookform-id, .field-translatemessagesource-id,
+.field-translatemessage-id, .field-translatemessage-language {
+    margin: 0;
+}
+
+a.red-button {
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+.red {
+    color: #d9534f;
+}
+
+.navbar .dropdown-user a{
+	color: #000!important;
+}
+
+.bg-gray {
+    background: #e4e4e4;
+}
+
+.result-green {
+    background: #b5e4b6;
+}
+
+.result-red {
+    background: #ffe7ee;
+}
+
+.result-blue {
+    background: #d7edff;
+}
+
+.result-yellow {
+    background: #f8ff8a;
+}
+
+.result-white {
+    background: #ffffff;
+    color: #000000;
+}
+
+.bg-0 {
+    background: #65d0e4;
+}
+
+.bg-1 {
+    background: #b5e4b6;
+}
+
+.bg-2 {
+    background: #e7d7b4;
+}
+
+.bg-3 {
+    background: #d7edff;
+}
+
+.bg-4 {
+    background: #f8ff8a;
+}
+
+.bg-5 {
+    background: #ffffff;
+}
+
+.bg-6 {
+    background: #d5ff9e;
+}
+
+.bg-7 {
+    background: #d1a0ff;
+}
+
+.bg-8 {
+    background: #fff1bb;
+}
+
+.bg-9 {
+    background: #bdd4bc;
+}
+
+.download .dropdown-menu > li > a:hover {
+    background-color: #e6e6e6;
+}
+
+#importParticipants label {
+    font-weight: normal;
+    display: block;
+}
+
+.tr-success {
+    border: 2px solid #5cb85c!important;
 }

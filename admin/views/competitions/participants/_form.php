@@ -11,6 +11,7 @@ use common\models\AthletesClass;
 /* @var $model common\models\Participant */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $championship \common\models\Championship */
+/* @var $needClarification bool */
 ?>
 
 <div class="participant-form">
@@ -30,6 +31,13 @@ use common\models\AthletesClass;
 			'placeholder' => 'Выберите спортсмена...',
 			'id'          => 'athlete-id',
 		],
+		/*'pluginOptions' => [
+			'ajax' => [
+				'url' => \yii\helpers\Url::to('/competitions/athlete/get-list'),
+				'dataType' => 'json',
+				'data' => new \yii\web\JsExpression('function(params) { return {title:params.term}; }')
+			],
+		],*/
 	]) ?>
 	
 	<?= $form->field($model, 'motorcycleId')->widget(\kartik\widgets\DepDrop::className(), [
@@ -59,10 +67,24 @@ use common\models\AthletesClass;
 	<?= $form->field($model, 'number')->textInput() ?>
 	
 	<?= $form->field($model, 'sort')->textInput() ?>
-
-    <div class="form-group">
-		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+	
+	<?= $form->field($model, 'status')->dropDownList(\common\models\Participant::$typesTitle) ?>
+	
+	<?php if (!$needClarification) { ?>
+        <div class="form-group">
+	        <?= Html::hiddenInput('confirmed', false) ?>
+			<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+	<?php } else { ?>
+        <div class="form-group">
+	        <?= Html::hiddenInput('confirmed', true) ?>
+            <div class="alert alert-danger">
+                На этап уже зарегистрировано максимальное количество участников. Всё равно добавить этого спортсмена?<br>
+	            <?= Html::a('Отмена', ['/competitions/participants/index', 'stageId' => $model->stageId], ['class' => 'btn btn-danger']) ?>
+	            <?= Html::submitButton('Зарегистрировать', ['class' => 'btn btn-success']) ?>
+            </div>
+        </div>
+    <?php } ?>
 	
 	<?php ActiveForm::end(); ?>
 

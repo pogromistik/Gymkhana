@@ -169,6 +169,7 @@ class TmpParticipantController extends BaseController
 			$participant = new Participant();
 			$participant->athleteId = $athlete->id;
 			$participant->motorcycleId = $motorcycle->id;
+			$participant->dateRegistration = $tmpParticipant->dateAdded;
 			if ($tmpParticipant->number) {
 				$participant->number = $tmpParticipant->number;
 			}
@@ -264,12 +265,14 @@ class TmpParticipantController extends BaseController
 		$old = Participant::find()->where(['stageId' => $tmpParticipant->stageId])
 			->andWhere(['athleteId' => $athleteId])->andWhere(['motorcycleId' => $motorcycleId])->one();
 		if ($old) {
-			if ($old->status == Participant::STATUS_ACTIVE) {
-				return 'Спортсмен уже зарегистрирован на этап на этом мотоцикле';
+			if ($old->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
+				return 'Спортсмен уже подавал заявку, она была отклонена администратором';
 			} elseif ($old->status == Participant::STATUS_DISQUALIFICATION) {
 				return 'Спортсмен дисквалифицирован, регистрация невозможна';
 			}
-			$old->status = Participant::STATUS_ACTIVE;
+			if ($old->status != Participant::STATUS_ACTIVE) {
+				$old->status = Participant::STATUS_NEED_CLARIFICATION;
+			}
 			$old->save();
 			
 			$tmpParticipant->status = TmpParticipant::STATUS_PROCESSED;
@@ -295,6 +298,7 @@ class TmpParticipantController extends BaseController
 			
 			$participant = new Participant();
 			$participant->athleteId = $athlete->id;
+			$participant->dateRegistration = $tmpParticipant->dateAdded;
 			$participant->motorcycleId = $motorcycle->id;
 			$participant->stageId = $tmpParticipant->stageId;
 			$participant->championshipId = $tmpParticipant->championshipId;
@@ -370,6 +374,7 @@ class TmpParticipantController extends BaseController
 			}
 			
 			$participant = new Participant();
+			$participant->dateRegistration = $tmpParticipant->dateAdded;
 			$participant->athleteId = $athlete->id;
 			$participant->motorcycleId = $motorcycle->id;
 			$participant->stageId = $tmpParticipant->stageId;

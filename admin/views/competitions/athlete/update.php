@@ -4,10 +4,11 @@ use yii\helpers\Html;
 use dosamigos\editable\Editable;
 
 /**
- * @var \yii\web\View             $this
- * @var \common\models\Athlete    $model
- * @var integer                   $success
- * @var \common\models\Motorcycle $motorcycle
+ * @var \yii\web\View              $this
+ * @var \common\models\Athlete     $model
+ * @var integer                    $success
+ * @var \common\models\Motorcycle  $motorcycle
+ * @var \admin\models\PasswordForm $password
  */
 
 $this->title = 'Редактирование спортсмена: ' . $model->lastName . ' ' . $model->firstName;
@@ -33,6 +34,16 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	<?= $this->render('_form', [
 		'model' => $model,
 	]) ?>
+	
+	<?php if (\Yii::$app->user->can('developer')) { ?>
+        <h3>Изменение пароля</h3>
+		<?php $form = \yii\bootstrap\ActiveForm::begin() ?>
+		<?= $form->field($password, 'pass')->passwordInput()->label('Пароль'); ?>
+		<?= $form->field($password, 'athleteId')->hiddenInput(['value' => $model->id])->label(false)->error(false); ?>
+		<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
+		<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
+		<?php $form->end() ?>
+	<?php } ?>
 
     <h3>Мотоциклы</h3>
     <div id="motorcycles">

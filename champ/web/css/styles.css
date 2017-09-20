@@ -44,6 +44,15 @@ a:hover {
     text-decoration: underline;
 }
 
+.stage a, .figure a {
+    word-wrap: break-word;
+}
+
+.stage a.qualification-link {
+    color: #4e4e4e;
+    font-weight: bold;
+}
+
 .content a:hover, .full-content a:hover {
     color: #56a025;
 }
@@ -94,6 +103,10 @@ ul {
 
 .pb-10-md {
     padding-bottom: 10px;
+}
+
+.pt-10-md {
+    padding-top: 10px;
 }
 
 .pb-20 {
@@ -262,7 +275,6 @@ nav .navbar-toggle .icon-bar {
 .list .item .toggle .title {
     color: #4b4e53;
     padding: 5px 10px;
-    height: 30px;
     z-index: 10;
     cursor: pointer;
     position: relative;
@@ -429,6 +441,15 @@ table.results th p:before {
 span.red {
     color: #dc0004;
     font-size: 10px;
+}
+
+span.remove {
+    color: #dc0004;
+}
+
+.wait {
+    color: #56a025;
+    font-size: 18px;
 }
 
 span.green, td.green {
@@ -721,6 +742,10 @@ a.deletePhoto {
     text-transform: uppercase;
 }
 
+.list-nav ul li:nth-child(2n) a {
+    color: #6d6f73;
+}
+
 .registration-city {
     margin-bottom: 15px;
 }
@@ -915,6 +940,10 @@ a.deletePhoto {
     padding: 0 !important;
 }
 
+.schedule table tr.future {
+    background: #ecf7e6;
+}
+
 .change-type {
     margin-bottom: 20px;
     text-align: right;
@@ -1013,4 +1042,12 @@ table.results small.red {
     border: 1px solid #e47221;
     padding: 5px;
     margin-bottom: 5px;
+}
+
+.dark-border {
+    border-bottom: 2px solid #4b4e53;
+}
+
+h2.title small {
+    font-size: 14px;
 }

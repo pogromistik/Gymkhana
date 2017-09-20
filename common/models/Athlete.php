@@ -183,7 +183,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		if (!$this->hasErrors()) {
 			if ($this->isNewRecord || (isset($this->dirtyAttributes['number']) &&
-					$this->getOldAttributes()["number"] != $this->number)) {
+					$this->getOldAttributes()["number"] != $this->number)
+			) {
 				$regionId = $this->city->regionId;
 				$query = new Query();
 				$query->from([self::tableName(), City::tableName(), Region::tableName()]);
@@ -200,6 +201,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 					$query->select('a.id');
 					$query->where(['not', ['a.status' => Stage::STATUS_PAST]]);
 					$query->andWhere(['not', ['b.regionId' => null]]);
+					if ($this->regionId) {
+						$query->andWhere(['b.regionId' => $this->regionId]);
+					}
 					$query->andWhere(new Expression('"a"."championshipId" = "b"."id"'));
 					$stageIds = $query->column();
 					if ($stageIds) {
@@ -296,10 +300,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
 				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
-				if ($history && (mb_strlen($history->event) <= (252 - mb_strlen($text)))) {
+				if ($history && (mb_strlen($history->event, 'UTF-8') <= (252 - mb_strlen($text, 'UTF-8')))) {
 					$text .= ' (' . $history->event . ')';
 				}
 				Notice::add($this->id, $text);
+			}
+			$time = time();
+			$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
+				->andWhere(['status' => [Stage::STATUS_START_REGISTRATION, Stage::STATUS_END_REGISTRATION, Stage::STATUS_UPCOMING]])
+				->andWhere(['or',
+					['fastenClassFor' => null],
+					['fastenClassFor' => 0],
+					new Expression('"dateOfThe"-"fastenClassFor"*86400 >= ' . $time)
+					])
+				->asArray()->column();
+			if ($stageIds) {
+				Participant::updateAll(['athleteClassId' => $this->athleteClassId], ['athleteId' => $this->id, 'stageId' => $stageIds, 'bestTime' => null]);
 			}
 		}
 		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
@@ -324,13 +340,14 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 							->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
 							->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 					}
-				}  elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
+				} elseif (\Yii::$app->user->can('refereeOfCompetitions')) {
 					return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])
 						->andOnCondition(['creatorUserId' => \Yii::$app->user->id])
 						->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 				}
 			}
 		}
+		
 		return $this->hasMany(Motorcycle::className(), ['athleteId' => 'id'])->orderBy(['status' => SORT_DESC, 'dateAdded' => SORT_DESC]);
 	}
 	
@@ -381,6 +398,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function createCabinet()
 	{
 		$password = $this->generatePassword();
+		if (YII_ENV == 'dev') {
+			$password = '111111';
+		}
 		$this->login = $this->id + 6000;
 		$this->generateAuthKey();
 		$this->setPassword($password);

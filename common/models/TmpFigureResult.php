@@ -100,7 +100,7 @@ class TmpFigureResult extends BaseActiveRecord
 				$secs = $min . '.' . $secs;
 				$min = 0;
 			}
-			$this->time = ($min * 60000) + $secs * 1000;
+			$this->time = ($min * 60000) + round($secs * 1000);
 		}
 		
 		if ($this->dateForHuman) {

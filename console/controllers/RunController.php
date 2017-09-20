@@ -12,7 +12,9 @@ use common\models\Country;
 use common\models\Error;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\HelpModel;
 use common\models\InternalClass;
+use common\models\MoscowPoint;
 use common\models\Motorcycle;
 use common\models\Notice;
 use common\models\Participant;
@@ -23,6 +25,8 @@ use common\models\Time;
 use common\models\TmpAthlete;
 use common\models\TmpFigureResult;
 use common\models\TmpParticipant;
+use common\models\TranslateMessage;
+use common\models\TranslateMessageSource;
 use common\models\Year;
 use yii\console\Controller;
 use yii\db\Expression;
@@ -108,6 +112,12 @@ class RunController extends Controller
 	public function actionCleanCitiesIncrement()
 	{
 		\Yii::$app->db->createCommand('SELECT setval(\'"Russia_id_seq"\'::regclass, MAX("id")) FROM "Cities"')->execute();
+	}
+	
+	public function actionUpdateParticipantsArrived()
+	{
+		Participant::updateAll(['isArrived' => 1],
+			['status' => [Participant::STATUS_OUT_COMPETITION, Participant::STATUS_ACTIVE]]);
 	}
 	
 	public function actionAddRegions()
@@ -790,6 +800,21 @@ class RunController extends Controller
 			}
 		}
 		
+		//чемпионат завершился и снова начался
+		$year = Year::findOne(['year' => date('Y')]);
+		if ($year) {
+			$championships = Championship::findAll(['status' => Championship::STATUS_PAST, 'yearId' => $year->id]);
+			foreach ($championships as $championship) {
+				if (Stage::find()->where(['championshipId' => $championship->id])
+					->andWhere(['>=', 'dateOfThe', $time])->one()
+				) {
+					$championship->status = Championship::STATUS_PRESENT;
+					$championship->save();
+					$count++;
+				}
+			}
+		}
+		
 		echo 'Change ' . $count . ' items';
 		
 		return true;
@@ -1052,9 +1077,11 @@ class RunController extends Controller
 		foreach ($tmp as $tmpItem) {
 			$needAdd = false;
 			if (mb_strstr($tmpItem->videoLink, 'http://', 'UTF-8') !== false
-				|| mb_strstr($tmpItem->videoLink, 'https://', 'UTF-8') !== false) {
+				|| mb_strstr($tmpItem->videoLink, 'https://', 'UTF-8') !== false
+			) {
 				if (mb_strstr($tmpItem->videoLink, 'http://vk.', 'UTF-8') !== false
-					|| mb_strstr($tmpItem->videoLink, 'https://vk.', 'UTF-8') !== false) {
+					|| mb_strstr($tmpItem->videoLink, 'https://vk.', 'UTF-8') !== false
+				) {
 					if (mb_strstr($tmpItem->videoLink, 'video', 'UTF-8') !== false) {
 						$needAdd = true;
 					}
@@ -1077,6 +1104,313 @@ class RunController extends Controller
 		}
 		
 		echo 'update ' . $count . ' items';
+		
+		return true;
+	}
+	
+	public function actionInsertMoscowPoints()
+	{
+		$array1 = [
+			'A'  => [
+				1 => 500,
+				2 => 490,
+				3 => 480
+			],
+			'B'  => [
+				1 => 470,
+				2 => 460,
+				3 => 455
+			],
+			'D4' => [
+				1  => 20,
+				2  => 17,
+				3  => 15,
+				4  => 13,
+				5  => 11,
+				6  => 9,
+				7  => 7,
+				8  => 5,
+				9  => 3,
+				10 => 1
+			]
+		];
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($array1 as $letter => $items) {
+			$class = AthletesClass::findOne(['title' => $letter]);
+			if (!$class) {
+				echo 'Class ' . $letter . ' not found' . PHP_EOL;
+				$transaction->rollBack();
+				
+				return false;
+			}
+			foreach ($items as $place => $item) {
+				$pointModel = new MoscowPoint();
+				$pointModel->class = $class->id;
+				$pointModel->place = $place;
+				$pointModel->point = $item;
+				if (!$pointModel->save()) {
+					var_dump($pointModel->errors);
+					$transaction->rollBack();
+					
+					return false;
+				}
+			}
+		}
+		//начальное количестово; смещение; количество мест
+		$array2 = [
+			'C1' => [
+				450, 10, 5
+			],
+			'C2' => [
+				400, 10, 5
+			],
+			'C3' => [
+				350, 10, 5
+			],
+			'D1' => [
+				300, 10, 10
+			],
+			'D2' => [
+				200, 5, 20
+			],
+			'D3' => [
+				100, 4, 20
+			],
+		];
+		foreach ($array2 as $letter => $item) {
+			$class = AthletesClass::findOne(['title' => $letter]);
+			if (!$class) {
+				echo 'Class ' . $letter . ' not found' . PHP_EOL;
+				$transaction->rollBack();
+				
+				return false;
+			}
+			$point = $item[0];
+			$place = 1;
+			while ($place <= $item[2]) {
+				$pointModel = new MoscowPoint();
+				$pointModel->class = $class->id;
+				$pointModel->place = $place;
+				$pointModel->point = $point;
+				if (!$pointModel->save()) {
+					var_dump($pointModel->errors);
+					$transaction->rollBack();
+					
+					return false;
+				}
+				$point -= $item[1];
+				$place++;
+			}
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionUpdateParticipants($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+			
+			return false;
+		}
+		if ($stage->status == Stage::STATUS_PAST) {
+			echo 'Past stage' . PHP_EOL;
+			
+			return false;
+		}
+		$participants = Participant::findAll(['stageId' => $stageId]);
+		$count = 0;
+		foreach ($participants as $participant) {
+			$athlete = $participant->athlete;
+			if ($participant->athleteClassId != $athlete->athleteClassId) {
+				$participant->athleteClassId = $athlete->athleteClassId;
+				if (!$participant->save()) {
+					var_dump($participant->errors);
+					
+					return false;
+				}
+				$count++;
+			}
+		}
+		echo 'Update ' . $count . ' items' . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionMergeAthletes($id1, $id2)
+	{
+		$athlete1 = Athlete::findOne($id1);
+		$athlete2 = Athlete::findOne($id2);
+		if ($athlete1->hasAccount && $athlete2->hasAccount) {
+			echo 'account error' . PHP_EOL;
+			
+			return false;
+		}
+		if ($athlete1->lastName != $athlete2->lastName) {
+			echo 'lastname error' . PHP_EOL;
+			
+			return false;
+		}
+		if ($athlete1->hasAccount) {
+			$mainAthlete = $athlete1;
+		} else {
+			$mainAthlete = $athlete2;
+			$athlete2 = $athlete1;
+		}
+		
+		//объединяем время по фигурам
+		$transaction = \Yii::$app->db->beginTransaction();
+		$count = FigureTime::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update FigureTime: ' . $count . PHP_EOL;
+		$count = Motorcycle::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update Motorcycle: ' . $count . PHP_EOL;
+		$count = Notice::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update Notice: ' . $count . PHP_EOL;
+		$count = Participant::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update Participant: ' . $count . PHP_EOL;
+		$count = TmpAthlete::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update TmpAthlete: ' . $count . PHP_EOL;
+		$count = TmpFigureResult::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
+		$count = TmpParticipant::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update TmpParticipant: ' . $count . PHP_EOL;
+		$count = ClassHistory::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
+			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
+			$mainAthlete->save(false);
+		}
+		if ($athlete2->delete()) {
+			echo 'success' . PHP_EOL;
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionMergeMotorcycles($id1, $id2)
+	{
+		$motorcycle1 = Motorcycle::findOne($id1);
+		$motorcycle2 = Motorcycle::findOne($id2);
+		if ($motorcycle2->athleteId != $motorcycle1->athleteId) {
+			echo 'athlete error' . PHP_EOL;
+			
+			return false;
+		}
+		$transaction = \Yii::$app->db->beginTransaction();
+		$count = FigureTime::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update FigureTime: ' . $count . PHP_EOL;
+		$count = Participant::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update Participant: ' . $count . PHP_EOL;
+		$count = TmpFigureResult::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
+		$count = ClassHistory::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		
+		if ($motorcycle2->delete()) {
+			echo 'success' . PHP_EOL;
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionTestTime()
+	{
+		$timeHuman = '00:00.191';
+		$time = HelpModel::convertTime($timeHuman);
+		echo 'Old: ' . $time . ', ' . HelpModel::convertTimeToHuman($time) . PHP_EOL;
+		$referenceTime = round($time / 10) * 10;
+		echo 'New: ' . $referenceTime . ', ' . HelpModel::convertTimeToHuman($referenceTime) . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionFixForStages($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+			
+			return false;
+		}
+		$stage->referenceTime = round($stage->referenceTime / 10) * 10;
+		$participants = $stage->participants;
+		foreach ($participants as $participant) {
+			if ($participant->percent) {
+				$percent = round($participant->bestTime / $stage->referenceTime * 100, 2);
+				if ($percent != $participant->percent) {
+					file_put_contents('txt.txt',
+						$participant->athlete->getFullName() . ': old ' .
+						$participant->percent . ', new ' . $percent . PHP_EOL, FILE_APPEND);
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public function actionUpdateEraser()
+	{
+		$figure = Figure::findOne(['title' => 'Eraser']);
+		$times = FigureTime::findAll(['figureId' => $figure->id]);
+		foreach ($times as $time) {
+			$percent = round($time->resultTime / $figure->bestTime * 100, 2);
+			$time->actualPercent = $percent;
+			$time->needClassCalculate = false;
+			if (!$time->recordInMoment) {
+				$time->recordInMoment = $time->time;
+			}
+			$time->save(false);
+		}
+		if (!$figure->severalRecords) {
+			$figure->severalRecords = 1;
+			$figure->save(false);
+		}
+	}
+	
+	public function actionAddQualifications()
+	{
+		FigureTime::updateAll(['stageId' => null]);
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->all();
+		foreach ($stages as $stage) {
+			$count = 0;
+			$dateStart = $stage->dateOfThe;
+			$dateEnd = $stage->dateOfThe + 12 * 3600;
+			/** @var FigureTime[] $figureTimes */
+			$figureTimes = FigureTime::find()
+				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
+			foreach ($figureTimes as $item) {
+				if (Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
+				                                'stageId'   => $stage->id])->one()
+				) {
+					$item->stageId = $stage->id;
+					$item->save(false);
+					$count++;
+				}
+			}
+			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
+		}
+		
+		return true;
+	}
+	
+	public function actionDownloadTranslate()
+	{
+		/** @var TranslateMessageSource[] $items */
+		$items = TranslateMessageSource::find()->all();
+		foreach ($items as $item) {
+			$message =  TranslateMessage::findOne(['id' => $item->id]);
+			$res = $item->message . ';';
+			if ($message && $message->translation) {
+				$res .= $message->translation;
+			}
+			$res .= PHP_EOL;
+			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
+		}
 		return true;
 	}
 }

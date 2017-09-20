@@ -6,10 +6,11 @@ use yii\bootstrap\Html;
 use common\models\Championship;
 
 /**
- * @var \yii\web\View              $this
- * @var \common\models\Stage       $stage
- * @var \common\models\Participant $participant
- * @var string                     $error
+ * @var \yii\web\View                $this
+ * @var \common\models\Stage         $stage
+ * @var \common\models\Participant   $participant
+ * @var string                       $error
+ * @var \common\models\Participant[] $participants
  */
 $championship = $stage->championship;
 $this->title = $championship->title . ', ' . $stage->title;
@@ -39,6 +40,13 @@ $attempt = 0;
     </div>
 <?php } ?>
 
+<?php if (!$participants) { ?>
+    <div class="alert alert-danger">
+        Нет ни одного участника. Возможно, Вы забывали отметить пункт "участник приехал на этап" на странице со
+		<?= Html::a('списком участников', ['/competitions/participants/index', 'stageId' => $stage->id]) ?>
+    </div>
+<?php } ?>
+
 <?php if (!$stage->class) { ?>
     <div class="alert alert-danger">
         <b>Не установлен класс соревнования.</b>
@@ -58,12 +66,11 @@ $attempt = 0;
     </div>
     <hr>
 	<?php
-	$participants = $stage->activeParticipants;
 	foreach ($participants as $participant) {
 		$timeModel = $participant->getTimeForm($attempt);
 		?>
 		<?php $form = ActiveForm::begin([
-			'id'      => 'raceTimeForm' . $participant->id,
+			'id'      => 'raceTimeForm' . $participant->id . '-' . $attempt,
 			'options' => [
 				'class' => 'raceTimeForm form-' . $attempt,
 			]
@@ -88,7 +95,7 @@ $attempt = 0;
 				])->label(false) ?>
             </div>
             <div class="col-sm-1"><?= $form->field($timeModel, 'fine')->textInput()->label(false) ?></div>
-            <div class="col-sm-1"><?= $form->field($timeModel, 'isFail')->checkbox() ?></div>
+            <div class="col-sm-1"><?= $form->field($timeModel, 'isFail')->checkbox(['id' => 'isFail-'.$timeModel->id.'-'.$timeModel->participantId.'-'.$attempt]) ?></div>
             <div class="col-sm-1">
                 <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
             </div>
@@ -99,7 +106,7 @@ $attempt = 0;
     <div class="row">
         <div class="col-sm-1 col-sm-offset-10">
             <a href="#" data-attempt="<?= $attempt ?>" data-count="<?= count($participants) ?>"
-               class="saveAllStageResult btn btn-primary">Сохранить всё</a>
+               class="saveAllStageResult btn btn-default">Сохранить всё</a>
         </div>
     </div>
 <?php } ?>

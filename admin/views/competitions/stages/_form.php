@@ -10,6 +10,7 @@ use kartik\widgets\DepDrop;
 use yii\web\JsExpression;
 use yii\helpers\ArrayHelper;
 use common\models\Country;
+use dosamigos\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Stage */
@@ -72,7 +73,9 @@ use common\models\Country;
 	
 	<?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
 	
-	<?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
+	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+		'preset' => 'full', 'clientOptions' => ['height' => 150]
+	]) ?>
 	
 	<?= $form->field($model, 'countRace')->textInput(['maxlength' => true]) ?>
 	
@@ -91,6 +94,22 @@ use common\models\Country;
 			'format'    => 'dd.mm.yyyy',
 		]
 	]) ?>
+	
+	<?= $form->field($model, 'documentIds',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+ Предварительно необходимо загрузить нужный регламент в раздел "'
+			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
+				['target' => '_blank']) . '".</div>{input}</div>'])
+		->widget(Select2::classname(), [
+			'data'          => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
+			'options'       => [
+				'placeholder' => 'Выберите регламент...',
+				'multiple'    => true
+			],
+			'pluginOptions' => [
+				'allowClear' => true,
+			]
+		]) ?>
 	
 	<?= $form->field($model, 'startRegistrationHuman',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
@@ -118,6 +137,13 @@ use common\models\Country;
 			]
 		]) ?>
 	
+	<?= $form->field($model, 'fastenClassFor',
+		['inputTemplate' => '<div class="input-with-description"><div class="text">
+Класс участников этапа перестанет меняться за указанное количество дней (напр. спортсмен зарегистрировался на этап в классе N,
+затем проехал GP8 в класс D3. Класс спортсмена на сайте изменится, но на этом этапе он будет выступать в классе N).
+</div>{input}</div>'])
+		->textInput(['placeholder' => 'Количество суток...']) ?>
+	
 	<?php if ($model->trackPhoto) { ?>
         <div class="row">
             <div class="col-md-2 col-sm-4 img-in-profile">
@@ -140,21 +166,6 @@ use common\models\Country;
 </div>{input}</div>'])->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
 		<?= $form->field($model, 'trackPhotoStatus')->checkbox() ?>
 	<?php } ?>
-	
-	<?= $form->field($model, 'documentId',
-		['inputTemplate' => '<div class="input-with-description"><div class="text">
- Предварительно необходимо загрузить нужный регламент в раздел "'
-			. Html::a('документы', ['/competitions/documents/update', 'id' => \common\models\DocumentSection::REGULATIONS],
-                ['target' => '_blank']) . '".</div>{input}</div>'])
-		->widget(Select2::classname(), [
-			'data'    => ArrayHelper::map(\common\models\OverallFile::getActualRegulations(), 'id', 'title'),
-			'options' => [
-				'placeholder' => 'Выберите регламент...'
-			],
-            'pluginOptions' => [
-	            'allowClear'         => true,
-            ]
-		]) ?>
 	
 	<?= $form->field($model, 'class',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">

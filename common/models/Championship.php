@@ -29,6 +29,8 @@ use yii\db\Query;
  * @property integer         $isClosed
  * @property string          $onlyRegions
  * @property integer         $useCheScheme
+ * @property integer         $showResults
+ * @property integer         $useMoscowPoints
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -60,7 +62,7 @@ class Championship extends BaseActiveRecord
 	];
 	
 	public static $groupsTitle = [
-		self::GROUPS_RUSSIA   => 'Чемпионаты России',
+		self::GROUPS_RUSSIA   => 'Чемпионаты России и мира',
 		self::GROUPS_REGIONAL => 'Региональные чемпионаты'
 	];
 	
@@ -102,12 +104,12 @@ class Championship extends BaseActiveRecord
 		return [
 			[['description'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber',
-				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount'], 'required'],
+				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount', 'showResults'], 'required'],
 			[[
 				'yearId', 'status', 'groupId', 'regionGroupId',
 				'dateAdded', 'dateUpdated', 'regionId',
 				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount',
-				'isClosed', 'useCheScheme'
+				'isClosed', 'useCheScheme', 'showResults', 'useMoscowPoints'
 			], 'integer'],
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
@@ -117,7 +119,7 @@ class Championship extends BaseActiveRecord
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
 			['maxNumber', 'default', 'value' => 99],
-			[['requiredOtherRegions', 'isClosed', 'useCheScheme'], 'default', 'value' => 0],
+			[['requiredOtherRegions', 'isClosed', 'useCheScheme', 'showResults', 'useMoscowPoints'], 'default', 'value' => 0],
 			[['onlyRegions'], 'safe'],
 			['useCheScheme', 'validateClasses']
 		];
@@ -158,7 +160,9 @@ class Championship extends BaseActiveRecord
 			'estimatedAmount'      => 'Количество этапов, по которым подсчитывается итог',
 			'isClosed'             => 'Закрытый чемпионат',
 			'onlyRegions'          => 'Регионы, которые могут принимать участие',
-			'useCheScheme'         => 'Использовать Челябинскую схему для награждения'
+			'useCheScheme'         => 'Использовать Челябинскую схему для награждения',
+			'showResults'          => 'Показывать итоги чемпионата',
+			'useMoscowPoints'      => 'Считать баллы по Московской схеме'
 		];
 	}
 	
@@ -218,7 +222,7 @@ class Championship extends BaseActiveRecord
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_CHAMPIONSHIP, $this);
 		}
-		if (array_key_exists('useCheScheme', $changedAttributes)) {
+		if (array_key_exists('useCheScheme', $changedAttributes) && $changedAttributes['useCheScheme'] != $this->useCheScheme) {
 			if ($this->useCheScheme) {
 				$oldIds = $this->getInternalClasses()->select('cheId')->andWhere(['not', ['cheId' => null]])->asArray()->column();
 				if ($oldIds) {
@@ -293,6 +297,7 @@ class Championship extends BaseActiveRecord
 			$busyNumbers = $busyNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
 		$busyNumbers = $busyNumbers->asArray()->column();
+		$addOldNumber = null;
 		if ($championship->regionId && $stage->status != Stage::STATUS_PAST) {
 			$query = new Query();
 			$query->from([Athlete::tableName(), City::tableName(), Region::tableName()]);
@@ -313,6 +318,14 @@ class Championship extends BaseActiveRecord
 				if ($athlete->regionId == $championship->regionId && !in_array($athlete->number, $numbers)) {
 					$numbers[] = $athlete->number;
 				}
+				//если участник уже принимал участие в этапе - он может зарегистрироваться под этим же номером
+				$prevStages = Participant::find()->where(['championshipId' => $championship->id])
+					->andWhere(['athleteId' => $athleteId])
+					->andWhere(['status' => Participant::STATUS_ACTIVE])
+					->one();
+				if ($prevStages) {
+					$addOldNumber = $prevStages->number;
+				}
 			}
 		}
 		$tmpBusyNumbers = TmpParticipant::find()->select('number')->where(['stageId' => $stage->id])
@@ -331,6 +344,10 @@ class Championship extends BaseActiveRecord
 			if (in_array($number, $busyNumbers)) {
 				unset($numbers[$i]);
 			}
+		}
+		
+		if ($addOldNumber) {
+			$numbers[] = $addOldNumber;
 		}
 		
 		return $numbers;
@@ -356,8 +373,8 @@ class Championship extends BaseActiveRecord
 					];
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
-					$results[$participant->athleteId]['stages'][$stage->id] = $participant->points;
-					$results[$participant->athleteId]['points'] += $participant->points;
+					$results[$participant->athleteId]['stages'][$stage->id] = $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+					$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
 					$results[$participant->athleteId]['countStages'] += 1;
 					if (!$results[$participant->athleteId]['cityId']) {
 						$results[$participant->athleteId]['cityId'] = $stage->cityId;
@@ -424,7 +441,10 @@ class Championship extends BaseActiveRecord
 	}
 	
 	/**
-	 * @return null|Region[]
+	 * @param bool $asString
+	 * @param bool $asArray
+	 *
+	 * @return array|null|string|static[]
 	 */
 	public function getRegionsFor($asString = false, $asArray = false)
 	{

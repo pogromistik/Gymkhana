@@ -19,11 +19,11 @@ $this->title = $championship->title;
                 Регион проведения: <?= $championship->region->title ?>
             </div>
 		<?php } ?>
-        <?php if ($championship->onlyRegions && $championship->isClosed) { ?>
+		<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
             <div class="pb-10">
                 Регионы, допускающиеся к участию: <?= $championship->getRegionsFor(true) ?>
             </div>
-        <?php } ?>
+		<?php } ?>
 		<?php if ($championship->description) { ?>
             <div class="pt-20">
 				<?= $championship->description ?>
@@ -44,17 +44,17 @@ $this->title = $championship->title;
             <br>
             Диапазон стартовых номеров участников: <?= $championship->minNumber ?>-<?= $championship->maxNumber ?>.
         </div>
-	    <?php if ($championship->activeInternalClasses) { ?>
+		<?php if ($championship->activeInternalClasses) { ?>
             <div class="pt-10 pb-10">
-			    <?php
-			    $internalClasses = [];
-			    foreach ($championship->activeInternalClasses as $class) {
-				    $internalClasses[] = $class->title;
-			    }
-			    ?>
+				<?php
+				$internalClasses = [];
+				foreach ($championship->activeInternalClasses as $class) {
+					$internalClasses[] = $class->title;
+				}
+				?>
                 <b>Классы награждения:</b> <?= implode(', ', $internalClasses) ?>
             </div>
-	    <?php } ?>
+		<?php } ?>
     </div>
 
     <div class="col-bg-4 col-lg-3 col-md-2 col-sm-12 list-nav">
@@ -68,9 +68,11 @@ $this->title = $championship->title;
 						<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
                     </li>
 				<?php } ?>
-                <li>
-					<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $championship->id]) ?>
-                </li>
+				<?php if ($championship->showResults) { ?>
+                    <li>
+						<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $championship->id]) ?>
+                    </li>
+				<?php } ?>
             </ul>
 			<?php
 		}

@@ -12,6 +12,7 @@ use admin\controllers\BaseController;
 use common\models\Country;
 use common\models\Figure;
 use common\models\HelpModel;
+use common\models\MoscowPoint;
 use common\models\Region;
 use common\models\search\CitySearch;
 use common\models\search\YearSearch;
@@ -19,6 +20,7 @@ use common\models\Stage;
 use common\models\Year;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -396,16 +398,64 @@ class HelpController extends BaseController
 		return $this->render('che-scheme', ['items' => $items]);
 	}
 	
+	public function actionMoscowPointsScheme()
+	{
+		$this->can('competitions');
+		$points = (new Query())->select('*')
+			->from(['a' => MoscowPoint::tableName(), 'b' => AthletesClass::tableName()])
+			->where(new Expression('"a"."class" = "b"."id"'))
+			->orderBy(['b."percent"' => SORT_ASC, 'b."title"' => SORT_ASC, 'a."place"' => SORT_ASC])->all();
+		$items = ArrayHelper::map($points,
+			'place', 'point', 'title');
+		
+		return $this->render('moscow-point-scheme', ['items' => $items]);
+	}
+	
 	public function actionTimeCalculate()
 	{
 		$this->can('competitions');
 		$model = new ReferenceTimeForm();
+		/** @var AthletesClass[] $classes */
 		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		$needTime = [];
 		if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
 			$model->calculate();
+			if ($model->referenceTime) {
+				/** @var AthletesClass $prev */
+				$prev = null;
+				$last = null;
+				$prevTime = 0;
+				foreach ($classes as $class) {
+					if (!$prev || $prev->percent == $class->percent) {
+						$startTime = '00:00.00';
+					} else {
+						$time = $prevTime + 10;
+						$startTime = HelpModel::convertTimeToHuman($time);
+					}
+					$time = floor($model->referenceTime * ($class->percent) / 100);
+					$time = ((int)($time / 10)) * 10;
+					if (round($time / $model->referenceTime * 100, 2) >= $class->percent) {
+						$time -= 10;
+					}
+					$prevTime = $time;
+					$endTime = HelpModel::convertTimeToHuman($time);
+					$needTime[$class->id] = [
+						'classModel' => $class,
+						'startTime'  => $startTime,
+						'endTime'    => $endTime,
+						'percent'    => $class->percent
+					];
+					$prev = $class;
+					$last = $class->id;
+				}
+				$needTime[$last]['endTime'] = '59:59.59';
+				if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+					$needTime[$last]['percent'] = '> ' . $prev->percent;
+				}
+			}
 		}
 		
-		return $this->render('time-calculate', ['model' => $model, 'classes' => $classes]);
+		return $this->render('time-calculate', ['model' => $model, 'classes' => $classes, 'needTime' => $needTime]);
 	}
 	
 	public function actionResultCalculate()

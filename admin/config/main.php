@@ -10,7 +10,7 @@ return [
 	'id'                  => 'app-admin',
 	'language'            => 'ru_RU',
 	'timeZone'            => 'Asia/Yekaterinburg',
-	'name'                => 'gymkhana74',
+	'name'                => 'GymkhanaCup',
 	'basePath'            => dirname(__DIR__),
 	'defaultRoute'        => 'help/index',
 	'controllerNamespace' => 'admin\controllers',
@@ -45,6 +45,9 @@ return [
 			// this is the name of the session cookie used for login on the admin
 			'name' => 'advanced-admin',
 		],
+		'assetManager' => [
+			'appendTimestamp' => true,
+		],
 		'log'          => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
 			'targets'    => [
@@ -76,6 +79,18 @@ return [
 		],
 		'authManager'  => [
 			'class' => 'yii\rbac\DbManager',
+		],
+		'i18n'         => [
+			'translations' => [
+				'app*' => [
+					'class'              => 'yii\i18n\DbMessageSource',
+					'messageTable'       => \common\models\TranslateMessage::tableName(),
+					'sourceMessageTable' => \common\models\TranslateMessageSource::tableName(),
+					'enableCaching'      => true,
+					'cachingDuration'    => 10,
+					'forceTranslation'   => true,
+				],
+			],
 		],
 	],
 	'params'              => $params,

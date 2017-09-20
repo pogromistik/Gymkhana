@@ -26,7 +26,7 @@ use yii\helpers\Url;
                             <div class="text">
                             </div>
                             <div class="show-all text-center pt-10">
-				                <?= \yii\bootstrap\Html::a('Показать все уведомления', ['/notices/all']) ?>
+				                <?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать все уведомления'), ['/notices/all']) ?>
                             </div>
                         </div>
                     </div>
@@ -35,11 +35,12 @@ use yii\helpers\Url;
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><span class="fa fa-user"></span></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/profile/index">Профиль</a></li>
-                                <li><a href="/profile/stats">Статистика</a></li>
-                                <li><a href="/profile/info">Заявки на участие</a></li>
-                                <li><a href="/figures/send-result">Отправить результат</a></li>
-                                <li><a href="/site/logout">Выход</a></li>
+                                <li><a href="/profile/index"><?= \Yii::t('app', 'Профиль') ?></a></li>
+                                <li><a href="/profile/stats"><?= \Yii::t('app', 'Статистика') ?></a></li>
+                                <li><a href="/profile/info"><?= \Yii::t('app', 'Заявки на участие') ?></a></li>
+                                <li><a href="/figures/send-result"><?= \Yii::t('app', 'Отправить результат') ?></a></li>
+                                <li><a href="/profile/change-class"><?= \Yii::t('app', 'Смена класса') ?></a></li>
+                                <li><a href="/site/logout"><?= \Yii::t('app', 'Выход') ?></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -54,44 +55,51 @@ use yii\helpers\Url;
                 <div id="navbarCollapse" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-left">
                         <li>
-                            <a href="/">Главная</a>
+                            <a href="/"><?= \Yii::t('app', 'Главная') ?></a>
                         </li>
                         <li>
-                            <a href="<?= Url::to(['site/documents']) ?>">Документы</a>
+                            <a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a>
                         </li>
                         <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">Соревнования <b
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?= \Yii::t('app', 'Соревнования') ?> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/competitions/schedule">Расписание</a></li>
-                                <li class="dropdown dropdown-submenu"><a href="#" data-toggle="dropdown">Результаты</a>
+                                <li><a href="/competitions/schedule"><?= \Yii::t('app', 'Расписание') ?></a></li>
+                                <li class="dropdown dropdown-submenu"><a href="#" data-toggle="dropdown"><?= \Yii::t('app', 'Результаты') ?></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">Базовые фигуры</a> </li>
-                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">Чемпионаты России</a></li>
-                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">Региональные соревнования</a></li>
+                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">
+                                                <?= \Yii::t('app', 'Базовые фигуры') ?>
+                                            </a> </li>
+                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">
+                                                <?= \Yii::t('app', 'Чемпионаты России и мира') ?>
+                                            </a></li>
+                                        <li><a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">
+                                                <?= \Yii::t('app', 'Региональные соревнования') ?>
+                                            </a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="/athletes/list">Спортсмены</a>
+                            <a href="/athletes/list"><?= \Yii::t('app', 'Спортсмены') ?></a>
                         </li>
                         <li>
-                            <a href="http://gymkhana74.ru/russia" target="_blank">Россия</a>
+                            <a href="http://gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
                         </li>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
-                                <a href="/site/login">Вход</a>
+                                <a href="/site/login"><?= \Yii::t('app', 'Вход') ?></a>
 							<?php } else { ?>
                         <li class="dropdown pk-menu-items">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::$app->user->identity->getFullName() ?> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/profile/index">Профиль</a></li>
-                                <li><a href="/profile/stats">Статистика</a></li>
-                                <li><a href="/profile/info">Заявки на участие</a></li>
-                                <li><a href="/figures/send-result">Отправить результат</a></li>
-                                <li><a href="/site/logout">Выход</a></li>
+                                <li><a href="/profile/index"><?= \Yii::t('app', 'Профиль') ?></a></li>
+                                <li><a href="/profile/stats"><?= \Yii::t('app', 'Статистика') ?></a></li>
+                                <li><a href="/profile/info"><?= \Yii::t('app', 'Заявки на участие') ?></a></li>
+                                <li><a href="/figures/send-result"><?= \Yii::t('app', 'Отправить результат') ?></a></li>
+                                <li><a href="/profile/change-class"><?= \Yii::t('app', 'Смена класса') ?></a></li>
+                                <li><a href="/site/logout"><?= \Yii::t('app', 'Выход') ?></a></li>
                             </ul>
                         </li>
                         <li class="pk-menu-items">
@@ -102,7 +110,7 @@ use yii\helpers\Url;
                                 <div class="text">
                                 </div>
                                 <div class="show-all text-center pt-10">
-                                    <?= \yii\bootstrap\Html::a('Показать все уведомления', ['/notices/all']) ?>
+                                    <?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать все уведомления'), ['/notices/all']) ?>
                                 </div>
                             </div>
                         </li>

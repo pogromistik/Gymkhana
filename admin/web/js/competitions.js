@@ -178,31 +178,37 @@ $('.change-status').click(function (e) {
     });
 });
 
+var clickCount = 0;
 $(document).on("submit", '.raceTimeForm', function (e) {
+    clickCount++;
     e.preventDefault();
-    showBackDrop();
-    var form = $(this);
-    $.ajax({
-        url: '/competitions/participants/add-time',
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            if (result['success'] == true) {
-                form.find('.row').addClass('result-line');
-                form.find('.timeId').val(result['id']);
-                var next = form.next();
-                next.find('input[name="Time[timeForHuman]"]').focus();
+    if (clickCount === 1) {
+        showBackDrop();
+        var form = $(this);
+        $.ajax({
+            url: '/competitions/participants/add-time',
+            type: "POST",
+            data: form.serialize(),
+            success: function (result) {
+                clickCount = 0;
+                if (result['success'] == true) {
+                    form.find('.row').addClass('result-line');
+                    form.find('.timeId').val(result['id']);
+                    var next = form.next();
+                    next.find('input[name="Time[timeForHuman]"]').focus();
+                    hideBackDrop();
+                } else {
+                    hideBackDrop();
+                    BootboxError(result['error']);
+                }
+            },
+            error: function (result) {
+                clickCount = 0;
                 hideBackDrop();
-            } else {
-                hideBackDrop();
-                BootboxError(result['error']);
+                BootboxError(result);
             }
-        },
-        error: function (result) {
-            hideBackDrop();
-            BootboxError(result);
-        }
-    });
+        });
+    }
 });
 
 $('.saveAllStageResult').click(function (e) {
@@ -210,13 +216,13 @@ $('.saveAllStageResult').click(function (e) {
     var elem = $(this);
     var attempt = elem.data('attempt');
     showBackDrop();
-    var form = $('.form-'+attempt+':first');
+    var form = $('.form-' + attempt + ':first');
     AddAllResults(form);
 });
 
 function AddAllResults(form) {
     $.ajax({
-        url: '/competitions/participants/add-time',
+        url: '/competitions/participants/add-time?checkTime=0',
         type: "POST",
         data: form.serialize(),
         success: function (result) {
@@ -246,43 +252,43 @@ function AddAllResults(form) {
     });
 }
 /*
-$('.saveAllStageResult').click(function (e) {
-    e.preventDefault();
-    var elem = $(this);
-    var attempt = elem.data('attempt');
-    var count = elem.data('count');
-    showBackDrop();
-    var i = 1;
-    $(".form-"+attempt).each(function() {
-        var form = $(this);
-        AddAllResults(form, i, count);
-        i++;
-    });
-});
+ $('.saveAllStageResult').click(function (e) {
+ e.preventDefault();
+ var elem = $(this);
+ var attempt = elem.data('attempt');
+ var count = elem.data('count');
+ showBackDrop();
+ var i = 1;
+ $(".form-"+attempt).each(function() {
+ var form = $(this);
+ AddAllResults(form, i, count);
+ i++;
+ });
+ });
 
-function AddAllResults(form, i, count) {
-    $.ajax({
-        url: '/competitions/participants/add-time',
-        type: "POST",
-        data: form.serialize(),
-        success: function (result) {
-            if (result == true) {
-                form.find('.row').addClass('result-line');
-                if (i == count) {
-                    hideBackDrop();
-                }
-            } else {
-                hideBackDrop();
-                alert(result);
-            }
-        },
-        error: function (result) {
-            hideBackDrop();
-            alert(result);
-        }
-    });
-}
-*/
+ function AddAllResults(form, i, count) {
+ $.ajax({
+ url: '/competitions/participants/add-time',
+ type: "POST",
+ data: form.serialize(),
+ success: function (result) {
+ if (result == true) {
+ form.find('.row').addClass('result-line');
+ if (i == count) {
+ hideBackDrop();
+ }
+ } else {
+ hideBackDrop();
+ alert(result);
+ }
+ },
+ error: function (result) {
+ hideBackDrop();
+ alert(result);
+ }
+ });
+ }
+ */
 $('.changeParticipantStatus').click(function (e) {
     e.preventDefault();
     showBackDrop();
@@ -293,11 +299,47 @@ $('.changeParticipantStatus').click(function (e) {
         id: id,
         status: status
     }).done(function (data) {
-        if (data == true) {
+        if (data['success'] == true) {
             location.reload(true);
+        } else if (data['needClarification'] == true) {
+            hideBackDrop();
+            bootbox.dialog({
+                locale: 'ru',
+                title: 'Регистрация спортсмена',
+                message: data['text'],
+                className: 'info',
+                buttons: {
+                    cancel: {
+                        label: 'Отмена',
+                        className: "btn-danger",
+                        callback: function () {
+                            return true;
+                        }
+                    },
+                    confirm: {
+                        label: 'Добавить',
+                        className: "btn-success",
+                        callback: function () {
+                            showBackDrop();
+                            $.get('/competitions/participants/change-status', {
+                                id: id, status: status, confirmed: true
+                            }).done(function (data) {
+                                hideBackDrop();
+                                if (data['success'] == true) {
+                                    location.reload();
+                                } else {
+                                    alert(data['text']);
+                                }
+                            }).fail(function (error) {
+                                alert(error.responseText);
+                            });
+                        }
+                    }
+                }
+            });
         } else {
             hideBackDrop();
-            BootboxError(data);
+            BootboxError(data['text']);
         }
     }).fail(function (error) {
         hideBackDrop();
@@ -605,6 +647,24 @@ $('.stageCalcResult').click(function (e) {
     }
 });
 
+$('.accruePoints').click(function (e) {
+    e.preventDefault();
+    if (confirm("Уверены, что хотите начислить баллы участникам? Лучше это делать после того, как переходы спортсмена в новую группу были подтверждены")) {
+        var id = $(this).data('id');
+        $.get('/competitions/stages/accrue-points', {
+            stageId: id
+        }).done(function (data) {
+            if (data == true) {
+                location.href = '/competitions/stages/result?stageId=' + id;
+            } else {
+                BootboxError(data);
+            }
+        }).fail(function (error) {
+            BootboxError(error.responseText);
+        });
+    }
+});
+
 $('.createCabinet').click(function (e) {
     e.preventDefault();
     if (confirm("Уверены, что хотите создать кабинет этому спортсмену?")) {
@@ -652,12 +712,50 @@ $(document).on("submit", '#figureTimeForm', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            if (result == true) {
+            if (result['success'] == true) {
                 location.href = '/competitions/figures/add-results?figureId=' + figureId +
                     '&date=' + date + '&success=true';
+            } else if (result['confirm'] == true) {
+                hideBackDrop();
+                bootbox.dialog({
+                    locale: 'ru',
+                    title: 'Добавление времени',
+                    message: result['text'],
+                    className: 'info',
+                    buttons: {
+                        cancel: {
+                            label: 'Отмена',
+                            className: "btn-danger",
+                            callback: function () {
+                                location.href = '/competitions/figures/add-results?figureId=' + figureId +
+                                    '&date=' + date;
+                            }
+                        },
+                        confirm: {
+                            label: 'Добавить',
+                            className: "btn-success",
+                            callback: function () {
+                                showBackDrop();
+                                $.ajax({
+                                    url: '/competitions/figures/add-time?confirm=true',
+                                    type: "POST",
+                                    data: form.serialize(),
+                                    success: function (result) {
+                                        if (result['success'] == true) {
+                                            location.href = '/competitions/figures/add-results?figureId=' + figureId +
+                                                '&date=' + date + '&success=true';
+                                        } else {
+                                            alert(result['text']);
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                });
             } else {
                 hideBackDrop();
-                BootboxError(result);
+                BootboxError(result['text']);
             }
         },
         error: function (result) {
@@ -674,6 +772,8 @@ $(document).ready(function () {
         var count = 255 - box.length;
 
         if (count >= 0) {
+            $('#length').removeClass('color-red');
+            $('#length').addClass('color-green');
             $('#length').html('осталось символов: ' + count);
         } else {
             $('#length').removeClass('color-green');
@@ -805,7 +905,7 @@ function cityForNewAthlete(id) {
     $.ajax({
         url: '/competitions/tmp-athletes/save-new-city',
         type: "POST",
-        data: $('#cityForNewAthlete'+id).serialize(),
+        data: $('#cityForNewAthlete' + id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
@@ -826,7 +926,7 @@ function cityForNewParticipant(id) {
     $.ajax({
         url: '/competitions/tmp-participant/save-new-city',
         type: "POST",
-        data: $('#cityForNewParticipant'+id).serialize(),
+        data: $('#cityForNewParticipant' + id).serialize(),
         success: function (result) {
             hideBackDrop();
             if (result == true) {
@@ -877,6 +977,278 @@ $(document).on("submit", '#addFigureTimeForStage', function (e) {
         error: function (result) {
             hideBackDrop();
             alert(result);
+        }
+    });
+});
+
+$('#isClosedChamp').click(function () {
+    $('#regionsForChamp').slideToggle();
+});
+
+$('.participantIsArrived').click(function () {
+    var elem = $(this);
+    var id = elem.data('id');
+    showBackDrop();
+    $.get('/competitions/participants/is-arrived', {
+        id: id
+    }).done(function (data) {
+        if (data == true) {
+            $('<div class="text-with-backdrop">Сохранено</div>').appendTo(document.body);
+            setTimeout(function () {
+                $('.text-with-backdrop').hide();
+                hideBackDrop()
+            }, 1000);
+        } else {
+            hideBackDrop();
+            BootboxError(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$('.setFinalList').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var stageId = elem.data('id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Формирование итогового списка',
+        message: 'Все заявки, для которых не отмечен пункт "Участник приехал на этап", будут отменены. ' +
+        'Для отмененных заявок невозможно установить время заездов. Уверены, что хотите совершить это действие? (' +
+        'в дальнейшем отмененные заявки можно вернуть в работу на странице "участники")',
+        className: 'info',
+        buttons: {
+            cancel: {
+                label: 'Отмена',
+                className: "btn-danger",
+                callback: function () {
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Сформировать список',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/participants/set-final-list', {
+                        stageId: stageId
+                    }).done(function (data) {
+                        if (data['success'] == true) {
+                            hideBackDrop();
+                            $('<div class="text-with-backdrop">' + data['text'] + '</div>').appendTo(document.body);
+                            setTimeout(function () {
+                                $('.text-with-backdrop').hide();
+                            }, 1500);
+                        } else {
+                            hideBackDrop();
+                            alert(data['text']);
+                        }
+                    }).fail(function (error) {
+                        hideBackDrop();
+                        alert(error.responseText);
+                    });
+                }
+            }
+        }
+    });
+});
+
+$(document).on("submit", '#changeAthleteClassForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $('.alert-danger').hide();
+    showBackDrop();
+    $.ajax({
+        url: "/competitions/athlete/change-athlete-class",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.href = '/competitions/athlete/change-class?success=true';
+            } else {
+                hideBackDrop();
+                $('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+});
+
+$('.processClassRequest').click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var status = $(this).data('status');
+    $('.alert').hide();
+    $('#id').val(id);
+    $('#status').val(status);
+    if (status == 1) {
+        $('.modal-body h4').text('Укажите текст события для перехода в новый класс');
+        $('.modal-header h3').text('Вы собираетесь ПОДТВЕРДИТЬ класс');
+    } else {
+        $('.modal-body h4').text('Укажите причину отказа');
+        $('.modal-header h3').text('Вы собираетесь ОТКЛОНИТЬ класс');
+    }
+    $('#processClassRequest').modal('show')
+});
+
+$(document).on("submit", '#processClassRequestForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+        url: '/competitions/classes-request/process',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                $('.alert-danger').text(result).show();
+            }
+        },
+        error: function (result) {
+            $('.alert-danger').text(result).show();
+        }
+    });
+});
+
+$(document).on("submit", '#sendMessagesForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $('.alert').hide();
+    $.ajax({
+        url: '/competitions/additional/send-message',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['success'] == true) {
+                $('.form').slideToggle();
+                form.trigger('reset');
+                $('.alert-success').text(result['text']).slideToggle();
+            } else {
+                $('.alert-danger').text(result['text']).show();
+            }
+        },
+        error: function (result) {
+            $('.alert-danger').text(result).show();
+        }
+    });
+});
+
+$('.freeNumbersList').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    $.get('/competitions/stages/get-free-numbers', {
+        stageId: id
+    }).done(function (data) {
+        if (data['success'] == true) {
+            $('.free-numbers .list').html(data['numbers']);
+            $('.free-numbers').slideToggle();
+        } else {
+            alert(data['error']);
+        }
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});
+
+$('.deleteParticipant').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var name = elem.data('name');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Удаление заявки спортсмена',
+        message: '<p>Уверены, что хотите полностью удалить из системы заявку спортсмена ' +
+        '<span style="color: gray"> ' + name + '</span>? ' +
+        'Совершайте это действие только в том случае, если спортсмен был ошибочно зарегистрирован на этап. ' +
+        'Если спортсмен просто решил не участвовать - отмените его заявку, нажав на красную кнопку с крестиком.</p>' +
+        '<p><span class="red">ОБРАТИТЕ ВНИМАНИЕ!</span> Это действие необратимо, заявка будет полностью удалена. В дальнейшем можно будет лишь заново' +
+        ' зарегистрировать спортсмена.</p>',
+        className: 'danger',
+        buttons: {
+            cancel: {
+                label: 'Отмена',
+                className: "btn-danger",
+                callback: function () {
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Удалить заявку',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/participants/delete', {
+                        id: id
+                    }).done(function (data) {
+                        if (data == true) {
+                            hideBackDrop();
+                            $('<div class="text-with-backdrop">Заявка успешно удалена</div>').appendTo(document.body);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            hideBackDrop();
+                            alert(data);
+                        }
+                    }).fail(function (error) {
+                        hideBackDrop();
+                        alert(error.responseText);
+                    });
+                }
+            }
+        }
+    });
+});
+
+$('#prepareParticipantsForImport').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var stageId = elem.data('stage-id');
+    $.get('/competitions/participants/prepare-list-for-import', {
+        stageId: stageId
+    }).done(function (data) {
+        hideBackDrop();
+        $('.modalList').html(data);
+        $('#participantsList').modal('show')
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$(document).on("submit", '#importParticipants', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var btn = form.find('button');
+    var wait = form.find('.wait');
+    btn.hide();
+    wait.show();
+    $.ajax({
+        url: "/competitions/participants/import-for-stage",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(result);
+                wait.hide();
+                btn.show();
+            }
+        },
+        error: function (result) {
+            alert(result);
+            wait.hide();
+            btn.show();
         }
     });
 });

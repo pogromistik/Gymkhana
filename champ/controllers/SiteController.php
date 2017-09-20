@@ -34,7 +34,7 @@ class SiteController extends BaseController
 		$this->layout = 'main-with-img';
 		$this->pageTitle = 'Мотоджимхана: события';
 		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
-		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, новости мото джимханы, события мото джимханы, новости, события';
+		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
 		
 		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
 		$pagination = new Pagination([
@@ -83,10 +83,14 @@ class SiteController extends BaseController
 	public function actionLogin()
 	{
 		$this->pageTitle = 'Вход в личный кабинет';
+		$this->keywords = 'джимхана кап, gymkhana cup';
 		
 		if (!Yii::$app->user->isGuest) {
 			return $this->goHome();
 		}
+		
+		$this->layout = 'main-with-img';
+		$this->background = 'login.png';
 		
 		$model = new LoginForm();
 		if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -138,6 +142,9 @@ class SiteController extends BaseController
 			return $this->goHome();
 		}
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'register.png';
+		
 		$registration = new TmpAthlete();
 		
 		return $this->render('registration', [
@@ -188,9 +195,9 @@ class SiteController extends BaseController
 			if (!$form->email) {
 				return 'Необходимо указать email';
 			}
-			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email)])
+			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])
 				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
-			->andWhere(['not', ['status' => TmpAthlete::STATUS_CANCEL]])->one()) {
+			->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()) {
 				return 'Указанный email занят';
 			}
 			if (!$form->validate()) {
@@ -236,6 +243,9 @@ class SiteController extends BaseController
 		$this->pageTitle = 'Восстановление пароля';
 		$model = new PasswordResetRequestForm();
 		
+		$this->layout = 'main-with-img';
+		$this->background = 'reset-psw.png';
+		
 		return $this->render('reset-password', ['model' => $model]);
 	}
 	
@@ -243,7 +253,7 @@ class SiteController extends BaseController
 	{
 		$model = new PasswordResetRequestForm();
 		if ($model->load(\Yii::$app->request->post())) {
-			$athlete = Athlete::findOne(['email' => $model->login]);
+			$athlete = Athlete::findOne(['upper("email")' => mb_strtoupper($model->login)]);
 			if (!$athlete) {
 				$login = preg_replace('~\D+~', '', $model->login);
 				if ($login == $model->login) {

@@ -23,6 +23,13 @@ $this->title = 'Обработанные заявки на участие в э�
 				['class' => 'yii\grid\SerialColumn'],
 				
 				[
+					'attribute' => 'dateAdded',
+					'format'    => 'raw',
+					'value'     => function (TmpParticipant $participant) {
+						return date("d.m.Y, H:i", $participant->dateAdded);
+					}
+				],
+				[
 					'attribute' => 'championshipId',
 					'format'    => 'raw',
 					'filter'    => Select2::widget([
@@ -59,6 +66,10 @@ $this->title = 'Обработанные заявки на участие в э�
 						$result .= $participant->country->title;
 						$result .= '<br>';
 						$result .= '<small>' . ($participant->phone ? $participant->phone : '') . '</small>';
+						if ($participant->email) {
+							$result .= '<br>';
+							$result .= '<small>' . $participant->email. '</small>';
+						}
 						
 						return $result;
 					}
@@ -80,12 +91,3 @@ $this->title = 'Обработанные заявки на участие в э�
 			],
 		]); ?>
     </div>
-
-    <div class="modalList"></div>
-<?php
-/**
- * Created by PhpStorm.
- * User: nadia
- * Date: 07.06.2017
- * Time: 14:39
- */

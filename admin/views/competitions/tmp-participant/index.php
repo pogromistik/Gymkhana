@@ -14,6 +14,12 @@ use yii\web\JsExpression;
 $this->title = 'Заявки на участие, требующие одобрения';
 ?>
 
+<div class="alert alert-danger">
+	<b>ВНИМАНИЕ!</b> Обращайте внимание на город участников - в найденном совпадении может быть полный тёзка из другого города. 
+	Как показывает практика - он даже может ездить на таком же мотоцикле :) Если не уверены в том, что это тот же человек - свяжитесь 
+	с ним по указанному в заявке телефону или email.
+</div>
+
 <div class="tmp-participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -45,7 +51,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 				}
 			],
 			[
-				'label'  => 'Данные о спортсмене',
+				'label'  => 'Заявка спортсмена',
 				'format' => 'raw',
 				'value'  => function (TmpParticipant $participant) {
 					$result =
@@ -76,9 +82,8 @@ $this->title = 'Заявки на участие, требующие одобр�
 					$result .= $participant->country->title;
 					$result .= '<br>';
 					$result .= '<small>' . $participant->city . '</small>';
-					$html = '';
+					$html = '<br>';
 					if (!$participant->cityId) {
-						$html = '<br>';
 						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewParticipant'.$participant->id]);
 						$html .= Html::hiddenInput('id', $participant->id);
 						$html .= Select2::widget([
@@ -107,8 +112,12 @@ $this->title = 'Заявки на участие, требующие одобр�
 						$html .= '<br>';
                     }
                     $result .= $html;
-					$result .= '<small>' . ($participant->phone ? ', ' . $participant->phone : '') . '</small>';
+					$result .= '<small>' . ($participant->phone ? $participant->phone : '') . '</small>';
 					$result .= '<br>';
+					if ($participant->email) {
+						$result .= '<small>' . ($participant->email ? $participant->email : '') . '</small>';
+						$result .= '<br>';
+					}
 					$result .= Editable::widget([
 							'name'          => 'motorcycleMark',
 							'value'         => $participant->motorcycleMark,
@@ -205,7 +214,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 			[
 				'format' => 'raw',
 				'value'  => function (TmpParticipant $participant) {
-					$html = '<div class = "pb-10">' . Html::a('Добавить и зарегистрировать',
+					$html = '<div class = "pb-10">' . Html::a('Создать спортсмена и зарегистрировать на этап',
 							['/competitions/tmp-participant/add-and-registration', 'id' => $participant->id],
 							['class' => 'btn btn-success addAndRegistration', 'data-id' => $participant->id]) . '</div>';
 					$html .= '<div class = "pb-10">' . Html::a('Отменить заявку',

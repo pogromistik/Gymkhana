@@ -1,14 +1,18 @@
 <?php
+
 namespace champ\controllers;
 
 use champ\models\PasswordForm;
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\Championship;
+use common\models\ClassesRequest;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
 use common\models\Participant;
+use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
 use common\models\Year;
 use yii\base\UserException;
@@ -62,6 +66,7 @@ class ProfileController extends AccessController
 					$athlete->save(false);
 				}
 			}
+			
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
@@ -103,7 +108,8 @@ class ProfileController extends AccessController
 		
 		$time = time();
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
-			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])->all();
+			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->all();
 		
 		$participants = null;
 		if ($newStages) {
@@ -189,9 +195,11 @@ class ProfileController extends AccessController
 				$percent = $athlete->athleteClass->percent;
 				if ($bestPercentOfClass > $percent) {
 					$bestClass = $athlete->athleteClassId;
+					$bestPercentOfClass = $percent;
 				}
 			}
 		}
+		
 		if ($bestClass) {
 			if ($me->athleteClassId == $bestClass) {
 				$bestClassIds[] = $me->id;
@@ -225,7 +233,7 @@ class ProfileController extends AccessController
 					if ($hisResult) {
 						$hisResults[$athleteId] = $hisResult;
 						if ($hisResult->resultTime < $bestTime) {
-							$bestTime = $hisResult;
+							$bestTime = $hisResult->resultTime;
 							$bestId = $athleteId;
 						}
 					}
@@ -413,7 +421,7 @@ class ProfileController extends AccessController
 		if ($stage->dateOfThe < time()) {
 			return 'В день соревнований изменение данных невозможно';
 		}
-
+		
 		if (in_array($stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
 			return 'Этап начался, изменение данных невозможно';
 		}
@@ -426,10 +434,12 @@ class ProfileController extends AccessController
 			return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
 		}
 		
-		if ($participant->status == Participant::STATUS_ACTIVE) {
+		if ($participant->status == Participant::STATUS_ACTIVE || $participant->status == Participant::STATUS_NEED_CLARIFICATION
+			|| $participant->status == Participant::STATUS_OUT_COMPETITION
+		) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
 		} else {
-			$participant->status = Participant::STATUS_ACTIVE;
+			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
 		}
 		
 		if (!$participant->save()) {
@@ -459,6 +469,55 @@ class ProfileController extends AccessController
 		return $this->render('stats-by-figure', [
 			'figure'        => $figure,
 			'figuresResult' => $figuresResult
+		]);
+	}
+	
+	public function actionChangeClass()
+	{
+		$this->pageTitle = 'Отправить запрос на изменение класса';
+		
+		$model = new ClassesRequest();
+		$model->athleteId = \Yii::$app->user->id;
+		
+		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		
+		return $this->render('change-class', [
+			'model'   => $model,
+			'classes' => $classes
+		]);
+	}
+	
+	public function actionSendClassRequest()
+	{
+		$model = new ClassesRequest();
+		
+		if ($model->load(\Yii::$app->request->post())) {
+			if (!$model->newClassId) {
+				return 'Выберите класс';
+			}
+			if (!$model->comment) {
+				return 'Укажите причину смены класса';
+			}
+			if ($model->save()) {
+				return true;
+			}
+		}
+		
+		return 'Возникла ошибка при отправке данных';
+	}
+	
+	public function actionHistoryClassesRequest()
+	{
+		$searchModel = new ClassesRequestSearch();
+		$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
+		
+		$this->pageTitle = 'Заявки на изменение класса';
+		$this->layout = 'full-content';
+		
+		return $this->render('history-classes-request', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
 		]);
 	}
 }

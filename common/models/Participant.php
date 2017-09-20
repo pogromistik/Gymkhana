@@ -28,6 +28,9 @@ use yii\db\Expression;
  * @property integer       $newAthleteClassStatus
  * @property integer       $placeOfAthleteClass
  * @property integer       $points
+ * @property integer       $pointsByMoscow
+ * @property integer       $isArrived
+ * @property integer       $dateRegistration
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -44,11 +47,18 @@ class Participant extends BaseActiveRecord
 	
 	public $humanBestTime;
 	
+	public $resultClass;
+	public $n;
+	public $tmpPlace;
+	public $tmpPlaceInInternalClass;
+	public $tmpPlaceInAthleteClass;
+	
 	const STATUS_NEED_CLARIFICATION = 0;
 	const STATUS_ACTIVE = 1;
 	const STATUS_DISQUALIFICATION = 2;
 	const STATUS_CANCEL_ATHLETE = 3;
 	const STATUS_CANCEL_ADMINISTRATION = 4;
+	const STATUS_OUT_COMPETITION = 5;
 	
 	const NEW_CLASS_STATUS_NEED_CHECK = 1;
 	const NEW_CLASS_STATUS_APPROVE = 2;
@@ -58,7 +68,14 @@ class Participant extends BaseActiveRecord
 		self::STATUS_ACTIVE                => 'Заявка активна',
 		self::STATUS_DISQUALIFICATION      => 'Участник дисквалифицирован',
 		self::STATUS_CANCEL_ATHLETE        => 'Отменена участником',
-		self::STATUS_CANCEL_ADMINISTRATION => 'Отменена администрацией'
+		self::STATUS_CANCEL_ADMINISTRATION => 'Отменена администрацией',
+		self::STATUS_NEED_CLARIFICATION    => 'Требует подтверждения организатора',
+		self::STATUS_OUT_COMPETITION       => 'Вне зачёта'
+	];
+	
+	public static $typesTitle = [
+		self::STATUS_ACTIVE          => 'В зачёте',
+		self::STATUS_OUT_COMPETITION => 'Вне зачёта'
 	];
 	
 	/**
@@ -94,9 +111,13 @@ class Participant extends BaseActiveRecord
 				'newAthleteClassId',
 				'newAthleteClassStatus',
 				'placeOfAthleteClass',
-				'points'
+				'points',
+				'pointsByMoscow',
+				'isArrived',
+				'dateRegistration'
 			], 'integer'],
-			['number', 'validateNumber']
+			['number', 'validateNumber'],
+			['isArrived', 'default', 'value' => 0]
 		];
 	}
 	
@@ -128,12 +149,14 @@ class Participant extends BaseActiveRecord
 			'placeOfClass'        => 'Место в классе награждения',
 			'placeOfAthleteClass' => 'Место в классе спортсмена',
 			'number'              => 'Номер спортсмена',
-			'sort'                => 'Сортировка',
+			'sort'                => 'Порядок выступления',
 			'dateAdded'           => 'Дата добавления',
 			'status'              => 'Статус',
 			'percent'             => 'Рейтинг',
 			'newAthleteClassId'   => 'Класс по итогам проведенного этапа',
-			'points'              => 'Баллы за этап'
+			'points'              => 'Баллы за этап',
+			'pointsByMoscow'      => 'Баллы за этап по Московской схеме',
+			'isArrived'           => 'Участник приехал на этап'
 		];
 	}
 	
@@ -142,6 +165,9 @@ class Participant extends BaseActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 			$this->athleteClassId = $this->athlete->athleteClassId;
+			if (!$this->dateRegistration) {
+				$this->dateRegistration = time();
+			}
 			
 			if ($this->championship->useCheScheme && !$this->internalClassId) {
 				$internalClass = $this->internalClassWithScheme($this->athleteClassId);
@@ -150,10 +176,11 @@ class Participant extends BaseActiveRecord
 				}
 			}
 			
-			if ($this->stage->participantsLimit > 0) {
+			if ($this->stage->participantsLimit > 0 && $this->status != self::STATUS_ACTIVE && $this->status != self::STATUS_OUT_COMPETITION) {
 				$this->status = self::STATUS_NEED_CLARIFICATION;
 			}
 			
+			//Если человек участвовал в предыдущих этапах - переносим его номер
 			/** @var Participant $participationInPreviousStages */
 			$participationInPreviousStages = Participant::find()
 				->where(['championshipId' => $this->championshipId])->andWhere(['not', ['stageId' => $this->stageId]])
@@ -173,9 +200,69 @@ class Participant extends BaseActiveRecord
 					$this->athleteClassId = $participationInPreviousStages->athleteClassId;
 				}
 			}
+			
+			//если в предыдущих этапах кто-то другой был под этим номером - обнуляем номер
+			if ($this->number) {
+				$oldStage = Participant::find()->where(['championshipId' => $this->championshipId])
+					->andWhere(['not', ['stageId' => $this->stageId]])
+					->andWhere(['not', ['athleteId' => $this->athleteId]])
+					->andWhere(['number' => $this->number])
+					->one();
+				if ($oldStage) {
+					$championship = Championship::findOne($this->championshipId);
+					$athlete = Athlete::findOne($this->athleteId);
+					if ($championship->regionId && $championship->regionId == $athlete->regionId) {
+						$this->number = null;
+					}
+				}
+			}
+		}
+		
+		if ($this->status == self::STATUS_OUT_COMPETITION) {
+			$stage = $this->stage;
+			if ($stage->referenceTime && $this->bestTime && $this->bestTime < 1800000) {
+				$this->percent = round($this->bestTime / $stage->referenceTime * 100, 2);
+				if ($stage->class && isset($this->getOldAttributes()["bestTime"])
+					&& $this->bestTime != $this->getOldAttributes()["bestTime"]
+					&& $this->newAthleteClassStatus != Participant::NEW_CLASS_STATUS_APPROVE
+				) {
+					$newClassId = self::getNewClass($stage->classModel, $this);
+					if ($newClassId) {
+						$this->newAthleteClassId = $newClassId;
+						$this->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_NEED_CHECK;
+					} elseif ($this->newAthleteClassId) {
+						$this->newAthleteClassId = null;
+						$this->newAthleteClassStatus = null;
+					}
+				}
+			}
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public static function getNewClass(AthletesClass $stageClass, Participant $participant)
+	{
+		if ($participant->athleteClassId) {
+			/** @var AthletesClass $resultClass */
+			$resultClass = AthletesClass::find()->where(['>', 'percent', $participant->percent])
+				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
+			if ($resultClass && $resultClass->id != $participant->id) {
+				if ($stageClass->percent > $resultClass->percent) {
+					if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent
+						&& $stageClass->id != $participant->newAthleteClassId
+					) {
+						return $stageClass->id;
+					}
+				} elseif (!$participant->athleteClassId ||
+					$participant->athleteClass->percent > $resultClass->percent && $participant->newAthleteClassId != $resultClass->id
+				) {
+					return $resultClass->id;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public function internalClassWithScheme($classId)
@@ -209,7 +296,7 @@ class Participant extends BaseActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		$stage = $this->stage;
 		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
-			if (array_key_exists('bestTime', $changedAttributes)) {
+			if ($this->status != Participant::STATUS_OUT_COMPETITION && array_key_exists('bestTime', $changedAttributes)) {
 				$stage->placesCalculate();
 			}
 		}
@@ -250,7 +337,16 @@ class Participant extends BaseActiveRecord
 	
 	public function getTimes()
 	{
-		return $this->hasMany(Time::className(), ['participantId' => 'id']);
+		return $this->hasMany(Time::className(), ['participantId' => 'id'])->addOrderBy(['attemptNumber' => SORT_ASC]);
+	}
+	
+	/**
+	 * @return array|null|Time
+	 */
+	public function getBestTimeItem()
+	{
+		return Time::find()->where(['participantId' => $this->id])->andWhere(['not', ['resultTime' => null]])
+			->orderBy(['resultTime' => SORT_ASC])->one();
 	}
 	
 	public function getStage()

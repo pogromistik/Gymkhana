@@ -18,6 +18,7 @@ use yii\web\UploadedFile;
  * @property integer      $bestTimeInRussia
  * @property string       $bestAthleteInRussia
  * @property integer      $useForClassesCalculate
+ * @property integer      $severalRecords
  *
  * @property FigureTime[] $results
  */
@@ -44,11 +45,11 @@ class Figure extends \yii\db\ActiveRecord
 		return [
 			[['title'], 'required'],
 			[['description', 'bestAthlete', 'bestAthleteInRussia', 'bestTimeForHuman', 'bestTimeInRussiaForHuman'], 'string'],
-			[['bestTime', 'bestTimeInRussia', 'useForClassesCalculate'], 'integer'],
+			[['bestTime', 'bestTimeInRussia', 'useForClassesCalculate', 'severalRecords'], 'integer'],
 			[['title', 'file', 'picture'], 'string', 'max' => 255],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
-			['useForClassesCalculate', 'default', 'value' => 0]
+			[['useForClassesCalculate', 'severalRecords'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -70,7 +71,8 @@ class Figure extends \yii\db\ActiveRecord
 			'bestTimeInRussia'         => 'Лучшее время в России',
 			'bestTimeInRussiaForHuman' => 'Лучшее время в России',
 			'bestAthleteInRussia'      => 'Рекордсмен в России',
-			'useForClassesCalculate'   => 'Использовать для расчета классов'
+			'useForClassesCalculate'   => 'Использовать для расчета классов',
+			'severalRecords'           => 'Рекорд был обновлён'
 		];
 	}
 	
@@ -78,14 +80,14 @@ class Figure extends \yii\db\ActiveRecord
 	{
 		if ($this->bestTimeForHuman) {
 			list($min, $secs) = explode(':', $this->bestTimeForHuman);
-			$this->bestTime = ($min * 60000) + $secs * 1000;
+			$this->bestTime = ($min * 60000) + round($secs * 1000);
 		} else {
 			$this->bestTime = null;
 		}
 		
 		if ($this->bestTimeInRussiaForHuman) {
 			list($min, $secs) = explode(':', $this->bestTimeInRussiaForHuman);
-			$this->bestTimeInRussia = ($min * 60000) + $secs * 1000;
+			$this->bestTimeInRussia = ($min * 60000) + round($secs * 1000);
 		} else {
 			$this->bestTimeInRussia = null;
 		}
@@ -114,6 +116,25 @@ class Figure extends \yii\db\ActiveRecord
 		return parent::beforeSave($insert);
 	}
 	
+	public function afterSave($insert, $changedAttributes)
+	{
+		if (array_key_exists('bestTime', $changedAttributes) && $this->bestTime
+		 && $changedAttributes['bestTime'] && $this->bestTime != $changedAttributes['bestTime']) {
+			$times = FigureTime::findAll(['figureId' => $this->id]);
+			foreach ($times as $time) {
+				$percent = round($time->resultTime / $this->bestTime * 100, 2);
+				$time->actualPercent = $percent;
+				$time->needClassCalculate = false;
+				$time->save(false);
+			}
+			if (!$this->severalRecords) {
+				$this->severalRecords = 1;
+				$this->save(false);
+			}
+		}
+		parent::afterSave($insert, $changedAttributes);
+	}
+	
 	public function afterFind()
 	{
 		parent::afterFind();
@@ -140,7 +161,7 @@ class Figure extends \yii\db\ActiveRecord
 	/**
 	 * @return Figure[]
 	 */
-	public static function getAll($withoutId)
+	public static function getAll($withoutId = null)
 	{
 		$result = self::find()->orderBy(['title' => SORT_ASC]);
 		if ($withoutId) {
