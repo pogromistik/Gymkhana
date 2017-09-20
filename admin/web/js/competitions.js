@@ -1252,3 +1252,20 @@ $(document).on("submit", '#importParticipants', function (e) {
         }
     });
 });
+
+var equalizer = function (equalizer) {
+    var maxHeight = 0;
+
+    equalizer.each(function () {
+        console.log($(this).height());
+        if ($(this).height() > maxHeight) {
+            maxHeight = $(this).height()
+        }
+    });
+
+    equalizer.height(maxHeight);
+};
+
+if ($(document).width() >= 975) {
+    equalizer($('.with-hr-border > div'));
+}
