@@ -22,6 +22,15 @@ $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<?php if ($stage->fastenClassFor && $stage->fastenClassFor > 0) { ?>
+    <div class="alert alert-info">
+        <b>Обратите внимание!</b> При добавлении результата с этой
+        страницы (в случае повышения класса), класс участника в этапе будет изменен, не смотря на то,
+        что у вас стоит отметка "закрепить класс участника". Если вы хотите добавить результат так, чтобы
+        он не влиял на класс в этом этапе - сделайте это со страницы "Фигуры".
+    </div>
+<?php } ?>
+
 <?php $form = ActiveForm::begin(['id' => 'figureTimeForStage']); ?>
 
 <?= $form->field($figureTime, 'date')->hiddenInput()->label(false)->error(false) ?>
