@@ -44,16 +44,16 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                     <p><?= $stage->description ?></p>
 				<?php } ?>
 				<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
-					<?php if ($stage->startRegistration) { ?>
+					<?php if ($stage->startRegistration || $stage->endRegistration) { ?>
                         <p>
-                            Начало регистрации: <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+							<?php if ($stage->startRegistration) { ?>
+                                Начало регистрации: <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+							<?php } ?>
 							<?php if ($stage->endRegistration) { ?>
                                 <br>
                                 Завершение регистрации: <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
 							<?php } ?>
                         </p>
-					<?php } else { ?>
-                        <p>Регистрация на этап завершена</p>
 					<?php } ?>
 				<?php } ?>
 				<?php if ($stage->documentIds) { ?>
@@ -160,16 +160,16 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         </div>
                     </div>
 				<?php } ?>
-	
-	            <?php if ($qualification && isset($qualification['figureTitles'])) { ?>
+				
+				<?php if ($qualification && isset($qualification['figureTitles'])) { ?>
                     <div>
                         <h5><?= Html::a('Нажмите, чтобы посмотреть результаты квалификации
                         (' . implode($qualification['figureTitles'], ', ') . ')',
-					            ['/competitions/qualification', 'stageId' => $stage->id],
-					            ['class' => 'qualification-link']) ?>
+								['/competitions/qualification', 'stageId' => $stage->id],
+								['class' => 'qualification-link']) ?>
                         </h5>
                     </div>
-	            <?php } ?>
+				<?php } ?>
 				
 				<?php if ($stage->status == Stage::STATUS_CANCEL) { ?>
                     <div class="warning">
@@ -210,7 +210,9 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
 					<?php } ?>
 					
-					<?php if ($time >= $stage->startRegistration || $stage->status != Stage::STATUS_UPCOMING) { ?>
+					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
+						|| $time >= $stage->dateOfThe
+					) { ?>
 
                         <div class="results pt-20">
                             <div class="pb-10">

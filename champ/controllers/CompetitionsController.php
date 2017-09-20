@@ -47,8 +47,9 @@ class CompetitionsController extends BaseController
 		if (!$currentYear) {
 			throw new UserException();
 		}
+		$yearIds = Year::find()->select('id')->where(['>=', 'year', $currentYear->year]);
 		$championshipIds = Championship::find()->select('id')
-			->andWhere(['yearId' => $currentYear->id])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+			->andWhere(['yearId' => $yearIds])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
 		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
@@ -128,7 +129,14 @@ class CompetitionsController extends BaseController
 						->orderBy(['dateAdded' => SORT_DESC])->all();
 					$results = [];
 					foreach ($championships as $championship) {
-						$results[$championship->yearId] = [
+						if (!isset($results[$championship->yearId])) {
+							$results[$championship->yearId] =
+								[
+									'data' => [],
+									'year' => $championship->year->year
+								];
+						}
+						$results[$championship->yearId]['data'][] = [
 							'year'        => $championship->year->year,
 							'stages'      => $championship->stages,
 							'status'      => $championship->status,
@@ -152,7 +160,6 @@ class CompetitionsController extends BaseController
 					$query->andWhere(new Expression('"a"."yearId" = "c"."id"'));
 					$query->orderBy(['a."regionGroupId"' => SORT_ASC, 'a."dateAdded"' => SORT_DESC]);
 					$championships = $query->asArray()->all();
-					
 					foreach ($championships as $item) {
 						if (!isset($results[$item['regionGroupId']])) {
 							$results[$item['regionGroupId']] = [

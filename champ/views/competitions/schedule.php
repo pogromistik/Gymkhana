@@ -66,27 +66,28 @@ use yii\bootstrap\Html;
                         <tr>
                             <th>
                                 <div class="month">
-									<?= \common\models\HelpModel::$month[date("n", $date)] ?>
+									<?= \common\models\HelpModel::$month[date("n", $date)] ?>&nbsp;
+									<?= (date("Y", $date) != date("Y")) ? date("Y", $date) : '' ?>
                                 </div>
                             </th>
                         </tr>
 						<?php foreach ($stages as $stage) { ?>
-							<?php if ($stage->dateOfThe+86400 < time()) { ?>
-	                            <tr>
-	                        <?php } else {?>
-	                        	<tr class="future">
-	                        <?php } ?>
-                                <td>
-                                    <div class="row item">
-                                        <div class="col-md-2 col-sm-3 col-xs-4">
-											<?= date("d.m.Y", $stage->dateOfThe) ?>
-                                        </div>
-                                        <div class="col-md-10 col-sm-9 col-xs-8">
-											<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
-												['/competitions/stage', 'id' => $stage->id]) ?>
-                                        </div>
+							<?php if ($stage->dateOfThe + 86400 < time()) { ?>
+                                <tr>
+							<?php } else { ?>
+                                <tr class="future">
+							<?php } ?>
+                            <td>
+                                <div class="row item">
+                                    <div class="col-md-2 col-sm-3 col-xs-4">
+										<?= date("d.m.Y", $stage->dateOfThe) ?>
                                     </div>
-                                </td>
+                                    <div class="col-md-10 col-sm-9 col-xs-8">
+										<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+											['/competitions/stage', 'id' => $stage->id]) ?>
+                                    </div>
+                                </div>
+                            </td>
                             </tr>
 						<?php } ?>
 					<?php } ?>

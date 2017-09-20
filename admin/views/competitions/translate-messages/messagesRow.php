@@ -33,8 +33,8 @@ use common\models\TranslateMessageSource;
 		      onclick="changeMessageStatus('<?= $model->id ?>')">
     <?php
     } else { ?>
-			<span class="btn btn-danger btn-circle fa fa-remove" title="Отменить"
-			      onclick="changeMessageStatus('<?= $model->id ?>')">
+			<span class="btn btn-danger btn-circle fa fa-remove" title="Удалить"
+			      onclick="deleteMessage('<?= $model->id ?>')">
     <?php } ?>
                     </span>
 	

@@ -23,13 +23,15 @@ $form = \yii\bootstrap\ActiveForm::begin([
 
 ]);
 ?>
-<td><?= $model->comment ?></td>
-<td>
-	<?= $form->field($translateForm, 'id')->label(false)->hiddenInput()->error(false) ?>
+<td><?= $form->field($translateForm, 'id')->label(false)->hiddenInput()->error(false) ?>
 	<?= $form->field($translateForm, 'language')->label(false)->hiddenInput()->error(false) ?>
+    <?= $model->comment ?></td>
+<?php /*
+<td>
 	<?= $form->field($translateForm,
 		'language')->dropDownList(\common\models\TranslateMessage::$languagesTitle, ['disabled' => true])->label(false) ?>
 </td>
+  */ ?>
 <td class="translate-row">
 	<?= $form->field($translateForm,
 		'translation')->textarea(['rows' => 1])->label(false) ?>

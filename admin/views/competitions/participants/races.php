@@ -106,7 +106,7 @@ $attempt = 0;
     <div class="row">
         <div class="col-sm-1 col-sm-offset-10">
             <a href="#" data-attempt="<?= $attempt ?>" data-count="<?= count($participants) ?>"
-               class="saveAllStageResult btn btn-primary">Сохранить всё</a>
+               class="saveAllStageResult btn btn-default">Сохранить всё</a>
         </div>
     </div>
 <?php } ?>

@@ -248,7 +248,7 @@ class SiteController extends BaseController
 	{
 		$model = new PasswordResetRequestForm();
 		if ($model->load(\Yii::$app->request->post())) {
-			$athlete = Athlete::findOne(['email' => $model->login]);
+			$athlete = Athlete::findOne(['upper("email")' => mb_strtoupper($model->login)]);
 			if (!$athlete) {
 				$login = preg_replace('~\D+~', '', $model->login);
 				if ($login == $model->login) {
