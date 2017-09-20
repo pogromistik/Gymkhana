@@ -33,9 +33,11 @@ $country = \common\models\Country::getRussia();
 	
 	<?= $form->field($model, 'title')->textInput(['placeholder' => 'название чемпионата, необязательное поле']) ?>
 	
-	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
-		'preset' => 'full', 'clientOptions' => ['height' => 150]
-	]) ?>
+	<div class="champ-description">
+		<?= $form->field($model, 'description')->widget(CKEditor::className(), [
+			'preset' => 'full', 'clientOptions' => ['height' => 150]
+		]) ?>
+    </div>
 	
 	<?= $form->field($model, 'yearId')->dropDownList(ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year')) ?>
 	

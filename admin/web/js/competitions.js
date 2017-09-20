@@ -1262,10 +1262,11 @@ var equalizer = function (equalizer) {
             maxHeight = $(this).height()
         }
     });
-
     equalizer.height(maxHeight);
 };
 
-if ($(document).width() >= 975) {
-    equalizer($('.with-hr-border > div'));
-}
+$(window).load(function(){
+    if ($(document).width() >= 975) {
+        equalizer($('.with-hr-border > div'));
+    }
+});

@@ -36,7 +36,7 @@ $stages = $model->stages;
 	    ]); ?>
     </div>
     
-    <div class="row">
+    <div class="row with-hr-border">
         <div class="col-md-6 col-sm-12">
             <h3>Информация о чемпионате</h3>
 		    <?= $this->render('_form', [

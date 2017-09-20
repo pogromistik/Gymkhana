@@ -545,8 +545,18 @@ a.red-button {
     padding-left: 20px;
 }
 
-.with-hr-border div {
+.with-hr-border > div {
     border-left: 3px solid #00aa00;
+}
+
+.champ-description {
+    height: 412px;
+}
+
+@media (max-width: 530px) {
+    .champ-description {
+        height: auto;
+    }
 }
 
 .btn-my-style {
@@ -559,6 +569,10 @@ a.red-button {
 
 .btn-my-style:hover {
     font-weight: bold;
+}
+
+.btn-my-style:active, .btn-my-style:focus {
+    color: #fff;
 }
 
 .btn-green {
