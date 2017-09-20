@@ -321,7 +321,7 @@ class Championship extends BaseActiveRecord
 				//если участник уже принимал участие в этапе - он может зарегистрироваться под этим же номером
 				$prevStages = Participant::find()->where(['championshipId' => $championship->id])
 					->andWhere(['athleteId' => $athleteId])
-					->andWhere(['status' => Participant::STATUS_ACTIVE])
+					->andWhere(['status' => Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION])
 					->one();
 				if ($prevStages) {
 					$addOldNumber = $prevStages->number;
