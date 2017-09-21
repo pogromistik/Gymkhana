@@ -830,3 +830,8 @@ a.red-button {
 .closeHintBtn:hover {
     opacity: .8;
 }
+
+.site-error .img {
+    max-width: 50%;
+    margin: 0 auto;
+}
