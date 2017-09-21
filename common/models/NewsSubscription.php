@@ -22,10 +22,12 @@ class NewsSubscription extends \yii\db\ActiveRecord
 	const TYPE_ALL = 1;
 	const TYPE_STAGES = 2;
 	const TYPE_REGISTRATIONS = 3;
+	const TYPE_RECORDS = 4;
 	public static $typesTitle = [
 		self::TYPE_ALL           => 'все новости',
 		self::TYPE_STAGES        => 'о новых этапах',
-		self::TYPE_REGISTRATIONS => 'об открытых регистрациях'
+		self::TYPE_REGISTRATIONS => 'об открытых регистрациях',
+		self::TYPE_RECORDS       => 'о новых рекордах'
 	];
 	
 	const IS_ACTIVE_NO = 0;
@@ -99,6 +101,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 			return ArrayHelper::map(
 				Region::findAll(['id' => $regionIds]), 'id', 'title');
 		}
+		
 		return [];
 	}
 	
