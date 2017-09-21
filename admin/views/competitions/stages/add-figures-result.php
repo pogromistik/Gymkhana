@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php if ($stage->fastenClassFor && $stage->fastenClassFor > 0) { ?>
-    <div class="alert alert-info">
+    <div class="alert required-alert-info">
         <b>Обратите внимание!</b> При добавлении результата с этой
         страницы (в случае повышения класса), класс участника в этапе будет изменен, не смотря на то,
         что у вас стоит отметка "закрепить класс участника". Если вы хотите добавить результат так, чтобы

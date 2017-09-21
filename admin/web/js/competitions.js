@@ -1286,7 +1286,7 @@ $('.closeHintBtn').click(function () {
         className: 'info',
         buttons: {
             cancel: {
-                label: 'Отключить эту подсказку',
+                label: 'Скрыть эту подсказку',
                 className: "btn-primary",
                 callback: function () {
                     elem.parent().parent().hide();

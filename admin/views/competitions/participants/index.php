@@ -35,6 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <h3>Зарегистрировать участника на этап</h3>
 <div class="alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
     Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
     <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
 </div>

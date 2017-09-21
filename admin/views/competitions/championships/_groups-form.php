@@ -11,9 +11,20 @@ $group = new RegionalGroup();
 
 <div class="championship-form">
     <h3>Добавить группу региональных соревнований</h3>
-    
-    <div class="alert alert-info"><b>Внимание!</b> Не создавайте раздел, если аналогичный ему уже есть в списке -
-    иначе пользователям станет сложнее найти нужные этапы</div>
+
+    <div class="alert required-alert-info"><b>Внимание!</b> Не создавайте раздел, если аналогичный ему уже есть в списке -
+        иначе пользователям будет затруднительно найти нужный этап
+    </div>
+
+    <div class="alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
+        Региональный раздел нужен для группировки чемпионатов по годам. Название может быть любым, напр. "Кубок
+        &#60;вашего региона&#62;".
+        Постарайтесь сделать название максимально понятным, чтобы при поиске человек понимал, что это уцбок именно
+        вашего региона.
+    </div>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'newRegionalGroup']]); ?>
 
@@ -39,17 +50,17 @@ $i = 1;
         <tr>
             <td><?= $i++ ?></td>
             <td><?= Editable::widget([
-		            'name'          => 'title',
-		            'value'         => $regionalGroup->title,
-		            'url'           => 'update-group',
-		            'type'          => 'text',
-		            'mode'          => 'inline',
-		            'clientOptions' => [
-			            'pk'        => $regionalGroup->id,
-			            'value'     => $regionalGroup->title,
-			            'placement' => 'right',
-		            ]
-	            ]); ?></td>
+					'name'          => 'title',
+					'value'         => $regionalGroup->title,
+					'url'           => 'update-group',
+					'type'          => 'text',
+					'mode'          => 'inline',
+					'clientOptions' => [
+						'pk'        => $regionalGroup->id,
+						'value'     => $regionalGroup->title,
+						'placement' => 'right',
+					]
+				]); ?></td>
         </tr>
 	<?php } ?>
 </table>

@@ -16,6 +16,9 @@ if ($model->previewText) {
 
 <div class="assoc-news-form">
     <div class="alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
         <ul>
             <li>
                 <b>При добавлении изображения обязательно оставьте пустыми поля "ширина" и "высота" или хотя бы поле "высота"</b>
