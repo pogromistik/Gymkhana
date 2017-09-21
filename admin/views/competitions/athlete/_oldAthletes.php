@@ -13,6 +13,6 @@
 		<?php } ?>
     </ul>
     Всё равно добавить?<br>
-    <a href="/competitions/athlete/index" class="btn btn-danger">Нет</a>
-    <a href="#" onclick="newAthleteConfirm()" class="btn btn-success">Да</a>
+    <a href="/competitions/athlete/index" class="btn btn-my-style btn-red">Нет</a>
+    <a href="#" onclick="newAthleteConfirm()" class="btn btn-my-style btn-green">Да</a>
 </div>

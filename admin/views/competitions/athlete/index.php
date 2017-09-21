@@ -13,7 +13,7 @@ $this->title = 'Спортсмены';
 ?>
 <div class="athlete-index">
     <p>
-		<?= Html::a('Добавить спортсмена', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить спортсмена', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -137,7 +137,7 @@ $this->title = 'Спортсмены';
 				'format' => 'raw',
 				'value'  => function (\common\models\Athlete $athlete) {
 					return Html::a('<span class="fa fa-eye"></span>', ['view', 'id' => $athlete->id], [
-						'class' => 'btn btn-info',
+						'class' => 'btn btn-my-style btn-light-blue',
 						'title' => 'Просмотр'
 					]);
 				}
@@ -147,7 +147,7 @@ $this->title = 'Спортсмены';
 				'value'  => function (\common\models\Athlete $athlete) {
 					return \common\helpers\UserHelper::accessAverage($athlete->regionId, $athlete->creatorUserId) ?
 						Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
-							'class' => 'btn btn-primary',
+							'class' => 'btn btn-my-style btn-blue',
 							'title' => 'Редактирование'
 						]) : '';
 				}

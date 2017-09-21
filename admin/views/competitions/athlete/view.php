@@ -30,7 +30,7 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 		<?php } ?>
 		<?php if (!$model->hasAccount) { ?>
 			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-				['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+				['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
 		<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
 			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
 				['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
@@ -138,13 +138,13 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 						<?php
 						if ($motorcycleInfo->status) {
 							echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-danger changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-red changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Удалить'
 							]);
 						} else {
 							echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-warning changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-boggy changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Вернуть в работу'
 							]);
@@ -168,7 +168,7 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 						if ($motorcycleInfo->status) {
 						} else {
 							echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-warning changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-boggy changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Вернуть в работу'
 							]);

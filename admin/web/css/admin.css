@@ -549,6 +549,10 @@ a.red-button {
     border-left: 3px solid #00aa00;
 }
 
+.with-bottom-border {
+    border-bottom: 3px solid #00aa00;
+}
+
 .champ-description {
     height: 412px;
 }

@@ -50,7 +50,7 @@ $length = 255;
 
 <div class="alert alert-danger" style="display: none"></div>
 
-<?= \yii\helpers\Html::submitButton('Изменить класс', ['class' => 'btn btn-success']) ?>
+<?= \yii\helpers\Html::submitButton('Изменить класс', ['class' => 'btn btn-my-style btn-blue']) ?>
 
 <?php ActiveForm::end(); ?>
 

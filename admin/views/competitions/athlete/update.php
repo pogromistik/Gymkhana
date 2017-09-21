@@ -24,25 +24,29 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	
 	<?php if (!$model->hasAccount) { ?>
 		<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-			['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+			['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
 	<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
 		<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
-			['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
+			['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
 	<?php } ?>
 
-    <h3>Информация о спортсмене</h3>
-	<?= $this->render('_form', [
-		'model' => $model,
-	]) ?>
+    <div class="with-bottom-border">
+        <h3>Информация о спортсмене</h3>
+		<?= $this->render('_form', [
+			'model' => $model,
+		]) ?>
+    </div>
 	
 	<?php if (\Yii::$app->user->can('developer')) { ?>
-        <h3>Изменение пароля</h3>
-		<?php $form = \yii\bootstrap\ActiveForm::begin() ?>
-		<?= $form->field($password, 'pass')->passwordInput()->label('Пароль'); ?>
-		<?= $form->field($password, 'athleteId')->hiddenInput(['value' => $model->id])->label(false)->error(false); ?>
-		<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
-		<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
-		<?php $form->end() ?>
+        <div class="with-bottom-border pb-20">
+            <h3>Изменение пароля</h3>
+			<?php $form = \yii\bootstrap\ActiveForm::begin() ?>
+			<?= $form->field($password, 'pass')->passwordInput()->label('Пароль'); ?>
+			<?= $form->field($password, 'athleteId')->hiddenInput(['value' => $model->id])->label(false)->error(false); ?>
+			<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
+			<?= Html::submitButton('изменить', ['class' => 'btn btn-my-style btn-blue']) ?>
+			<?php $form->end() ?>
+        </div>
 	<?php } ?>
 
     <h3>Мотоциклы</h3>
@@ -103,13 +107,13 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 						<?php
 						if ($motorcycleInfo->status) {
 							echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-danger changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-red changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Удалить'
 							]);
 						} else {
 							echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-warning changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-boggy changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Вернуть в работу'
 							]);
