@@ -74,6 +74,33 @@ class PasswordForm extends Model
 		
 		return null;
 	}
+	
+	public static function staticCheckPassword($pass)
+	{
+		$array = str_split($pass);
+		$unique = [];
+		foreach ($array as $item) {
+			if (array_search($item, $unique) === false) {
+				$unique[] = $item;
+			}
+		}
+		
+		if (count($unique) < 5) {
+			return 'Должно быть минимум 5 уникальных символов';
+		}
+		
+		if(!preg_match("/([a-z]+)/", $pass))
+		{
+			return 'Пароль должен содержать маленькие буквы';
+		}
+		
+		if(!preg_match("/([A-Z]+)/", $pass))
+		{
+			return 'Пароль должен содержать большие буквы';
+		}
+		
+		return null;
+	}
 }
 
 ?>

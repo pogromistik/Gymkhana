@@ -8,6 +8,7 @@ use common\models\Client;
 /**
  * @var \common\models\User              $user
  * @var \dektrium\rbac\models\Assignment $assignment
+ * @var string                           $errors
  */
 
 ?>
@@ -30,12 +31,18 @@ use common\models\Client;
 ] : [])->label('Роль') ?>
 
 <?= $form->field($user, 'password')->passwordInput() ?>
-	
-	<div class="form-group">
-		<div class="col-lg-offset-3 col-lg-9">
+
+<?php if ($errors) { ?>
+    <div class="alert alert-danger">
+		<?= $errors ?>
+    </div>
+<?php } ?>
+
+    <div class="form-group">
+        <div class="col-lg-offset-3 col-lg-9">
 			<?= Html::submitButton(Yii::t('user', 'Save'),
-                ['class' => $user->isNewRecord ? 'btn btn-block btn-my-style btn-green' : 'btn btn-block btn-my-style btn-blue']) ?>
-		</div>
-	</div>
+				['class' => $user->isNewRecord ? 'btn btn-block btn-my-style btn-green' : 'btn btn-block btn-my-style btn-blue']) ?>
+        </div>
+    </div>
 
 <?php ActiveForm::end(); ?>
