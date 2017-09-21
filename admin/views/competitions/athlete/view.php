@@ -11,17 +11,8 @@ use dosamigos\editable\Editable;
 $this->title = $model->lastName . ' ' . $model->firstName;
 $this->params['breadcrumbs'][] = ['label' => 'Спортсмены', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$motorcycles = '';
 ?>
-<?php
-if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all()) {
-	$motorcycles = '<ul>';
-	foreach ($motorcyclesModels as $motorcycleItem) {
-		$motorcycles .= '<li>' . $motorcycleItem->model . ' ' . $motorcycleItem->mark . '</li>';
-	}
-	$motorcycles .= '</ul>';
-}
-?>
+
 <div class="athlete-view">
 
     <p>
@@ -78,7 +69,20 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 				'attribute' => 'motorcycles',
 				'label'     => 'Мотоциклы',
 				'format'    => 'raw',
-				'value'     => $motorcycles
+				'value'     => function ($model) {
+					$html = '<ul>';
+					foreach ($model->activeMotorcycles as $motorcycle) {
+						$html .= '<li>' . $motorcycle->getFullTitle() . '</li>';
+					}
+					$html .= '</ul>';
+					
+					return $html;
+				}
+			],
+			[
+				'attribute' => 'photo',
+				'format'    => 'raw',
+				'value'     => Html::img(\Yii::getAlias('@filesView') . '/' . $model->photo)
 			]
 		],
 	]) ?>
