@@ -19,6 +19,7 @@ use common\models\search\TmpFigureResultSearch;
 use common\models\search\TmpParticipantSearch;
 use common\models\Stage;
 use common\models\TmpAthlete;
+use common\models\User;
 use Yii;
 use common\models\Point;
 use common\models\search\PointSearch;
@@ -408,5 +409,16 @@ class AdditionalController extends BaseController
 		$result['text'] = 'Сообщение успешно отправлено. Количество человек, которые его получат: ' . $count;
 		
 		return $result;
+	}
+	
+	public function actionCloseHint()
+	{
+		$this->can('competitions');
+		$user = User::findOne(\Yii::$app->user->identity->id);
+		if ($user) {
+			$user->showHint = 0;
+			$user->save();
+		}
+		return true;
 	}
 }

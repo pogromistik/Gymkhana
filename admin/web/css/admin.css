@@ -805,3 +805,12 @@ a.red-button {
     background: #f7c96d;
     color: #fff;
 }
+
+.closeHintBtn {
+    cursor: pointer;
+    font-size: 18px!important;
+}
+
+.closeHintBtn:hover {
+    opacity: .8;
+}

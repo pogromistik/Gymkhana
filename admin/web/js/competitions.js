@@ -1270,8 +1270,40 @@ var equalizer = function (equalizer) {
     equalizer.height(maxHeight);
 };
 
-$(window).load(function(){
+$(window).load(function () {
     if ($(document).width() >= 975) {
         equalizer($('.with-hr-border > div'));
     }
+});
+
+$('.closeHintBtn').click(function () {
+    var elem = $(this);
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Отключение подсказок',
+        message: 'Отключить подсказки полностью? Они будут отключены на ВСЕХ страницах в админке. ' +
+        'При необходимости вы сможете включить их в своём профиле. ',
+        className: 'info',
+        buttons: {
+            cancel: {
+                label: 'Отключить эту подсказку',
+                className: "btn-primary",
+                callback: function () {
+                    elem.parent().parent().hide();
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Отключить все подсказки',
+                className: "btn-warning",
+                callback: function () {
+                    $.get('/competitions/additional/close-hint').done(function (data) {
+                        location.reload();
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            }
+        }
+    });
 });

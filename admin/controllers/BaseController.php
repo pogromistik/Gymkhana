@@ -47,6 +47,9 @@ class BaseController extends Controller
 			$user = User::findOne(\Yii::$app->user->id);
 			$user->last_login_at = time();
 			$user->save();
+			if (!$user->showHint) {
+				echo '<style>.alert.alert-info {display:none}</style>';
+			}
 		}
 	}
 
