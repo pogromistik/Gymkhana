@@ -82,6 +82,9 @@ use yii\helpers\Html;
                 <li><a href="<?= Url::to(['/site/logout']) ?>" data-method='post'><i
                                 class="fa fa-sign-out fa-fw"></i> <?= Yii::t('app', 'Выход') ?></a>
                 </li>
+                <li><a href="<?= Url::to(['/profile/index']) ?>"><i
+                                class="fa fa-user fa-fw"></i> <?= Yii::t('app', 'Профиль') ?></a>
+                </li>
             </ul>
             <!-- /.dropdown-user -->
         </li>
