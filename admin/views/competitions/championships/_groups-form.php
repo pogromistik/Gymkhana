@@ -23,7 +23,7 @@ $group = new RegionalGroup();
         </div>
         <div class="col-md-2 col-sm-4">
             <div class="form-group">
-				<?= Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>
+				<?= Html::submitButton('Добавить', ['class' => 'btn btn-my-style btn-green']) ?>
             </div>
         </div>
     </div>

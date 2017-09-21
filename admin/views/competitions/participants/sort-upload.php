@@ -31,5 +31,5 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?= Html::label('Файл', 'file') ?>
 	<?= Html::fileInput('file') ?> <br/>
 </div>
-<?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary']) ?>
+<?= Html::submitButton('Загрузить', ['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
 <?= Html::endForm(); ?>

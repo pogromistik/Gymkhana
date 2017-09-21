@@ -557,9 +557,18 @@ a.red-button {
     height: 412px;
 }
 
+@media (max-width: 991px) {
+    .with-border-bottom-sm {
+        border-bottom: 3px solid #00aa00;
+    }
+}
+
 @media (max-width: 530px) {
     .champ-description {
         height: auto;
+    }
+    .with-border-bottom-sm {
+        border-bottom: 3px solid #00aa00;
     }
 }
 
@@ -749,6 +758,18 @@ a.red-button {
     color: #fff;
 }
 
+.btn-light-gray {
+    background: #b0b1b7;
+    background: linear-gradient(to top, #76787d, #b0b1b7);
+    color: #fff;
+    border: 1px solid #6e6f71;
+}
+
+.btn-light-gray:hover {
+    background: #c1c1c3;
+    color: #fff;
+}
+
 .btn-boggy {
     background: #919100;
     background: linear-gradient(to top, #727200, #919100);
@@ -784,5 +805,3 @@ a.red-button {
     background: #f7c96d;
     color: #fff;
 }
-
-.btn-

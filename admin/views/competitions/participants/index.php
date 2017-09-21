@@ -25,7 +25,8 @@ $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competit
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<a href="#" class="freeNumbersList btn btn-info" data-id="<?= $stage->id ?>">Посмотреть список свободных номеров</a>
+<a href="#" class="freeNumbersList btn btn-my-style btn-light-gray" data-id="<?= $stage->id ?>">
+    Посмотреть список свободных номеров</a>
 <div class="free-numbers" style="display: none">
     <hr>
     <div class="list"></div>
@@ -41,7 +42,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	->andWhere(['championshipId' => $stage->championshipId])->one()
 ) { ?>
     <div>
-        <a href="#" class="btn btn-warning" id="prepareParticipantsForImport" data-stage-id="<?= $stage->id ?>">
+        <a href="#" class="btn btn-my-style btn-orange" id="prepareParticipantsForImport"
+           data-stage-id="<?= $stage->id ?>">
             Импортировать участников с предыдущих этапов</a>
         <div class="modalList"></div>
     </div>
@@ -80,9 +82,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php if ($stage->status != \common\models\Stage::STATUS_PAST && $stage->status != \common\models\Stage::STATUS_CALCULATE_RESULTS) { ?>
     <div>
 		<?= Html::a('Изменить порядок выступления спортсменов', ['/competitions/participants/sort', 'stageId' => $stage->id],
-			['class' => 'btn btn-info']) ?>
+			['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
 		<?= Html::a('Загрузить порядок выступления', ['/competitions/participants/sort-upload', 'stageId' => $stage->id],
-			['class' => 'btn btn-info']) ?>
+			['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
     </div>
 <?php } ?>
 
@@ -139,7 +141,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							['/competitions/athlete/view', 'id' => $item->athleteId]) . '<br>' . $item->motorcycle->getFullTitle();
 					if (!$item->bestTime && $item->stage->status != \common\models\Stage::STATUS_PAST) {
 						$html .= '<div class="small">
-<a href="#" class="deleteParticipant red-button" data-id="' . $item->id . '" data-name="' . $athlete->getFullName() . ', ' . $athlete->city->title . '">
+<a href="#" class="deleteParticipant btn-my-style red-button" data-id="' . $item->id . '" data-name="' . $athlete->getFullName() . ', ' . $athlete->city->title . '">
 Полностью удалить заявку
 </a></div>';
 					}
@@ -232,45 +234,45 @@ $this->params['breadcrumbs'][] = $this->title;
 				'filter'  => false,
 				'value'   => function (\common\models\Participant $item) {
 					if ($item->status == \common\models\Participant::STATUS_ACTIVE) {
-						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-								'class'       => 'btn btn-danger changeParticipantStatus',
+						return '<div>' . Html::a('Отклонить', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-my-style btn-red small changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
 								'title'       => 'Отменить заявку',
 								'data-id'     => $item->id
-							]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
-								'class'       => 'btn btn-info changeParticipantStatus',
+							]) . '</div><div>' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-my-style btn-peach small changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
 								'data-id'     => $item->id,
 								'title'       => 'Допустить до участия вне зачёта'
 							]) . '</div>';
 					} elseif ($item->status !== \common\models\Participant::STATUS_NEED_CLARIFICATION && $item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
-						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
-								'class'       => 'btn btn-success changeParticipantStatus',
+						return '<div>' . Html::a('&nbsp;&nbsp;Вернуть&nbsp;&nbsp;', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-my-style btn-boggy small changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_ACTIVE,
 								'data-id'     => $item->id,
 								'title'       => 'Возобновить заявку'
-							]) . '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
-								'class'       => 'btn btn-info changeParticipantStatus',
+							]) . '</div><div>' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-my-style btn-peach small changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
 								'data-id'     => $item->id,
 								'title'       => 'Допустить до участия вне зачёта'
 							]) . '</div>';
 					}
 					
-					$html = Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-							'class'       => 'btn btn-danger changeParticipantStatus',
+					$html = '<div>' . Html::a('Отклонить', ['change-status', 'id' => $item->id], [
+							'class'       => 'btn btn-my-style btn-red small changeParticipantStatus',
 							'data-status' => \common\models\Participant::STATUS_CANCEL_ADMINISTRATION,
 							'title'       => 'Отменить заявку',
 							'data-id'     => $item->id
-						]) . ' ' . Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
-							'class'       => 'btn btn-success changeParticipantStatus',
+						]) . '</div><div>' . Html::a('&nbsp;&nbsp;&nbsp;В зачёт&nbsp;&nbsp;&nbsp;', ['change-status', 'id' => $item->id], [
+							'class'       => 'btn btn-my-style btn-boggy small changeParticipantStatus',
 							'data-status' => \common\models\Participant::STATUS_ACTIVE,
 							'data-id'     => $item->id,
 							'title'       => 'Подтвердить заявку'
-						]);
+						]) . '</div>';
 					if ($item->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
-						$html .= '<div class="pt-5">' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
-								'class'       => 'btn btn-info changeParticipantStatus',
+						$html .= '<div>' . Html::a('Вне зачёта', ['change-status', 'id' => $item->id], [
+								'class'       => 'btn btn-my-style btn-peach small changeParticipantStatus',
 								'data-status' => \common\models\Participant::STATUS_OUT_COMPETITION,
 								'data-id'     => $item->id,
 								'title'       => 'Допустить до участия вне зачёта'

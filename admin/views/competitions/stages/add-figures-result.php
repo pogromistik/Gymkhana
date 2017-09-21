@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="col-sm-1"><?= $form->field($figureTime, 'fine')->textInput()->label(false) ?></div>
     <div class="col-sm-1">
-        <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
+        <button type="submit" class="btn btn-my-style btn-green btn-circle fa fa-save" title="Сохранить"></button>
     </div>
 </div>
 

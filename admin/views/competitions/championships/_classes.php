@@ -24,7 +24,7 @@ $newClass->championshipId = $model->id;
     </div>
     <div class="col-md-2 col-sm-12">
         <div class="form-group">
-			<?= Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>
+			<?= Html::submitButton('Добавить', ['class' => 'btn btn-my-style btn-green']) ?>
         </div>
     </div>
 </div>
@@ -74,15 +74,15 @@ $newClass->championshipId = $model->id;
 						<?php
 						if ($class->status) {
 							echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
-								'class'       => 'btn btn-danger change-status',
+								'class'       => 'btn btn-my-style btn-red change-status',
 								'data-action' => '/competitions/championships/change-class-status',
 								'data-id'     => $class->id,
 								'data-status' => \common\models\InternalClass::STATUS_INACTIVE,
 								'title'       => 'Удалить',
 							]);
 						} else {
-							echo Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $class->id], [
-								'class'       => 'btn btn-success change-status',
+							echo Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $class->id], [
+								'class'       => 'btn btn-my-style btn-boggy change-status',
 								'title'       => 'Вернуть',
 								'data-action' => '/competitions/championships/change-class-status',
 								'data-id'     => $class->id,

@@ -193,6 +193,11 @@ $(document).on("submit", '.raceTimeForm', function (e) {
                 clickCount = 0;
                 if (result['success'] == true) {
                     form.find('.row').addClass('result-line');
+                    var btn = form.find('.btn');
+                    if (btn.hasClass('btn-green')) {
+                        btn.removeClass('btn-green');
+                        btn.addClass('btn-blue');
+                    }
                     form.find('.timeId').val(result['id']);
                     var next = form.next();
                     next.find('input[name="Time[timeForHuman]"]').focus();

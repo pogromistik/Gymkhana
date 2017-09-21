@@ -91,7 +91,8 @@ $attempt = 0;
             <div class="col-sm-1"><?= $form->field($timeModel, 'fine')->textInput()->label(false) ?></div>
             <div class="col-sm-1"><?= $form->field($timeModel, 'isFail')->checkbox(['id' => 'isFail-'.$timeModel->id.'-'.$timeModel->participantId.'-'.$attempt]) ?></div>
             <div class="col-sm-1">
-                <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
+                <button type="submit" class="btn btn-my-style <?= $timeModel->isNewRecord ?
+                    'btn-green' : 'btn-blue' ?> btn-circle fa fa-save" title="Сохранить"></button>
             </div>
         </div>
 		<?php $form->end(); ?>
