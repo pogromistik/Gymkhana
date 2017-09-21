@@ -38,6 +38,17 @@ $this->params['breadcrumbs'][] = 'Редактирование';
     </div>
 	
 	<?php if (\Yii::$app->user->can('developer')) { ?>
+        <div class="pt-10">
+            <div class="alert alert-info">
+                <div class="text-right">
+                    <span class="fa fa-remove closeHintBtn"></span>
+                </div>
+                Пароль должен содержать как минимум 6 символов. Желательно, чтобы он не был слишком простым.
+                Можно воспользоваться онлайн генератором, к примеру
+                <a href="http://www.onlinepasswordgenerator.ru/" target="_blank">www.onlinepasswordgenerator.ru</a>
+            </div>
+        </div>
+        
         <div class="with-bottom-border pb-20">
             <h3>Изменение пароля</h3>
 			<?php $form = \yii\bootstrap\ActiveForm::begin() ?>
@@ -50,6 +61,19 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	<?php } ?>
 
     <h3>Мотоциклы</h3>
+    <div class="pt-10">
+        <div class="alert alert-info">
+            <div class="text-right">
+                <span class="fa fa-remove closeHintBtn"></span>
+            </div>
+            Постарайтесь не перепутать марку и модель :)<br>
+            Параметры для уже созданных мотоциклов можно редактировать - для этого необходимо нажать на нужное поле.
+            Если ничего не происходит - значит, у вас недостаточно прав для совершения этого действия. Для решения проблемы вы можете обратиться
+            к организатору своего региона или напрямую к <a href="https://vk.com/id19792817" target="_blank">разработчику</a>.<br>
+            Красная кнопка - "удаление" мотоцикла. Фактически, при этом он лишь блокируется и в любой момент его можно вернуть обратно
+            (кнопка удаления сменится на кнопку возврата).
+        </div>
+    </div>
     <div id="motorcycles">
 		<?= $this->render('_motorcycle-form', [
 			'motorcycle' => $motorcycle,
