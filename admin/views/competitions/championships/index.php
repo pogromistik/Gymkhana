@@ -48,23 +48,6 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				}
 			],
 			[
-				'attribute' => 'status',
-				'format'    => 'raw',
-				'filter'    => Html::activeDropDownList($searchModel, 'status', Championship::$statusesTitle,
-					['class' => 'form-control', 'prompt' => 'Выберите статус']),
-				'value'     => function (Championship $championship) {
-					return Championship::$statusesTitle[$championship->status];
-				}
-			],
-			[
-				'attribute' => 'groupId',
-				'format'    => 'raw',
-				'filter'    => false,
-				'value'     => function (Championship $championship) {
-					return Championship::$groupsTitle[$championship->groupId];
-				}
-			],
-			[
 				'format' => 'raw',
 				'label'  => 'Этапы',
 				'value'  => function (Championship $championship) use ($view) {
@@ -77,7 +60,12 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 							if ($stage->dateOfThe) {
 								$title .= ', ' . $stage->dateOfTheHuman;
 							}
-							$html .= '<li>' . Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]) . '</li>';
+							$html .= '<li>';
+							$html .= Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]);
+							$html .= ' ';
+							$html .= Html::a('<span class="fa fa-user btn btn-my-style btn-light-aquamarine small"></span>',
+                                ['/competitions/participants/index', 'stageId' => $stage->id]);
+							$html .= '</li>';
 						}
 						$html .= '</ul>';
 					}

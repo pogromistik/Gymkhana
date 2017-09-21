@@ -568,6 +568,11 @@ a.red-button {
     font-weight: bold;
 }
 
+.btn-my-style.small {
+    padding: 3px 6px;
+    font-size: 12px;
+}
+
 .btn-my-style:hover {
     font-weight: bold;
 }
