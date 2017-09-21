@@ -12,7 +12,7 @@ $this->title = 'Фигуры';
 <div class="figure-index">
 
     <p>
-		<?= Html::a('Добавить фигуру', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить фигуру', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,

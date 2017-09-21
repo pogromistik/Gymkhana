@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="col-sm-6 text-right download">
         <div class="btn-group">
-            <button type="button" class="btn btn-success dropdown-toggle"
+            <button type="button" class="btn btn-my-style btn-dirty-blue dropdown-toggle"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Скачать список участников
                 <span class="caret"></span>

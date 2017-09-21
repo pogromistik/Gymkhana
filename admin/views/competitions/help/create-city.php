@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-	<?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-default']) ?>
-	<?= Html::a('Добавить регион', ['create-region'], ['class' => 'btn btn-default']) ?>
+	<?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-my-style btn-default']) ?>
+	<?= Html::a('Добавить регион', ['create-region'], ['class' => 'btn btn-my-style btn-default']) ?>
 </p>
 
 <h3><?= $city->isNewRecord ? 'Добавить город' : 'Редактировать: ' . $city->title ?></h3>

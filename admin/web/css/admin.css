@@ -563,9 +563,25 @@ a.red-button {
     }
 }
 
+.panel-my-style {
+    box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
+    0 1px 1px rgba(0, 1, 6, .5),
+    0 0 1px 1px rgba(0, 1, 6, .2);
+}
+
+.panel-blue {
+    border-color: #3251b2;
+}
+
+.panel-blue > .panel-heading {
+    background: #4974c1;
+    background: linear-gradient(to top, #2d4c9c, #6c96e0);
+    color: #fff;
+}
+
 .btn-my-style {
     box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
-    0 3px 5px rgba(0, 1, 6, .5),
+    0 1px 1px rgba(0, 1, 6, .5),
     0 0 1px 1px rgba(0, 1, 6, .2);
     transition: background 0.5s ease;
     margin-bottom: 10px;
@@ -583,6 +599,10 @@ a.red-button {
 
 .btn-my-style:active, .btn-my-style:focus {
     color: #fff;
+}
+
+.btn-my-style.btn-default {
+    color: #8e8e8e;
 }
 
 .btn-green {
@@ -681,6 +701,18 @@ a.red-button {
     color: #fff;
 }
 
+.btn-dirty-blue {
+    background: #98d9f3;
+    background: linear-gradient(to top, #568090, #98d9f3);
+    color: #fff;
+    border: 1px solid #6199af;
+}
+
+.btn-dirty-blue:hover {
+    background: #b2e5f9;
+    color: #fff;
+}
+
 .btn-yellow {
     background: #fec556;
     background: linear-gradient(to top, #feb543, #fec556);
@@ -752,3 +784,5 @@ a.red-button {
     background: #f7c96d;
     color: #fff;
 }
+
+.btn-

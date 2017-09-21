@@ -44,7 +44,7 @@ $length = 255;
 	<?= $form->field($model, 'link')->textInput(['maxlength' => 255, 'placeholder' => 'ссылка на подробную информацию']) ?>
 
     <div class="form-group">
-		<?= Html::submitButton('Отправить', ['class' => 'btn btn-success']) ?>
+		<?= Html::submitButton('Отправить', ['class' => 'btn btn-my-style btn-green']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

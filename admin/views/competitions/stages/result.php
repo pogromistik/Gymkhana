@@ -21,10 +21,12 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 
 <div class="row pb-10">
     <div class="col-sm-6">
-		<?= \yii\helpers\Html::a('Скачать в xls', ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-success']) ?>
+		<?= \yii\helpers\Html::a('Скачать в xls',
+            ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-my-style btn-dirty-blue']) ?>
     </div>
     <div class="col-sm-6 text-right">
-		<?= \yii\helpers\Html::a('Добавить видео заездов', ['/competitions/stages/add-video', 'stageId' => $stage->id], ['class' => 'btn btn-warning']) ?>
+		<?= \yii\helpers\Html::a('Добавить видео заездов', ['/competitions/stages/add-video', 'stageId' => $stage->id],
+            ['class' => 'btn btn-my-style btn-peach']) ?>
     </div>
 </div>
 

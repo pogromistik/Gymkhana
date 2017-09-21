@@ -33,7 +33,8 @@ use common\models\Client;
 	
 	<div class="form-group">
 		<div class="col-lg-offset-3 col-lg-9">
-			<?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-block btn-success']) ?>
+			<?= Html::submitButton(Yii::t('user', 'Save'),
+                ['class' => $user->isNewRecord ? 'btn btn-block btn-my-style btn-green' : 'btn btn-block btn-my-style btn-blue']) ?>
 		</div>
 	</div>
 

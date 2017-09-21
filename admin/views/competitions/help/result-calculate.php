@@ -45,7 +45,7 @@ $this->title = 'Расчёт результата заезда спортсме�
         </div>
         <div class="col-sm-2">
             <label>&nbsp;</label><br>
-			<?= Html::submitButton('Результат заезда', ['class' => 'btn btn-primary']) ?>
+			<?= Html::submitButton('Результат заезда', ['class' => 'btn btn-my-style btn-aquamarine']) ?>
         </div>
     </div>
 <?php $form->end(); ?>

@@ -13,7 +13,7 @@ $this->title = 'Классы спортсменов';
 <div class="athletes-class-index">
 
     <p>
-		<?= Html::a('Добавить класс', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить класс', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -116,16 +116,16 @@ $this->title = 'Классы спортсменов';
 					if ($class->status == \common\models\AthletesClass::STATUS_ACTIVE) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status',
 							'id' => $class->id, 'status' => \common\models\AthletesClass::STATUS_INACTIVE], [
-							'class'       => 'btn btn-danger change-status',
+							'class'       => 'btn btn-my-style btn-red change-status',
 							'title'       => 'Заблокировать класс',
 							'data-id'     => $class->id,
 							'data-action' => '/competitions/classes/change-status',
 							'data-status' => \common\models\AthletesClass::STATUS_INACTIVE
 						]);
 					} else {
-						return Html::a('<span class="fa fa-remove"></span>', ['change-status',
+						return Html::a('<span class="fa fa-check"></span>', ['change-status',
 							'id' => $class->id, 'status' => \common\models\AthletesClass::STATUS_ACTIVE], [
-							'class'       => 'btn btn-success change-status',
+							'class'       => 'btn btn-my-style btn-boggy change-status',
 							'title'       => 'Разблокировать класс',
 							'data-id'     => $class->id,
 							'data-action' => '/competitions/classes/change-status',

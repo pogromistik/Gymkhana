@@ -50,7 +50,7 @@ use yii\widgets\MaskedInput;
             <div class="col-md-2 col-sm-4 img-in-profile">
 				<?= Html::img(\Yii::getAlias('@filesView') . '/' . $model->picture) ?>
                 <br>
-                <a href="#" class="btn btn-warning btn-block deletePhoto" data-id="<?= $model->id ?>"
+                <a href="#" class="btn btn-my-style btn-red btn-block deletePhoto" data-id="<?= $model->id ?>"
                    data-model="<?= \admin\controllers\competitions\HelpController::PHOTO_FIGURE ?>">удалить</a>
                 <br>
             </div>
