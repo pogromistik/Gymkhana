@@ -565,6 +565,7 @@ a.red-button {
     0 0 1px 1px rgba(0, 1, 6, .2);
     transition: background 0.5s ease;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .btn-my-style:hover {
@@ -584,6 +585,18 @@ a.red-button {
 
 .btn-green:hover {
     background: #8cc74c;
+    color: #fff;
+}
+
+.btn-light-green {
+    background: #81ec60;
+    background: linear-gradient(to top, #5bb355, #81ec60);
+    color: #fff;
+    border: 1px solid #65bb37;
+}
+
+.btn-light-green:hover {
+    background: #79ec65;
     color: #fff;
 }
 

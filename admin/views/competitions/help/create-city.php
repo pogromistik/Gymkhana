@@ -71,7 +71,8 @@ if ($city->countryId) {
     <div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
-<?= Html::submitButton($city->isNewRecord ? 'Добавить город' : 'Сохранить', ['class' => 'btn btn-primary']) ?>
+<?= Html::submitButton($city->isNewRecord ? 'Добавить город' : 'Сохранить',
+    ['class' => $city->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
 <?php ActiveForm::end() ?>
 
 

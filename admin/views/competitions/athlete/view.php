@@ -26,14 +26,14 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 
     <p>
 		<?php if (\common\helpers\UserHelper::accessAverage($model->regionId, $model->creatorUserId)) { ?>
-			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-my-style btn-blue']) ?>
 		<?php } ?>
 		<?php if (!$model->hasAccount) { ?>
 			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
 				['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
 		<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
 			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
-				['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
+				['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
 		<?php } ?>
     </p>
 	

@@ -178,7 +178,8 @@ use dosamigos\ckeditor\CKEditor;
 	
 	<?= $form->field($model, 'status')->dropDownList(\common\models\Stage::$statusesTitle) ?>
     <div class="form-group">
-		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
+            ['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

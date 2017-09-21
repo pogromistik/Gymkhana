@@ -29,10 +29,10 @@ $stages = $model->stages;
     <?php } ?>
     
     <div class="pb-20"><?=  Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $model->id], [
-		    'class' => 'btn btn-success'
+		    'class' => 'btn btn-my-style btn-light-green'
 	    ]); ?>
 	    <?=  Html::a('Результаты', ['/competitions/championships/results', 'championshipId' => $model->id], [
-		    'class' => 'btn btn-default'
+		    'class' => 'btn btn-my-style btn-lilac'
 	    ]); ?>
     </div>
     

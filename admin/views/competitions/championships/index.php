@@ -20,7 +20,8 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 <div class="championship-index">
 	<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
         <p>
-			<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId], ['class' => 'btn btn-success']) ?>
+			<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId],
+                ['class' => 'btn btn-my-style btn-green']) ?>
         </p>
 	<?php } ?>
 	<?= GridView::widget([
@@ -89,7 +90,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'visible' => \Yii::$app->user->can('projectAdmin'),
 				'value'   => function (Championship $championship) {
 					return Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $championship->id], [
-						'class' => 'btn btn-default'
+						'class' => 'btn btn-my-style btn-light-green'
 					]);
 				}
 			],
@@ -97,7 +98,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'format' => 'raw',
 				'value'  => function (Championship $championship) {
 					return Html::a('<span class="fa fa-eye"></span>', ['view', 'id' => $championship->id], [
-						'class' => 'btn btn-info',
+						'class' => 'btn btn-my-style btn-light-blue',
 						'title' => 'Просмотр'
 					]);
 				}
@@ -107,7 +108,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'visible' => \Yii::$app->user->can('projectAdmin'),
 				'value'   => function (Championship $championship) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $championship->id], [
-						'class' => 'btn btn-primary',
+						'class' => 'btn btn-my-style btn-blue',
 						'title' => 'Редактирование'
 					]);
 				}

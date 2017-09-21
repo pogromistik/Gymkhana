@@ -21,13 +21,14 @@ $stages = $model->stages;
     
     <p>
 		<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id],
+                ['class' => 'btn btn-my-style btn-blue']) ?>
 			<?= Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $model->id], [
-				'class' => 'btn btn-success'
+				'class' => 'btn btn-my-style btn-light-green'
 			]); ?>
 		<?php } ?>
 		<?= Html::a('Результаты', ['/competitions/championships/results', 'championshipId' => $model->id], [
-			'class' => 'btn btn-default'
+			'class' => 'btn btn-my-style btn-lilac'
 		]); ?>
     </p>
 	
