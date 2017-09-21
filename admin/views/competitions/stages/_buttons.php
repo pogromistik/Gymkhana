@@ -12,7 +12,8 @@ use yii\helpers\Html;
     <div class="col-md-6">
         <h3>Подготовка к этапу</h3>
 		
-		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id], ['class' => 'btn btn-my-style btn-green']) ?>
+		<?= Html::a('Участники', ['/competitions/participants/index', 'stageId' => $model->id],
+            ['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
 		<?php if ($model->status != Stage::STATUS_CALCULATE_RESULTS && $model->status != Stage::STATUS_PAST) { ?>
 			<?= Html::a('Добавить время по фигурам',
 				['/competitions/stages/add-figures-results', 'stageId' => $model->id], ['class' => 'btn btn-my-style btn-light-blue']) ?>
