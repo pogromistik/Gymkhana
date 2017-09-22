@@ -154,6 +154,9 @@ use yii\helpers\Url;
                     </ul>
                 </li>
 			<?php } ?>
+            <li>
+                <a href="<?= Url::to(['/competitions/additional/mails']) ?>"> Текста писем</a>
+            </li>
         </ul>
     </li>
 <?php } ?>

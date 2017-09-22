@@ -835,3 +835,13 @@ a.red-button {
     max-width: 50%;
     margin: 0 auto;
 }
+
+.mail-text small {
+    color: #757575;
+    background: #e2e2e2;
+    font-weight: bold;
+}
+
+.mail-text hr {
+    margin: 0;
+}

@@ -419,6 +419,14 @@ class AdditionalController extends BaseController
 			$user->showHint = 0;
 			$user->save();
 		}
+		
 		return true;
+	}
+	
+	public function actionMails()
+	{
+		$this->can('competitions');
+		
+		return $this->render('mails');
 	}
 }
