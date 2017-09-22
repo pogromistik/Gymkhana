@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 	
 	<?php if (\Yii::$app->user->can('developer')) { ?>
         <div class="pt-10">
-            <div class="alert alert-info">
+            <div class="alert help-alert alert-info">
                 <div class="text-right">
                     <span class="fa fa-remove closeHintBtn"></span>
                 </div>
@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 
     <h3>Мотоциклы</h3>
     <div class="pt-10">
-        <div class="alert alert-info">
+        <div class="alert help-alert alert-info">
             <div class="text-right">
                 <span class="fa fa-remove closeHintBtn"></span>
             </div>

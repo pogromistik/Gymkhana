@@ -48,7 +48,7 @@ class BaseController extends Controller
 			$user->last_login_at = time();
 			$user->save();
 			if (!$user->showHint) {
-				echo '<style>.alert.alert-info {display:none}</style>';
+				echo '<style>.alert.help-alert {display:none}</style>';
 			}
 		}
 	}

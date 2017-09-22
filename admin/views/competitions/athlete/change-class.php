@@ -12,6 +12,16 @@ $this->title = 'Изменение класса спортсмену';
 $length = 255;
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    Убедительная посьба - не понижайте класс спортсмену без объективной причины. "Я так хочу, что мне делать в C3" - не
+    повод для смены класса. И даже смена техники - не повод (ну разве что поменяли мотард\дорожник\спорт на круизёр). В
+    любом случае, предварительно вопрос о понижении класса должен обсуждаться с организатором и спортсменом, а в
+    идеальном мире - ещё и с Ассоциацией Мотоджимханы России.
+</div>
+
 <?php if ($success) { ?>
     <div class="alert alert-success">Класс успешно изменён</div>
 <?php } ?>
@@ -45,8 +55,8 @@ $length = 255;
 
 <?= $form->field($history, 'event',
 	['inputTemplate' => '<div class="input-with-description">{input}</div><div class="text-right color-green" id="length">осталось символов: ' . $length . '</div>'])->textarea(['rows'        => 3,
-                                               'placeholder' => 'Текст события, обязательное поле',
-                                               'id'          => 'smallText']) ?>
+                                                                                                                                                                                 'placeholder' => 'Текст события, обязательное поле',
+                                                                                                                                                                                 'id'          => 'smallText']) ?>
 
 <div class="alert alert-danger" style="display: none"></div>
 

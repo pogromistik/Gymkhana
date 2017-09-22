@@ -10,6 +10,18 @@ use yii\widgets\MaskedInput;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+        <li>Обязательные поля: "Название"</li>
+        <li>
+            Если фигура используется для рассчёта классов, обязательно укажите эталонное время.
+        </li>
+    </ul>
+</div>
+
 <div class="figure-form">
 	
 	<?php $form = ActiveForm::begin(); ?>

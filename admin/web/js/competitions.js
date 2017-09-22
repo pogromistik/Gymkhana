@@ -608,7 +608,7 @@ $('.getRequestWithConfirm').click(function (e) {
 $('.cancelFigureResult').click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $('#id').val(id);
     $('#cancelFigureResult').modal('show')
 });
@@ -1088,7 +1088,7 @@ $('.processClassRequest').click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
     var status = $(this).data('status');
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $('#id').val(id);
     $('#status').val(status);
     if (status == 1) {
@@ -1124,7 +1124,7 @@ $(document).on("submit", '#processClassRequestForm', function (e) {
 $(document).on("submit", '#sendMessagesForm', function (e) {
     e.preventDefault();
     var form = $(this);
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $.ajax({
         url: '/competitions/additional/send-message',
         type: "POST",

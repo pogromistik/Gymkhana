@@ -13,7 +13,7 @@ use yii\bootstrap\Html;
 $this->title = 'Расчёт эталонного времени трассы';
 ?>
 
-    <div class="alert alert-info">
+    <div class="alert help-alert alert-info">
         <div class="text-right">
             <span class="fa fa-remove closeHintBtn"></span>
         </div>

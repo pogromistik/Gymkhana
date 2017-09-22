@@ -12,7 +12,7 @@ use yii\bootstrap\Html;
 $this->title = 'Расчёт результата заезда спортсмена';
 ?>
 
-    <div class="alert alert-info">
+    <div class="alert help-alert alert-info">
         <div class="text-right">
             <span class="fa fa-remove closeHintBtn"></span>
         </div>

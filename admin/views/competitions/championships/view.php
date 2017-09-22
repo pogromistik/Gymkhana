@@ -107,12 +107,10 @@ $stages = $model->stages;
     </table>
 	
 	<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-		<?php if ($model->internalClasses) { ?>
-            <h3>Классы награждения</h3>
-			<?= $this->render('_classes', [
-				'model' => $model,
-			]) ?>
-		<?php } ?>
+        <h3>Классы награждения</h3>
+		<?= $this->render('_classes', [
+			'model' => $model,
+		]) ?>
 	<?php } else { ?>
 		<?php if ($model->activeInternalClasses) { ?>
             <h3>Классы награждения</h3>

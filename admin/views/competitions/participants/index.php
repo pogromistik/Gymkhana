@@ -23,6 +23,9 @@ $this->params['breadcrumbs'][] = ['label' => Championship::$groupsTitle[$champio
 $this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' => ['/competitions/championships/view', 'id' => $stage->championshipId]];
 $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/stages/view', 'id' => $stage->id]];
 $this->params['breadcrumbs'][] = $this->title;
+
+$prevStages = \common\models\Stage::find()->where(['<', 'dateOfThe', $stage->dateOfThe])
+	->andWhere(['championshipId' => $stage->championshipId])->one();
 ?>
 
 <a href="#" class="freeNumbersList btn btn-my-style btn-light-gray" data-id="<?= $stage->id ?>">
@@ -34,16 +37,36 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <h3>Зарегистрировать участника на этап</h3>
-<div class="alert alert-info">
+<div class="alert help-alert alert-info">
     <div class="text-right">
         <span class="fa fa-remove closeHintBtn"></span>
     </div>
-    Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
-    <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>
+    <ul>
+        <li>
+            Если участник ещё не зарегистрирован в системе - сперва необходимо создать его в разделе
+            <a href="/competitions/athlete/create" target="_blank">"спортсмены"</a>.
+        </li>
+        <li>
+            Поля "класс награждения", "номер спортсмена" и "порядок выступления" необязательны для заполнения.
+        </li>
+        <li>
+            Если вы попробуете зарегистрировать спортсмена, номер которого занят - регистрация не пройдёт, система
+            выдаст ошибку.
+        </li>
+		<?php if ($prevStages) { ?>
+            <li>
+                При импорте по умолчанию на этап будут зарегистрированы спортсмены, принявшие участие хотя бы в одном
+                этапе этого чемпионата, но при нажатии на кнопку импорта появится окно с предпросмотром, где можно сразу
+                убрать лишних участников. Или же вы можете в дальнейшем просто удалить созданные заявки.
+            </li>
+            <li>
+                Обратите внимание - классы награждения не импортируются, т.е. после импорта вам надо будет вручную
+                заново проставить всем участникам класс награждения.
+            </li>
+		<?php } ?>
+    </ul>
 </div>
-<?php if (\common\models\Stage::find()->where(['<', 'dateOfThe', $stage->dateOfThe])
-	->andWhere(['championshipId' => $stage->championshipId])->one()
-) { ?>
+<?php if ($prevStages) { ?>
     <div>
         <a href="#" class="btn btn-my-style btn-orange" id="prepareParticipantsForImport"
            data-stage-id="<?= $stage->id ?>">
@@ -88,6 +111,40 @@ $this->params['breadcrumbs'][] = $this->title;
 			['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
 		<?= Html::a('Загрузить порядок выступления', ['/competitions/participants/sort-upload', 'stageId' => $stage->id],
 			['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
+    </div>
+<?php } ?>
+
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+		<?php if ($stage->participantsLimit && $stage->participantsLimit > 0) { ?>
+            <li>
+                Т.к. у вас ограниченное количество участников, все заявки требуют предварительной модерации. Обратите
+                внимание - при отклонении заявки участнику будет отправлено письмо на почту, указанную при регистрации;
+                при подтверждении - уведомление в личный кабинет. Поэтому, пожалуйста, не нажимайте эти кнопки просто
+                так.
+            </li>
+            <li>
+                При необходимости вы можете зарегистрировать спортсменов больше, чем <?= $stage->participantsLimit ?>,
+                просто
+                система запросит подтверждение.
+            </li>
+		<?php } ?>
+        <li>
+            Все действия с кнопками "отклонить", "вернуть", "вне зачёта", "в зачёт" - обратимы.
+        </li>
+        <li>
+            Полностью удалённую заявку нельзя вернуть, но вы всегда можете вновь зарегистрировать нужного человека.
+        </li>
+    </ul>
+</div>
+
+<?php if ($championship->internalClasses) { ?>
+    <div class="alert required-alert-info">
+        <b>Внимание!</b> Не забывайте проставлять классы награждения спортсменам. Не забывайте отметить "Участник
+        приехал на этап".
     </div>
 <?php } ?>
 

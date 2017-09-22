@@ -10,7 +10,7 @@ use yii\grid\GridView;
 $this->title = 'Обратная связь';
 ?>
 
-<div class="alert alert-info">
+<div class="alert help-alert alert-info">
     <div class="text-right">
         <span class="fa fa-remove closeHintBtn"></span>
     </div>
