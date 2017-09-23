@@ -438,8 +438,10 @@ class ProfileController extends AccessController
 			|| $participant->status == Participant::STATUS_OUT_COMPETITION
 		) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
-		} else {
+		} elseif ($stage->participantsLimit && $stage->participantsLimit > 0) {
 			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
+		} else {
+			$participant->status = Participant::STATUS_ACTIVE;
 		}
 		
 		if (!$participant->save()) {
