@@ -29,7 +29,7 @@ use yii\widgets\MaskedInput;
 	<?= $form->field($model, 'newClassId')->dropDownList(ArrayHelper::map($classes, 'id', 'title')) ?>
 	
 	<?= $form->field($model, 'comment')->textarea(['rows' => 3, 'placeholder' =>
-        \Yii::t('app', 'Укажите всю необходимую информацию. Например, добавите ссылку на результаты чемпионата и описание класса соревнований')]) ?>
+        \Yii::t('app', 'Укажите всю необходимую информацию. Например, добавьте ссылку на результаты чемпионата и описание класса соревнований')]) ?>
 
     <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
