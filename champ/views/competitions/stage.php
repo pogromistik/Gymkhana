@@ -88,7 +88,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 					<?= Html::a(\Yii::t('app', 'Подробнее о чемпионате'), ['/competitions/championship', 'id' => $championship->id]) ?>
                 </div>
 				
-				<?php if ($stage->referenceTime) { ?>
+				<?php if ($stage->referenceTime && $stage->class && $stage->classModel->title != Stage::CLASS_UNPERCENT) { ?>
                     <div>
                         <?= \Yii::t('app', 'Эталонное время трассы: {time}', ['time' => $stage->referenceTimeHuman]) ?>
                         <br>
@@ -150,7 +150,13 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php } ?>
 				<?php if ($stage->class) { ?>
                     <div>
-                        <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
+						<?php $stageClassTitle = $stage->classModel->title; ?>
+                        Класс соревнования: <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
+	                    <?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
+                            <div><b>Т.к. класс соревнования <?= $stageClassTitle ?>, рейтинг спортсменов
+                                     и эталонное время трассы не
+                                    рассчитывается</b></div>
+						<?php } ?>
                     </div>
 				<?php } ?>
 				
