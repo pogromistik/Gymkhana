@@ -123,6 +123,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public static function findByLogin($login)
 	{
+		$login = trim($login);
 		$notEmail = preg_replace('~\D+~', '', $login);
 		if ($notEmail === $login) {
 			$athlete = static::findOne(['login' => $login, 'status' => self::STATUS_ACTIVE]);
@@ -300,7 +301,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
 				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
-				if ($history && (mb_strlen($history->event) <= (252 - mb_strlen($text)))) {
+				if ($history && (mb_strlen($history->event, 'UTF-8') <= (252 - mb_strlen($text, 'UTF-8')))) {
 					$text .= ' (' . $history->event . ')';
 				}
 				Notice::add($this->id, $text);

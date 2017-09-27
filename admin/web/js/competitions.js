@@ -222,7 +222,7 @@ $('.saveAllStageResult').click(function (e) {
 
 function AddAllResults(form) {
     $.ajax({
-        url: '/competitions/participants/add-time',
+        url: '/competitions/participants/add-time?checkTime=0',
         type: "POST",
         data: form.serialize(),
         success: function (result) {
@@ -1204,6 +1204,51 @@ $('.deleteParticipant').click(function (e) {
                     });
                 }
             }
+        }
+    });
+});
+
+$('#prepareParticipantsForImport').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var stageId = elem.data('stage-id');
+    $.get('/competitions/participants/prepare-list-for-import', {
+        stageId: stageId
+    }).done(function (data) {
+        hideBackDrop();
+        $('.modalList').html(data);
+        $('#participantsList').modal('show')
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$(document).on("submit", '#importParticipants', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var btn = form.find('button');
+    var wait = form.find('.wait');
+    btn.hide();
+    wait.show();
+    $.ajax({
+        url: "/competitions/participants/import-for-stage",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(result);
+                wait.hide();
+                btn.show();
+            }
+        },
+        error: function (result) {
+            alert(result);
+            wait.hide();
+            btn.show();
         }
     });
 });

@@ -32,16 +32,20 @@ class TranslateMessagesController extends BaseController
 		]);
 	}
 	
-	public function actionTranslate()
+	public function actionTranslate($letter = null)
 	{
 		$this->can('translate');
 		$searchModel = new TranslateMessageSourceSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['status' => TranslateMessageSource::STATUS_ACTIVE]);
+		if ($letter) {
+			$dataProvider->query->andWhere(['like', 'upper("message")', $letter.'%', false]);
+		}
 		
 		return $this->render('translate', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
+			'letter'       => $letter
 		]);
 	}
 	
@@ -135,6 +139,14 @@ class TranslateMessagesController extends BaseController
 		} else {
 			return var_dump($message->errors);
 		}
+	}
+	
+	public function actionDelete($id)
+	{
+		$this->can('developer');
+		$message = $this->findModel($id);
+		$message->delete();
+		return true;
 	}
 	
 	/**

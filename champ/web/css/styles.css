@@ -443,6 +443,15 @@ span.red {
     font-size: 10px;
 }
 
+span.remove {
+    color: #dc0004;
+}
+
+.wait {
+    color: #56a025;
+    font-size: 18px;
+}
+
 span.green, td.green {
     color: #56a025;
 }
@@ -731,6 +740,10 @@ a.deletePhoto {
 .list-nav ul li {
     list-style: none;
     text-transform: uppercase;
+}
+
+.list-nav ul li:nth-child(2n) a {
+    color: #6d6f73;
 }
 
 .registration-city {

@@ -171,6 +171,12 @@ img {
     font-weight: bold;
 }
 
+.navbar-default.sidebar ul li.translate-bg > a {
+    color: #fff676;
+    background: #464644;
+    font-weight: bold;
+}
+
 .none-block {
     display: none;
 }
@@ -529,4 +535,13 @@ a.red-button {
 
 .pb-1 {
     padding-bottom: 1px;
+}
+
+#importParticipants label {
+    font-weight: normal;
+    display: block;
+}
+
+.tr-success {
+    border: 2px solid #5cb85c!important;
 }

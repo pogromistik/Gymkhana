@@ -51,7 +51,7 @@ class ClassesRequestController extends BaseController
 	    if (!$status) {
 	    	return 'Внутренняя ошибка. Свяжитесь с разработчиком';
 	    }
-	    if (mb_strlen($text) > 255) {
+	    if (mb_strlen($text, 'UTF-8') > 255) {
 		    return 'Текст должен содержать не более 255 символов';
 	    }
 	    $request = ClassesRequest::findOne($id);

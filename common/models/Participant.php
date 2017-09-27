@@ -340,6 +340,15 @@ class Participant extends BaseActiveRecord
 		return $this->hasMany(Time::className(), ['participantId' => 'id'])->addOrderBy(['attemptNumber' => SORT_ASC]);
 	}
 	
+	/**
+	 * @return array|null|Time
+	 */
+	public function getBestTimeItem()
+	{
+		return Time::find()->where(['participantId' => $this->id])->andWhere(['not', ['resultTime' => null]])
+			->orderBy(['resultTime' => SORT_ASC])->one();
+	}
+	
 	public function getStage()
 	{
 		return $this->hasOne(Stage::className(), ['id' => 'stageId']);

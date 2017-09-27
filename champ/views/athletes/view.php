@@ -7,6 +7,7 @@ use yii\bootstrap\Html;
  * @var \common\models\FigureTime     $result
  * @var \common\models\Figure         $figure
  * @var \common\models\ClassHistory[] $history
+ * @var \common\models\Participant[]  $participants
  */
 ?>
 
@@ -44,7 +45,8 @@ use yii\bootstrap\Html;
     <div class="figures pt-10">
         <h4>
             Результаты базовых фигур<br>
-            <small>представлены только лучшие результаты</small><br>
+            <small>представлены только лучшие результаты</small>
+            <br>
             <span class="small">
                 <small>для просмотра прогресса по фигуре нажмите на время</small>
             </span>
@@ -63,8 +65,8 @@ use yii\bootstrap\Html;
                         <td><?= Html::a($figure->title, ['/competitions/figure', 'id' => $figure->id], ['target' => '_blank']) ?></td>
                         <td class="show-pk"><?= $result->motorcycle->getFullTitle() ?></td>
                         <td>
-	                        <?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
-		                        'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
+							<?= \yii\helpers\Html::a($result->resultTimeForHuman, ['/competitions/progress',
+								'figureId' => $figure->id, 'athleteId' => $athlete->id]) ?>
 							<?php if ($result->fine) { ?>
                                 <small> (<?= $result->timeForHuman ?> +<?= $result->fine ?>)</small>
 							<?php } ?>
@@ -74,41 +76,110 @@ use yii\bootstrap\Html;
 									'alt'   => \common\models\FigureTime::$recordsTitle[$result->recordType] . '!'
 								]) ?>
 							<?php } ?>
-							<div class="show-mobile">
-							<small><?= $result->motorcycle->getFullTitle() ?></small>
-							</div>
+                            <div class="show-mobile">
+                                <small><?= $result->motorcycle->getFullTitle() ?></small>
+                            </div>
                         </td>
-                        <td><?= $result->percent ?>%</td>
+                        <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%
+	                        <?php if ($result->videoLink) { ?>
+                                <a href="<?= $result->videoLink ?>" target="_blank">
+                                    <i class="fa fa-youtube"></i>
+                                </a>
+	                        <?php } ?>
+                        </td>
                     </tr>
 				<?php } ?>
             </table>
 		<?php } ?>
     </div>
 	
-	<?php if ($history) { ?>
-        <div class="history pt-10">
-            <h4>
-                История переходов между классами<br>
-                <small>показано не более 15 последних записей</small>
-            </h4>
-            <table class="table">
+	<?php if ($participants) { ?>
+    <div class="history pt-10">
+        <h4>
+            Участие в этапах<br>
+            <small>показано не более 30 последних записей</small>
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
                 <tr>
-                    <th>Дата</th>
-                    <th>Старый класс</th>
-                    <th>Новый класс</th>
-                    <th>Событие</th>
+                    <th>Этап</th>
+                    <th>Мотоцикл</th>
+                    <th>Рейтинг</th>
+                    <th>Место в абсолюте</th>
                 </tr>
-				<?php foreach ($history as $item) { ?>
+				<?php foreach ($participants as $participant) { ?>
                     <tr>
-                        <td><?= $item->dateForHuman ?></td>
-                        <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
-                        <td><?= $item->newClass->title ?></td>
-                        <td><?= $item->event ?></td>
+                        <td>
+							<?php $stage = $participant->stage; ?>
+							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman . ', ' . $stage->city->title : $stage->city->title ?></small>
+                        </td>
+                        <td><?= $participant->motorcycle->getFullTitle() ?></td>
+                        <td>
+	                        <?php if ($participant->percent) {
+		                        echo $participant->percent . '%';
+		                        $bestTime = $participant->getBestTimeItem();
+		                        if ($bestTime && $bestTime->videoLink) { ?>
+                                    <a href="<?= $bestTime->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+		                        <?php }
+	                        } else {
+		                        if ($stage->referenceTime) {
+			                        ?>
+                                    <span class="fa fa-remove remove"></span>
+			                        <?php
+		                        } else {
+		                            ?>
+                                    <span class="green wait">...</span>
+                            <?php
+                                }
+	                        } ?>
+                        <td>
+							<?php if ($participant->place) {
+								echo $participant->place;
+							} else {
+								if ($stage->referenceTime) {
+									?>
+                                    <span class="fa fa-remove remove"></span>
+									<?php
+								} else {
+									?>
+                                    <span class="green wait">...</span>
+									<?php
+								}
+							} ?>
+                        </td>
                     </tr>
 				<?php } ?>
             </table>
         </div>
-	<?php } ?>
-</div>
+		<?php } ?>
+		
+		<?php if ($history) { ?>
+            <div class="history pt-10">
+                <h4>
+                    История переходов между классами<br>
+                    <small>показано не более 15 последних записей</small>
+                </h4>
+                <table class="table">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Старый класс</th>
+                        <th>Новый класс</th>
+                        <th>Событие</th>
+                    </tr>
+					<?php foreach ($history as $item) { ?>
+                        <tr>
+                            <td><?= $item->dateForHuman ?></td>
+                            <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
+                            <td><?= $item->newClass->title ?></td>
+                            <td><?= $item->event ?></td>
+                        </tr>
+					<?php } ?>
+                </table>
+            </div>
+		<?php } ?>
+    </div>
 
-<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"> Вернуться к спортсменам </a>
+    <a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"> Вернуться к спортсменам </a>

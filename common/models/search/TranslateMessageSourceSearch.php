@@ -51,6 +51,7 @@ class TranslateMessageSourceSearch extends TranslateMessageSource
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => ['defaultOrder' => ['message' => SORT_ASC]]
 		]);
 		
 		$this->load($params);

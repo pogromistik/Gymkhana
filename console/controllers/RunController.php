@@ -25,6 +25,8 @@ use common\models\Time;
 use common\models\TmpAthlete;
 use common\models\TmpFigureResult;
 use common\models\TmpParticipant;
+use common\models\TranslateMessage;
+use common\models\TranslateMessageSource;
 use common\models\Year;
 use yii\console\Controller;
 use yii\db\Expression;
@@ -804,7 +806,8 @@ class RunController extends Controller
 			$championships = Championship::findAll(['status' => Championship::STATUS_PAST, 'yearId' => $year->id]);
 			foreach ($championships as $championship) {
 				if (Stage::find()->where(['championshipId' => $championship->id])
-					->andWhere(['>=', 'dateOfThe', $time])->one()) {
+					->andWhere(['>=', 'dateOfThe', $time])->one()
+				) {
 					$championship->status = Championship::STATUS_PRESENT;
 					$championship->save();
 					$count++;
@@ -1382,7 +1385,7 @@ class RunController extends Controller
 				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
 			foreach ($figureTimes as $item) {
 				if (Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
-				                                 'stageId'   => $stage->id])->one()
+				                                'stageId'   => $stage->id])->one()
 				) {
 					$item->stageId = $stage->id;
 					$item->save(false);
@@ -1392,6 +1395,35 @@ class RunController extends Controller
 			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
 		}
 		
+		return true;
+	}
+	
+	public function actionDownloadTranslate()
+	{
+		/** @var TranslateMessageSource[] $items */
+		$items = TranslateMessageSource::find()->all();
+		foreach ($items as $item) {
+			$message =  TranslateMessage::findOne(['id' => $item->id]);
+			$res = $item->message . ';';
+			if ($message && $message->translation) {
+				$res .= $message->translation;
+			}
+			$res .= PHP_EOL;
+			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
+		}
+		return true;
+	}
+	
+	public function actionUpdatePercent($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if ($stage->classModel->title != Stage::CLASS_UNPERCENT) {
+			echo 'Error class' . PHP_EOL;
+		}
+		foreach ($stage->participants as $participant) {
+			$participant->percent = null;
+			$participant->save(false);
+		}
 		return true;
 	}
 }

@@ -45,6 +45,8 @@ class Stage extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
 	
+	const CLASS_UNPERCENT = 'N';
+	
 	public $photoFile;
 	
 	public $dateOfTheHuman;
@@ -325,15 +327,17 @@ class Stage extends BaseActiveRecord
 		$transaction = \Yii::$app->db->beginTransaction();
 		/** @var Participant $best */
 		$best = $this->getActiveParticipants()->andWhere(['athleteClassId' => $this->class])->orderBy(['bestTime' => SORT_ASC])->one();
-		if (!$best) {
-			$transaction->rollBack();
-			
-			return 'Неправильно указан класс соревнований: нет ни одного результата в классе ' . $this->classModel->title;
-		}
-		if (!$best->bestTime || $best->bestTime == 0) {
-			$transaction->rollBack();
-			
-			return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
+		if ($this->classModel->percent != 1000) {
+			if (!$best) {
+				$transaction->rollBack();
+				
+				return 'Неправильно указан класс соревнований: нет ни одного результата в классе ' . $this->classModel->title;
+			}
+			if (!$best->bestTime || $best->bestTime == 0) {
+				$transaction->rollBack();
+				
+				return 'Нет ни одного результата времени в классе ' . $this->classModel->title;
+			}
 		}
 		$referenceTime = floor($best->bestTime / $best->athleteClass->coefficient);
 		$referenceTime = ((int)($referenceTime / 10)) * 10;;
@@ -394,7 +398,11 @@ class Stage extends BaseActiveRecord
 							->andWhere(['athleteClassId' => $participant->athleteClassId])
 							->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
 				}*/
-				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				if ($this->class && $this->classModel->title == self::CLASS_UNPERCENT) {
+					$participant->percent = null;
+				} else {
+					$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				}
 				
 				//баллы
 				if (isset($points[$participant->place]) && $participant->percent != 0) {
@@ -421,6 +429,16 @@ class Stage extends BaseActiveRecord
 					return $participant->athlete->getFullName() . var_dump($participant->errors);
 				}
 				$prevResult = $participant;
+			} elseif ($participant->percent) {
+				$participant->percent = null;
+				$participant->newAthleteClassId = null;
+				$participant->newAthleteClassStatus = null;
+				$participant->points = null;
+				if (!$participant->save()) {
+					$transaction->rollBack();
+					
+					return $participant->athlete->getFullName() . var_dump($participant->errors);
+				}
 			}
 		}
 		
