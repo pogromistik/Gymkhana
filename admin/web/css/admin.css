@@ -366,7 +366,7 @@ small.very {
     font-size: 8px;
 }
 
-.is-delivery-2 {
+.is-delivery-2, .green-grid-row {
     background: #dff0d8 !important;
 }
 
@@ -844,4 +844,10 @@ a.red-button {
 
 .mail-text hr {
     margin: 0;
+}
+
+.user-item-example {
+    display: inline-block;
+    background: #56a025;
+    padding-right: 5px;
 }

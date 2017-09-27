@@ -26,7 +26,7 @@ $this->title = 'Редактирование профиля';
 
 
     <h3>Изменение пароля</h3>
-    <div class="alert alert-info">
+    <div class="alert required-alert-info">
         Правила создания пароля:<br>
         1. Минимум 8 символов<br>
         2. Минимум 5 уникальных символов<br>

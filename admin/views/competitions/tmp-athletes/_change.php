@@ -42,7 +42,8 @@ use yii\bootstrap\Html;
                 <div class="pt-10">
                     <div class="alert alert-danger" style="display: none"></div>
                     <div class="button">
-						<?= Html::submitButton(\Yii::t('app', 'Добавить выбранные мотоциклы и создать кабинет'), ['class' => 'btn btn-primary btn-block']) ?>
+						<?= Html::submitButton(\Yii::t('app', 'Добавить выбранные мотоциклы и создать кабинет'),
+                            ['class' => 'btn btn-my-style btn-green btn-block']) ?>
                     </div>
                     <div class="wait-text"></div>
                 </div>
