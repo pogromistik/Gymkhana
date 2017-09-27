@@ -1413,4 +1413,17 @@ class RunController extends Controller
 		}
 		return true;
 	}
+	
+	public function actionUpdatePercent($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if ($stage->classModel->title != Stage::CLASS_UNPERCENT) {
+			echo 'Error class' . PHP_EOL;
+		}
+		foreach ($stage->participants as $participant) {
+			$participant->percent = null;
+			$participant->save(false);
+		}
+		return true;
+	}
 }

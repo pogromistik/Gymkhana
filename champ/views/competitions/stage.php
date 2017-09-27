@@ -84,7 +84,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 					<?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
                 </div>
 				
-				<?php if ($stage->referenceTime) { ?>
+				<?php if ($stage->referenceTime && $stage->class && $stage->classModel->title != Stage::CLASS_UNPERCENT) { ?>
                     <div>
                         Эталонное время трассы: <?= $stage->referenceTimeHuman ?>
                         <br>
@@ -146,7 +146,13 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php } ?>
 				<?php if ($stage->class) { ?>
                     <div>
-                        Класс соревнования: <?= $stage->classModel->title ?>
+						<?php $stageClassTitle = $stage->classModel->title; ?>
+                        Класс соревнования: <?= $stageClassTitle ?>
+						<?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
+                            <div><b>Т.к. класс соревнования <?= $stageClassTitle ?>, рейтинг спортсменов
+                                     и эталонное время трассы не
+                                    рассчитывается</b></div>
+						<?php } ?>
                     </div>
 				<?php } ?>
 				

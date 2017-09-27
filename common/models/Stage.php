@@ -46,6 +46,8 @@ class Stage extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
 	
+	const CLASS_UNPERCENT = 'N';
+	
 	public $photoFile;
 	
 	public $dateOfTheHuman;
@@ -397,7 +399,11 @@ class Stage extends BaseActiveRecord
 							->andWhere(['athleteClassId' => $participant->athleteClassId])
 							->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
 				}*/
-				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				if ($this->class && $this->classModel->title == self::CLASS_UNPERCENT) {
+					$participant->percent = null;
+				} else {
+					$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				}
 				
 				//баллы
 				if (isset($points[$participant->place]) && $participant->percent != 0) {
