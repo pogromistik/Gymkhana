@@ -56,7 +56,7 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
 						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
-                        <br><?= $athlete->city->title ?></td>
+                        <br><?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
                         <td>1.</td>
@@ -153,7 +153,7 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?>
                         <br>
-						<?= $tmpParticipant->city ?></td>
+						<?= \common\helpers\TranslitHelper::translitCity($tmpParticipant->city) ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></td>
                     <td>1.</td>
                     <td></td>
@@ -202,7 +202,7 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
 						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
-                        <br><?= $athlete->city->title ?></td>
+                        <br><?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
                         <td>1.</td>
@@ -320,7 +320,7 @@
 						<?php } ?>
                         <br>
                         <small>
-							<?= $athlete->city->title ?>
+							<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                             <br>
 							<?= $participant->motorcycle->getFullTitle() ?>
 							<?php if ($participant->athleteClassId) { ?>
@@ -374,7 +374,7 @@
                 <tr class="result-needClarificationParticipant">
                     <td></td>
                     <td><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
-                        <small><?= $tmpParticipant->city ?><br>
+                        <small><?= \common\helpers\TranslitHelper::translitCity($tmpParticipant->city) ?><br>
 							<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></small>
                     </td>
                     <td></td>
@@ -414,7 +414,7 @@
 						<?php } ?>
                         <br>
                         <small>
-							<?= $athlete->city->title ?>
+							<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                             <br>
 							<?= $outParticipant->motorcycle->getFullTitle() ?>
 							<?php if ($outParticipant->athleteClassId) { ?>

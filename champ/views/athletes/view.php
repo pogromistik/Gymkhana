@@ -24,7 +24,9 @@ use yii\bootstrap\Html;
         <h3><?= $athlete->getFullName() ?><?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></h3>
         <div class="info">
             <div class="item">
-                <b><?= \Yii::t('app', 'Город') ?>: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
+                <b><?= \Yii::t('app', 'Город') ?>: </b>
+	            <?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>,
+                <?= \common\helpers\TranslitHelper::translitRegion($athlete->region->title) ?>
             </div>
 			<?php if ($athlete->athleteClassId) { ?>
                 <div class="item">

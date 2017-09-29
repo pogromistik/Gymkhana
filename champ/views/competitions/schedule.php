@@ -66,7 +66,7 @@ use yii\bootstrap\Html;
                         <tr>
                             <th>
                                 <div class="month">
-									<?= \common\models\HelpModel::$month[date("n", $date)] ?>&nbsp;
+									<?= \common\models\HelpModel::getMonth(date("n", $date)) ?>&nbsp;
 									<?= (date("Y", $date) != date("Y")) ? date("Y", $date) : '' ?>
                                 </div>
                             </th>

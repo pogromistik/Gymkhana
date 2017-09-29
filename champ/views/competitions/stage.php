@@ -152,8 +152,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php if ($stage->class) { ?>
                     <div>
 						<?php $stageClassTitle = $stage->classModel->title; ?>
-                        Класс
-                        соревнования: <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
+                        <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
 						<?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
                             <div><b>
 									<?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
