@@ -2,6 +2,8 @@
 
 namespace common\helpers;
 
+use common\models\TranslateMessage;
+
 class TranslitHelper
 {
 	public static function translitFio($text)
@@ -63,6 +65,9 @@ class TranslitHelper
 	public static function translitCity($text)
 	{
 		$text = trim($text);
+		if (\Yii::$app->language == TranslateMessage::LANGUAGE_RU) {
+			return $text;
+		}
 		if (!preg_match("/[а-яёА-ЯЁ]/iu",$text)){
 			return $text;
 		};
@@ -123,6 +128,9 @@ class TranslitHelper
 	public static function translitRegion($text)
 	{
 		$text = trim($text);
+		if (\Yii::$app->language == TranslateMessage::LANGUAGE_RU) {
+			return $text;
+		}
 		if (!preg_match("/[а-яёА-ЯЁ]/iu",$text)){
 			return $text;
 		};
