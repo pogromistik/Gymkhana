@@ -11,7 +11,7 @@ use kartik\widgets\Select2;
 
 <div class="alert alert-info">
     <b>Для отображения города на карте требуются параметры top и left. Берутся они с сайта
-        <a href="http://card.gymkhana74.ru/" target="_blank">card.gymkhana74.ru</a>. Необходимо перейти на сайт, поставить точку в нужном месте
+        <a href="//card.gymkhana74.ru/" target="_blank">card.gymkhana74.ru</a>. Необходимо перейти на сайт, поставить точку в нужном месте
     на карте и навести курсор на эту точку. Первая цифра - это параметр left, вторая цифра - параметр top.</b>
 </div>
 

@@ -84,7 +84,7 @@ use yii\helpers\Url;
                             <a href="/athletes/list"><?= \Yii::t('app', 'Спортсмены') ?></a>
                         </li>
                         <li>
-                            <a href="http://gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
+                            <a href="//gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
                         </li>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login"><?= \Yii::t('app', 'Вход') ?></a>

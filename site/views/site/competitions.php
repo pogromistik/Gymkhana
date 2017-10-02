@@ -1,7 +1,7 @@
 
 <div id="content" class="container reconstruction">
     <h3>Начиная с 2017 года результаты соревнований выкладываются только на сайт
-    <a href="http://gymkhana-cup.ru/" target="_blank">gymkhana-cup.ru</a></h3>
+    <a href="//gymkhana-cup.ru/" target="_blank">gymkhana-cup.ru</a></h3>
     <br><br>
     <p>Тем временем, пока программисты <strike>развлекаются</strike> работают, вы можете скачать все результаты соревнований и базовых фигур, собранные нами в период с 2014 по 2016 год:</p>
     <div>
