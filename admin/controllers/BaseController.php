@@ -36,10 +36,6 @@ class BaseController extends Controller
 	public function init()
 	{
 		parent::init();
-		$isBlockedSite = Work::findOne(['status' => 1]);
-		if ($isBlockedSite && !\Yii::$app->user->can('developer')) {
-			return $this->redirect(['/work/page']);
-		}
 
 		if (\Yii::$app->user->isGuest) {
 			$this->redirect(['/user/login']);
@@ -49,6 +45,10 @@ class BaseController extends Controller
 			\Yii::$app->getSession()->setFlash('error', 'Ваш аккаунт заблокирован');
 			return $this->goHome();
 		} else {
+			$isBlockedSite = Work::findOne(['status' => 1]);
+			if ($isBlockedSite && !\Yii::$app->user->can('developer')) {
+				return $this->redirect(['/work/page']);
+			}
 			$user = User::findOne(\Yii::$app->user->id);
 			$user->last_login_at = time();
 			$user->save();
