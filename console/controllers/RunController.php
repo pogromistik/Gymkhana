@@ -1451,8 +1451,10 @@ class RunController extends Controller
 			$history = ClassHistory::find()->where(['athleteId' => $athlete->id, 'oldClassId' => $participant->athleteClassId,
 				'newClassId' => $participant->newAthleteClassId])->one();
 			$history->delete();
-			$text = 'К сожалению, была допущена ошибка: по результатам 4 этапа G-Sport класс повысили только призёры. Ваш класс по-прежнему ' . $participant->athleteClass->title;
-			Notice::add($athlete->id, $text);
+			if ($athlete->hasAccount) {
+				$text = 'К сожалению, была допущена ошибка: по результатам 4 этапа G-Sport класс повысили только призёры. Ваш класс по-прежнему ' . $participant->athleteClass->title;
+				Notice::add($athlete->id, $text);
+			}
 			$participant->newAthleteClassId = null;
 			$participant->newAthleteClassStatus = null;
 			if (!$participant->save()) {
