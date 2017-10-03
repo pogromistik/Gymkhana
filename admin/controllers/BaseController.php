@@ -5,6 +5,7 @@ use common\helpers\UserHelper;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\User;
+use common\models\Work;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -35,6 +36,10 @@ class BaseController extends Controller
 	public function init()
 	{
 		parent::init();
+		$isBlockedSite = Work::findOne(['status' => 1]);
+		if ($isBlockedSite && !\Yii::$app->user->can('developer')) {
+			return $this->redirect(['/work/page']);
+		}
 
 		if (\Yii::$app->user->isGuest) {
 			$this->redirect(['/user/login']);

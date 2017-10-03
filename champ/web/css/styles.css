@@ -1051,3 +1051,31 @@ table.results small.red {
 h2.title small {
     font-size: 14px;
 }
+
+.down-time {
+    float: left;
+    text-align: center;
+}
+
+.time-blocks .points {
+    float:left;
+    font-size:55px;
+}
+
+.down-time .item {
+    font-family: Stencil;
+    font-size: 65px;
+}
+
+.work-page {
+    text-align: center;
+    padding-top: 50px;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.work-page .time-blocks{
+    position: relative;
+    left: calc(50% - 124px);
+}
