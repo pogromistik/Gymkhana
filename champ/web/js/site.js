@@ -198,13 +198,15 @@ $(document).on("submit", '#resetPasswordForm', function (e) {
     });
 });
 
-function countDown(second,endMinute,endHour) {
+function countDown(second,endMinute,endHour,endDay,endMonth) {
     var now = new Date();
     second = (arguments.length == 1) ? second + now.getSeconds() : second;
     endHour = typeof(endHour) != 'undefined' ?  endHour : now.getHours();
     endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();
+    endDay = typeof(endDay) != 'undefined' ?  endDay : now.getDate();
+    endMonth = typeof(endMonth) != 'undefined' ? endMonth : now.getMonth();
 //добавляем секунду к конечной дате (таймер показывает время уже спустя 1с.)
-    var endDate = new Date(now.getFullYear(),now.getMonth(),now.getDate(),endHour,endMinute,second+1);
+    var endDate = new Date(now.getFullYear(),endMonth,endDay,endHour,endMinute,second+1);
     var interval = setInterval(function() { //запускаем таймер с интервалом 1 секунду
         var time = endDate.getTime() - now.getTime();
         if (time < 0) {                      //если конечная дата меньше текущей

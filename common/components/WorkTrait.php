@@ -31,6 +31,8 @@ trait WorkTrait
 		$endHours = date('H', $end);
 		$endMins = date('i', $end);
 		$endSecs = date('s', $end);
+		$endDay = date('d', $end);
+		$endMonth = date('m', $end);
 		
 		return $this->render('@common/views/work/page', [
 			'model'    => $model,
@@ -39,7 +41,9 @@ trait WorkTrait
 			'secs'     => $secs,
 			'endHours' => $endHours,
 			'endMins'  => $endMins,
-			'endSecs'  => $endSecs
+			'endSecs'  => $endSecs,
+			'endDay'   => $endDay,
+			'endMonth' => $endMonth
 		]);
 	}
 }
