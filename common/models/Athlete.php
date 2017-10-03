@@ -48,7 +48,6 @@ use yii\web\UploadedFile;
  */
 class Athlete extends BaseActiveRecord implements IdentityInterface
 {
-	public $changeClass = true;
 	protected static $enableLogging = true;
 	protected static $ignoredAttributes = [
 		'authKey',
@@ -290,24 +289,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']
 			&& $changedAttributes['athleteClassId'] != $this->athleteClassId
 		) {
-			if ($this->changeClass) {
-				$old = $changedAttributes['athleteClassId'];
-				$new = $this->athleteClassId;
-				$history = ClassHistory::find()->where(['athleteId' => $this->id])
-					->andWhere(['oldClassId' => $old, 'newClassId' => $new])
-					->orderBy(['date' => SORT_DESC])->one();
-				if (!$history) {
-					ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
+			$old = $changedAttributes['athleteClassId'];
+			$new = $this->athleteClassId;
+			$history = ClassHistory::find()->where(['athleteId' => $this->id])
+				->andWhere(['oldClassId' => $old, 'newClassId' => $new])
+				->orderBy(['date' => SORT_DESC])->one();
+			if (!$history) {
+				ClassHistory::create($this->id, null, $old, $new, 'Установлено админом');
+			}
+			if ($this->hasAccount) {
+				$oldClass = AthletesClass::findOne($old);
+				$newClass = AthletesClass::findOne($new);
+				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
+				if ($history && (mb_strlen($history->event, 'UTF-8') <= (252 - mb_strlen($text, 'UTF-8')))) {
+					$text .= ' (' . $history->event . ')';
 				}
-				if ($this->hasAccount) {
-					$oldClass = AthletesClass::findOne($old);
-					$newClass = AthletesClass::findOne($new);
-					$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
-					if ($history && (mb_strlen($history->event, 'UTF-8') <= (252 - mb_strlen($text, 'UTF-8')))) {
-						$text .= ' (' . $history->event . ')';
-					}
-					Notice::add($this->id, $text);
-				}
+				Notice::add($this->id, $text);
 			}
 			$time = time();
 			$stageIds = Stage::find()->select('id')->where(['>', 'dateOfThe', time()])
