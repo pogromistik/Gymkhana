@@ -1403,7 +1403,7 @@ class RunController extends Controller
 		/** @var TranslateMessageSource[] $items */
 		$items = TranslateMessageSource::find()->all();
 		foreach ($items as $item) {
-			$message =  TranslateMessage::findOne(['id' => $item->id]);
+			$message = TranslateMessage::findOne(['id' => $item->id]);
 			$res = $item->message . ';';
 			if ($message && $message->translation) {
 				$res .= $message->translation;
@@ -1411,6 +1411,7 @@ class RunController extends Controller
 			$res .= PHP_EOL;
 			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
 		}
+		
 		return true;
 	}
 	
@@ -1424,6 +1425,45 @@ class RunController extends Controller
 			$participant->percent = null;
 			$participant->save(false);
 		}
+		
+		return true;
+	}
+	
+	public function actionCancelClasses()
+	{
+		$notCancel = [577, 549, 550, 578, 572, 590, 571, 605];
+		/** @var Participant[] $participants */
+		$participants = Participant::find()->where(['stageId' => 16])
+			->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['not', ['id' => $notCancel]])
+			->all();
+		$count = 0;
+		foreach ($participants as $participant) {
+			echo $count . PHP_EOL;
+			$transaction = \Yii::$app->db->beginTransaction();
+			$athlete = Athlete::findOne($participant->athleteId);
+			$athlete->athleteClassId = $participant->athleteClassId;
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				var_dump($athlete->errors);
+				return false;
+			}
+			$history = ClassHistory::find()->where(['athleteId' => $athlete->id, 'oldClassId' => $participant->athleteClassId,
+				'newClassId' => $participant->newAthleteClassId])->one();
+			$history->delete();
+			$text = 'К сожалению, была допущена ошибка: по результатам 4 этапа G-Sport класс повысили только призёры. Ваш класс по-прежнему ' . $participant->newAthleteClass->title;
+			Notice::add($athlete->id, $text);
+			$participant->newAthleteClassId = null;
+			$participant->newAthleteClassStatus = null;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				var_dump($participant->errors);
+				return false;
+			}
+			$transaction->commit();
+			$count++;
+		}
+		echo 'Update: ' . $count . ' items' . PHP_EOL;
 		return true;
 	}
 }
