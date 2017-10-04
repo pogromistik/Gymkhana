@@ -238,6 +238,9 @@ class SiteController extends BaseController
 		$this->pageTitle = 'Восстановление пароля';
 		$model = new PasswordResetRequestForm();
 		
+		throw new UserException('Восстановление пароля временно недоступно, т.к. мы настраиваем почтовый сервер.
+		Ориентировочно функционал начнёт работу 05.10.2017 после 13.00 по Московскому времени.');
+		
 		$this->layout = 'main-with-img';
 		$this->background = 'reset-psw.png';
 		
