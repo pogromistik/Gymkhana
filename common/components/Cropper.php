@@ -31,7 +31,7 @@ class Cropper extends CutterBehavior {
 			$croppingFileName = md5(uniqid() . '_' . $uploadImage->name . $this->quality . Json::encode($cropping));
 			$croppingFileExt = strrchr($uploadImage->name, '.');
 			
-			$croppingFileBasePath = \Yii::getAlias($this->basePath) . $this->baseDir;
+			$croppingFileBasePath = \Yii::getAlias($this->basePath) . DIRECTORY_SEPARATOR . $this->baseDir;
 			
 			if (!is_dir($croppingFileBasePath)) {
 				mkdir($croppingFileBasePath, 0755, true);
