@@ -53,6 +53,8 @@ class Work extends \yii\db\ActiveRecord
 	{
 		if ($this->status === 1) {
 			$this->dateStart = time();
+		} else {
+			$this->dateStart = null;
 		}
 		
 		return parent::beforeValidate();
