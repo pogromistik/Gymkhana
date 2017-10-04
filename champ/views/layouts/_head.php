@@ -122,11 +122,3 @@ use yii\helpers\Url;
         </div>
     </div>
 </div><!-- КОНЕЦ: ШАПКА САЙТА -->
-
-<?php if (YII_ENV == 'dev') { ?>
-    <div class="pt-20">
-        <div class="alert alert-danger">
-            <b>Это тестовая версия</b>
-        </div>
-    </div>
-<?php } ?>
