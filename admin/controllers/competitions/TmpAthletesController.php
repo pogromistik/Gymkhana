@@ -91,7 +91,7 @@ class TmpAthletesController extends BaseController
 			return 'Спортсмен не найден';
 		}
 		
-		$busy = AthletesClass::find()->where(['email' => $tmpAthlete->email])->andWhere(['not', ['id' => $oldAthlete->id]])->one();
+		$busy = Athlete::find()->where(['email' => $tmpAthlete->email])->andWhere(['not', ['id' => $oldAthlete->id]])->one();
 		if ($busy) {
 			return 'Указанный email занят';
 		}
@@ -163,7 +163,7 @@ class TmpAthletesController extends BaseController
 			return $result;
 		}
 		
-		$busy = AthletesClass::find()->where(['email' => $tmpAthlete->email])->andWhere(['not', ['id' => $oldAthlete->id]])->one();
+		$busy = Athlete::find()->where(['email' => $tmpAthlete->email])->andWhere(['not', ['id' => $oldAthlete->id]])->one();
 		if ($busy) {
 			$result['error'] = 'Указанный email занят';
 			
