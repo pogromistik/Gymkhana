@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
 use common\models\Athlete;
+use common\models\AthletesClass;
 use common\models\City;
 use common\models\Motorcycle;
 use common\models\TmpParticipant;
@@ -90,6 +91,11 @@ class TmpAthletesController extends BaseController
 			return 'Спортсмен не найден';
 		}
 		
+		$busy = Athlete::find()->where(['email' => $tmpAthlete->email])->andWhere(['not', ['id' => $oldAthlete->id]])->one();
+		if ($busy) {
+			return 'Указанный email занят';
+		}
+		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$oldAthlete->email = $tmpAthlete->email;
 			if ($tmpAthlete->phone) {
@@ -101,7 +107,11 @@ class TmpAthletesController extends BaseController
 			if (!$oldAthlete->save()) {
 				\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
 				
-				return 'При создании личного кабинета возникла ошибка';
+				if (\Yii::$app->user->can('developer')) {
+					return var_dump($oldAthlete->save());
+				} else {
+					return 'При создании личного кабинета возникла ошибка. Обратитесь к разработчику.';
+				}
 			}
 			
 			if (!$oldAthlete->createCabinet()) {
@@ -149,6 +159,13 @@ class TmpAthletesController extends BaseController
 		$oldAthlete = Athlete::findOne($athleteId);
 		if (!$athleteId) {
 			$result['error'] = 'Спортсмен не найден';
+			
+			return $result;
+		}
+		
+		$busy = Athlete::find()->where(['email' => $tmpAthlete->email])->andWhere(['not', ['id' => $oldAthlete->id]])->one();
+		if ($busy) {
+			$result['error'] = 'Указанный email занят';
 			
 			return $result;
 		}

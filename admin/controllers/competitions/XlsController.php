@@ -56,7 +56,7 @@ class XlsController extends BaseController
 				$name .= '-активные участники';
 				break;
 			case self::TYPE_ARRIVED:
-				$participants->andWhere(['status' => Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION])->andWhere(['isArrived' => 1]);
+				$participants->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_OUT_COMPETITION]])->andWhere(['isArrived' => 1]);
 				$name .= '-приехавшие участники';
 				break;
 		}

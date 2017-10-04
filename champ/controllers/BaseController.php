@@ -5,6 +5,7 @@ use common\models\Athlete;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\OverallFile;
+use common\models\Work;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -31,6 +32,10 @@ class BaseController extends Controller
 	public function init()
 	{
 		parent::init();
+		$isBlockedSite = Work::findOne(['status' => 1]);
+		if ($isBlockedSite) {
+			return $this->redirect(['/work/page']);
+		}
 		
 		if(!\Yii::$app->user->isGuest) {
 			$user = Athlete::findOne(\Yii::$app->user->id);
