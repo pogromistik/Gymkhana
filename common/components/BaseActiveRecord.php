@@ -141,7 +141,9 @@ abstract class BaseActiveRecord extends ActiveRecord
 			}
 			if (mb_strpos($attribute, 'date') !== false || mb_strpos($attribute, 'Date') !== false
 			|| mb_strpos($attribute, 'startRegistration') !== false || mb_strpos($attribute, 'endRegistration') !== false) {
-				return date('d.m.Y, H:i', $value);
+				if ($value) {
+					return date('d.m.Y, H:i', $value);
+				}
 			}
 			return $value;
 		}
