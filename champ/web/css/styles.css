@@ -1143,14 +1143,14 @@ h2.title small {
     padding: 5px;
     text-align: center;
     border-radius: 100%;
-    width: 27px;
-    height: 27px;
+    width: 32px;
+    height: 30px;
+    display: inline-block;
 }
 
 .circle-class-green {
     background: #00bb04;
     color: #f4f4f4;
-    display: inline-block;
 }
 
 .circle-class-red {
