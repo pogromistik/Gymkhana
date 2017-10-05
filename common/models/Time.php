@@ -105,7 +105,10 @@ class Time extends BaseActiveRecord
 				$this->time = self::FAIL_TIME;
 			}
 		}
-		$this->resultTime = $this->time + $this->fine * 1000;
+		$this->resultTime = $this->time;
+		if ($this->fine) {
+			$this->resultTime += $this->fine * 1000;
+		}
 		
 		if ($this->videoLink) {
 			if (strpos($this->videoLink, 'http://') === false && strpos($this->videoLink, 'https://') === false) {
