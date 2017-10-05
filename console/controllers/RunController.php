@@ -881,7 +881,7 @@ class RunController extends Controller
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
@@ -899,7 +899,7 @@ class RunController extends Controller
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
@@ -923,7 +923,7 @@ class RunController extends Controller
 				$errors->type = Error::TYPE_SIZE;
 				$errors->save();
 				
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					\Yii::$app->mailer->compose('text', ['text' => $errors->text])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])

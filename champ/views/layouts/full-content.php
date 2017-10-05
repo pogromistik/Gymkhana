@@ -43,7 +43,7 @@ if (!\Yii::$app->user->isGuest) {
 					'links'    => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 				]) ?>
             </div>
-	        <?php if (YII_ENV == 'dev') { ?>
+	        <?php if (YII_ENV == 'betta') { ?>
                 <div class="pt-20">
                     <div class="alert alert-danger">
                         <b>Это тестовая версия</b>

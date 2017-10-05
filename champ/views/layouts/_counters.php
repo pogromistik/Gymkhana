@@ -1,4 +1,4 @@
-<?php if (YII_ENV != 'dev') { ?>
+<?php if (YII_ENV == 'prod') { ?>
     <script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;

@@ -207,7 +207,7 @@ class SiteController extends BaseController
 				return \Yii::t('app', 'Необходимо заполнить все поля, кроме номера телефона');
 			}
 			if ($form->save(false)) {
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Новый запрос на регистрацию в личном кабинете';
 					$text .= '<br>';
 					$text .= '<b>Фио: </b>' . $form->lastName . ' ' . $form->firstName;

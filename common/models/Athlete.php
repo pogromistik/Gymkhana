@@ -443,7 +443,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			return 'mail.ru заблокировал почту, поэтому отравьте сообщение этому человеку
 				 самостоятельно. Пароль: ' . $password;
 		}*/
-		if (YII_ENV != 'dev') {
+		if (YII_ENV == 'prod') {
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
 				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
@@ -531,7 +531,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if ($this->save()) {
 			$resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/new-password', 'token' => $this->passwordResetToken]);
 			
-			if (YII_ENV != 'dev') {
+			if (YII_ENV == 'prod') {
 				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
 					->setTo($this->email)
 					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])

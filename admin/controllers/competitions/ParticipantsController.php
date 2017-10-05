@@ -543,7 +543,7 @@ class ParticipantsController extends BaseController
 					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title], $athlete->language);
 				Notice::add($participant->athleteId, $text);
 			}
-			if (YII_ENV != 'dev' && $athlete->email) {
+			if (YII_ENV == 'prod' && $athlete->email) {
 				$text = \Yii::t('app', 'Ваша заявка на этап "{stageTitle}" чемпионата "{champTitle}" на мотоцикле {motorcycle} отклонена, так как на этап уже зарегистрировано максимальное количество участников. Для уточнения подробностей можете связаться с организатором соревнования.',
 					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title, 'motorcycle' => $participant->motorcycle->getFullTitle()],
 					$athlete->language);
