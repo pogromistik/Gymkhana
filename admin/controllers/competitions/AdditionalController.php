@@ -390,7 +390,7 @@ class AdditionalController extends BaseController
 		}
 		$message->save();
 		$count = count($emails);
-		if (YII_ENV != 'dev') {
+		if (YII_ENV == 'prod') {
 			$count = 0;
 			foreach ($emails as $email) {
 				if (mb_stripos($email, '@', null, 'UTF-8')) {

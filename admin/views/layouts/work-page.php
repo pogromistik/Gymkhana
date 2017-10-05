@@ -20,7 +20,7 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<?php if (YII_ENV == 'dev') { ?>
+<?php if (YII_ENV == 'betta') { ?>
     <div class="pt-20">
         <div class="alert alert-danger">
             <b>Это тестовая версия</b>
