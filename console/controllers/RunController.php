@@ -1463,7 +1463,7 @@ class RunController extends Controller
 			echo $i . PHP_EOL;
 			$messageSource = TranslateMessageSource::findOne(['message' => $data['message']]);
 			if (!$messageSource) {
-				$messageSource = new TranslateMessageSource();
+				/*$messageSource = new TranslateMessageSource();
 				$messageSource->category = 'app';
 				$messageSource->message = $data['message'];
 				$messageSource->status = 1;
@@ -1472,7 +1472,8 @@ class RunController extends Controller
 					$transaction->rollBack();
 					
 					return false;
-				}
+				}*/
+				echo 'Not found: ' . $data['message'] . '; ' . $data['translate'] . PHP_EOL;
 			}
 			$translate = TranslateMessage::findOne(['id' => $messageSource->id]);
 			if (!$translate) {
