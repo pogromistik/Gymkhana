@@ -70,6 +70,16 @@ $this->title = 'Обработанные заявки с результатам�
 				'attribute' => 'cancelReason',
 				'filter'    => false,
 			],
+			[
+				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('developer'),
+				'value'   => function (TmpFigureResult $figureResult) {
+					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
+						'modelClass' => TmpFigureResult::class,
+						'modelId'    => $figureResult->id
+					]);
+				}
+			]
 		],
 	]); ?>
 </div>

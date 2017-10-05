@@ -29,6 +29,16 @@ $this->title = 'Фигуры';
 			],
 			'bestTimeForHuman',
 			'bestTimeInRussiaForHuman',
+			[
+				'visible' => \Yii::$app->user->can('developer'),
+				'format'  => 'raw',
+				'value'   => function (\common\models\Figure $figure) {
+					return Html::a('логи', ['/competitions/developer/logs',
+						'modelClass' => \common\models\Figure::class,
+						'modelId'    => $figure->id
+					], ['class' => 'btn btn-default']);
+				}
+			]
 		],
 	]); ?>
 </div>

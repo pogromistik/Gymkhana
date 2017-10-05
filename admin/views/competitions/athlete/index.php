@@ -34,7 +34,17 @@ $this->title = 'Спортсмены';
 					'options'       => [
 						'placeholder' => 'Укажите фамилию...',
 					]
-				])
+				]),
+				'format'    => 'raw',
+				'value'     => function (\common\models\Athlete $athlete) {
+					if (\Yii::$app->user->can('developer')) {
+						return Html::a($athlete->lastName, ['/competitions/developer/logs',
+							'modelClass' => \common\models\Athlete::class,
+							'modelId'    => $athlete->id]);
+					}
+					
+					return $athlete->lastName;
+				}
 			],
 			[
 				'attribute' => 'firstName',
