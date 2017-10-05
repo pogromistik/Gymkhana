@@ -137,7 +137,9 @@ abstract class BaseActiveRecord extends ActiveRecord
 		if ($this->hasAttribute($attribute)) {
 			if (mb_strpos($attribute, 'time') !== false || mb_strpos($attribute, 'Time') !== false
 			|| mb_strpos($attribute, 'recordInMoment') !== false) {
-				return HelpModel::convertTimeToHuman($value);
+				if ($value) {
+					return HelpModel::convertTimeToHuman($value);
+				}
 			}
 			if (mb_strpos($attribute, 'date') !== false || mb_strpos($attribute, 'Date') !== false
 			|| mb_strpos($attribute, 'startRegistration') !== false || mb_strpos($attribute, 'endRegistration') !== false) {
