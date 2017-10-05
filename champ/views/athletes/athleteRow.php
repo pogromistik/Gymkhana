@@ -19,14 +19,9 @@ if ($athlete->athleteClassId) {
 <div class="col-xs-12 col-sm-6 col-lg-4 col-bg-3 item">
     <a href="/athletes/view?id=<?= $athlete->id ?>">
         <div class="card">
-            <div class="img">
-				<?php if ($athlete->photo) { ?>
-					<?= Html::img(\Yii::getAlias('@filesView') . $athlete->photo) ?>
-				<?php } else {
-					$img = rand(0, 4);
-					?>
-					<?= Html::img('/img/avatar.jpg') ?>
-				<?php } ?>
+            <div class="img"
+                 style="background-image: url(<?= $athlete->photo ?
+		             \Yii::getAlias('@filesView') . $athlete->photo : '/img/avatar.jpg' ?>)">
             </div>
             <div class="info">
                 <h4><?= $athlete->getFullName() ?></h4>

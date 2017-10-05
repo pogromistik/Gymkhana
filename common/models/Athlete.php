@@ -4,7 +4,10 @@ namespace common\models;
 
 use common\components\BaseActiveRecord;
 use common\helpers\TranslitHelper;
+use common\components\Cropper;
 use common\helpers\UserHelper;
+use Imagine\Filter\Basic\Crop;
+use sadovojav\cutter\behaviors\CutterBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\Expression;
@@ -175,9 +178,22 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['number', 'validateNumber'],
 			['number', 'integer', 'min' => 1],
 			['number', 'integer', 'max' => 999],
-			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 307200,
-			                      'tooBig'     => 'Размер файла не должен превышать 300KB'],
+			['photo', 'file', 'extensions' => 'jpg, jpeg, png', 'mimeTypes' => 'image/jpeg, image/png',
+			                  'maxFiles'   => 1, 'maxSize' => 512000,
+			                  'tooBig'     => 'Размер файла не должен превышать 500KB'],
 			['language', 'default', 'value' => TranslateMessage::LANGUAGE_RU]
+		];
+	}
+	
+	public function behaviors()
+	{
+		return [
+			'image' => [
+				'class'      => Cropper::className(),
+				'attributes' => 'photo',
+				'baseDir'    => 'athletes',
+				'basePath'   => '@files'
+			],
 		];
 	}
 	
@@ -218,11 +234,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 								->one();
 						}
 						if ($busy) {
-							$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап 
-						"' . $busy->stage->title . '" 
+							$this->addError($attribute, 'Вы не можете занять этот номер, пока не закончится этап
+						"' . $busy->stage->title . '"
 						чемпионата "' . $busy->championship->title . '"');
 						} else {
-							
+						
 						}
 					}
 				}

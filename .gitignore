@@ -17,6 +17,7 @@ Thumbs.db
 
 # composer vendor dir
 /vendor
+/composer.lock
 
 # composer itself is not needed
 composer.phar
@@ -31,3 +32,5 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+composer.lock

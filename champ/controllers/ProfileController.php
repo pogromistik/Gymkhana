@@ -32,6 +32,21 @@ class ProfileController extends AccessController
 		$this->layout = 'full-content';
 	}
 	
+	public function actionUploadImg()
+	{
+		$model = Athlete::findOne(\Yii::$app->user->identity->id);
+		if (!$model) {
+			throw new UserException();
+		}
+		
+		if ($model->load(\Yii::$app->request->post())) {
+			$model->save();
+			return $this->redirect('index');
+		}
+		
+		throw new NotFoundHttpException();
+	}
+	
 	public function actionIndex($success = false)
 	{
 		$this->pageTitle = \Yii::t('app', 'Редактирование профиля');
@@ -47,25 +62,6 @@ class ProfileController extends AccessController
 		}
 		
 		if ($athlete->load(\Yii::$app->request->post()) && $athlete->save()) {
-			$file = UploadedFile::getInstance($athlete, 'photoFile');
-			if ($file && $file->size <= 307200) {
-				if ($athlete->photo) {
-					$filePath = \Yii::getAlias('@files') . $athlete->photo;
-					if (file_exists($filePath)) {
-						unlink($filePath);
-					}
-				}
-				$dir = \Yii::getAlias('@files') . '/' . 'athletes';
-				if (!file_exists($dir)) {
-					mkdir($dir);
-				}
-				$title = uniqid() . '.' . $file->extension;
-				$folder = $dir . '/' . $title;
-				if ($file->saveAs($folder)) {
-					$athlete->photo = '/athletes/' . $title;
-					$athlete->save(false);
-				}
-			}
 			
 			return $this->redirect(['index', 'success' => true]);
 		}
