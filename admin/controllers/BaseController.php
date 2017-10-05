@@ -5,6 +5,7 @@ use common\helpers\UserHelper;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\User;
+use common\models\Work;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -44,6 +45,10 @@ class BaseController extends Controller
 			\Yii::$app->getSession()->setFlash('error', 'Ваш аккаунт заблокирован');
 			return $this->goHome();
 		} else {
+			$isBlockedSite = Work::findOne(['status' => 1]);
+			if ($isBlockedSite && !\Yii::$app->user->can('developer')) {
+				return $this->redirect(['/work/page']);
+			}
 			$user = User::findOne(\Yii::$app->user->id);
 			$user->last_login_at = time();
 			$user->save();

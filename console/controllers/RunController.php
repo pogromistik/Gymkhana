@@ -1494,4 +1494,43 @@ class RunController extends Controller
 		
 		return true;
 	}
+	public function actionCancelClasses()
+	{
+		$notCancel = [577, 549, 550, 578, 572, 590, 571, 605];
+		/** @var Participant[] $participants */
+		$participants = Participant::find()->where(['stageId' => 16])
+			->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['not', ['id' => $notCancel]])
+			->all();
+		$count = 0;
+		foreach ($participants as $participant) {
+			echo $count . PHP_EOL;
+			$transaction = \Yii::$app->db->beginTransaction();
+			$athlete = Athlete::findOne($participant->athleteId);
+			$athlete->athleteClassId = $participant->athleteClassId;
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				var_dump($athlete->errors);
+				return false;
+			}
+			$history = ClassHistory::find()->where(['athleteId' => $athlete->id, 'oldClassId' => $participant->athleteClassId,
+			                                        'newClassId' => $participant->newAthleteClassId])->one();
+			$history->delete();
+			if ($athlete->hasAccount) {
+				$text = 'К сожалению, была допущена ошибка: по результатам 4 этапа G-Sport класс повысили только призёры. Ваш класс по-прежнему ' . $participant->athleteClass->title;
+				Notice::add($athlete->id, $text);
+			}
+			$participant->newAthleteClassId = null;
+			$participant->newAthleteClassStatus = null;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				var_dump($participant->errors);
+				return false;
+			}
+			$transaction->commit();
+			$count++;
+		}
+		echo 'Update: ' . $count . ' items' . PHP_EOL;
+		return true;
+	}
 }

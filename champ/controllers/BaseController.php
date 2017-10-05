@@ -6,6 +6,7 @@ use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\OverallFile;
 use common\models\TranslateMessage;
+use common\models\Work;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -32,6 +33,10 @@ class BaseController extends Controller
 	public function init()
 	{
 		parent::init();
+		$isBlockedSite = Work::findOne(['status' => 1]);
+		if ($isBlockedSite) {
+			return $this->redirect(['/work/page']);
+		}
 		
 		$hostName = \Yii::$app->request->getHostName();
 		switch ($hostName) {
