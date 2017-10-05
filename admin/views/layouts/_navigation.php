@@ -203,7 +203,7 @@ use yii\helpers\Html;
                     </li>
 				<?php } ?>
 				<?= $this->render('_nav-competitions') ?>
-                <?php
+				<?php
 				if (\Yii::$app->user->can('developer')) { ?>
                     <li class="translate-bg">
                         <a href="#">
@@ -225,6 +225,15 @@ use yii\helpers\Html;
                         <a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>"><i
                                     class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
                             &nbsp;ПЕРЕВОД</a>
+                    </li>
+					<?php
+				} ?>
+				<?php if (\Yii::$app->user->can('developer')) {
+					?>
+                    <li>
+                        <a href="<?= Url::to(['/developer/work-page']) ?>"><i
+                                    class="fa fa-lock" aria-hidden="true"></i>
+                            &nbsp;Заблокировать</a>
                     </li>
 					<?php
 				} ?>

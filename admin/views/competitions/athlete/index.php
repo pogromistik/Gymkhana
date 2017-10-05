@@ -29,11 +29,12 @@ $this->title = 'Спортсмены';
 ' . Html::activeInput('text', $searchModel, 'firstOrLastName',
 						['class' => 'form-control', 'placeholder' => 'Имя или фамилия...']) . '
 </div>',
-				'value'     => function (\common\models\Athlete $athlete) {
+				'value'  => function (\common\models\Athlete $athlete) {
 					if (\Yii::$app->user->can('developer')) {
 						return Html::a($athlete->getFullName(), ['/competitions/developer/logs',
 							'modelClass' => \common\models\Athlete::class,
-							'modelId'    => $athlete->id]);
+							'modelId'    => $athlete->id
+						], ['class' => 'dev-logs']);
 					}
 					
 					return $athlete->getFullName();

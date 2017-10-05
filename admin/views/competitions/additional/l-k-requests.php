@@ -61,7 +61,7 @@ $this->title = 'Обработанные заявки на регистраци�
 					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => \common\models\TmpAthlete::class,
 						'modelId'    => $athlete->id
-					]);
+					], ['class' => 'dev-logs dev-logs-btn']);
 				}
 			]
 		],

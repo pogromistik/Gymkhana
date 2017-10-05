@@ -36,7 +36,7 @@ $this->title = 'Фигуры';
 					return Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => \common\models\Figure::class,
 						'modelId'    => $figure->id
-					], ['class' => 'btn btn-default']);
+					], ['class' => 'dev-logs dev-logs-btn']);
 				}
 			]
 		],

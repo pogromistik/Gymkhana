@@ -21,7 +21,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 	<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
         <p>
 			<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId],
-                ['class' => 'btn btn-my-style btn-green']) ?>
+				['class' => 'btn btn-my-style btn-green']) ?>
         </p>
 	<?php } ?>
 	<?= GridView::widget([
@@ -36,14 +36,16 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
   <span class="input-group-addon"><i class="fa fa-search"></i></span>
 ' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
 </div>',
-                'format' => 'raw',
-                'value' => function (Championship $championship) {
-	                if (\Yii::$app->user->can('developer')) {
-	                    return Html::a($championship->title, ['/competitions/developer/logs',
-                            'modelClass' => Championship::class, 'modelId' => $championship->id]);
-                    }
-                    return $championship->title;
-                }
+				'format'    => 'raw',
+				'value'     => function (Championship $championship) {
+					if (\Yii::$app->user->can('developer')) {
+						return Html::a($championship->title, ['/competitions/developer/logs',
+							'modelClass' => Championship::class, 'modelId' => $championship->id],
+							['class' => 'dev-logs']);
+					}
+					
+					return $championship->title;
+				}
 			],
 			[
 				'attribute' => 'yearId',
@@ -72,7 +74,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 							$html .= Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]);
 							$html .= ' ';
 							$html .= Html::a('<span class="fa fa-user btn btn-my-style btn-light-aquamarine small"></span>',
-                                ['/competitions/participants/index', 'stageId' => $stage->id]);
+								['/competitions/participants/index', 'stageId' => $stage->id]);
 							$html .= '</li>';
 						}
 						$html .= '</ul>';

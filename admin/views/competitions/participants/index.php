@@ -372,7 +372,7 @@ $prevStages = \common\models\Stage::find()->where(['<', 'dateOfThe', $stage->dat
 					return Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => \common\models\Participant::class,
 						'modelId'    => $item->id
-					], ['class' => 'btn btn-default']);
+					], ['class' => 'dev-logs dev-logs-btn']);
 				}
 			]
 		],

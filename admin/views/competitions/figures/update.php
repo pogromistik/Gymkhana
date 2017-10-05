@@ -158,7 +158,8 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
                 'value' => function (\common\models\FigureTime $item) {
 	                if (\Yii::$app->user->can('developer')) {
 	                    return Html::a($item->dateForHuman, ['/competitions/developer/logs',
-                            'modelClass' => \common\models\FigureTime::class, 'modelId' => $item->id]);
+                            'modelClass' => \common\models\FigureTime::class, 'modelId' => $item->id],
+		                    ['class' => 'dev-logs']);
                     }
                     return $item->dateForHuman;
                 }

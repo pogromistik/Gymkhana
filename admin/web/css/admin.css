@@ -893,3 +893,19 @@ a.red-button {
     position: relative;
     left: calc(50% - 124px);
 }
+
+.dev-logs, a.dev-logs {
+    color: #ff7b3c;
+}
+
+.dev-logs-btn {
+    border: 1px solid #ff7b3c;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+.dev-logs-btn:hover {
+    color: #fff;
+    background: #ff7b3c;
+}

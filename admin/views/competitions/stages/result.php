@@ -141,7 +141,8 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                 <td>
                     <?php if (\Yii::$app->user->can('developer')) {
                         $tmeForHuman = \yii\helpers\Html::a($first->timeForHuman, ['/competitions/developer/logs',
-                            'modelClass' => \common\models\Time::class, 'modelId' => $first->id]);
+                            'modelClass' => \common\models\Time::class, 'modelId' => $first->id],
+	                        ['class' => 'dev-logs']);
                     } else {
                         $tmeForHuman = $first->timeForHuman;
                     } ?>
@@ -201,7 +202,8 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                     <td>
 	                    <?php if (\Yii::$app->user->can('developer')) {
 		                    $tmeForHuman = \yii\helpers\Html::a($next->timeForHuman, ['/competitions/developer/logs',
-			                    'modelClass' => \common\models\Time::class, 'modelId' => $next->id]);
+			                    'modelClass' => \common\models\Time::class, 'modelId' => $next->id],
+			                    ['class' => 'dev-logs']);
 	                    } else {
 		                    $tmeForHuman = $next->timeForHuman;
 	                    } ?>
