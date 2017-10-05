@@ -1429,6 +1429,72 @@ class RunController extends Controller
 		return true;
 	}
 	
+	public static function actionInsertTranslate()
+	{
+		Country::deleteAll();
+		$filePath = 'admin/web/files/Perevody.xlsx';
+		
+		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
+		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
+		
+		$array = [];
+		
+		foreach ($worksheet->getRowIterator() as $i => $row) {
+			$cellIterator = $row->getCellIterator();
+			/**
+			 * @var \PHPExcel_Cell $cell
+			 */
+			foreach ($cellIterator as $j => $cell) {
+				if ($cell->getFormattedValue() !== null) {
+					switch ($j) {
+						case 'B':
+							$array[$i]['message'] = $cell->getFormattedValue();
+							break;
+						case 'C':
+							$array[$i]['translate'] = $cell->getFormattedValue();
+							break;
+					}
+				}
+			}
+		}
+		
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($array as $i => $data) {
+			echo $i . PHP_EOL;
+			$messageSource = TranslateMessageSource::findOne(['message' => $data['message']]);
+			if (!$messageSource) {
+				/*$messageSource = new TranslateMessageSource();
+				$messageSource->category = 'app';
+				$messageSource->message = $data['message'];
+				$messageSource->status = 1;
+				if (!$messageSource->save()) {
+					var_dump($messageSource->errors);
+					$transaction->rollBack();
+					
+					return false;
+				}*/
+				echo 'Not found: ' . $data['message'] . '; ' . $data['translate'] . PHP_EOL;
+				continue;
+			}
+			$translate = TranslateMessage::findOne(['id' => $messageSource->id]);
+			if (!$translate) {
+				$translate = new TranslateMessage();
+				$translate->id = $messageSource->id;
+			}
+			$translate->language = 'en-US';
+			$translate->translation = $data['translate'];
+			if (!$translate->save()) {
+				var_dump($translate->errors);
+				$transaction->rollBack();
+				
+				return false;
+			}
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
 	public function actionCancelClasses()
 	{
 		$notCancel = [577, 549, 550, 578, 572, 590, 571, 605];
