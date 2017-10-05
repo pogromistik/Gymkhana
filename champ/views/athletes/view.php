@@ -34,8 +34,8 @@ use yii\bootstrap\Html;
 				}
 				?>
                 <div class="item">
-                    <b>Класс: </b><span
-                            class="circle-class circle-class-<?= $cssClass ?>"><?= $athleteClass->title ?></span>
+                    <b>Класс: </b><div
+                            class="circle-class circle-class-<?= $cssClass ?>"><?= $athleteClass->title ?></div>
                 </div>
 			<?php } ?>
         </div>
