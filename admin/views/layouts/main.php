@@ -35,6 +35,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 	<?= $this->render('_navigation') ?>
 
     <div id="page-wrapper">
+	    <?php if (YII_ENV == 'betta') { ?>
+            <div class="pt-20">
+                <div class="alert alert-danger">
+                    <b>Это тестовая версия</b>
+                </div>
+            </div>
+	    <?php } ?>
 		<?php if (\Yii::$app->user->can('developer')) { ?>
 			<?php if ($errors) { ?>
                 <div class="pt-20">

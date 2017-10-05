@@ -524,13 +524,13 @@ class ParticipantsController extends BaseStageController
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
 				Notice::add($participant->athleteId, $text);
 			}
-			if (YII_ENV != 'dev' && $athlete->email) {
+			if (YII_ENV == 'prod' && $athlete->email) {
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата 
 				"' . $stage->championship->title . '" на мотоцикле '
 					. $participant->motorcycle->getFullTitle() . ' отклонена, так как на этап уже зарегистрировано максимальное
 					количество участников. Для уточнения подробностей можете связаться с
 					организатором соревнования.';
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo($athlete->email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
