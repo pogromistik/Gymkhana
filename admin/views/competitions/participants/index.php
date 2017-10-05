@@ -302,6 +302,16 @@ $this->params['breadcrumbs'][] = $this->title;
 					
 					return '';
 				}
+			],
+			[
+				'visible' => \Yii::$app->user->can('developer'),
+				'format'  => 'raw',
+				'value'   => function (\common\models\Participant $item) {
+					return Html::a('логи', ['/competitions/developer/logs',
+						'modelClass' => \common\models\Participant::class,
+						'modelId'    => $item->id
+					], ['class' => 'btn btn-default']);
+				}
 			]
 		],
 	]); ?>

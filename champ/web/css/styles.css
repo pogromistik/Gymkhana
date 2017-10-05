@@ -1143,3 +1143,37 @@ h2.title small {
     background: url('../img/icons/9.png') repeat;
     background-size: contain;
 }
+
+.circle-class {
+    padding: 5px;
+    text-align: center;
+    border-radius: 100%;
+    width: 32px;
+    height: 30px;
+    display: inline-block;
+}
+
+.circle-class-green {
+    background: #00bb04;
+    color: #f4f4f4;
+}
+
+.circle-class-red {
+    background: #ff014a;
+    color: #f4f4f4;
+}
+
+.circle-class-blue {
+    background: #0082f4;
+    color: #f4f4f4;
+}
+
+.circle-class-yellow {
+    background: #ffcd00;
+    color: #f4f4f4;
+}
+
+.circle-class-white {
+    background: #ffffff;
+    color: #000000;
+}

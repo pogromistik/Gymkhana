@@ -29,9 +29,29 @@ use yii\helpers\ArrayHelper;
  */
 class TmpAthlete extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
+	public function getAttributeDisplayValue($attribute, $value)
+	{
+		switch ($attribute) {
+			case 'status':
+				return isset(self::$statusesTitle[$value]) ? self::$statusesTitle[$value] : $value;
+				break;
+			default:
+				return parent::getAttributeDisplayValue($attribute, $value);
+				break;
+		}
+	}
+	
 	const STATUS_NEW = 0;
 	const STATUS_CANCEL = 2;
 	const STATUS_ACCEPT = 1;
+	
+	public static $statusesTitle = [
+		self::STATUS_NEW    => 'новая',
+		self::STATUS_CANCEL => 'отклонена',
+		self::STATUS_ACCEPT => 'подтверждена'
+	];
 	
 	/**
 	 * @inheritdoc

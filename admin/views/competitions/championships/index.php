@@ -35,6 +35,14 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
   <span class="input-group-addon"><i class="fa fa-search"></i></span>
 ' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
 </div>',
+                'format' => 'raw',
+                'value' => function (Championship $championship) {
+	                if (\Yii::$app->user->can('developer')) {
+	                    return Html::a($championship->title, ['/competitions/developer/logs',
+                            'modelClass' => Championship::class, 'modelId' => $championship->id]);
+                    }
+                    return $championship->title;
+                }
 			],
 			[
 				'attribute' => 'yearId',

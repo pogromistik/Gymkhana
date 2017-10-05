@@ -23,6 +23,18 @@ class ClassesRequest extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
 	
+	public function getAttributeDisplayValue($attribute, $value)
+	{
+		switch ($attribute) {
+			case 'status':
+				return isset(self::$statusesTitle[$value]) ? self::$statusesTitle[$value] : $value;
+				break;
+			default:
+				return parent::getAttributeDisplayValue($attribute, $value);
+				break;
+		}
+	}
+	
 	const STATUS_NEW = 0;
 	const STATUS_APPROVE = 1;
 	const STATUS_CANCEL = 2;

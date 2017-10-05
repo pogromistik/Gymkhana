@@ -103,9 +103,17 @@ class ProfileController extends AccessController
 		$this->pageTitle = \Yii::t('app', 'Информация об этапах и заявках на участие');
 		
 		$time = time();
+		$withoutRegistrationIds = Stage::find()->select('id')
+			->where(['startRegistration' => null, 'endRegistration' => null])
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->asArray()->column();
+		
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
 			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
-			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->all();
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]]);
+		if($withoutRegistrationIds) {
+			$newStages->andWhere(['not', ['id' => $withoutRegistrationIds]]);
+		}
+		$newStages = $newStages->all();
 		
 		$participants = null;
 		if ($newStages) {

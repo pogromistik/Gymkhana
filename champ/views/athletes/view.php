@@ -28,9 +28,16 @@ use yii\bootstrap\Html;
 	            <?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>,
                 <?= \common\helpers\TranslitHelper::translitRegion($athlete->region->title) ?>
             </div>
-			<?php if ($athlete->athleteClassId) { ?>
+			<?php if ($athlete->athleteClassId) {
+				$athleteClass = $athlete->athleteClass;
+				$cssClass = 'default';
+				if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title, 'UTF-8')])) {
+					$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title, 'UTF-8')];
+				}
+				?>
                 <div class="item">
-                    <b><?= \Yii::t('app', 'Класс') ?>: </b><?= $athlete->athleteClass->title ?>
+                    <b><?= \Yii::t('app', 'Класс') ?>: </b><div
+                            class="circle-class circle-class-<?= $cssClass ?>"><?= $athleteClass->title ?></div>
                 </div>
 			<?php } ?>
         </div>
@@ -83,11 +90,11 @@ use yii\bootstrap\Html;
                             </div>
                         </td>
                         <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%
-	                        <?php if ($result->videoLink) { ?>
+							<?php if ($result->videoLink) { ?>
                                 <a href="<?= $result->videoLink ?>" target="_blank">
                                     <i class="fa fa-youtube"></i>
                                 </a>
-	                        <?php } ?>
+							<?php } ?>
                         </td>
                     </tr>
 				<?php } ?>
@@ -118,25 +125,25 @@ use yii\bootstrap\Html;
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
                         <td>
-	                        <?php if ($participant->percent) {
-		                        echo $participant->percent . '%';
-		                        $bestTime = $participant->getBestTimeItem();
-		                        if ($bestTime && $bestTime->videoLink) { ?>
+							<?php if ($participant->percent) {
+								echo $participant->percent . '%';
+								$bestTime = $participant->getBestTimeItem();
+								if ($bestTime && $bestTime->videoLink) { ?>
                                     <a href="<?= $bestTime->videoLink ?>" target="_blank">
                                         <i class="fa fa-youtube"></i>
                                     </a>
-		                        <?php }
-	                        } else {
-		                        if ($stage->referenceTime) {
-			                        ?>
+								<?php }
+							} else {
+								if ($stage->referenceTime) {
+									?>
                                     <span class="fa fa-remove remove"></span>
-			                        <?php
-		                        } else {
-		                            ?>
+									<?php
+								} else {
+									?>
                                     <span class="green wait">...</span>
-                            <?php
-                                }
-	                        } ?>
+									<?php
+								}
+							} ?>
                         <td>
 							<?php if ($participant->place) {
 								echo $participant->place;
