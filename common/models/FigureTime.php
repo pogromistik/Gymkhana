@@ -142,7 +142,10 @@ class FigureTime extends BaseActiveRecord
 			list($min, $secs) = explode(':', $this->timeForHuman);
 			$this->time = ($min * 60000) + round($secs * 1000);
 		}
-		$this->resultTime = $this->time + $this->fine * 1000;
+		$this->resultTime = $this->time;
+		if ($this->fine) {
+			$this->resultTime += $this->fine * 1000;
+		}
 		if ($this->dateForHuman) {
 			$this->date = (new \DateTime($this->dateForHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
 		}
