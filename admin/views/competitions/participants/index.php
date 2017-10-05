@@ -364,6 +364,16 @@ $prevStages = \common\models\Stage::find()->where(['<', 'dateOfThe', $stage->dat
 					
 					return '';
 				}
+			],
+			[
+				'visible' => \Yii::$app->user->can('developer'),
+				'format'  => 'raw',
+				'value'   => function (\common\models\Participant $item) {
+					return Html::a('логи', ['/competitions/developer/logs',
+						'modelClass' => \common\models\Participant::class,
+						'modelId'    => $item->id
+					], ['class' => 'btn btn-default']);
+				}
 			]
 		],
 	]); ?>

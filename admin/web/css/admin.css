@@ -523,6 +523,20 @@ a.red-button {
     background-color: #e6e6e6;
 }
 
+.changes .old {
+    background: #de7f77;
+    border-radius: 2px;
+}
+
+.changes .new {
+    background: #99e499;
+    border-radius: 2px;
+}
+
+.pb-1 {
+    padding-bottom: 1px;
+}
+
 #importParticipants label {
     font-weight: normal;
     display: block;
@@ -850,4 +864,32 @@ a.red-button {
     display: inline-block;
     background: #56a025;
     padding-right: 5px;
+}
+
+.down-time {
+    float: left;
+    text-align: center;
+}
+
+.time-blocks .points {
+    float:left;
+    font-size:55px;
+}
+
+.down-time .item {
+    font-family: Stencil;
+    font-size: 65px;
+}
+
+.work-page {
+    text-align: center;
+    padding-top: 50px;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.work-page .time-blocks{
+    position: relative;
+    left: calc(50% - 124px);
 }

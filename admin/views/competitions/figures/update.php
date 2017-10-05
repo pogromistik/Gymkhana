@@ -152,7 +152,17 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 					return $item->year->year;
 				}
 			],
-			'attribute' => 'dateForHuman',
+			[
+				'attribute' => 'dateForHuman',
+				'format'    => 'raw',
+                'value' => function (\common\models\FigureTime $item) {
+	                if (\Yii::$app->user->can('developer')) {
+	                    return Html::a($item->dateForHuman, ['/competitions/developer/logs',
+                            'modelClass' => \common\models\FigureTime::class, 'modelId' => $item->id]);
+                    }
+                    return $item->dateForHuman;
+                }
+            ],
 			[
 				'attribute' => 'athleteId',
 				'format'    => 'raw',

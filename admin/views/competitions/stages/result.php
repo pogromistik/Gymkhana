@@ -139,10 +139,16 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 			<?php if ($first) { ?>
                 <td>1.</td>
                 <td>
+                    <?php if (\Yii::$app->user->can('developer')) {
+                        $tmeForHuman = \yii\helpers\Html::a($first->timeForHuman, ['/competitions/developer/logs',
+                            'modelClass' => \common\models\Time::class, 'modelId' => $first->id]);
+                    } else {
+                        $tmeForHuman = $first->timeForHuman;
+                    } ?>
 					<?php if ($first->isFail) { ?>
-                        <strike><?= $first->timeForHuman ?></strike>
+                        <strike><?= $tmeForHuman ?></strike>
 					<?php } else { ?>
-						<?= $first->timeForHuman ?>
+						<?= $tmeForHuman ?>
 					<?php } ?>
 					<?php if ($first->videoLink) { ?>
                         <a href="<?= $first->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
@@ -193,10 +199,16 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
                     <td>
+	                    <?php if (\Yii::$app->user->can('developer')) {
+		                    $tmeForHuman = \yii\helpers\Html::a($next->timeForHuman, ['/competitions/developer/logs',
+			                    'modelClass' => \common\models\Time::class, 'modelId' => $next->id]);
+	                    } else {
+		                    $tmeForHuman = $next->timeForHuman;
+	                    } ?>
 						<?php if ($next->isFail) { ?>
-                            <strike><?= $next->timeForHuman ?></strike>
+                            <strike><?= $tmeForHuman ?></strike>
 						<?php } else { ?>
-							<?= $next->timeForHuman ?>
+							<?= $tmeForHuman ?>
 						<?php } ?>
 						<?php if ($next->videoLink) { ?>
                             <a href="<?= $next->videoLink ?>" class="fa fa-youtube" target="_blank"></a>

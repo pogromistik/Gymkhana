@@ -244,7 +244,10 @@ class StagesController extends BaseStageController
 				if (!$error) {
 					list($min, $secs) = explode(':', $figureTime->timeForHuman);
 					$time = ($min * 60000) + $secs * 1000;
-					$figureTime->resultTime = $time + $figureTime->fine * 1000;
+					$figureTime->resultTime = $time;
+					if ($figureTime->fine) {
+						$figureTime->resultTime += $figureTime->fine * 1000;
+					}
 					
 					//процент
 					if ($figure->bestTime) {

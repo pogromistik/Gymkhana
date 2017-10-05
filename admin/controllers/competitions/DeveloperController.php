@@ -5,6 +5,7 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\FigureTime;
+use yii\web\NotFoundHttpException;
 
 /**
  * AthleteController implements the CRUD actions for Athlete model.
@@ -35,8 +36,19 @@ class DeveloperController extends BaseController
 		foreach ($repeats as $repeat) {
 			$items = array_merge($items, FigureTime::findAll(['figureId' => $repeat['figureId'], 'athleteId' => $repeat['athleteId'], 'resultTime' => $repeat['resultTime']]));
 		}
+		
 		return $this->render('repeat-figures-time', [
 			'items' => $items
 		]);
+	}
+	
+	public function actionLogs($modelClass, $modelId)
+	{
+		$model = $modelClass::findOne($modelId);
+		if (!$model) {
+			throw new NotFoundHttpException('Модель не найдена');
+		}
+		
+		return $this->render('//competitions/common/_logs', ['model' => $model]);
 	}
 }

@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
 
 class MetisMenuAsset extends AssetBundle
 {
-    public $sourcePath = '@bower/metisMenu/dist';
+    public $sourcePath = '@bower/node_modules/metismenu/dist';
     public $css = [
         'metisMenu.min.css',
     ];
