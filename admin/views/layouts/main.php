@@ -455,6 +455,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
                 </div>
 			<?php } ?>
 		<?php } ?>
+        <?php if (YII_ENV == 'dev') { ?>
+            <div class="pt-20">
+                <div class="alert alert-danger">
+                    <b>Это тестовая версия</b>
+                </div>
+            </div>
+        <?php } ?>
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header"><?= $this->title ?></h1>

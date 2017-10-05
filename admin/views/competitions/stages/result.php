@@ -129,9 +129,9 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 					<?php } else { ?>
 						<?= $tmeForHuman ?>
 					<?php } ?>
-                    <?php if ($first->videoLink) { ?>
+					<?php if ($first->videoLink) { ?>
                         <a href="<?= $first->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
-                    <?php } ?>
+					<?php } ?>
                 </td>
                 <td><?= $first->fine ?></td>
 			<?php } else { ?>
