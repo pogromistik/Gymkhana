@@ -72,6 +72,7 @@ $this->title = 'Обработанные заявки с результатам�
 			],
 			[
 				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('developer'),
 				'value'   => function (TmpFigureResult $figureResult) {
 					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => TmpFigureResult::class,

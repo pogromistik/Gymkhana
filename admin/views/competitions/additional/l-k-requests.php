@@ -56,6 +56,7 @@ $this->title = 'Обработанные заявки на регистраци�
 			],
 			[
 				'format'  => 'raw',
+				'visible' => \Yii::$app->user->can('developer'),
 				'value'   => function (\common\models\TmpAthlete $athlete) {
 					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => \common\models\TmpAthlete::class,
