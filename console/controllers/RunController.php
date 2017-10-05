@@ -1474,6 +1474,7 @@ class RunController extends Controller
 					return false;
 				}*/
 				echo 'Not found: ' . $data['message'] . '; ' . $data['translate'] . PHP_EOL;
+				continue;
 			}
 			$translate = TranslateMessage::findOne(['id' => $messageSource->id]);
 			if (!$translate) {
