@@ -397,11 +397,21 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
 				<?php } elseif (\Yii::$app->user->can('translate')) {
 					?>
                     <li class="translate-bg">
-                        <a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>"><i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+                        <a href="<?= Url::to(['/competitions/translate-messages/translate']) ?>"><i
+                                    class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
                             &nbsp;ПЕРЕВОД</a>
                     </li>
 					<?php
 				} ?>
+					<?php if (\Yii::$app->user->can('developer')) {
+						?>
+                        <li>
+                            <a href="<?= Url::to(['/developer/work-page']) ?>"><i
+                                        class="fa fa-lock" aria-hidden="true"></i>
+                                &nbsp;Заблокировать</a>
+                        </li>
+						<?php
+					} ?>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
@@ -410,6 +420,13 @@ $errors = Error::findAll(['status' => Error::STATUS_NEW]);
     </nav>
 
     <div id="page-wrapper">
+	    <?php if (YII_ENV == 'betta') { ?>
+            <div class="pt-20">
+                <div class="alert alert-danger">
+                    <b>Это тестовая версия</b>
+                </div>
+            </div>
+	    <?php } ?>
 		<?php if (\Yii::$app->user->can('developer')) { ?>
 			<?php if ($errors) { ?>
                 <div class="pt-20">

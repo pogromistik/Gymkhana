@@ -32,6 +32,21 @@ class ProfileController extends AccessController
 		$this->layout = 'full-content';
 	}
 	
+	public function actionUploadImg()
+	{
+		$model = Athlete::findOne(\Yii::$app->user->identity->id);
+		if (!$model) {
+			throw new UserException();
+		}
+		
+		if ($model->load(\Yii::$app->request->post())) {
+			$model->save();
+			return $this->redirect('index');
+		}
+		
+		throw new NotFoundHttpException();
+	}
+	
 	public function actionIndex($success = false)
 	{
 		$this->pageTitle = 'Редактирование профиля';
@@ -47,25 +62,6 @@ class ProfileController extends AccessController
 		}
 		
 		if ($athlete->load(\Yii::$app->request->post()) && $athlete->save()) {
-			$file = UploadedFile::getInstance($athlete, 'photoFile');
-			if ($file && $file->size <= 307200) {
-				if ($athlete->photo) {
-					$filePath = \Yii::getAlias('@files') . $athlete->photo;
-					if (file_exists($filePath)) {
-						unlink($filePath);
-					}
-				}
-				$dir = \Yii::getAlias('@files') . '/' . 'athletes';
-				if (!file_exists($dir)) {
-					mkdir($dir);
-				}
-				$title = uniqid() . '.' . $file->extension;
-				$folder = $dir . '/' . $title;
-				if ($file->saveAs($folder)) {
-					$athlete->photo = '/athletes/' . $title;
-					$athlete->save(false);
-				}
-			}
 			
 			return $this->redirect(['index', 'success' => true]);
 		}
@@ -107,9 +103,17 @@ class ProfileController extends AccessController
 		$this->pageTitle = 'Информация о этапах и заявок на участие';
 		
 		$time = time();
+		$withoutRegistrationIds = Stage::find()->select('id')
+			->where(['startRegistration' => null, 'endRegistration' => null])
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->asArray()->column();
+		
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
 			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
-			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->all();
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]]);
+		if($withoutRegistrationIds) {
+			$newStages->andWhere(['not', ['id' => $withoutRegistrationIds]]);
+		}
+		$newStages = $newStages->all();
 		
 		$participants = null;
 		if ($newStages) {
@@ -438,8 +442,10 @@ class ProfileController extends AccessController
 			|| $participant->status == Participant::STATUS_OUT_COMPETITION
 		) {
 			$participant->status = Participant::STATUS_CANCEL_ATHLETE;
-		} else {
+		} elseif ($stage->participantsLimit && $stage->participantsLimit > 0) {
 			$participant->status = Participant::STATUS_NEED_CLARIFICATION;
+		} else {
+			$participant->status = Participant::STATUS_ACTIVE;
 		}
 		
 		if (!$participant->save()) {

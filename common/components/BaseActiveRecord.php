@@ -5,6 +5,7 @@ namespace common\components;
 
 use common\helpers\UserHelper;
 use common\models\ChangesLog;
+use common\models\HelpModel;
 use yii\console\Application;
 use yii\db\ActiveRecord;
 
@@ -134,6 +135,18 @@ abstract class BaseActiveRecord extends ActiveRecord
 	public function getAttributeDisplayValue($attribute, $value)
 	{
 		if ($this->hasAttribute($attribute)) {
+			if (mb_strpos($attribute, 'time') !== false || mb_strpos($attribute, 'Time') !== false
+			|| mb_strpos($attribute, 'recordInMoment') !== false) {
+				if ($value) {
+					return HelpModel::convertTimeToHuman($value);
+				}
+			}
+			if (mb_strpos($attribute, 'date') !== false || mb_strpos($attribute, 'Date') !== false
+			|| mb_strpos($attribute, 'startRegistration') !== false || mb_strpos($attribute, 'endRegistration') !== false) {
+				if ($value) {
+					return date('d.m.Y, H:i', $value);
+				}
+			}
 			return $value;
 		}
 		return $value;
