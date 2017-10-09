@@ -5,4 +5,4 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 0 0 * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii run/change-photo-status >> /var/log/cron.log
 0 0 * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii run/check-size >> /var/log/cron.log
 0 0 * * * certbot renew
-0 0 * * * sh /var/backups/backup.sh >> /var/log/cron.log 2>&1
+0 0 * * * sh /hdd/backups/backup.sh >> /var/log/cron.log 2>&1
