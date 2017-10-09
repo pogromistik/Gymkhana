@@ -1308,16 +1308,16 @@ $('.closeHintBtn').click(function () {
     });
 });
 
-function countDown(second,endMinute,endHour,endDay,endMonth) {
+function countDown(second, endMinute, endHour, endDay, endMonth) {
     var now = new Date();
     second = (arguments.length == 1) ? second + now.getSeconds() : second;
-    endHour = typeof(endHour) != 'undefined' ?  endHour : now.getHours();
+    endHour = typeof(endHour) != 'undefined' ? endHour : now.getHours();
     endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();
-    endDay = typeof(endDay) != 'undefined' ?  endDay : now.getDate();
+    endDay = typeof(endDay) != 'undefined' ? endDay : now.getDate();
     endMonth = typeof(endMonth) != 'undefined' ? endMonth : now.getMonth();
 //добавляем секунду к конечной дате (таймер показывает время уже спустя 1с.)
-    var endDate = new Date(now.getFullYear(),endMonth,endDay,endHour,endMinute,second+1);
-    var interval = setInterval(function() { //запускаем таймер с интервалом 1 секунду
+    var endDate = new Date(now.getFullYear(), endMonth, endDay, endHour, endMinute, second + 1);
+    var interval = setInterval(function () { //запускаем таймер с интервалом 1 секунду
         var time = endDate.getTime() - now.getTime();
         if (time < 0) {                      //если конечная дата меньше текущей
             var seconds = 0;
@@ -1338,3 +1338,38 @@ function countDown(second,endMinute,endHour,endDay,endMonth) {
         now.setSeconds(now.getSeconds() + 1); //увеличиваем текущее время на 1 секунду
     }, 1000);
 }
+
+$('.ajaxDelete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var actionId = elem.data('action');
+    var id = elem.data('id');
+    var text = '';
+    var action = '';
+    switch (actionId) {
+        case 'stage':
+            text = 'Уверены, что хотите удалить этот этап? Действие необратимо.';
+            action = '/competitions/stages/delete';
+            break;
+        case 'champ':
+            text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
+            action = '/competitions/championships/delete';
+            break;
+    }
+    if (confirm(text)) {
+        showBackDrop();
+        $.get(action, {
+            id: id
+        }).done(function (data) {
+            hideBackDrop();
+            if (data == true) {
+                location.href = '/competitions/championships';
+            } else {
+                BootboxError(data);
+            }
+        }).fail(function (error) {
+            hideBackDrop();
+            alert(error.responseText);
+        });
+    }
+});

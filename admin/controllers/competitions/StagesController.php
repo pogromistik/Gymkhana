@@ -498,4 +498,19 @@ class StagesController extends BaseStageController
 		
 		return $result;
 	}
+	
+	public function actionDelete($id)
+	{
+		$this->can('projectAdmin');
+		$stage = $this->findStage($id);
+		$participants = $stage->participants;
+		if ($participants) {
+			return 'На данный этап зарегистрированы участники. Удаление невозможно';
+		}
+		if ($stage->delete()) {
+			return true;
+		}
+		
+		return 'Возникла ошибка при удалении. Свяжитесь с разработчиком.';
+	}
 }

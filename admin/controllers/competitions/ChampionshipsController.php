@@ -284,4 +284,29 @@ class ChampionshipsController extends BaseController
 	{
 		return ($a['points'] > $b['points']) ? -1 : 1;
 	}
+	
+	public function actionDelete($id)
+	{
+		$this->can('projectAdmin');
+		$championship = $this->findModel($id);
+		$stages = $championship->stages;
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($stages as $stage) {
+			if ($stage->participants) {
+				$transaction->rollBack();
+				return 'На этап "' . $stage->title . '" есть зарегистрированные участники. Удаление чемпионата невозможно';
+			}
+			if (!$stage->delete()) {
+				$transaction->rollBack();
+				return 'Возникла ошибка. Обратитесь к разработчику.';
+			}
+		}
+		InternalClass::deleteAll(['championshipId' => $championship->id]);
+		if (!$championship->delete()) {
+			$transaction->rollBack();
+			return 'Возникла ошибка. Обратитесь к разработчику.';
+		}
+		$transaction->commit();
+		return true;
+	}
 }
