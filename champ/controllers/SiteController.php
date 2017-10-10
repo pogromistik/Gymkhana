@@ -29,7 +29,9 @@ class SiteController extends BaseController
 		$statusCode = 404;
 		$text = '';
 		$title = 'not found';
-		if ($exception) {
+		$this->pageTitle = 'Ошибка!';
+		if ($exception && isset($exception->statusCode)) {
+			$this->pageTitle = 'Ошибка: ' . $exception->statusCode;
 			switch ($exception->statusCode) {
 				case 404:
 					$title = 'not found';
