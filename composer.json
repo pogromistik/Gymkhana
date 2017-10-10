@@ -30,7 +30,9 @@
         "kartik-v/yii2-editable": "*",
         "kartik-v/yii2-popover-x": "*",
         "bower-asset/bootbox": "~4.3.0",
-        "philippfrenzel/yii2fullcalendar":"~2"
+        "philippfrenzel/yii2fullcalendar":"~2",
+        "sadovojav/yii2-image-cutter": "dev-master",
+        "yiisoft/yii2-imagine": "dev-upd-imagine"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
@@ -49,5 +51,11 @@
     },
     "scripts": {
         "post-install-cmd": "php init --env=Development --overwrite=n"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/pogromistik/yii2-imagine.git"
+        }
+    ]
 }

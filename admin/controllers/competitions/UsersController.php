@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use admin\models\PasswordForm;
 use common\models\User;
 use dektrium\rbac\models\Assignment;
 use Yii;
@@ -52,20 +53,26 @@ class UsersController extends BaseController
 			'user_id' => -10,
 		]);
 		
+		$errors = null;
 		if ($user->load(Yii::$app->request->post())) {
 			$user->regionId = \Yii::$app->user->identity->regionId;
-			if ($user->create()) {
-				if ($assignment->load(\Yii::$app->request->post())) {
-					$assignment->user_id = $user->id;
-					$assignment->updateAssignments();
+			$errors = PasswordForm::staticCheckPassword($user->password);
+			if (!$errors) {
+				if ($user->create()) {
+					if ($assignment->load(\Yii::$app->request->post())) {
+						$assignment->user_id = $user->id;
+						$assignment->updateAssignments();
+					}
+					
+					return $this->redirect(['index']);
 				}
-				return $this->redirect(['index']);
 			}
 		}
 		
 		return $this->render('create', [
 			'user'       => $user,
-			'assignment' => $assignment
+			'assignment' => $assignment,
+			'errors'     => $errors
 		]);
 	}
 	
@@ -80,16 +87,24 @@ class UsersController extends BaseController
 			'class'   => Assignment::className(),
 			'user_id' => $user->id,
 		]);
+		$errors = null;
 		if ($user->load(Yii::$app->request->post())) {
-			$user->save();
-			if ($assignment->load(\Yii::$app->request->post()) && $assignment->updateAssignments()) {
+			if ($user->password) {
+				$errors = PasswordForm::staticCheckPassword($user->password);
 			}
-			return $this->redirect(['index']);
+			if (!$errors) {
+				$user->save();
+				if ($assignment->load(\Yii::$app->request->post()) && $assignment->updateAssignments()) {
+				}
+				
+				return $this->redirect(['index']);
+			}
 		}
 		
 		return $this->render('update', [
 			'user'       => $user,
-			'assignment' => $assignment
+			'assignment' => $assignment,
+			'errors'     => $errors
 		]);
 	}
 	

@@ -25,6 +25,8 @@ use common\models\Time;
 use common\models\TmpAthlete;
 use common\models\TmpFigureResult;
 use common\models\TmpParticipant;
+use common\models\TranslateMessage;
+use common\models\TranslateMessageSource;
 use common\models\Year;
 use yii\console\Controller;
 use yii\db\Expression;
@@ -804,7 +806,8 @@ class RunController extends Controller
 			$championships = Championship::findAll(['status' => Championship::STATUS_PAST, 'yearId' => $year->id]);
 			foreach ($championships as $championship) {
 				if (Stage::find()->where(['championshipId' => $championship->id])
-					->andWhere(['>=', 'dateOfThe', $time])->one()) {
+					->andWhere(['>=', 'dateOfThe', $time])->one()
+				) {
 					$championship->status = Championship::STATUS_PRESENT;
 					$championship->save();
 					$count++;
@@ -878,7 +881,7 @@ class RunController extends Controller
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
@@ -896,7 +899,7 @@ class RunController extends Controller
 				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
 				$errors->save();
 				
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
@@ -920,7 +923,7 @@ class RunController extends Controller
 				$errors->type = Error::TYPE_SIZE;
 				$errors->save();
 				
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					\Yii::$app->mailer->compose('text', ['text' => $errors->text])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
@@ -1382,7 +1385,7 @@ class RunController extends Controller
 				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
 			foreach ($figureTimes as $item) {
 				if (Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
-				                                 'stageId'   => $stage->id])->one()
+				                                'stageId'   => $stage->id])->one()
 				) {
 					$item->stageId = $stage->id;
 					$item->save(false);
@@ -1392,6 +1395,143 @@ class RunController extends Controller
 			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
 		}
 		
+		return true;
+	}
+	
+	public function actionDownloadTranslate()
+	{
+		/** @var TranslateMessageSource[] $items */
+		$items = TranslateMessageSource::find()->all();
+		foreach ($items as $item) {
+			$message = TranslateMessage::findOne(['id' => $item->id]);
+			$res = $item->message . ';';
+			if ($message && $message->translation) {
+				$res .= $message->translation;
+			}
+			$res .= PHP_EOL;
+			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
+		}
+		
+		return true;
+	}
+	
+	public function actionUpdatePercent($stageId)
+	{
+		$stage = Stage::findOne($stageId);
+		if ($stage->classModel->title != Stage::CLASS_UNPERCENT) {
+			echo 'Error class' . PHP_EOL;
+		}
+		foreach ($stage->participants as $participant) {
+			$participant->percent = null;
+			$participant->save(false);
+		}
+		
+		return true;
+	}
+	
+	public static function actionInsertTranslate()
+	{
+		Country::deleteAll();
+		$filePath = 'admin/web/files/Perevody.xlsx';
+		
+		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
+		$worksheet = $objPHPExcel->getWorksheetIterator()->current();
+		
+		$array = [];
+		
+		foreach ($worksheet->getRowIterator() as $i => $row) {
+			$cellIterator = $row->getCellIterator();
+			/**
+			 * @var \PHPExcel_Cell $cell
+			 */
+			foreach ($cellIterator as $j => $cell) {
+				if ($cell->getFormattedValue() !== null) {
+					switch ($j) {
+						case 'B':
+							$array[$i]['message'] = $cell->getFormattedValue();
+							break;
+						case 'C':
+							$array[$i]['translate'] = $cell->getFormattedValue();
+							break;
+					}
+				}
+			}
+		}
+		
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($array as $i => $data) {
+			echo $i . PHP_EOL;
+			$messageSource = TranslateMessageSource::findOne(['message' => $data['message']]);
+			if (!$messageSource) {
+				/*$messageSource = new TranslateMessageSource();
+				$messageSource->category = 'app';
+				$messageSource->message = $data['message'];
+				$messageSource->status = 1;
+				if (!$messageSource->save()) {
+					var_dump($messageSource->errors);
+					$transaction->rollBack();
+					
+					return false;
+				}*/
+				echo 'Not found: ' . $data['message'] . '; ' . $data['translate'] . PHP_EOL;
+				continue;
+			}
+			$translate = TranslateMessage::findOne(['id' => $messageSource->id]);
+			if (!$translate) {
+				$translate = new TranslateMessage();
+				$translate->id = $messageSource->id;
+			}
+			$translate->language = 'en-US';
+			$translate->translation = $data['translate'];
+			if (!$translate->save()) {
+				var_dump($translate->errors);
+				$transaction->rollBack();
+				
+				return false;
+			}
+		}
+		$transaction->commit();
+		
+		return true;
+	}
+	
+	public function actionCancelClasses()
+	{
+		$notCancel = [577, 549, 550, 578, 572, 590, 571, 605];
+		/** @var Participant[] $participants */
+		$participants = Participant::find()->where(['stageId' => 16])
+			->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['not', ['id' => $notCancel]])
+			->all();
+		$count = 0;
+		foreach ($participants as $participant) {
+			echo $count . PHP_EOL;
+			$transaction = \Yii::$app->db->beginTransaction();
+			$athlete = Athlete::findOne($participant->athleteId);
+			$athlete->athleteClassId = $participant->athleteClassId;
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				var_dump($athlete->errors);
+				return false;
+			}
+			$history = ClassHistory::find()->where(['athleteId' => $athlete->id, 'oldClassId' => $participant->athleteClassId,
+				'newClassId' => $participant->newAthleteClassId])->one();
+			$history->delete();
+			if ($athlete->hasAccount) {
+				$text = 'К сожалению, была допущена ошибка: по результатам 4 этапа G-Sport класс повысили только призёры. Ваш класс по-прежнему ' . $participant->athleteClass->title;
+				Notice::add($athlete->id, $text);
+			}
+			$participant->newAthleteClassId = null;
+			$participant->newAthleteClassStatus = null;
+			if (!$participant->save()) {
+				$transaction->rollBack();
+				var_dump($participant->errors);
+				return false;
+			}
+			$transaction->commit();
+			$count++;
+		}
+		echo 'Update: ' . $count . ' items' . PHP_EOL;
 		return true;
 	}
 }

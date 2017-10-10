@@ -8,6 +8,8 @@ $params = array_merge(
 
 return [
 	'id'                  => 'app-site',
+	'language'            => 'ru_RU',
+	'timeZone'            => 'Asia/Yekaterinburg',
 	'basePath'            => dirname(__DIR__),
 	'bootstrap'           => ['log'],
 	'controllerNamespace' => 'site\controllers',
@@ -43,6 +45,10 @@ return [
 				[
 					'pattern' => 'download/<id:\w+>',
 					'route'   => 'site/download'
+				],
+				[
+					'pattern' => 'work/page',
+					'route'   => 'work/page'
 				],
 				[
 					'pattern' => 'photogallery/<year:\w+>/<album:\w+>',

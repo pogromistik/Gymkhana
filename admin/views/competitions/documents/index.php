@@ -12,7 +12,7 @@ $this->title = 'Документы';
 <div class="assoc-news-index">
 	<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
         <p>
-			<?= Html::a('Добавить раздел', ['create'], ['class' => 'btn btn-success']) ?>
+			<?= Html::a('Добавить раздел', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
         </p>
 	<?php } ?>
 	
@@ -34,7 +34,7 @@ $this->title = 'Документы';
 				'format' => 'raw',
 				'value'  => function (\common\models\DocumentSection $item) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $item->id], [
-						'class' => 'btn btn-primary'
+						'class' => 'btn btn-my-style btn-blue'
 					]);
 				}
 			],
@@ -44,12 +44,12 @@ $this->title = 'Документы';
 				'value'   => function (\common\models\DocumentSection $item) {
 					if ($item->status) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-							'class' => 'btn btn-danger',
+							'class' => 'btn btn-my-style btn-red',
 							'title' => 'Заблокировать раздел'
 						]);
 					} else {
-						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $item->id], [
-							'class' => 'btn btn-success',
+						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $item->id], [
+							'class' => 'btn btn-my-style btn-boggy',
 							'title' => 'Разблокировать раздел'
 						]);
 					}

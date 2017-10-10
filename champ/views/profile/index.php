@@ -7,6 +7,7 @@ use kartik\widgets\DepDrop;
 use common\models\Country;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use karpoff\icrop\CropImageUpload;
 
 /**
  * @var \common\models\Athlete     $athlete
@@ -14,7 +15,6 @@ use yii\web\JsExpression;
  * @var \champ\models\PasswordForm $password
  */
 ?>
-
 <h2>Редактирование профиля</h2>
 <div class="row">
     <div class="col-bg-7 col-lg-9 col-md-10 col-sm-10-col-xs-12">
@@ -22,23 +22,24 @@ use yii\web\JsExpression;
             <div class="alert alert-success">Изменения успешно сохранены</div>
 		<?php } ?>
 
+
         <h3>Изменение пароля</h3>
 		<?php $form = ActiveForm::begin() ?>
 		<?= $form->field($password, 'pass')->passwordInput()->label('Пароль'); ?>
 		<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
 		<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
 		<?php $form->end() ?>
-
-
-        <h3><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h3>
-        <div class="athlete-form">
-			<?php $form = ActiveForm::begin(['enableAjaxValidation' => true, 'options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
-
-            <div class="help-for-athlete">
-                <small>Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg.
-                    Необходимые пропорции: 3x4 (300x400 pixels)
-                </small>
-            </div>
+        
+        <div class="hr-motorcycle hr-motorcycle-8"></div>
+        
+        <h3>Изменение фотографии</h3>
+        <div class="help-for-athlete">
+            <small>Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg.
+                Необходимые пропорции: 3x4 (300x400 pixels)
+            </small>
+        </div>
+		<div class="pt-10">
+			<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 			<?php if ($athlete->photo) { ?>
                 <div class="row">
                     <div class="col-md-2 col-sm-4 img-in-profile">
@@ -48,12 +49,41 @@ use yii\web\JsExpression;
                         <br>
                     </div>
                     <div class="col-md-10 col-sm-8">
-						<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+						<?= $form->field($athlete, 'photo')->widget(\sadovojav\cutter\Cutter::className(), [
+							'cropperOptions'        => [
+								'aspectRatio' => 3 / 4,
+							],
+							'defaultCropperOptions' => [
+								'rotatable' => false,
+								'zoomable'  => false,
+								'movable'   => false,
+							]
+						]) ?>
                     </div>
                 </div>
 			<?php } else { ?>
-				<?= $form->field($athlete, 'photoFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
+				<?= $form->field($athlete, 'photo')->widget(\sadovojav\cutter\Cutter::className(), [
+					'cropperOptions'        => [
+						'aspectRatio' => 3 / 4
+					],
+					'defaultCropperOptions' => [
+						'rotatable' => false,
+						'zoomable'  => false,
+						'movable'   => false,
+					]
+				]) ?>
 			<?php } ?>
+            <div class="form-group">
+				<?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary']) ?>
+            </div>
+			<?php ActiveForm::end(); ?>
+        </div>
+
+        <div class="hr-motorcycle hr-motorcycle-6"></div>
+        
+        <h3><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h3>
+        <div class="athlete-form">
+			<?php $form = ActiveForm::begin(['enableAjaxValidation' => true, 'options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
 
             <div class="help-for-athlete">
                 <small>Информация, обязательная для заполнения:</small>
@@ -152,6 +182,8 @@ use yii\web\JsExpression;
 
         </div>
 
+        <div class="hr-motorcycle hr-motorcycle-7"></div>
+        
         <h3>Мотоциклы</h3>
         <div class="help-for-athlete">
             <small>

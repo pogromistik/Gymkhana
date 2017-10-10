@@ -199,7 +199,7 @@ class SiteController extends BaseController
 				return 'Необходимо заполнить все поля, кроме номера телефона';
 			}
 			if ($form->save(false)) {
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Новый запрос на регистрацию в личном кабинете';
 					$text .= '<br>';
 					$text .= '<b>Фио: </b>' . $form->lastName . ' ' . $form->firstName;
@@ -248,7 +248,7 @@ class SiteController extends BaseController
 	{
 		$model = new PasswordResetRequestForm();
 		if ($model->load(\Yii::$app->request->post())) {
-			$athlete = Athlete::findOne(['email' => $model->login]);
+			$athlete = Athlete::findOne(['upper("email")' => mb_strtoupper($model->login)]);
 			if (!$athlete) {
 				$login = preg_replace('~\D+~', '', $model->login);
 				if ($login == $model->login) {

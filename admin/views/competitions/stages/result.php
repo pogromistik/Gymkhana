@@ -19,12 +19,33 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 	->andWhere(['newAthleteClassStatus' => \common\models\Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+        <li>
+            Обратите внимание, что новые классы спортсменов требуют подтверждения. Если спортсмены повысят класс - появятся
+            кнопки для его подтверждения и отклонения. Можно подтвердить\отклонить как все результаты сразу, так и один
+            конкретный. Если какие-то результаты вызывают у вас подозрение - рекомендуем проверить их на предмет опечаток и при
+            необходимости изменить время в "заездах", после чего заново "пересчитать результаты".
+        </li>
+        <li>
+            Если вы подтвердили новый класс, а потом выяснилось, что в результате допущена опечатка и фактический класс
+            спортсмена ниже - измените класс в профиле спортсмена или на
+            странице "<?= \yii\helpers\Html::a('изменить класс спортсмена', ['/competitions/athlete/change-class']) ?>".
+        </li>
+    </ul>
+</div>
+
 <div class="row pb-10">
     <div class="col-sm-6">
-		<?= \yii\helpers\Html::a('Скачать в xls', ['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-success']) ?>
+		<?= \yii\helpers\Html::a('Скачать в xls',
+			['/competitions/xls/stage-results', 'stageId' => $stage->id], ['class' => 'btn btn-my-style btn-dirty-blue']) ?>
     </div>
     <div class="col-sm-6 text-right">
-		<?= \yii\helpers\Html::a('Добавить видео заездов', ['/competitions/stages/add-video', 'stageId' => $stage->id], ['class' => 'btn btn-warning']) ?>
+		<?= \yii\helpers\Html::a('Добавить видео заездов', ['/competitions/stages/add-video', 'stageId' => $stage->id],
+			['class' => 'btn btn-my-style btn-peach']) ?>
     </div>
 </div>
 
@@ -118,14 +139,21 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
 			<?php if ($first) { ?>
                 <td>1.</td>
                 <td>
+                    <?php if (\Yii::$app->user->can('developer')) {
+                        $tmeForHuman = \yii\helpers\Html::a($first->timeForHuman, ['/competitions/developer/logs',
+                            'modelClass' => \common\models\Time::class, 'modelId' => $first->id],
+	                        ['class' => 'dev-logs']);
+                    } else {
+                        $tmeForHuman = $first->timeForHuman;
+                    } ?>
 					<?php if ($first->isFail) { ?>
-                        <strike><?= $first->timeForHuman ?></strike>
+                        <strike><?= $tmeForHuman ?></strike>
 					<?php } else { ?>
-						<?= $first->timeForHuman ?>
+						<?= $tmeForHuman ?>
 					<?php } ?>
-                    <?php if ($first->videoLink) { ?>
+					<?php if ($first->videoLink) { ?>
                         <a href="<?= $first->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
-                    <?php } ?>
+					<?php } ?>
                 </td>
                 <td><?= $first->fine ?></td>
 			<?php } else { ?>
@@ -172,14 +200,21 @@ $newClasses = $stage->getParticipantsForRaces()->andWhere(['not', ['newAthleteCl
                 <td><?= $attempt ?>.</td>
 				<?php if ($next) { ?>
                     <td>
+	                    <?php if (\Yii::$app->user->can('developer')) {
+		                    $tmeForHuman = \yii\helpers\Html::a($next->timeForHuman, ['/competitions/developer/logs',
+			                    'modelClass' => \common\models\Time::class, 'modelId' => $next->id],
+			                    ['class' => 'dev-logs']);
+	                    } else {
+		                    $tmeForHuman = $next->timeForHuman;
+	                    } ?>
 						<?php if ($next->isFail) { ?>
-                            <strike><?= $next->timeForHuman ?></strike>
+                            <strike><?= $tmeForHuman ?></strike>
 						<?php } else { ?>
-							<?= $next->timeForHuman ?>
+							<?= $tmeForHuman ?>
 						<?php } ?>
-	                    <?php if ($next->videoLink) { ?>
+						<?php if ($next->videoLink) { ?>
                             <a href="<?= $next->videoLink ?>" class="fa fa-youtube" target="_blank"></a>
-	                    <?php } ?>
+						<?php } ?>
                     </td>
                     <td><?= $next->fine ?></td>
 				<?php } else { ?>

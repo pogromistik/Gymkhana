@@ -1,5 +1,7 @@
 <?php
+
 namespace admin\models;
+
 use common\models\AthletesClass;
 use common\models\HelpModel;
 use common\models\Time;
@@ -12,6 +14,7 @@ class ReferenceTimeForm extends Model
 	public $timeForHuman;
 	public $referenceTime;
 	public $referenceTimeForHuman;
+	public $coefficient;
 	
 	/**
 	 * @inheritdoc
@@ -28,7 +31,7 @@ class ReferenceTimeForm extends Model
 	{
 		return [
 			'timeForHuman' => 'Время',
-			'class' => 'Класс соревнования'
+			'class'        => 'Класс соревнования'
 		];
 	}
 	
@@ -44,7 +47,17 @@ class ReferenceTimeForm extends Model
 		$time = floor($this->time / $athleteClass->coefficient);
 		$this->referenceTime = ((int)($time / 10)) * 10;
 		$this->referenceTimeForHuman = HelpModel::convertTimeToHuman($this->referenceTime);
+		$this->coefficient = $athleteClass->coefficient;
 		
 		return true;
+	}
+	
+	public function getClassModel()
+	{
+		if (!$this->class) {
+			return null;
+		}
+		
+		return AthletesClass::findOne($this->class);
 	}
 }

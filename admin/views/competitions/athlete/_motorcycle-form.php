@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 		</div>
 		<div class="col-md-2 col-sm-4">
 			<div class="form-group complete">
-				<?= Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>
+				<?= Html::submitButton('Добавить', ['class' => 'btn btn-my-style btn-green']) ?>
 			</div>
 		</div>
 	</div>

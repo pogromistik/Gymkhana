@@ -123,6 +123,25 @@ function changeMessageStatus(id) {
     });
 }
 
+function deleteMessage(id) {
+    showBackDrop();
+    if (confirm('Точно удалить?')) {
+        $.get("/competitions/translate-messages/delete", {id: id}).done(function (data) {
+            if (data == true) {
+                location.reload(true);
+            }
+            else {
+                hideBackDrop();
+                alert(data);
+            }
+        }).fail(function (error) {
+            hideBackDrop();
+            alert(error.responseText);
+        });
+        hideBackDrop();
+    }
+}
+
 $(document).on("submit", '.TranslateMessagesForm', function (e) {
     e.preventDefault();
     showBackDrop();
@@ -136,6 +155,7 @@ $(document).on("submit", '.TranslateMessagesForm', function (e) {
             if (result == true) {
                 btn.removeClass('btn-primary');
                 btn.addClass('btn-success');
+                form.parent('tr').addClass('tr-success');
                 hideBackDrop();
             }
             else {

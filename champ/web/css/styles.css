@@ -443,6 +443,15 @@ span.red {
     font-size: 10px;
 }
 
+span.remove {
+    color: #dc0004;
+}
+
+.wait {
+    color: #56a025;
+    font-size: 18px;
+}
+
 span.green, td.green {
     color: #56a025;
 }
@@ -634,6 +643,9 @@ a.deletePhoto {
     height: 159px;
     padding-right: 10px;
     overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }
 
 .athletes .info {
@@ -643,10 +655,6 @@ a.deletePhoto {
     height: 159px;
     z-index: 10;
     width: calc(100% - 130px);
-}
-
-.athletes .img img {
-    max-width: 120px;
 }
 
 .athletes .item .card .athleteClass {
@@ -731,6 +739,10 @@ a.deletePhoto {
 .list-nav ul li {
     list-style: none;
     text-transform: uppercase;
+}
+
+.list-nav ul li:nth-child(2n) a {
+    color: #6d6f73;
 }
 
 .registration-city {
@@ -1037,4 +1049,126 @@ table.results small.red {
 
 h2.title small {
     font-size: 14px;
+}
+
+.down-time {
+    float: left;
+    text-align: center;
+}
+
+.time-blocks .points {
+    float:left;
+    font-size:55px;
+}
+
+.down-time .item {
+    font-family: Stencil;
+    font-size: 65px;
+}
+
+.work-page {
+    text-align: center;
+    padding-top: 50px;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.work-page .time-blocks{
+    position: relative;
+    left: calc(50% - 124px);
+}
+
+.image-cutter .dropzone {
+    min-height: 100px;
+}
+.image-cutter .dropzone .img-container .preview-image {
+    height: 150px;
+    width: auto;
+}
+
+.hr-motorcycle {
+    margin-top: 15px;
+    width: 100%;
+    height: 25px;
+    background-size: contain;
+}
+
+.hr-motorcycle-1 {
+    background: url('../img/icons/1.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-2 {
+    background: url('../img/icons/2.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-3 {
+    background: url('../img/icons/3.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-4 {
+    background: url('../img/icons/4.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-5 {
+    background: url('../img/icons/5.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-6 {
+    background: url('../img/icons/6.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-7 {
+    background: url('../img/icons/7.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-8 {
+    background: url('../img/icons/8.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-9 {
+    background: url('../img/icons/9.png') repeat;
+    background-size: contain;
+}
+
+.circle-class {
+    padding: 5px;
+    text-align: center;
+    border-radius: 100%;
+    width: 32px;
+    height: 30px;
+    display: inline-block;
+}
+
+.circle-class-green {
+    background: #00bb04;
+    color: #f4f4f4;
+}
+
+.circle-class-red {
+    background: #ff014a;
+    color: #f4f4f4;
+}
+
+.circle-class-blue {
+    background: #0082f4;
+    color: #f4f4f4;
+}
+
+.circle-class-yellow {
+    background: #ffcd00;
+    color: #f4f4f4;
+}
+
+.circle-class-white {
+    background: #ffffff;
+    color: #000000;
 }

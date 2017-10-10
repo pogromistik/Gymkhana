@@ -12,7 +12,7 @@ $this->title = 'Фигуры';
 <div class="figure-index">
 
     <p>
-		<?= Html::a('Добавить фигуру', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить фигуру', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -29,6 +29,16 @@ $this->title = 'Фигуры';
 			],
 			'bestTimeForHuman',
 			'bestTimeInRussiaForHuman',
+			[
+				'visible' => \Yii::$app->user->can('developer'),
+				'format'  => 'raw',
+				'value'   => function (\common\models\Figure $figure) {
+					return Html::a('логи', ['/competitions/developer/logs',
+						'modelClass' => \common\models\Figure::class,
+						'modelId'    => $figure->id
+					], ['class' => 'dev-logs dev-logs-btn']);
+				}
+			]
 		],
 	]); ?>
 </div>

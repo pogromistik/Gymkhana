@@ -41,6 +41,13 @@ AppAsset::register($this);
 			<?= Alert::widget() ?>
 		<?php }
 		?>
+	    <?php if (YII_ENV == 'betta') { ?>
+            <div class="pt-20">
+                <div class="alert alert-danger">
+                    <b>Это тестовая версия</b>
+                </div>
+            </div>
+	    <?php } ?>
         <h1><?= Html::encode($this->title) ?></h1>
 		<?= $content ?>
     </div>

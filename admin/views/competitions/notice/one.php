@@ -7,7 +7,7 @@ use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\search\NoticeSearch */
+/* @var $searchModel common\models\search\NoticesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $success integer */
 /* @var $model \common\models\Notice */
@@ -44,7 +44,7 @@ $length = 255;
 	<?= $form->field($model, 'link')->textInput(['maxlength' => 255, 'placeholder' => 'ссылка на подробную информацию']) ?>
 
     <div class="form-group">
-		<?= Html::submitButton('Отправить', ['class' => 'btn btn-success']) ?>
+		<?= Html::submitButton('Отправить', ['class' => 'btn btn-my-style btn-green']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>
@@ -55,9 +55,9 @@ $length = 255;
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
-		'rowOptions' => function (\common\models\Notice $notice) {
-	    return ['class' => 'is-delivery-'.$notice->status];
-	},
+		'rowOptions'   => function (\common\models\Notice $notice) {
+			return ['class' => 'is-delivery-' . $notice->status];
+		},
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
@@ -69,7 +69,7 @@ $length = 255;
 				}
 			],
 			'text',
-            'link',
+			'link',
 			[
 				'attribute' => 'dateAdded',
 				'format'    => 'raw',

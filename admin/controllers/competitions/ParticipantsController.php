@@ -2,7 +2,7 @@
 
 namespace admin\controllers\competitions;
 
-use admin\controllers\BaseController;
+use admin\components\BaseStageController;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -23,14 +23,13 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
  * ParticipantsController implements the CRUD actions for Participant model.
  */
-class ParticipantsController extends BaseController
+class ParticipantsController extends BaseStageController
 {
 	public function actions()
 	{
@@ -47,16 +46,7 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = Stage::findOne($stageId);
-		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
-		}
-		
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new ForbiddenHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
 		
 		$error = null;
 		$needClarification = false;
@@ -124,6 +114,8 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
+		$this->layout = 'stages';
+		
 		return $this->render('index', [
 			'searchModel'       => $searchModel,
 			'dataProvider'      => $dataProvider,
@@ -139,15 +131,8 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = Stage::findOne($stageId);
-		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
-		}
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new ForbiddenHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
+		
 		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
 			throw new UserException('Этап завершен, изменение данных невозможно');
 		}
@@ -395,12 +380,7 @@ class ParticipantsController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = Stage::findOne($stageId);
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new ForbiddenHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
 		
 		$error = false;
 		
@@ -410,6 +390,8 @@ class ParticipantsController extends BaseController
 		
 		$participants = $stage->getParticipantsForRaces()->andWhere(['isArrived' => 1])->all();
 		
+		$this->layout = 'stages';
+		
 		return $this->render('races', [
 			'stage'        => $stage,
 			'error'        => $error,
@@ -417,7 +399,7 @@ class ParticipantsController extends BaseController
 		]);
 	}
 	
-	public function actionAddTime()
+	public function actionAddTime($checkTime = true)
 	{
 		$this->can('competitions');
 		
@@ -433,7 +415,19 @@ class ParticipantsController extends BaseController
 		if (isset($params['Time']['id']) && $params['Time']['id'] != '') {
 			$time = Time::findOne($params['Time']['id']);
 		} else {
-			$time = new Time();
+			if (isset($params['Time']['stageId']) && isset($params['Time']['attemptNumber']) &&
+				isset($params['Time']['participantId'])
+			) {
+				$time = Time::findOne(['attemptNumber' => $params['Time']['attemptNumber'],
+				                       'stageId'       => $params['Time']['stageId'],
+				                       'participantId' => $params['Time']['participantId']
+				]);
+				if (!$time) {
+					$time = new Time();
+				}
+			} else {
+				$time = new Time();
+			}
 		}
 		if ($time->load(\Yii::$app->request->post())) {
 			$stage = Stage::findOne($time->stageId);
@@ -449,9 +443,15 @@ class ParticipantsController extends BaseController
 				if ($time->isFail == Time::IS_FAIL_YES) {
 					$time->timeForHuman = Time::FAIL_TIME_FOR_HUMAN;
 				} else {
-					$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
-					
-					return $result;
+					if ($checkTime) {
+						$result['error'] = $time->participant->athlete->getFullName() . ': необходимо указать время';
+						
+						return $result;
+					} else {
+						$result['success'] = true;
+						
+						return $result;
+					}
 				}
 			}
 			trim($time->timeForHuman, '_');
@@ -524,13 +524,13 @@ class ParticipantsController extends BaseController
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата "' . $stage->championship->title . '" отклонена';
 				Notice::add($participant->athleteId, $text);
 			}
-			if (YII_ENV != 'dev' && $athlete->email) {
+			if (YII_ENV == 'prod' && $athlete->email) {
 				$text = 'Ваша заявка на этап "' . $stage->title . '" чемпионата 
 				"' . $stage->championship->title . '" на мотоцикле '
 					. $participant->motorcycle->getFullTitle() . ' отклонена, так как на этап уже зарегистрировано максимальное
 					количество участников. Для уточнения подробностей можете связаться с
 					организатором соревнования.';
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					\Yii::$app->mailer->compose('text', ['text' => $text])
 						->setTo($athlete->email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
@@ -609,28 +609,9 @@ class ParticipantsController extends BaseController
 			}
 		}
 		
-		$participants = Participant::findAll(['stageId' => $stageId, 'status' => [Participant::STATUS_ACTIVE], 'isArrived' => 1]);
-		if ($participants) {
-			$classIds = Participant::find()->select('athleteClassId')
-				->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])->distinct()->asArray()->column();
-			$class = null;
-			while ($classIds) {
-				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
-				$presumablyClass = AthletesClass::findOne(['percent' => $percent, 'id' => $classIds]);
-				if (Participant::find()->where(['stageId' => $stageId, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])
-						->andWhere(['athleteClassId' => $presumablyClass->id])->count() >= 3
-				) {
-					$class = $presumablyClass;
-					break;
-				}
-				$key = array_search($presumablyClass->id, $classIds);
-				unset($classIds[$key]);
-			}
-			if (!$class) {
-				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
-					->orderBy(['percent' => SORT_DESC])->one();
-			}
-			$stage->class = $class->id;
+		$stageClass = $stage->classCalculate();
+		if ($stageClass) {
+			$stage->class = $stageClass->id;
 			if (!$stage->save()) {
 				return 'Не удалось установить класс соревнований';
 			}
@@ -913,5 +894,113 @@ class ParticipantsController extends BaseController
 		}
 		
 		return 'Произошла ошибка при удалении. Обратитесь к разработчику';
+	}
+	
+	public function actionPrepareListForImport($stageId)
+	{
+		$this->can('competitions');
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
+		$prevStageIds = Stage::find()->select('id')->where(['championshipId' => $stage->championshipId])
+			->andWhere(['<', 'dateOfThe', $stage->dateOfThe])->asArray()->column();
+		if (!$prevStageIds) {
+			return 'Ещё не проведён ни один этап';
+		}
+		
+		$query = new Query();
+		$query->from(['a' => Participant::tableName(), 'b' => Athlete::tableName(), 'c' => Motorcycle::tableName()]);
+		$query->select(['a.id', 'a.athleteId', 'a.motorcycleId', '("b"."lastName" || \' \' || "b"."firstName") as athlete',
+			'a.number', '("c"."mark" || \' \' || "c"."model") as motorcycle']);
+		$query->where(['a.stageId' => $prevStageIds]);
+		$query->andWhere(new Expression('"a"."athleteId"="b"."id"'));
+		$query->andWhere(new Expression('"a"."motorcycleId"="c"."id"'));
+		$query->orderBy('b.lastName');
+		$participants = $query->all();
+		
+		if (!$participants) {
+			return 'Участники не найдены';
+		}
+		
+		$checkAthletes = [];
+		$resultForList = [];
+		foreach ($participants as $participant) {
+			if (isset($checkAthletes[$participant['athleteId'] . '-' . $participant['motorcycleId']])) {
+				continue;
+			}
+			$checkAthletes[$participant['athleteId'] . '-' . $participant['motorcycleId']] = $participant;
+			$resultForList[$participant['id']] = $participant['number'] ? '№' . $participant['number'] . ' ' : '';
+			$resultForList[$participant['id']] .= $participant['athlete'] . ', ' . $participant['motorcycle'];
+		}
+		
+		return $this->renderAjax('_participantsList', ['participants' => $resultForList, 'stage' => $stage]);
+	}
+	
+	public function actionImportForStage()
+	{
+		$this->can('competitions');
+		
+		$stageId = \Yii::$app->request->post('stageId');
+		$participantIds = \Yii::$app->request->post('participants');
+		if (!$stageId || !$participantIds) {
+			return 'Ошибка. Свяжитесь с разработчиком';
+		}
+		
+		$stage = Stage::findOne($stageId);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
+			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
+				return 'Доступ запрещен';
+			}
+		}
+		$motorcycleIds = Participant::find()->select('motorcycleId')
+			->where(['stageId' => $stageId])->asArray()->column();
+		
+		$prevStageIds = Stage::find()->select('id')->where(['championshipId' => $stage->championshipId])
+			->andWhere(['<', 'dateOfThe', $stage->dateOfThe])->asArray()->column();
+		$participants = Participant::find()->where(['stageId' => $prevStageIds])
+			->andWhere(['id' => $participantIds]);
+		if ($motorcycleIds) {
+			$participants = $participants->andWhere(['not', ['motorcycleId' => $motorcycleIds]]);
+		}
+		/** @var Participant[] $participants */
+		$participants = $participants->all();
+		if (!$participants) {
+			return 'Невозможно добавить ни одного участника. Возможно, все выбранные вами участники уже зарегистрированы на этап.';
+		}
+		
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($participants as $participant) {
+			$new = new Participant();
+			$new->championshipId = $stage->championshipId;
+			$new->stageId = $stageId;
+			$new->athleteId = $participant->athleteId;
+			$new->motorcycleId = $participant->motorcycleId;
+			if ($participant->number) {
+				$new->number = $participant->number;
+			}
+			$new->athleteClassId = $participant->athlete->athleteClassId;
+			$new->status = Participant::STATUS_ACTIVE;
+			if ($stage->dateOfThe <= time()) {
+				$new->isArrived = true;
+			}
+			if (!$new->save()) {
+				$transaction->rollBack();
+				
+				return 'Ошибка. Свяжитесь с разработчиком.';
+			}
+		}
+		$transaction->commit();
+		
+		return true;
 	}
 }
