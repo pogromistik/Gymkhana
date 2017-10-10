@@ -38,13 +38,19 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 </div>',
 				'format'    => 'raw',
 				'value'     => function (Championship $championship) {
+					$html = $championship->title;
 					if (\Yii::$app->user->can('developer')) {
-						return Html::a($championship->title, ['/competitions/developer/logs',
+						$html = Html::a($championship->title, ['/competitions/developer/logs',
 							'modelClass' => Championship::class, 'modelId' => $championship->id],
 							['class' => 'dev-logs']);
 					}
+					if (\Yii::$app->user->can('projectAdmin') && $championship->status === Championship::STATUS_UPCOMING) {
+						$html .= '<br>';
+						$html .= '<a href="#" class="ajaxDelete btn btn-my-style btn-red small" ' .
+							'data-id="' . $championship->id . '"  data-action="champ">удалить чемпионат</a>';
+					}
 					
-					return $championship->title;
+					return $html;
 				}
 			],
 			[
@@ -75,6 +81,11 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 							$html .= ' ';
 							$html .= Html::a('<span class="fa fa-user btn btn-my-style btn-light-aquamarine small"></span>',
 								['/competitions/participants/index', 'stageId' => $stage->id]);
+							if (!$stage->participants && \Yii::$app->user->can('projectAdmin')) {
+								$html .= ' ';
+								$html .= '<a href="#" class="ajaxDelete btn btn-my-style btn-red small fa fa-remove" ' .
+									'data-id="' . $stage->id . '"  data-action="stage"></a>';
+							}
 							$html .= '</li>';
 						}
 						$html .= '</ul>';
