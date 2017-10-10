@@ -333,7 +333,9 @@ class Championship extends BaseActiveRecord
 		$busyNumbers = array_merge($busyNumbers, $tmpBusyNumbers);
 		$oldParticipantsNumbers = Participant::find()->select('number')
 			->where(['not', ['stageId' => $stage->id]])
-			->andWhere(['championshipId' => $stage->championshipId]);
+			->andWhere(['championshipId' => $stage->championshipId])
+			->andWhere(['not', ['status' => [Participant::STATUS_DISQUALIFICATION, Participant::STATUS_CANCEL_ATHLETE,
+				Participant::STATUS_CANCEL_ADMINISTRATION]]]);
 		if ($athleteId) {
 			$oldParticipantsNumbers = $oldParticipantsNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
