@@ -366,7 +366,7 @@ small.very {
     font-size: 8px;
 }
 
-.is-delivery-2 {
+.is-delivery-2, .green-grid-row {
     background: #dff0d8 !important;
 }
 
@@ -546,6 +546,326 @@ a.red-button {
     border: 2px solid #5cb85c !important;
 }
 
+.alert-errors {
+    background: #b72824;
+    color: #fff;
+    padding: 10px;
+    box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
+    0 3px 5px rgba(0, 1, 6, .6),
+    0 0 1px 1px rgba(0, 1, 6, .2);
+}
+
+.required-alert-info {
+    background: #98d9f3;
+    background: linear-gradient(to top, #98d9f3, #568090);
+    color: #fff;
+    border: 1px solid #6199af;
+    padding: 10px;
+}
+
+.required-alert-info b {
+    color: #003a54;
+}
+
+.required-alert-info a {
+    color: #e7e8a4;
+}
+
+.alert-errors ul {
+    padding-left: 20px;
+}
+
+.with-hr-border > div {
+    border-left: 3px solid #00aa00;
+}
+
+.with-bottom-border {
+    border-bottom: 3px solid #00aa00;
+}
+
+.champ-description {
+    height: 412px;
+}
+
+@media (max-width: 991px) {
+    .with-border-bottom-sm {
+        border-bottom: 3px solid #00aa00;
+    }
+}
+
+@media (max-width: 530px) {
+    .champ-description {
+        height: auto;
+    }
+    .with-border-bottom-sm {
+        border-bottom: 3px solid #00aa00;
+    }
+}
+
+.panel-my-style {
+    box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
+    0 1px 1px rgba(0, 1, 6, .5),
+    0 0 1px 1px rgba(0, 1, 6, .2);
+}
+
+.panel-blue {
+    border-color: #3251b2;
+}
+
+.panel-blue > .panel-heading {
+    background: #4974c1;
+    background: linear-gradient(to top, #2d4c9c, #6c96e0);
+    color: #fff;
+}
+
+.btn-my-style {
+    box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
+    0 1px 1px rgba(0, 1, 6, .5),
+    0 0 1px 1px rgba(0, 1, 6, .2);
+    transition: background 0.5s ease;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.btn-my-style.small {
+    padding: 3px 6px;
+    font-size: 12px;
+}
+
+.btn-my-style:hover {
+    font-weight: bold;
+}
+
+.btn-my-style:active, .btn-my-style:focus {
+    color: #fff;
+}
+
+.btn-my-style.btn-default {
+    color: #8e8e8e;
+}
+
+.btn-green {
+    background: #73b43e;
+    background: linear-gradient(to top, #569a2f, #73b43e);
+    color: #fff;
+    border: 1px solid #52972d;
+}
+
+.btn-green:hover {
+    background: #8cc74c;
+    color: #fff;
+}
+
+.btn-light-green {
+    background: #81ec60;
+    background: linear-gradient(to top, #5bb355, #81ec60);
+    color: #fff;
+    border: 1px solid #65bb37;
+}
+
+.btn-light-green:hover {
+    background: #79ec65;
+    color: #fff;
+}
+
+.btn-blue {
+    background: #4974c1;
+    background: linear-gradient(to top, #3859ad, #4974c1);
+    color: #fff;
+    border: 1px solid #3251b2;
+}
+
+.btn-blue:hover {
+    background: #5487cd;
+    color: #fff;
+}
+
+.btn-light-blue {
+    background: #00bbf5;
+    background: linear-gradient(to top, #00a6f3, #00bbf5);
+    color: #fff;
+    border: 1px solid #007fed;
+}
+
+.btn-light-blue:hover {
+    background: #00c6f7;
+    color: #fff;
+}
+
+.btn-red {
+    background: #dc5334;
+    background: linear-gradient(to top, #d2432a, #dc5334);
+    color: #fff;
+    border: 1px solid #cf3c26;
+}
+
+.btn-red:hover {
+    background: #d2432a;
+    color: #fff;
+}
+
+.btn-lilac {
+    background: #7773a4;
+    background: linear-gradient(to top, #5f5c8d, #7773a4);
+    color: #fff;
+    border: 1px solid #8985b6;
+}
+
+.btn-lilac:hover {
+    background: #5f5996;
+    color: #fff;
+}
+
+.btn-orange {
+    background: #ff9800;
+    background: linear-gradient(to top, #ff7c00, #ff9800);
+    color: #fff;
+    border: 1px solid #ff6a00;
+}
+
+.btn-orange:hover {
+    background: #ffa600;
+    color: #fff;
+}
+
+.btn-aquamarine {
+    background: #3f95a2;
+    background: linear-gradient(to top, #317787, #3f95a2);
+    color: #fff;
+    border: 1px solid #265d6f;
+}
+
+.btn-aquamarine:hover {
+    background: #47a6b2;
+    color: #fff;
+}
+
+.btn-dirty-blue {
+    background: #98d9f3;
+    background: linear-gradient(to top, #568090, #98d9f3);
+    color: #fff;
+    border: 1px solid #6199af;
+}
+
+.btn-dirty-blue:hover {
+    background: #b2e5f9;
+    color: #fff;
+}
+
+.btn-yellow {
+    background: #fec556;
+    background: linear-gradient(to top, #feb543, #fec556);
+    color: #fff;
+    border: 1px solid #fea331;
+}
+
+.btn-yellow:hover {
+    background: #fed369;
+    color: #fff;
+}
+
+.btn-burgundy {
+    background: #805364;
+    background: linear-gradient(to top, #64414e, #805364);
+    color: #fff;
+    border: 1px solid #513640;
+}
+
+.btn-burgundy:hover {
+    background: #976579;
+    color: #fff;
+}
+
+.btn-gray {
+    background: #5e5f63;
+    background: linear-gradient(to top, #48494d, #5e5f63);
+    color: #fff;
+    border: 1px solid #363739;
+}
+
+.btn-gray:hover {
+    background: #707278;
+    color: #fff;
+}
+
+.btn-light-gray {
+    background: #b0b1b7;
+    background: linear-gradient(to top, #76787d, #b0b1b7);
+    color: #fff;
+    border: 1px solid #6e6f71;
+}
+
+.btn-light-gray:hover {
+    background: #c1c1c3;
+    color: #fff;
+}
+
+.btn-boggy {
+    background: #919100;
+    background: linear-gradient(to top, #727200, #919100);
+    color: #fff;
+    border: 1px solid #626200;
+}
+
+.btn-boggy:hover {
+    background: #b7b700;
+    color: #fff;
+}
+
+.btn-light-aquamarine {
+    background: #3cc7b2;
+    background: linear-gradient(to top, #2db59a, #3cc7b2);
+    color: #fff;
+    border: 1px solid #27ad8f;
+}
+
+.btn-light-aquamarine:hover {
+    background: #47d3c2;
+    color: #fff;
+}
+
+.btn-peach {
+    background: #f2a95d;
+    background: linear-gradient(to top, #ee8e47, #f2a95d);
+    color: #fff;
+    border: 1px solid #eb7533;
+}
+
+.btn-peach:hover {
+    background: #f7c96d;
+    color: #fff;
+}
+
+.closeHintBtn {
+    cursor: pointer;
+    font-size: 18px!important;
+}
+
+.closeHintBtn:hover {
+    opacity: .8;
+}
+
+.site-error .img {
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+.mail-text small {
+    color: #757575;
+    background: #e2e2e2;
+    font-weight: bold;
+}
+
+.mail-text hr {
+    margin: 0;
+}
+
+.user-item-example {
+    display: inline-block;
+    background: #56a025;
+    padding-right: 5px;
+}
+
 .down-time {
     float: left;
     text-align: center;
@@ -572,4 +892,20 @@ a.red-button {
 .work-page .time-blocks{
     position: relative;
     left: calc(50% - 124px);
+}
+
+.dev-logs, a.dev-logs {
+    color: #ff7b3c;
+}
+
+.dev-logs-btn {
+    border: 1px solid #ff7b3c;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+.dev-logs-btn:hover {
+    color: #fff;
+    background: #ff7b3c;
 }

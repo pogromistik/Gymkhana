@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="buttons">
 		<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-blue btn-my-style']) ?>
 		<?php } ?>
 		<?= $this->render('_buttons', ['model' => $model, 'championship' => $championship]) ?>
     </div>

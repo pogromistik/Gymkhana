@@ -10,7 +10,10 @@ use yii\grid\GridView;
 $this->title = 'Обратная связь';
 ?>
 
-<div class="alert alert-info">
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
     Зелёным цветом выделены новые заявки
 </div>
 
@@ -18,6 +21,9 @@ $this->title = 'Обратная связь';
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
+		'rowOptions' => function (\common\models\Feedback $item) {
+			return ['class' => $item->isNew ? 'green-grid-row' : ''];
+		},
 		'columns'      => [
 			[
 				'attribute'      => 'username',
@@ -29,12 +35,6 @@ $this->title = 'Обратная связь';
 					}
 					
 					return $item->username;
-				},
-				'contentOptions' => function (\common\models\Feedback $item) {
-					if ($item->isNew) {
-					    return ['class' => 'bg-green'];
-                    };
-					return [];
 				},
 			],
 			'phone',
@@ -49,8 +49,9 @@ $this->title = 'Обратная связь';
 			[
 				'format' => 'raw',
 				'value'  => function (\common\models\Feedback $item) {
-					return Html::a('<span class="fa fa-envelope-open"></span>', ['view', 'id' => $item->id], [
-						'class' => 'btn btn-primary',
+	    $class = $item->isNew ? 'fa fa-envelope' : 'fa fa-envelope-open';
+					return Html::a('<span class="'.$class.'"></span>', ['view', 'id' => $item->id], [
+						'class' => $item->isNew ? 'btn btn-my-style btn-green small' : 'btn btn-my-style btn-blue small',
 						'title' => 'Просмотр'
 					]);
 				}
@@ -60,7 +61,7 @@ $this->title = 'Обратная связь';
 				'visible' => \Yii::$app->user->can('globalWorkWithCompetitions'),
 				'value'   => function (\common\models\Feedback $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['delete', 'id' => $item->id], [
-						'class' => 'btn btn-danger',
+						'class' => 'btn btn-my-style btn-red small',
 						'title' => 'Удалить',
 						'data'  => [
 							'confirm' => 'Уверены? Отменить это действие будет невозможно.',

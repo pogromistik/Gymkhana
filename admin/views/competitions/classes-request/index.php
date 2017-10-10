@@ -95,7 +95,7 @@ data-id = ' . $item->id . '
             <div class="modal-footer">
                 <div class="form-text"></div>
                 <div class="button">
-					<?= Html::submitButton('Сохранить', ['class' => 'btn btn-lg btn-block btn-primary']) ?>
+					<?= Html::submitButton('Сохранить', ['class' => 'btn btn-lg btn-block btn-my-style btn-green']) ?>
                 </div>
             </div>
 			<?= Html::endForm() ?>

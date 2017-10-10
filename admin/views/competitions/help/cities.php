@@ -13,11 +13,11 @@ $this->title = 'Города';
 <div class="russia-index">
 
     <p>
-	    <?= Html::a('Добавить город', ['create-city'], ['class' => 'btn btn-success']) ?>
+	    <?= Html::a('Добавить город', ['create-city'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
     <p>
-	    <?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-default']) ?>
-	    <?= Html::a('Добавить регион', ['create-region'], ['class' => 'btn btn-default']) ?>
+	    <?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-my-style btn-default']) ?>
+	    <?= Html::a('Добавить регион', ['create-region'], ['class' => 'btn btn-my-style btn-default']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -63,7 +63,7 @@ $this->title = 'Города';
 				'format' => 'raw',
 				'value'  => function (\common\models\City $city) {
 					return Html::a('<span class="fa fa-edit"></span>', ['city-update', 'id' => $city->id],
-						['class' => 'btn btn-primary']);
+						['class' => 'btn btn-my-style btn-blue']);
 				}
 			]
 		],

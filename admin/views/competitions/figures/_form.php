@@ -10,6 +10,18 @@ use yii\widgets\MaskedInput;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+        <li>Обязательные поля: "Название"</li>
+        <li>
+            Если фигура используется для рассчёта классов, обязательно укажите эталонное время.
+        </li>
+    </ul>
+</div>
+
 <div class="figure-form">
 	
 	<?php $form = ActiveForm::begin(); ?>
@@ -50,7 +62,7 @@ use yii\widgets\MaskedInput;
             <div class="col-md-2 col-sm-4 img-in-profile">
 				<?= Html::img(\Yii::getAlias('@filesView') . '/' . $model->picture) ?>
                 <br>
-                <a href="#" class="btn btn-warning btn-block deletePhoto" data-id="<?= $model->id ?>"
+                <a href="#" class="btn btn-my-style btn-red btn-block deletePhoto" data-id="<?= $model->id ?>"
                    data-model="<?= \admin\controllers\competitions\HelpController::PHOTO_FIGURE ?>">удалить</a>
                 <br>
             </div>
@@ -67,7 +79,8 @@ use yii\widgets\MaskedInput;
 	<?php } ?>
 
     <div class="form-group">
-		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
+            ['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

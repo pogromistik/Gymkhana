@@ -57,7 +57,7 @@ $this->title = 'Обработанные заявки на смену класс
 					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => ClassesRequest::class,
 						'modelId'    => $item->id
-					]);
+					], ['class' => 'dev-logs dev-logs-btn']);
 				}
 			]
 		],

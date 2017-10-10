@@ -10,7 +10,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Обратная связь', 'url
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="feedback-view">
-
+    <div class="alert required-alert-info">
+        <b>Убедительная просьба!</b>
+        Если сообщение адресовано не вам - нажмите "отметить как новое", чтобы нужный организатор смог его увидеть.
+    </div>
+    
     <table class="table table-striped table-bordered detail-view">
         <tbody>
         <tr>
@@ -50,5 +54,5 @@ $this->params['breadcrumbs'][] = $this->title;
     </table>
     
     <?= Html::a('Отметить как новое', ['/competitions/feedback/change-status', 'id' => $model->id],
-        ['class' => 'btn btn-success']) ?>
+        ['class' => 'btn btn-my-style btn-boggy']) ?>
 </div>

@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = 'Редактирование результа�
 		[
 			'attribute' => '',
 			'format'    => 'raw',
-			'value'     => Html::submitButton('Сохранить', ['class' => 'btn btn-primary'])
+			'value'     => Html::submitButton('Сохранить', ['class' => 'btn btn-my-style btn-blue'])
 		]
 	],
 ]) ?>

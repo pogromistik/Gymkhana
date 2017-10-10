@@ -193,6 +193,11 @@ $(document).on("submit", '.raceTimeForm', function (e) {
                 clickCount = 0;
                 if (result['success'] == true) {
                     form.find('.row').addClass('result-line');
+                    var btn = form.find('.btn');
+                    if (btn.hasClass('btn-green')) {
+                        btn.removeClass('btn-green');
+                        btn.addClass('btn-blue');
+                    }
                     form.find('.timeId').val(result['id']);
                     var next = form.next();
                     next.find('input[name="Time[timeForHuman]"]').focus();
@@ -603,7 +608,7 @@ $('.getRequestWithConfirm').click(function (e) {
 $('.cancelFigureResult').click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $('#id').val(id);
     $('#cancelFigureResult').modal('show')
 });
@@ -1083,7 +1088,7 @@ $('.processClassRequest').click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
     var status = $(this).data('status');
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $('#id').val(id);
     $('#status').val(status);
     if (status == 1) {
@@ -1119,7 +1124,7 @@ $(document).on("submit", '#processClassRequestForm', function (e) {
 $(document).on("submit", '#sendMessagesForm', function (e) {
     e.preventDefault();
     var form = $(this);
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $.ajax({
         url: '/competitions/additional/send-message',
         type: "POST",
@@ -1249,6 +1254,56 @@ $(document).on("submit", '#importParticipants', function (e) {
             alert(result);
             wait.hide();
             btn.show();
+        }
+    });
+});
+
+var equalizer = function (equalizer) {
+    var maxHeight = 0;
+
+    equalizer.each(function () {
+        console.log($(this).height());
+        if ($(this).height() > maxHeight) {
+            maxHeight = $(this).height()
+        }
+    });
+    equalizer.height(maxHeight);
+};
+
+$(window).load(function () {
+    if ($(document).width() >= 975) {
+        equalizer($('.with-hr-border > div'));
+    }
+});
+
+$('.closeHintBtn').click(function () {
+    var elem = $(this);
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Отключение подсказок',
+        message: 'Отключить подсказки полностью? Они будут отключены на ВСЕХ страницах в админке. ' +
+        'При необходимости вы сможете включить их в своём профиле. ',
+        className: 'info',
+        buttons: {
+            cancel: {
+                label: 'Скрыть эту подсказку',
+                className: "btn-primary",
+                callback: function () {
+                    elem.parent().parent().hide();
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Отключить все подсказки',
+                className: "btn-warning",
+                callback: function () {
+                    $.get('/competitions/additional/close-hint').done(function (data) {
+                        location.reload();
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            }
         }
     });
 });

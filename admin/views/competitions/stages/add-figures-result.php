@@ -22,8 +22,27 @@ $this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+        <li>
+            Формат времени: мин:сек.мсек. Необходимо обязательно указывать все 6 цифр.
+        </li>
+        <li>
+            Добавление результата идёт в 2 действия:<br>
+            1. Выберите фигуру, участника, введите время и штраф (если есть), после чего нажмите кнопку сохранения.<br>
+            2. Система покажет рассчитанный результат и запросит подтверждение.
+        </li>
+        <li>
+            Если класс спортсмена не изменится, можете не добавлять результат.
+        </li>
+    </ul>
+</div>
+
 <?php if ($stage->fastenClassFor && $stage->fastenClassFor > 0) { ?>
-    <div class="alert alert-info">
+    <div class="alert required-alert-info">
         <b>Обратите внимание!</b> При добавлении результата с этой
         страницы (в случае повышения класса), класс участника в этапе будет изменен, не смотря на то,
         что у вас стоит отметка "закрепить класс участника". Если вы хотите добавить результат так, чтобы
@@ -83,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="col-sm-1"><?= $form->field($figureTime, 'fine')->textInput()->label(false) ?></div>
     <div class="col-sm-1">
-        <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
+        <button type="submit" class="btn btn-my-style btn-green btn-circle fa fa-save" title="Сохранить"></button>
     </div>
 </div>
 

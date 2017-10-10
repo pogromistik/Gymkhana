@@ -18,16 +18,17 @@ $stages = $model->stages;
 	<?php if (!$stages) { ?>
         <div class="alert alert-danger">Даже если у вас одноэтапный чемпионат, необходимо всё равно создать этап.</div>
 	<?php } ?>
-    
+
     <p>
 		<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id],
+				['class' => 'btn btn-my-style btn-blue']) ?>
 			<?= Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $model->id], [
-				'class' => 'btn btn-success'
+				'class' => 'btn btn-my-style btn-light-green'
 			]); ?>
 		<?php } ?>
 		<?= Html::a('Результаты', ['/competitions/championships/results', 'championshipId' => $model->id], [
-			'class' => 'btn btn-default'
+			'class' => 'btn btn-my-style btn-lilac'
 		]); ?>
     </p>
 	
@@ -37,7 +38,7 @@ $stages = $model->stages;
 			'title',
 			[
 				'attribute' => 'description',
-				'format'     => 'raw'
+				'format'    => 'raw'
 			],
 			[
 				'attribute' => 'yearId',
@@ -81,28 +82,35 @@ $stages = $model->stages;
             <th>Завершение регистрации</th>
             <th>Статус</th>
             <th>Класс соревнования</th>
+            <th></th>
         </tr>
         </thead>
-		<?php $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view'; ?>
 		<?php foreach ($stages as $stage) { ?>
             <tr>
-                <td><?= Html::a($stage->title, ['/competitions/stages/' . $view, 'id' => $stage->id]) ?></td>
+                <td><?= Html::a($stage->title, ['/competitions/stages/view', 'id' => $stage->id]) ?></td>
                 <td><?= $stage->dateOfTheHuman ?></td>
                 <td><?= $stage->startRegistrationHuman ?></td>
                 <td><?= $stage->endRegistrationHuman ?></td>
                 <td><?= \common\models\Stage::$statusesTitle[$stage->status] ?></td>
                 <td><?= $stage->class ? $stage->classModel->title : null ?></td>
+                <td>
+					<?= Html::a('<span class="fa fa-user btn-my-style btn-light-aquamarine small"></span>',
+						['/competitions/participants/index', 'stageId' => $stage->id]) ?>
+					<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+                        &nbsp;
+						<?= Html::a('<span class="fa fa-edit btn-my-style btn-blue small"></span>',
+							['/competitions/stages/update', 'id' => $stage->id]) ?>
+					<?php } ?>
+                </td>
             </tr>
 		<?php } ?>
     </table>
 	
 	<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-		<?php if ($model->internalClasses) { ?>
-            <h3>Классы награждения</h3>
-			<?= $this->render('_classes', [
-				'model' => $model,
-			]) ?>
-		<?php } ?>
+        <h3>Классы награждения</h3>
+		<?= $this->render('_classes', [
+			'model' => $model,
+		]) ?>
 	<?php } else { ?>
 		<?php if ($model->activeInternalClasses) { ?>
             <h3>Классы награждения</h3>

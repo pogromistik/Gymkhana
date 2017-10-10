@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-	<?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-default']) ?>
+	<?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-my-style btn-default']) ?>
 </p>
 
 <h3>Добавить регион</h3>
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
-<?= Html::submitButton('Добавить город', ['class' => 'btn btn-primary']) ?>
+<?= Html::submitButton('Добавить', ['class' => 'btn btn-my-style btn-green']) ?>
 <?php ActiveForm::end() ?>
 
 

@@ -27,7 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?= $form->field($year, 'status')->dropDownList(\common\models\Year::$statusesTitle) ?>
 
 	<div class="form-group">
-		<?= Html::submitButton($year->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $year->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($year->isNewRecord ? 'Добавить' : 'Сохранить',
+            ['class' => $year->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
 	</div>
 
 	<?php ActiveForm::end(); ?>

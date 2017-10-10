@@ -13,7 +13,7 @@ $this->title = 'Года';
 <div class="years-index">
 
     <p>
-		<?= Html::a('Добавить год', ['/competitions/help/year-view'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить год', ['/competitions/help/year-view'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,

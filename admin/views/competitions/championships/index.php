@@ -20,7 +20,8 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 <div class="championship-index">
 	<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
         <p>
-			<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId], ['class' => 'btn btn-success']) ?>
+			<?= Html::a('Создать чемпионат', ['create', 'groupId' => $groupId],
+				['class' => 'btn btn-my-style btn-green']) ?>
         </p>
 	<?php } ?>
 	<?= GridView::widget([
@@ -35,14 +36,16 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
   <span class="input-group-addon"><i class="fa fa-search"></i></span>
 ' . Html::activeInput('text', $searchModel, 'title', ['class' => 'form-control', 'placeholder' => 'Поиск по названию...']) . '
 </div>',
-                'format' => 'raw',
-                'value' => function (Championship $championship) {
-	                if (\Yii::$app->user->can('developer')) {
-	                    return Html::a($championship->title, ['/competitions/developer/logs',
-                            'modelClass' => Championship::class, 'modelId' => $championship->id]);
-                    }
-                    return $championship->title;
-                }
+				'format'    => 'raw',
+				'value'     => function (Championship $championship) {
+					if (\Yii::$app->user->can('developer')) {
+						return Html::a($championship->title, ['/competitions/developer/logs',
+							'modelClass' => Championship::class, 'modelId' => $championship->id],
+							['class' => 'dev-logs']);
+					}
+					
+					return $championship->title;
+				}
 			],
 			[
 				'attribute' => 'yearId',
@@ -52,23 +55,6 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 					['class' => 'form-control', 'prompt' => 'Укажите год']),
 				'value'     => function (Championship $championship) {
 					return $championship->year->year;
-				}
-			],
-			[
-				'attribute' => 'status',
-				'format'    => 'raw',
-				'filter'    => Html::activeDropDownList($searchModel, 'status', Championship::$statusesTitle,
-					['class' => 'form-control', 'prompt' => 'Выберите статус']),
-				'value'     => function (Championship $championship) {
-					return Championship::$statusesTitle[$championship->status];
-				}
-			],
-			[
-				'attribute' => 'groupId',
-				'format'    => 'raw',
-				'filter'    => false,
-				'value'     => function (Championship $championship) {
-					return Championship::$groupsTitle[$championship->groupId];
 				}
 			],
 			[
@@ -84,7 +70,12 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 							if ($stage->dateOfThe) {
 								$title .= ', ' . $stage->dateOfTheHuman;
 							}
-							$html .= '<li>' . Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]) . '</li>';
+							$html .= '<li>';
+							$html .= Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]);
+							$html .= ' ';
+							$html .= Html::a('<span class="fa fa-user btn btn-my-style btn-light-aquamarine small"></span>',
+								['/competitions/participants/index', 'stageId' => $stage->id]);
+							$html .= '</li>';
 						}
 						$html .= '</ul>';
 					}
@@ -97,7 +88,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'visible' => \Yii::$app->user->can('projectAdmin'),
 				'value'   => function (Championship $championship) {
 					return Html::a('Добавить этап', ['/competitions/stages/create', 'championshipId' => $championship->id], [
-						'class' => 'btn btn-default'
+						'class' => 'btn btn-my-style btn-light-green'
 					]);
 				}
 			],
@@ -105,7 +96,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'format' => 'raw',
 				'value'  => function (Championship $championship) {
 					return Html::a('<span class="fa fa-eye"></span>', ['view', 'id' => $championship->id], [
-						'class' => 'btn btn-info',
+						'class' => 'btn btn-my-style btn-light-blue',
 						'title' => 'Просмотр'
 					]);
 				}
@@ -115,7 +106,7 @@ $view = \Yii::$app->user->can('projectAdmin') ? 'update' : 'view';
 				'visible' => \Yii::$app->user->can('projectAdmin'),
 				'value'   => function (Championship $championship) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $championship->id], [
-						'class' => 'btn btn-primary',
+						'class' => 'btn btn-my-style btn-blue',
 						'title' => 'Редактирование'
 					]);
 				}

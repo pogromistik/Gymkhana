@@ -16,7 +16,8 @@ $this->title = 'Пользователи';
 ?>
 <div class="client-view">
 	<?= Html::a('Добавить пользователя',
-		['create'], ['class' => 'btn btn-success']) ?>
+		['create'], ['class' => 'btn btn-my-style btn-green']) ?>
+  
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
@@ -46,10 +47,10 @@ $this->title = 'Пользователи';
 				'value'  => function ($model) {
 					if (!$model->blocked_at) {
 						return Html::a('<span class="fa fa-remove"></span>', ['change-status', 'id' => $model->id],
-							['class' => 'btn btn-danger', 'title' => 'Заблокировать']);
+							['class' => 'btn btn-my-style btn-red', 'title' => 'Заблокировать']);
 					} else {
 						return Html::a('<span class="fa fa-check"></span>', ['change-status', 'id' => $model->id],
-							['class' => 'btn btn-success', 'title' => 'Восстановить']);
+							['class' => 'btn btn-my-style btn-boggy', 'title' => 'Восстановить']);
 					}
 				},
 			]
