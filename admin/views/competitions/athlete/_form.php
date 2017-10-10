@@ -18,6 +18,27 @@ if (!$model->countryId) {
 }
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    Поля, обязательные для заполнения: "Страна", "Город", "Фамилия", "Имя".<br>
+    Если необходимых города или страны нет в списке, добавьте их в
+    разделе <?= Html::a('Города', ['/competitions/help/cities']) ?><br>
+	<?php if (Yii::$app->user->can('projectAdmin')) { ?>
+        Менять класс спортсмена лучше через раздел
+		<?= Html::a('Изменение класса спортсмену', ['/competitions/athlete/change-class']) ?>
+        или при добавлении времени по фигуре \ при проведении этапа - так статистика спортсменов
+        будет более корректной. Но при необходимости вы можете сделать это здесь.<br>
+	<?php } ?>
+	<?php if ($model->isNewRecord) { ?>
+        <b>Не добавляйте спортсмена, если он уже есть в системе.</b> При добавлении спортсмена система производит поиск
+        совпадений с
+        существующими данными, и в случае успеха показывает уточняющее уведомление. Пожалуйста, будьте внимательны на этом
+        моменте.
+	<?php } ?>
+</div>
+
 <div class="athlete-form">
 	<?php if ($model->isNewRecord) { ?>
 		<?php $form = ActiveForm::begin(['options' => ['id' => 'newAthlete']]); ?>
@@ -120,7 +141,8 @@ if (!$model->countryId) {
 	<?php } ?>
 
     <div class="form-group complete">
-		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
+			['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

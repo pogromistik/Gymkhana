@@ -280,6 +280,35 @@ class HelpController extends BaseController
 		return $out;
 	}
 	
+	public function actionRegionList($title = null, $id = null, $countryId = null)
+	{
+		$this->can('competitions');
+		
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$out = ['results' => ['id' => '', 'text' => '']];
+		if (!is_null($title)) {
+			$title = mb_strtoupper($title, 'UTF-8');
+			$query = new Query();
+			$query->select('"Regions"."id", "Regions"."title" AS text')
+				->from(Region::tableName())
+				->where(['like', 'upper("Regions"."title")', mb_strtoupper($title, 'UTF-8')]);
+			if ($countryId) {
+				$query->andWhere(['"Regions"."countryId"' => $countryId]);
+			}
+			$query->orderBy('CASE WHEN upper("Regions"."title") LIKE \''.$title.'\' THEN 0
+			 WHEN upper("Regions"."title") LIKE \''.$title.'%\' THEN 1
+			WHEN upper("Regions"."title") LIKE \'%'.$title.'%\' THEN 2 ELSE 3 END');
+			$query->limit(50);
+			$command = $query->createCommand();
+			$data = $command->queryAll();
+			$out['results'] = array_values($data);
+		} elseif ($id > 0) {
+			$out['results'] = ['id' => $id, 'text' => Region::findOne($id)->title];
+		}
+		
+		return $out;
+	}
+	
 	public function actionCities()
 	{
 		$this->can('competitions');

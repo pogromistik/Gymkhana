@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
 
 class SBAdminAsset extends AssetBundle
 {
-    public $sourcePath = '@bower/startbootstrap-sb-admin-2/dist';
+    public $sourcePath = '@bower/node_modules/startbootstrap-sb-admin-2/dist';
     public $css = [
         'css/sb-admin-2.css',
     ];
