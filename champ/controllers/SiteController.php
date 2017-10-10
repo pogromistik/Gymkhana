@@ -39,6 +39,9 @@ class SiteController extends BaseController
 					break;
 				case 403:
 					$title = 'forbidden';
+					$text = 'Монстр расстроен, потому что вы пытаетесь зайти на запретную страницу. Но вы всегда можете ' .
+						'<a href="/">вернуться на главную</a> или
+<a href="#" data-toggle="modal" data-target="#feedbackForm">сообщить нам об ошибке</a>.';
 					break;
 				default:
 					$title = 'not found';
