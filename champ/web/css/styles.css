@@ -1217,3 +1217,17 @@ h2.title small {
     font-weight: bold;
     text-align: center;
 }
+
+.gray-column {
+    background: #dedede;
+    color: #7b7b7b;
+    border-bottom: 1px solid #cacaca;
+}
+
+.gray-column a {
+    color: #7b7b7b;
+}
+
+th.gray-column {
+    border-bottom: 2px solid #cacaca!important;
+}

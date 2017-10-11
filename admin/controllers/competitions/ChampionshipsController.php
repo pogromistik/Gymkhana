@@ -12,6 +12,7 @@ use Yii;
 use common\models\Championship;
 use common\models\search\ChampionshipSearch;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -101,7 +102,8 @@ class ChampionshipsController extends BaseController
 		$model = $this->findModel($id);
 		
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions') && $model->regionId
-			&& $model->regionId != \Yii::$app->user->identity->regionId) {
+			&& $model->regionId != \Yii::$app->user->identity->regionId
+		) {
 			throw new ForbiddenHttpException('Доступ запрещён');
 		}
 		
@@ -137,9 +139,11 @@ class ChampionshipsController extends BaseController
 		
 		if (($model = Championship::findOne($id)) !== null) {
 			if (!\Yii::$app->user->can('globalWorkWithCompetitions') && $model->regionId
-				&& $model->regionId != \Yii::$app->user->identity->regionId) {
+				&& $model->regionId != \Yii::$app->user->identity->regionId
+			) {
 				throw new ForbiddenHttpException('Доступ запрещён');
 			}
+			
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
@@ -153,6 +157,7 @@ class ChampionshipsController extends BaseController
 		$group = new RegionalGroup();
 		if ($group->load(\Yii::$app->request->post()) && $group->validate()) {
 			$group->save(false);
+			
 			return true;
 		} else {
 			return 'Возникла ошибка при добавлении группы';
@@ -170,6 +175,7 @@ class ChampionshipsController extends BaseController
 				return 'Доступ запрещен';
 			}
 			$class->save();
+			
 			return true;
 		}
 		
@@ -196,6 +202,7 @@ class ChampionshipsController extends BaseController
 		if ($status == InternalClass::STATUS_INACTIVE) {
 			if (!Participant::findOne(['championshipId' => $class->championshipId, 'internalClassId' => $class->id])) {
 				$class->delete();
+				
 				return true;
 			}
 		}
@@ -211,72 +218,16 @@ class ChampionshipsController extends BaseController
 	{
 		$this->can('competitions');
 		$championship = $this->findModel($championshipId);
+		$results = $championship->getResults($showAll);
 		$stages = $championship->stages;
-		$results = [];
-		foreach ($stages as $stage) {
-			/** @var Participant[] $participants */
-			$participants = Participant::find()->where(['stageId' => $stage->id])->andWhere(['status' => Participant::STATUS_ACTIVE])
-				->orderBy(['points' => SORT_DESC, 'sort' => SORT_ASC])->all();
-			foreach ($participants as $participant) {
-				if (!isset($results[$participant->athleteId])) {
-					$results[$participant->athleteId] = [
-						'athlete'        => $participant->athlete,
-						'points'         => 0,
-						'stages'         => [],
-						'countStages'    => 0,
-						'cityId'         => null,
-						'severalRegions' => false
-					];
-				}
-				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
-					$results[$participant->athleteId]['stages'][$stage->id] = $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
-					$results[$participant->athleteId]['points'] += $championship->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
-					$results[$participant->athleteId]['countStages'] += 1;
-					if (!$results[$participant->athleteId]['cityId']) {
-						$results[$participant->athleteId]['cityId'] = $stage->cityId;
-					} else {
-						if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
-							$results[$participant->athleteId]['severalRegions'] = true;
-						}
-					}
-				}
-			}
-		}
-		
-		if (!$showAll) {
-			foreach ($results as $i => $result) {
-				if ($result['countStages'] < $championship->amountForAthlete) {
-					unset($results[$i]);
-					continue;
-				}
-				if ($championship->requiredOtherRegions && !$result['severalRegions']) {
-					unset($results[$i]);
-					continue;
-				}
-				if (count($result['stages']) != $championship->estimatedAmount) {
-					$allPoints = $result['stages'];
-					arsort($allPoints);
-					$count = 0;
-					$result['points'] = 0;
-					foreach ($allPoints as $stagePoint) {
-						if ($count < $championship->estimatedAmount) {
-							$result['points'] += $stagePoint;
-							$count++;
-						} else {
-							break;
-						}
-					}
-				}
-			}
-		}
-		
-		uasort($results, "self::cmpByRackPlaces");
+		$outOfChampStages = $championship->getStages()->andWhere(['outOfCompetitions' => 1])->all();
 		
 		return $this->render('results', [
-			'championship' => $championship,
-			'results'      => $results,
-			'stages'       => $stages,
-			'showAll'      => $showAll
+			'championship'       => $championship,
+			'results'            => $results,
+			'stages'             => $stages,
+			'showAll'            => $showAll,
+			'outOfChampStages'   => $outOfChampStages
 		]);
 	}
 	
@@ -294,19 +245,23 @@ class ChampionshipsController extends BaseController
 		foreach ($stages as $stage) {
 			if ($stage->participants) {
 				$transaction->rollBack();
+				
 				return 'На этап "' . $stage->title . '" есть зарегистрированные участники. Удаление чемпионата невозможно';
 			}
 			if (!$stage->delete()) {
 				$transaction->rollBack();
+				
 				return 'Возникла ошибка. Обратитесь к разработчику.';
 			}
 		}
 		InternalClass::deleteAll(['championshipId' => $championship->id]);
 		if (!$championship->delete()) {
 			$transaction->rollBack();
+			
 			return 'Возникла ошибка. Обратитесь к разработчику.';
 		}
 		$transaction->commit();
+		
 		return true;
 	}
 }

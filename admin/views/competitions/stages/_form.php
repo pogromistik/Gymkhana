@@ -46,6 +46,9 @@ use dosamigos\ckeditor\CKEditor;
                 В такой ситуации многие спортсмены попадут в класс C3, фактически едва дотягивая до D2. Мы бы рекомендовали в такой ситуации
                 принудительно понизить класс до D1 или другого, по которому рассчёт будет произведён более корректно.)
             </li>
+            <li>
+                Если отмечен пункт "вне зачёта", баллы за этот этап не будут суммироваться при подсчёте итогов чемпионата.
+            </li>
         </ul>
     </div>
 	<?php $form = ActiveForm::begin(); ?>
@@ -99,6 +102,8 @@ use dosamigos\ckeditor\CKEditor;
 	<?= $form->field($model, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
 	
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'outOfCompetitions')->checkbox() ?>
 	
 	<?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
 	

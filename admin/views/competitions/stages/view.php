@@ -75,6 +75,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label'     => 'Статус публикации фото',
 				'value'     => $model->trackPhotoStatus ? 'опубликовано' : 'не опубликовано'
 			],
+			[
+				'attribute' => 'outOfCompetitions',
+				'label'     => 'Провести этап вне общего зачёта?',
+				'value'     => $model->outOfCompetitions ? 'да' : 'нет'
+			],
 			'referenceTimeHuman',
 			'participantsLimit',
 			'fastenClassFor'

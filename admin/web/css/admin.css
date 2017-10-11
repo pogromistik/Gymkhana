@@ -909,3 +909,13 @@ a.red-button {
     color: #fff;
     background: #ff7b3c;
 }
+
+.gray-column {
+    background: #dedede;
+    color: #616161;
+    border-bottom: 1px solid #cacaca;
+}
+
+th.gray-column {
+    border-bottom: 2px solid #cacaca!important;
+}

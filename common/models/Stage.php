@@ -33,6 +33,7 @@ use yii\web\UploadedFile;
  * @property string        $documentIds
  * @property integer       $participantsLimit
  * @property integer       $fastenClassFor
+ * @property integer       $outOfCompetitions
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -125,7 +126,8 @@ class Stage extends BaseActiveRecord
 				'trackPhotoStatus',
 				'countryId',
 				'participantsLimit',
-				'fastenClassFor'
+				'fastenClassFor',
+				'outOfCompetitions'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			[['description'], 'string'],
@@ -134,7 +136,8 @@ class Stage extends BaseActiveRecord
 			[['countRace'], 'integer', 'min' => 1],
 			[['participantsLimit'], 'integer', 'min' => 3],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
-			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
+			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['outOfCompetitions', 'default', 'value' => 0]
 		];
 	}
 	
@@ -169,7 +172,8 @@ class Stage extends BaseActiveRecord
 			'countryId'              => 'Страна',
 			'documentIds'            => 'Документы',
 			'participantsLimit'      => 'Допустимое количество участников',
-			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа'
+			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа',
+			'outOfCompetitions'      => 'Вне общего зачёта'
 		];
 	}
 	
@@ -598,6 +602,7 @@ LIMIT 1) order by "bestTime" asc) n'])
 				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
 					->orderBy(['percent' => SORT_DESC])->one();
 			}
+			
 			return $class;
 		} else {
 			return null;
