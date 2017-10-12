@@ -1355,6 +1355,10 @@ $('.ajaxDelete').click(function (e) {
             text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
             action = '/competitions/championships/delete';
             break;
+        case 'special-champ':
+            text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
+            action = '/competitions/special-champ/delete';
+            break;
     }
     if (confirm(text)) {
         showBackDrop();
