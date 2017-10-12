@@ -3,12 +3,18 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use admin\models\ParticipantForm;
+use common\models\Athlete;
 use common\models\HelpModel;
+use common\models\RequestForSpecialStage;
+use common\models\search\RequestForSpecialStageSearch;
 use common\models\SpecialStage;
 use common\models\Stage;
 use Yii;
 use common\models\SpecialChamp;
 use common\models\search\SpecialChampsSearch;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -191,5 +197,41 @@ class SpecialChampController extends BaseController
 		$stage->delete();
 		
 		return true;
+	}
+	
+	public function actionParticipants($stageId)
+	{
+		$stage = SpecialStage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$searchModel = new RequestForSpecialStageSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['stageId' => $stage->id]);
+		
+		$formModel = new ParticipantForm();
+		$formModel->stageId = $stage->id;
+		if ($formModel->load(\Yii::$app->request->post()) && $formModel->save()) {
+			return $this->redirect(['participants', 'stageId' => $stage->id]);
+		}
+		
+		$forSearch = RequestForSpecialStage::find()->from(['a' => RequestForSpecialStage::tableName(), 'b' => Athlete::tableName()])
+			->select(['a."athleteId"', '(b."lastName" || \' \' || b."firstName") as "name"'])
+			->where(new Expression('"a"."athleteId" = "b"."id"'))
+			->andWhere(['stageId' => $stageId])
+			->orderBy(['name' => SORT_ASC])
+			->distinct()
+			->asArray()->all();
+		if ($forSearch) {
+			$forSearch = ArrayHelper::map($forSearch, 'athleteId', 'name');
+		}
+		
+		return $this->render('participants', [
+			'stage'        => $stage,
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+			'formModel'    => $formModel,
+			'forSearch'    => $forSearch
+		]);
 	}
 }

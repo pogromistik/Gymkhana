@@ -2,32 +2,36 @@
 
 namespace common\models;
 
+use common\components\BaseActiveRecord;
 use Yii;
 use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "SpecialStages".
  *
- * @property integer       $id
- * @property string        $title
- * @property integer       $dateAdded
- * @property integer       $dateUpdated
- * @property string        $description
- * @property integer       $dateStart
- * @property integer       $dateEnd
- * @property integer       $dateResult
- * @property integer       $classId
- * @property integer       $status
- * @property string        $photoPath
- * @property integer       $referenceTime
- * @property integer       $outOfCompetitions
- * @property integer       $championshipId
+ * @property integer                $id
+ * @property string                 $title
+ * @property integer                $dateAdded
+ * @property integer                $dateUpdated
+ * @property string                 $description
+ * @property integer                $dateStart
+ * @property integer                $dateEnd
+ * @property integer                $dateResult
+ * @property integer                $classId
+ * @property integer                $status
+ * @property string                 $photoPath
+ * @property integer                $referenceTime
+ * @property integer                $outOfCompetitions
+ * @property integer                $championshipId
  *
- * @property AthletesClass $class
- * @property Championship  $championship
+ * @property AthletesClass          $class
+ * @property Championship           $championship
+ * @property RequestForSpecialStage $participants
  */
-class SpecialStage extends \yii\db\ActiveRecord
+class SpecialStage extends BaseActiveRecord
 {
+	protected static $enableLogging = true;
+	
 	public $photoFile;
 	
 	public $dateResultHuman;
@@ -193,5 +197,11 @@ class SpecialStage extends \yii\db\ActiveRecord
 	public function getClass()
 	{
 		return $this->hasOne(AthletesClass::className(), ['id' => 'class']);
+	}
+	
+	public function getParticipants()
+	{
+		return $this->hasMany(RequestForSpecialStage::className(), ['stageId' => 'id'])
+			->orderBy(['resultTime' => SORT_DESC, 'dateAdded' => SORT_ASC]);
 	}
 }

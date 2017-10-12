@@ -78,7 +78,7 @@ $this->title = 'Специальные чемпионаты';
 							$html .= Html::a($title, ['/competitions/special-champ/update-stage', 'id' => $stage->id]);
 							$html .= ' ';
 							$html .= Html::a('<span class="fa fa-user btn btn-my-style btn-light-aquamarine small"></span>',
-								['/competitions/participants/index', 'stageId' => $stage->id]);
+								['/competitions/special-champ/participants', 'stageId' => $stage->id]);
 							$html .= ' ';
 							$html .= '<a href="#" class="ajaxDelete btn btn-my-style btn-red small fa fa-remove" ' .
 								'data-id="' . $stage->id . '"  data-action="special-stage"></a>';
