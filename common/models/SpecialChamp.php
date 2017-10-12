@@ -8,16 +8,16 @@ use Yii;
 /**
  * This is the model class for table "SpecialChamps".
  *
- * @property integer $id
- * @property string  $title
- * @property string  $description
- * @property integer $yearId
- * @property integer $status
- * @property integer $dateAdded
- * @property integer $dateUpdated
+ * @property integer        $id
+ * @property string         $title
+ * @property string         $description
+ * @property integer        $yearId
+ * @property integer        $status
+ * @property integer        $dateAdded
+ * @property integer        $dateUpdated
  *
- * @property Year    $year
- * @property Stage   $stages
+ * @property Year           $year
+ * @property SpecialStage[] $stages
  */
 class SpecialChamp extends BaseActiveRecord
 {

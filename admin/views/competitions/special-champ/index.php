@@ -69,28 +69,28 @@ $this->title = 'Специальные чемпионаты';
 				'value'  => function (SpecialChamp $championship) {
 					$html = '';
 					
-					/*$stages = $championship->stages;
+					$stages = $championship->stages;
 					if ($stages) {
 						$html = '<ul>';
 						foreach ($stages as $stage) {
 							$title = $stage->title;
-							if ($stage->dateOfThe) {
-								$title .= ', ' . $stage->dateOfTheHuman;
-							}
 							$html .= '<li>';
-							$html .= Html::a($title, ['/competitions/stages/' . $view, 'id' => $stage->id]);
+							$html .= Html::a($title, ['/competitions/special-champ/update-stage', 'id' => $stage->id]);
 							$html .= ' ';
 							$html .= Html::a('<span class="fa fa-user btn btn-my-style btn-light-aquamarine small"></span>',
 								['/competitions/participants/index', 'stageId' => $stage->id]);
-							if (!$stage->participants && \Yii::$app->user->can('projectAdmin')) {
+							$html .= ' ';
+							$html .= '<a href="#" class="ajaxDelete btn btn-my-style btn-red small fa fa-remove" ' .
+								'data-id="' . $stage->id . '"  data-action="special-stage"></a>';
+							/*if (!$stage->participants && \Yii::$app->user->can('projectAdmin')) {
 								$html .= ' ';
 								$html .= '<a href="#" class="ajaxDelete btn btn-my-style btn-red small fa fa-remove" ' .
 									'data-id="' . $stage->id . '"  data-action="stage"></a>';
-							}
+							}*/
 							$html .= '</li>';
 						}
 						$html .= '</ul>';
-					}*/
+					}
 					
 					return $html;
 				}

@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\HelpModel;
 use common\models\SpecialStage;
 use common\models\Stage;
 use Yii;
@@ -103,7 +104,21 @@ class SpecialChampController extends BaseController
 	 */
 	public function actionDelete($id)
 	{
-		$this->findModel($id)->delete();
+		$championship = $this->findModel($id);
+		$stages = $championship->stages;
+		$transaction = \Yii::$app->db->beginTransaction();
+		foreach ($stages as $stage) {
+			if ($stage->photoPath) {
+				HelpModel::deleteFile($stage->photoPath);
+			}
+			if (!$stage->delete()) {
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка. Обратитесь к разработчику.';
+			}
+		}
+		$championship->delete();
+		$transaction->commit();
 		
 		return true;
 	}
@@ -162,5 +177,19 @@ class SpecialChampController extends BaseController
 		}
 		
 		return $this->render('update-stage', ['stage' => $stage]);
+	}
+	
+	public function actionDeleteStage($id)
+	{
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if ($stage->photoPath) {
+			HelpModel::deleteFile($stage->photoPath);
+		}
+		$stage->delete();
+		
+		return true;
 	}
 }

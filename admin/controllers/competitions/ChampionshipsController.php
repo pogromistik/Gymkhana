@@ -3,6 +3,7 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\HelpModel;
 use common\models\InternalClass;
 use common\models\Participant;
 use common\models\RegionalGroup;
@@ -247,6 +248,9 @@ class ChampionshipsController extends BaseController
 				$transaction->rollBack();
 				
 				return 'На этап "' . $stage->title . '" есть зарегистрированные участники. Удаление чемпионата невозможно';
+			}
+			if ($stage->trackPhoto) {
+				HelpModel::deleteFile($stage->trackPhoto);
 			}
 			if (!$stage->delete()) {
 				$transaction->rollBack();
