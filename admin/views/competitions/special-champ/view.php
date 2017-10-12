@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
 		<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-my-style btn-blue']) ?>
-		<?= Html::a('Добавить этап', ['/competitions/special-stages/create', 'championshipId' => $model->id], [
+		<?= Html::a('Добавить этап', ['/competitions/special-champ/create-stage', 'championshipId' => $model->id], [
 			'class' => 'btn btn-my-style btn-light-green'
 		]); ?>
     </p>

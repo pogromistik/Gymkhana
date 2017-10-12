@@ -17,6 +17,7 @@ use Yii;
  * @property integer $dateUpdated
  *
  * @property Year    $year
+ * @property Stage   $stages
  */
 class SpecialChamp extends BaseActiveRecord
 {
@@ -82,5 +83,10 @@ class SpecialChamp extends BaseActiveRecord
 	public function getYear()
 	{
 		return $this->hasOne(Year::className(), ['id' => 'yearId']);
+	}
+	
+	public function getStages()
+	{
+		return $this->hasMany(SpecialStage::className(), ['championshipId' => 'id'])->orderBy(['dateResult' => SORT_ASC, 'dateAdded' => SORT_ASC]);
 	}
 }

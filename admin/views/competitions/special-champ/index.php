@@ -99,7 +99,7 @@ $this->title = 'Специальные чемпионаты';
 				'format'  => 'raw',
 				'visible' => \Yii::$app->user->can('projectAdmin'),
 				'value'   => function (SpecialChamp $championship) {
-					return Html::a('Добавить этап', ['/competitions/special-stages/create', 'championshipId' => $championship->id], [
+					return Html::a('Добавить этап', ['/competitions/special-champ/create-stage', 'championshipId' => $championship->id], [
 						'class' => 'btn btn-my-style btn-light-green'
 					]);
 				}

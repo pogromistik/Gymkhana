@@ -3,6 +3,8 @@
 namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
+use common\models\SpecialStage;
+use common\models\Stage;
 use Yii;
 use common\models\SpecialChamp;
 use common\models\search\SpecialChampsSearch;
@@ -17,6 +19,7 @@ class SpecialChampController extends BaseController
 	public function init()
 	{
 		$this->can('changeSpecialChamps');
+		
 		return parent::init();
 	}
 	
@@ -121,5 +124,43 @@ class SpecialChampController extends BaseController
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
+	}
+	
+	public function actionCreateStage($championshipId)
+	{
+		$championship = $this->findModel($championshipId);
+		$stage = new SpecialStage();
+		$stage->championshipId = $championship->id;
+		if ($stage->load(Yii::$app->request->post()) && $stage->save()) {
+			return $this->redirect(['view-stage', 'id' => $stage->id]);
+		}
+		
+		return $this->render('create-stage', [
+			'championship' => $championship,
+			'stage'        => $stage
+		]);
+	}
+	
+	public function actionViewStage($id)
+	{
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		
+		return $this->render('view-stage', ['stage' => $stage]);
+	}
+	
+	public function actionUpdateStage($id)
+	{
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if ($stage->load(Yii::$app->request->post()) && $stage->save()) {
+			return $this->redirect(['view-stage', 'id' => $stage->id]);
+		}
+		
+		return $this->render('update-stage', ['stage' => $stage]);
 	}
 }
