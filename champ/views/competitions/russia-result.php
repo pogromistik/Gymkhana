@@ -18,7 +18,7 @@ use yii\bootstrap\Html;
                     <div class="title-with-bg">
 						<?= $yearInfo['year'] ?>
                     </div>
-					<?php if (empty($yearInfo['champs'])) { ?>
+					<?php if (empty($yearInfo['champs']) && empty($yearInfo['specialChamps'])) { ?>
                         <div class="pl-10">
                             Не создано ни одного чемпионата.
                         </div>

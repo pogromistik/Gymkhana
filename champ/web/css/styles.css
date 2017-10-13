@@ -1239,3 +1239,22 @@ th.gray-column {
 .green-title:hover, .green-title a:hover {
     color: #4b4e53;
 }
+
+.big-icon {
+    font-size: 18px;
+}
+
+.btn-green {
+    color: #fff;
+    background-color: #56a025;
+    border-color: #4cae4c;
+}
+
+.btn-green:hover {
+    background-color: #4cae4c;
+    color: #fff!important;
+}
+
+.toggle .btn {
+    text-decoration: none;
+}

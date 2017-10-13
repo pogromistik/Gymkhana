@@ -13,6 +13,7 @@ use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
+use common\models\RequestForSpecialStage;
 use common\models\SpecialChamp;
 use common\models\SpecialStage;
 use common\models\Stage;
@@ -84,7 +85,7 @@ class CompetitionsController extends BaseController
 				$dates[$month][] = [
 					'date'  => $stage->dateOfThe,
 					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
-					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+					'url'   => Url::to(['/competitions/stage', 'id' => $stage->id])
 				];
 				if ($stage->dateOfThe + 86400 > time()) {
 					$background = '#5cb85c';
@@ -186,8 +187,9 @@ class CompetitionsController extends BaseController
 						if (!isset($results[$championship->yearId])) {
 							$results[$championship->yearId] =
 								[
-									'champs' => [],
-									'year'   => $championship->year->year
+									'specialChamps' => [],
+									'champs'        => [],
+									'year'          => $championship->year->year
 								];
 						}
 						$results[$championship->yearId]['champs'][] = [
@@ -202,7 +204,8 @@ class CompetitionsController extends BaseController
 							$results[$championship->yearId] =
 								[
 									'specialChamps' => [],
-									'year'   => $championship->year->year
+									'champs'        => [],
+									'year'          => $championship->year->year
 								];
 						}
 						$results[$championship->yearId]['specialChamps'][] = [
@@ -927,6 +930,19 @@ class CompetitionsController extends BaseController
 		return $this->render('championship', ['championship' => $championship]);
 	}
 	
+	public function actionSpecialChamp($id)
+	{
+		$championship = SpecialChamp::findOne($id);
+		if (!$championship) {
+			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		$this->pageTitle = $championship->title;
+		$this->description = 'Информация о соревновании: ' . $championship->title;
+		$this->layout = 'full-content';
+		
+		return $this->render('special-champs/special-champ', ['championship' => $championship]);
+	}
+	
 	public function actionMoscowScheme()
 	{
 		$this->pageTitle = 'Московская схема начисления баллов';
@@ -940,5 +956,80 @@ class CompetitionsController extends BaseController
 			'place', 'point', 'title');
 		
 		return $this->render('moscow-scheme', ['items' => $items]);
+	}
+	
+	public function actionSpecialStage($id)
+	{
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$this->pageTitle = $stage->title;
+		$this->description = $stage->title;
+		$this->keywords = 'Этапы соревнования, ' . $stage->title;
+		$this->layout = 'full-content';
+		
+		$activeParticipants = $stage->getParticipants()->andWhere(['status' => RequestForSpecialStage::STATUS_APPROVE])->all();
+		
+		$needTime = [];
+		if ($stage->referenceTime) {
+			/** @var AthletesClass[] $allClasses */
+			$allClasses = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+			/** @var AthletesClass $prev */
+			$prev = null;
+			$last = null;
+			$prevTime = 0;
+			foreach ($allClasses as $class) {
+				if (!$prev || $prev->percent == $class->percent) {
+					$startTime = '00:00.00';
+				} else {
+					$time = $prevTime + 10;
+					$startTime = HelpModel::convertTimeToHuman($time);
+				}
+				$time = floor($stage->referenceTime * ($class->percent) / 100);
+				$time = ((int)($time / 10)) * 10;
+				if (round($time / $stage->referenceTime * 100, 2) >= $class->percent) {
+					$time -= 10;
+				}
+				$prevTime = $time;
+				$endTime = HelpModel::convertTimeToHuman($time);
+				$needTime[$class->id] = [
+					'classModel' => $class,
+					'startTime'  => $startTime,
+					'endTime'    => $endTime,
+					'percent'    => $class->percent
+				];
+				$prev = $class;
+				$last = $class->id;
+			}
+			$needTime[$last]['endTime'] = '59:59.59';
+			if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+				$needTime[$last]['percent'] = '> ' . $prev->percent;
+			}
+		}
+		
+		return $this->render('special-champs/special-stage', [
+			'stage'              => $stage,
+			'needTime'           => $needTime,
+			'activeParticipants' => $activeParticipants,
+		]);
+	}
+	
+	public function actionAthleteProgress($id)
+	{
+		$participant = RequestForSpecialStage::findOne($id);
+		if (!$id) {
+			throw new NotFoundHttpException('Участник не найден');
+		}
+		$this->pageTitle = 'Все результаты участника: ' . $participant->athlete->getFullName();
+		$requests = RequestForSpecialStage::find()->where(['athleteId' => $participant->athleteId, 'stageId' => $participant->stageId])
+			->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
+			->orderBy(['date' => SORT_ASC])->all();
+		
+		return $this->render('special-champs/athlete-progress', [
+			'stage'    => $participant->stage,
+			'requests' => $requests,
+			'athlete'  => $participant->athlete
+		]);
 	}
 }

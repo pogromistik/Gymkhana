@@ -8,28 +8,29 @@ use Yii;
 /**
  * This is the model class for table "RequestsForSpecialStages".
  *
- * @property integer      $id
- * @property string       $data
- * @property integer      $athleteId
- * @property integer      $motorcycleId
- * @property integer      $status
- * @property integer      $time
- * @property integer      $fine
- * @property integer      $resultTime
- * @property integer      $athleteClassId
- * @property integer      $newAthleteClassId
- * @property integer      $newAthleteClassStatus
- * @property integer      $percent
- * @property string       $videoLink
- * @property string       $cancelReason
- * @property integer      $stageId
- * @property integer      $date
- * @property integer      $dateAdded
- * @property integer      $dateUpdated
+ * @property integer       $id
+ * @property string        $data
+ * @property integer       $athleteId
+ * @property integer       $motorcycleId
+ * @property integer       $status
+ * @property integer       $time
+ * @property integer       $fine
+ * @property integer       $resultTime
+ * @property integer       $athleteClassId
+ * @property integer       $newAthleteClassId
+ * @property integer       $newAthleteClassStatus
+ * @property integer       $percent
+ * @property string        $videoLink
+ * @property string        $cancelReason
+ * @property integer       $stageId
+ * @property integer       $date
+ * @property integer       $dateAdded
+ * @property integer       $dateUpdated
  *
- * @property Athlete      $athlete
- * @property Motorcycle   $motorcycle
- * @property SpecialStage $stage
+ * @property Athlete       $athlete
+ * @property Motorcycle    $motorcycle
+ * @property SpecialStage  $stage
+ * @property AthletesClass $athleteClass
  */
 class RequestForSpecialStage extends BaseActiveRecord
 {
@@ -177,5 +178,10 @@ class RequestForSpecialStage extends BaseActiveRecord
 	public function getStage()
 	{
 		return $this->hasOne(SpecialStage::className(), ['id' => 'stageId']);
+	}
+	
+	public function getAthleteClass()
+	{
+		return $this->hasOne(AthletesClass::className(), ['id' => 'athleteClassId']);
 	}
 }

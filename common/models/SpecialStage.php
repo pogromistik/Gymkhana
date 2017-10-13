@@ -202,6 +202,6 @@ class SpecialStage extends BaseActiveRecord
 	public function getParticipants()
 	{
 		return $this->hasMany(RequestForSpecialStage::className(), ['stageId' => 'id'])
-			->orderBy(['resultTime' => SORT_DESC, 'dateAdded' => SORT_ASC]);
+			->orderBy(['resultTime' => SORT_ASC, 'dateAdded' => SORT_ASC]);
 	}
 }
