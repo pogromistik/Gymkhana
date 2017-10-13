@@ -15,7 +15,7 @@ $this->title = $name;
     </div>
     <div class="errors">
         <div class="img">
-			<?= Html::img('img/404.png') ?>
+			<?= Html::img('/img/404.png') ?>
         </div>
         <div class="text">
             <div class="code"><?= $statusCode ?></div>
