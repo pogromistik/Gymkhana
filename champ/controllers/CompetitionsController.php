@@ -13,6 +13,8 @@ use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
+use common\models\SpecialChamp;
+use common\models\SpecialStage;
 use common\models\Stage;
 use common\models\TmpParticipant;
 use common\models\Year;
@@ -53,14 +55,24 @@ class CompetitionsController extends BaseController
 		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
+		$specialChampIds = SpecialChamp::find()->select('id')
+			->andWhere(['yearId' => $yearIds])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+		$specialStages = SpecialStage::find()->where(['championshipId' => $specialChampIds])
+			->orderBy(['dateStart' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
+		
 		$color = '#fff';
 		$dates = [];
 		$notDate = [];
+		
+		//обычные чемпионаты
 		/** @var Stage[] $stages */
 		foreach ($stages as $stage) {
 			$background = '#a9a9a9';
 			if (!$stage->dateOfThe) {
-				$notDate[] = $stage;
+				$notDate[] = [
+					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+					'url'   => Url::to(['/competitions/stage', 'id' => $stage->id])
+				];
 			} else {
 				$month = (new \DateTime(date('01.m.Y', $stage->dateOfThe),
 					new \DateTimeZone('Asia/Yekaterinburg')))
@@ -69,7 +81,11 @@ class CompetitionsController extends BaseController
 				if (!isset($dates[$month])) {
 					$dates[$month] = [];
 				}
-				$dates[$month][] = $stage;
+				$dates[$month][] = [
+					'date'  => $stage->dateOfThe,
+					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+				];
 				if ($stage->dateOfThe + 86400 > time()) {
 					$background = '#5cb85c';
 				}
@@ -83,6 +99,44 @@ class CompetitionsController extends BaseController
 			$event->textColor = $color;
 			$event->url = Url::to(['/competitions/stage', 'id' => $stage->id]);
 			$event->start = date('Y-m-d', $stage->dateOfThe);
+			$events[] = $event;
+		}
+		
+		//специальные чемпионаты
+		/** @var SpecialStage[] $specialStages */
+		foreach ($specialStages as $stage) {
+			$background = '#a9a9a9';
+			if (!$stage->dateStart) {
+				$notDate[] = [
+					'title' => $stage->championship->title . ': ' . $stage->title,
+					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+				];
+			} else {
+				$month = (new \DateTime(date('01.m.Y', $stage->dateStart),
+					new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
+					->setTime(06, 00,
+						00)->getTimestamp();
+				if (!isset($dates[$month])) {
+					$dates[$month] = [];
+				}
+				$dates[$month][] = [
+					'date'  => $stage->dateStart,
+					'title' => $stage->championship->title . ': ' . $stage->title,
+					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+				];
+				if ($stage->dateStart + 86400 > time()) {
+					$background = '#5cb85c';
+				}
+			}
+			$event = new Event();
+			$event->id = $stage->id;
+			$event->title = $stage->title;
+			$event->allDay = true;
+			$event->backgroundColor = $background;
+			$event->color = $background;
+			$event->textColor = $color;
+			$event->url = Url::to(['/competitions/special-stage', 'id' => $stage->id]);
+			$event->start = date('Y-m-d', $stage->dateStart);
 			$events[] = $event;
 		}
 		
@@ -132,18 +186,31 @@ class CompetitionsController extends BaseController
 						if (!isset($results[$championship->yearId])) {
 							$results[$championship->yearId] =
 								[
-									'data' => [],
-									'year' => $championship->year->year
+									'champs' => [],
+									'year'   => $championship->year->year
 								];
 						}
-						$results[$championship->yearId]['data'][] = [
-							'year'        => $championship->year->year,
-							'stages'      => $championship->stages,
-							'status'      => $championship->status,
-							'id'          => $championship->id,
-							'showResults' => $championship->showResults
+						$results[$championship->yearId]['champs'][] = [
+							'championship' => $championship,
+							'stages'       => $championship->stages
 						];
 					}
+					/** @var SpecialChamp[] $specialChamps */
+					$specialChamps = SpecialChamp::find()->orderBy(['dateAdded' => SORT_DESC])->all();
+					foreach ($specialChamps as $championship) {
+						if (!isset($results[$championship->yearId])) {
+							$results[$championship->yearId] =
+								[
+									'specialChamps' => [],
+									'year'   => $championship->year->year
+								];
+						}
+						$results[$championship->yearId]['specialChamps'][] = [
+							'championship' => $championship,
+							'stages'       => $championship->stages
+						];
+					}
+					
 					if (isset($results)) {
 						krsort($results);
 					}

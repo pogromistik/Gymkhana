@@ -1231,3 +1231,11 @@ h2.title small {
 th.gray-column {
     border-bottom: 2px solid #cacaca!important;
 }
+
+.green-title, .green-title a {
+    color: #56a025;
+}
+
+.green-title:hover, .green-title a:hover {
+    color: #4b4e53;
+}
