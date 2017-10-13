@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "athletes_classes".
@@ -19,6 +20,7 @@ class AthletesClass extends \yii\db\ActiveRecord
 {
 	const STATUS_INACTIVE = 0;
 	const STATUS_ACTIVE = 1;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -74,5 +76,15 @@ class AthletesClass extends \yii\db\ActiveRecord
 	{
 		return self::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
 			->orderBy(['percent' => SORT_DESC])->one();
+	}
+	
+	public static function getList()
+	{
+		$result = self::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+		if (!$result) {
+			return null;
+		}
+		
+		return ArrayHelper::map($result,'id', 'title');
 	}
 }

@@ -86,10 +86,29 @@ $this->params['breadcrumbs'][] = 'Участники';
 		<?php ActiveForm::end(); ?>
 
     </div>
-	
+
+
+    <div class="small">
+        <div class="color-div need-clarification-participant"></div>
+        - результаты, требующие модерации;
+        <div class="color-div inactive-participant"></div>
+        - отклоненные результаты;
+        <div class="color-div out-participant"></div>
+        - неактуальные результаты.
+    </div>
+    
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
+		'rowOptions'   => function (\common\models\RequestForSpecialStage $item) {
+			if ($item->status === \common\models\RequestForSpecialStage::STATUS_NEED_CHECK) {
+				return ['class' => 'need-clarification-participant'];
+			} elseif ($item->status === \common\models\RequestForSpecialStage::STATUS_CANCEL) {
+				return ['class' => 'inactive-participant'];
+			} elseif ($item->status === \common\models\RequestForSpecialStage::STATUS_IN_ACTIVE) {
+				return ['class' => 'out-participant'];
+			}
+		},
 		'columns'      => [
 			['class' => 'yii\grid\SerialColumn'],
 			
@@ -126,6 +145,23 @@ $this->params['breadcrumbs'][] = 'Участники';
 			[
 				'attribute' => 'videoLink',
 				'filter'    => false
+			],
+			[
+				'format' => 'raw',
+				'value'  => function (RequestForSpecialStage $item) {
+					return Html::a('<span class="fa fa-edit"></span>', ['update-participant', 'id' => $item->id],
+						['class' => 'btn btn-my-style btn-blue small']);
+				}
+			],
+			[
+				'format' => 'raw',
+				'value'  => function (RequestForSpecialStage $item) {
+					return Html::a('<span class="fa fa-remove"></span>', ['delete-participant', 'id' => $item->id],
+						['class' => 'btn btn-my-style btn-red small',
+						 'data'  => [
+							 'confirm' => 'Уверены, что хотите полностью удалить результат?'
+						 ]]);
+				}
 			]
 		],
 	]); ?>

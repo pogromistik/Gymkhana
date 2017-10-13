@@ -49,7 +49,7 @@ class RequestForSpecialStageSearch extends RequestForSpecialStage
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-		]);
+			'sort'  => ['defaultOrder' => ['status' => SORT_ASC, 'dateAdded' => SORT_DESC]]]);
 		
 		$this->load($params);
 		

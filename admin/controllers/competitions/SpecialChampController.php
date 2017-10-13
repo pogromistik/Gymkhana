@@ -6,6 +6,7 @@ use admin\controllers\BaseController;
 use admin\models\ParticipantForm;
 use common\models\Athlete;
 use common\models\HelpModel;
+use common\models\Participant;
 use common\models\RequestForSpecialStage;
 use common\models\search\RequestForSpecialStageSearch;
 use common\models\SpecialStage;
@@ -232,6 +233,48 @@ class SpecialChampController extends BaseController
 			'dataProvider' => $dataProvider,
 			'formModel'    => $formModel,
 			'forSearch'    => $forSearch
+		]);
+	}
+	
+	public function actionDeleteParticipant($id)
+	{
+		$participant = RequestForSpecialStage::findOne($id);
+		if (!$participant) {
+			throw new NotFoundHttpException('Результат не найден');
+		}
+		$stageId = $participant->stageId;
+		$old = null;
+		if ($participant->status == RequestForSpecialStage::STATUS_APPROVE) {
+			/** @var RequestForSpecialStage $old */
+			$old = RequestForSpecialStage::find()->where(['not', ['id' => $participant->id]])
+				->andWhere(['athleteId' => $participant->athleteId, 'stageId' => $participant->stageId])
+				->andWhere(['status' => RequestForSpecialStage::STATUS_IN_ACTIVE])
+				->orderBy(['resultTime' => SORT_ASC])
+				->one();
+		}
+		$participant->delete();
+		if ($old) {
+			$old->status = RequestForSpecialStage::STATUS_APPROVE;
+			$old->save();
+		}
+		
+		return $this->redirect(['participants', 'stageId' => $stageId]);
+	}
+	
+	public function actionUpdateParticipant($id)
+	{
+		$participant = RequestForSpecialStage::findOne($id);
+		if (!$participant) {
+			throw new NotFoundHttpException('Результат не найден');
+		}
+		
+		if ($participant->load(\Yii::$app->request->post()) && $participant->save()) {
+			
+			return $this->redirect(['participants', 'stageId' => $participant->stageId]);
+		}
+		
+		return $this->render('update-participant', [
+			'participant' => $participant
 		]);
 	}
 }

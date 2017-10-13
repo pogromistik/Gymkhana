@@ -34,7 +34,7 @@ class ParticipantForm extends Model
 	public function rules()
 	{
 		return [
-			[['athleteId', 'motorcycleId', 'timeHuman', 'fine', 'videoLink', 'dateHuman', 'stageId'], 'required'],
+			[['athleteId', 'motorcycleId', 'timeHuman', 'videoLink', 'dateHuman', 'stageId'], 'required'],
 			[['athleteId', 'motorcycleId', 'fine', 'stageId'], 'integer'],
 			[['dateHuman', 'timeHuman', 'videoLink'], 'string']
 		];
@@ -70,6 +70,7 @@ class ParticipantForm extends Model
 		$result->videoLink = $this->videoLink;
 		$result->date = (new \DateTime($this->dateHuman, new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
 			->setTime(6, 0, 0)->getTimestamp();
+		$result->status = RequestForSpecialStage::STATUS_APPROVE;
 		if ($result->save()) {
 			return true;
 		}

@@ -8,27 +8,28 @@ use Yii;
 /**
  * This is the model class for table "RequestsForSpecialStages".
  *
- * @property integer    $id
- * @property string     $data
- * @property integer    $athleteId
- * @property integer    $motorcycleId
- * @property integer    $status
- * @property integer    $time
- * @property integer    $fine
- * @property integer    $resultTime
- * @property integer    $athleteClassId
- * @property integer    $newAthleteClassId
- * @property integer    $newAthleteClassStatus
- * @property integer    $percent
- * @property string     $videoLink
- * @property string     $cancelReason
- * @property integer    $stageId
- * @property integer    $date
- * @property integer    $dateAdded
- * @property integer    $dateUpdated
+ * @property integer      $id
+ * @property string       $data
+ * @property integer      $athleteId
+ * @property integer      $motorcycleId
+ * @property integer      $status
+ * @property integer      $time
+ * @property integer      $fine
+ * @property integer      $resultTime
+ * @property integer      $athleteClassId
+ * @property integer      $newAthleteClassId
+ * @property integer      $newAthleteClassStatus
+ * @property integer      $percent
+ * @property string       $videoLink
+ * @property string       $cancelReason
+ * @property integer      $stageId
+ * @property integer      $date
+ * @property integer      $dateAdded
+ * @property integer      $dateUpdated
  *
- * @property Athlete    $athlete
- * @property Motorcycle $motorcycle
+ * @property Athlete      $athlete
+ * @property Motorcycle   $motorcycle
+ * @property SpecialStage $stage
  */
 class RequestForSpecialStage extends BaseActiveRecord
 {
@@ -40,8 +41,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 	
 	const STATUS_NEED_CHECK = 1;
 	const STATUS_APPROVE = 2;
-	const STATUS_CANCEL = 3;
-	const STATUS_IN_ACTIVE = 4;
+	const STATUS_IN_ACTIVE = 3;
+	const STATUS_CANCEL = 4;
 	
 	public static $statusesTitle = [
 		self::STATUS_NEED_CHECK => 'Ожидает проверки',
@@ -67,6 +68,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			[['data', 'videoLink', 'cancelReason', 'dateHuman', 'resultTimeHuman', 'timeHuman'], 'string'],
 			[['athleteId', 'motorcycleId', 'status', 'time', 'fine', 'resultTime', 'athleteClassId', 'newAthleteClassId', 'newAthleteClassStatus', 'percent', 'stageId', 'date', 'dateAdded', 'dateUpdated'], 'integer'],
 			[['time', 'resultTime', 'videoLink', 'stageId', 'date', 'dateAdded', 'dateUpdated'], 'required'],
+			['fine', 'default', 'value' => 0]
 		];
 	}
 	
@@ -93,6 +95,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			'cancelReason'          => 'Причина отказа',
 			'stageId'               => 'Этап',
 			'date'                  => 'Дата заезда',
+			'dateHuman'             => 'Дата заезда',
 			'dateAdded'             => 'Date Added',
 			'dateUpdated'           => 'Date Updated',
 		];
@@ -107,9 +110,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 			}
 		}
 		$this->dateUpdated = time();
-		
-		if ($this->resultTimeHuman) {
-			$this->time = HelpModel::convertTime($this->resultTimeHuman);
+		if ($this->timeHuman) {
+			$this->time = HelpModel::convertTime($this->timeHuman);
 		}
 		$this->resultTime = $this->time;
 		if ($this->fine) {
@@ -117,6 +119,26 @@ class RequestForSpecialStage extends BaseActiveRecord
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function beforeSave($insert)
+	{
+		if ($this->athleteId && $this->status = self::STATUS_APPROVE) {
+			$bestOldTime = self::find()->where(['athleteId' => $this->athleteId, 'stageId' => $this->stageId]);
+			if (!$this->isNewRecord) {
+				$bestOldTime = $bestOldTime->andWhere(['not', ['id' => $this->id]]);
+			}
+			$bestOldTime = $bestOldTime->min('"resultTime"');
+			if ($this->resultTime < $bestOldTime) {
+				self::updateAll(['status' => self::STATUS_IN_ACTIVE], ['stageId' => $this->stageId, 'athleteId' => $this->athleteId]);
+			} else {
+				if ($bestOldTime && $bestOldTime != 0) {
+					$this->status = self::STATUS_IN_ACTIVE;
+				}
+			}
+		}
+		
+		return parent::beforeSave($insert);
 	}
 	
 	public function afterFind()
@@ -127,6 +149,10 @@ class RequestForSpecialStage extends BaseActiveRecord
 		}
 		if ($this->time) {
 			$this->timeHuman = HelpModel::convertTimeToHuman($this->time);
+		}
+		if ($this->date) {
+			date_default_timezone_set(HelpModel::DEFAULT_TIME_ZONE);
+			$this->dateHuman = date('d.m.Y', $this->date);
 		}
 	}
 	
@@ -146,5 +172,10 @@ class RequestForSpecialStage extends BaseActiveRecord
 		}
 		
 		return null;
+	}
+	
+	public function getStage()
+	{
+		return $this->hasOne(SpecialStage::className(), ['id' => 'stageId']);
 	}
 }
