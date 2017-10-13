@@ -204,4 +204,22 @@ class SpecialStage extends BaseActiveRecord
 		return $this->hasMany(RequestForSpecialStage::className(), ['stageId' => 'id'])
 			->orderBy(['resultTime' => SORT_ASC, 'dateAdded' => SORT_ASC]);
 	}
+	
+	public function isOpen()
+	{
+		if ($this->dateStart) {
+			if ($this->dateStart > time()) {
+				return false;
+			}
+			if ($this->dateEnd) {
+				if ($this->dateEnd < time()) {
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
 }

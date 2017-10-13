@@ -129,10 +129,22 @@ $championship = $stage->championship;
                     </div>
                 </div>
 			<?php } else { ?>
+				<?php if ($stage->isOpen()) { ?>
+					<?php if (\Yii::$app->user->isGuest) { ?>
+                        <a href="#" class="btn btn-dark sendResultForStage">Отправить результат</a>
+						<?php $view = '_guest-registration'; ?>
+					<?php } else { ?>
+                        <a href="#" class="btn btn-dark sendResultForStage">Отправить результат</a>
+						<?php $view = '_auth-registration'; ?>
+					<?php } ?>
+                    <div class="special-stage-form">
+						<?= $this->render($view, ['stage' => $stage]) ?>
+                    </div>
+				<?php } ?>
                 <div class="text-right">
                     Количество участников: <?= count($activeParticipants) ?>
                     <br>
-                   <small>Для просмотра прогресса нажмите на время</small>
+                    <small>Для просмотра прогресса нажмите на время</small>
                 </div>
 				<?= $this->render('_pk-results', ['participants' => $activeParticipants]) ?>
 				<?= $this->render('_mobile-results', ['participants' => $activeParticipants]) ?>

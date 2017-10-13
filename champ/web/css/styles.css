@@ -1258,3 +1258,7 @@ th.gray-column {
 .toggle .btn {
     text-decoration: none;
 }
+
+.special-stage-form {
+    display: none;
+}

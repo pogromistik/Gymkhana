@@ -84,8 +84,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 			'athleteId'             => 'Спортсмен',
 			'motorcycleId'          => 'Мотоцикл',
 			'status'                => 'Статус',
-			'time'                  => 'Время',
-			'timeHuman'             => 'Время',
+			'time'                  => 'Время (без учёта штрафа)',
+			'timeHuman'             => 'Время (без учёта штрафа)',
 			'fine'                  => 'Штраф',
 			'resultTime'            => 'Итоговое время',
 			'athleteClassId'        => 'Класс участника',
@@ -110,6 +110,10 @@ class RequestForSpecialStage extends BaseActiveRecord
 				$this->date = time();
 			}
 		}
+		if ($this->athleteId && !$this->athleteClassId) {
+			$athlete = Athlete::findOne($this->athleteId);
+			$this->athleteClassId = $athlete->athleteClassId;
+		}
 		$this->dateUpdated = time();
 		if ($this->timeHuman) {
 			$this->time = HelpModel::convertTime($this->timeHuman);
@@ -124,7 +128,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 	
 	public function beforeSave($insert)
 	{
-		if ($this->athleteId && $this->status = self::STATUS_APPROVE) {
+		if ($this->athleteId && $this->status == self::STATUS_APPROVE) {
 			$bestOldTime = self::find()->where(['athleteId' => $this->athleteId, 'stageId' => $this->stageId]);
 			if (!$this->isNewRecord) {
 				$bestOldTime = $bestOldTime->andWhere(['not', ['id' => $this->id]]);

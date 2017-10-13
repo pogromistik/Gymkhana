@@ -171,3 +171,34 @@ $('.deletePhoto').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$('.sendResultForStage').click(function (e) {
+    e.preventDefault();
+    $('.special-stage-form').slideToggle();
+    $('body').animate({scrollTop: $('.special-stage-form').offset().top}, 500);
+    $(this).hide();
+});
+
+$(document).on("submit", '#specialStageForAuth', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    $('.alert').hide();
+    showBackDrop();
+
+    $.ajax({
+        url: "/competitions/auth-special-stage-request",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['error']) {
+                $('.alert-danger').text(result['error']).show();
+                hideBackDrop();
+            } else {
+                $('.alert-success').html(result['data']).show();
+                hideBackDrop();
+                form.trigger('reset');
+            }
+        }
+    });
+});

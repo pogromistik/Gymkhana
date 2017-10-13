@@ -1032,4 +1032,94 @@ class CompetitionsController extends BaseController
 			'athlete'  => $participant->athlete
 		]);
 	}
+	
+	public function actionAuthSpecialStageRequest()
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$response = [
+			'error' => false,
+			'data'  => null
+		];
+		
+		$form = new RequestForSpecialStage();
+		if ($form->load(\Yii::$app->request->post())) {
+			if (!$form->athleteId || !$form->stageId) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			$stage = SpecialStage::findOne($form->stageId);
+			if (!$stage) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			if (!$stage->dateStart || $stage->dateStart > time()) {
+				$response['error'] = 'Приём результатов ещё не начался';
+				
+				return $response;
+			}
+			if ($stage->dateEnd && $stage->dateEnd < time()) {
+				$response['error'] = 'Приём заявок завершен';
+				
+				return $response;
+			}
+			if (!$form->motorcycle) {
+				$response['error'] = 'Необходимо выбрать мотоцикл';
+				
+				return $response;
+			}
+			if (!$form->dateHuman) {
+				$response['error'] = 'Необходимо указать время';
+				
+				return $response;
+			}
+			if (!$form->timeHuman) {
+				$response['error'] = 'Укажите время';
+				
+				return $response;
+			}
+			if (!$form->videoLink) {
+				$response['error'] = 'Ссылка на видео обязательна';
+				
+				return $response;
+			}
+			if (!$form->fine) {
+				$form->fine = 0;
+			}
+			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
+				$response['error'] = 'Ссылка на видео должна начинаться с http: или https:';
+				
+				return $response;
+			}
+			if (!$form->validate()) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			$old = RequestForSpecialStage::find()->where(['athleteId' => $form->athleteId, 'stageId' => $form->stageId])
+				->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
+				->andWhere(['time' => $form->time, 'fine' => $form->fine])
+				->one();
+			if ($old) {
+				$response['error'] = 'Для данного этапа у вас уже есть такой результат';
+				
+				return $response;
+			}
+			if (!$form->save(false)) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
+				'В любом случае, Вам будет отправлено соответствующее уведомление.';
+			
+			return $response;
+		}
+		
+		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+		
+		return $response;
+	}
 }
