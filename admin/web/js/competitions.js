@@ -1398,7 +1398,54 @@ $(document).on("submit", '#cancelRegForSpecStage', function (e) {
             }
         },
         error: function (result) {
-           alert(result);
+            alert(result);
         }
+    });
+});
+
+$('.approveSpecChampForAthlete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var athleteId = elem.data('athlete-id');
+    showBackDrop();
+    $.get('/competitions/special-champ/approve-for-athlete', {
+        id: id, athleteId: athleteId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            BootboxError(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+        console.log(error);
+    });
+});
+
+$('.approveSpecChampForAthleteOnMotorcycle').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var athleteId = elem.data('athlete-id');
+    var motorcycleId = elem.data('motorcycle-id');
+    showBackDrop();
+    $.get('/competitions/special-champ/approve-for-athlete-on-motorcycle', {
+        id: id, athleteId: athleteId, motorcycleId: motorcycleId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            BootboxError(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+        console.log(error);
     });
 });

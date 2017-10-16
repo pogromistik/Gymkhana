@@ -60,8 +60,8 @@ $this->title = 'Регистрации на особые этапы, требу�
 						/** @var \common\models\Athlete $athlete */
 						$athlete = $coincidence['athlete']; ?>
 						<?= $athlete->getFullName() . ', ' . $athlete->city->title ?>
-                        <a href="#" class="btn btn-my-style small btn-dirty-blue"
-                           data-id="<?= $athlete->id ?>" data-request-id="<?= $request->id ?>">
+                        <a href="#" class="btn btn-my-style small btn-dirty-blue approveSpecChampForAthlete"
+                           data-athlete-id="<?= $athlete->id ?>" data-id="<?= $request->id ?>">
                             Принять на новом мотоцикле
                         </a>
                         <div>
@@ -71,8 +71,9 @@ $this->title = 'Регистрации на особые этапы, требу�
 								?>
                                 <div>
 									<?= $motorcycle->getFullTitle(); ?>
-                                    <a href="#" class="btn btn-my-style small btn-light-gray"
-                                       data-id="<?= $athlete->id ?>" data-request-id="<?= $request->id ?>">
+                                    <a href="#" class="btn btn-my-style small btn-light-gray approveSpecChampForAthleteOnMotorcycle"
+                                       data-athlete-id="<?= $athlete->id ?>" data-id="<?= $request->id ?>"
+                                       data-motorcycle-id="<?= $motorcycle->id ?>">
                                         Принять на этом мотоцикле
                                     </a>
                                 </div>

@@ -126,8 +126,10 @@ $this->params['breadcrumbs'][] = 'Участники';
 						'placeholder' => 'Укажите фамилию или имя...',
 					]
 				]),
+				'format'    => 'raw',
 				'value'     => function (RequestForSpecialStage $item) {
-					return $item->athleteId ? $item->athlete->getFullName() : '';
+					return $item->athleteId ?
+						Html::a($item->athlete->getFullName(), ['/competitions/athlete/view', 'id' => $item->athleteId]) : '';
 				}
 			],
 			[

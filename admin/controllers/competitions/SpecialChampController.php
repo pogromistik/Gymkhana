@@ -449,4 +449,128 @@ class SpecialChampController extends BaseController
 		
 		return true;
 	}
+	
+	public function actionApproveForAthlete($id, $athleteId)
+	{
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Заявка не найдена';
+		}
+		
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		
+		if (\Yii::$app->mutex->acquire('SpecialStageRequests-' . $request->id, 10)) {
+			$request = RequestForSpecialStage::findOne($id);
+			if ($request->status !== RequestForSpecialStage::STATUS_NEED_CHECK) {
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Запись уже была обработана. Пожалуйста, перезагрузите страницу.';
+			}
+			
+			$data = $request->getData();
+			
+			$transaction = \Yii::$app->db->beginTransaction();
+			
+			if (!$athlete->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])) {
+				$athlete->email = $data['email'];
+				if (!$athlete->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return var_dump($athlete->errors);
+				}
+			}
+			
+			$motorcycle = new Motorcycle();
+			$motorcycle->athleteId = $athlete->id;
+			$motorcycle->mark = $data['motorcycleMark'];
+			$motorcycle->model = $data['motorcycleModel'];
+			if (!$motorcycle->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return var_dump($motorcycle->errors);
+			}
+			
+			$request->athleteId = $athlete->id;
+			$request->motorcycleId = $motorcycle->id;
+			$request->status = RequestForSpecialStage::STATUS_APPROVE;
+			if (!$request->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Возникла ошибка при сохранении';
+			}
+			
+			$transaction->commit();
+			\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+			
+			return true;
+		}
+		\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+		
+		return true;
+	}
+	
+	public function actionApproveForAthleteOnMotorcycle($id, $athleteId, $motorcycleId)
+	{
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Заявка не найдена';
+		}
+		
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			return 'Спортсмен не найден';
+		}
+		
+		$motorcycle = Motorcycle::findOne($motorcycleId);
+		if (!$motorcycle || $motorcycle->athleteId != $athlete->id) {
+			return 'Мотоцикл не найден';
+		}
+		
+		if (\Yii::$app->mutex->acquire('SpecialStageRequests-' . $request->id, 10)) {
+			$request = RequestForSpecialStage::findOne($id);
+			if ($request->status !== RequestForSpecialStage::STATUS_NEED_CHECK) {
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Запись уже была обработана. Пожалуйста, перезагрузите страницу.';
+			}
+			
+			$data = $request->getData();
+			
+			$transaction = \Yii::$app->db->beginTransaction();
+			
+			if (!$athlete->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])) {
+				$athlete->email = $data['email'];
+				if (!$athlete->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return var_dump($athlete->errors);
+				}
+			}
+			
+			$request->athleteId = $athlete->id;
+			$request->motorcycleId = $motorcycle->id;
+			$request->status = RequestForSpecialStage::STATUS_APPROVE;
+			if (!$request->save()) {
+				$transaction->rollBack();
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Возникла ошибка при сохранении';
+			}
+			
+			$transaction->commit();
+			\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+			
+			return true;
+		}
+		\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+		
+		return true;
+	}
 }
