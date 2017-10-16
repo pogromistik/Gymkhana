@@ -147,9 +147,15 @@ use yii\bootstrap\Html;
 								echo $participant->place;
 							} else {
 								if ($stage->referenceTime) {
-									?>
-                                    <span class="fa fa-remove remove"></span>
-									<?php
+									if ($participant->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+										?>
+                                        <span class="fa fa-remove remove"></span>
+										<?php
+									} else {
+										?>
+                                        <span class="small">вне зачёта</span>
+										<?php
+									}
 								} else {
 									?>
                                     <span class="green wait">...</span>
