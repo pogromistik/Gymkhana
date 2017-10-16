@@ -7,6 +7,11 @@
 $this->title = $stage->title;
 $newClasses = $stage->getActiveRequests()->andWhere(['not', ['newAthleteClassId' => null]])
 	->andWhere(['newAthleteClassStatus' => \common\models\RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK])->all();
+$championship = $stage->championship;
+$this->params['breadcrumbs'][] = ['label' => 'Специальные чемпионаты', 'url' => ['/competitions/special-champ/index']];
+$this->params['breadcrumbs'][] = ['label' => $stage->championship->title, 'url' => ['/competitions/special-champ/view', 'id' => $stage->championshipId]];
+$this->params['breadcrumbs'][] = ['label' => $stage->title, 'url' => ['/competitions/special-champ/view-stage', 'id' => $stage->id]];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 
@@ -38,12 +43,12 @@ $newClasses = $stage->getActiveRequests()->andWhere(['not', ['newAthleteClassId'
     <div class="text-right newClass">
         <div class="pb-10">
             <a class="btn btn-danger getRequest" href="#"
-               data-action="/competitions/participants/cancel-all-classes"
+               data-action="/competitions/special-champ/cancel-all-classes"
                data-id="<?= $stage->id ?>" title="Отменить">
                 Отменить все новые неподтверждённые классы
             </a>
             <a class="btn btn-success getRequest" href="#"
-               data-action="/competitions/participants/approve-all-classes"
+               data-action="/competitions/special-champ/approve-all-classes"
                data-id="<?= $stage->id ?>" title="Подтвердить">
                 Подтвердить все новые классы
             </a>
@@ -85,12 +90,12 @@ $newClasses = $stage->getActiveRequests()->andWhere(['not', ['newAthleteClassId'
 		        <?php if ($request->newAthleteClassStatus == \common\models\RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) { ?>
                     <br>
                     <a class="btn btn-danger getRequest" href="#"
-                       data-action="/competitions/participants/cancel-class"
+                       data-action="/competitions/special-champ/cancel-class"
                        data-id="<?= $request->id ?>" title="Отменить">
                         <span class="fa fa-remove"></span>
                     </a>
                     <a class="btn btn-success getRequest" href="#"
-                       data-action="/competitions/participants/approve-class"
+                       data-action="/competitions/special-champ/approve-class"
                        data-id="<?= $request->id ?>" title="Подтвердить">
                         <span class="fa fa-check"></span>
                     </a>

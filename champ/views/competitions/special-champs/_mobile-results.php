@@ -28,21 +28,29 @@ if (!\Yii::$app->user->isGuest) {
 			?>
             <tr class="<?= $class ?>">
                 <td>
-                    <?= $participant->place ?>
+					<?= $participant->place ?>
                 </td>
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                     <br>
-	                <?= $athlete->city->title ?>
+					<?= $athlete->city->title ?>
                     <br>
-	                <?= $participant->motorcycle->getFullTitle() ?>
+					<?= $participant->motorcycle->getFullTitle() ?>
                     <br>
-	                <?= $participant->athleteClass->title ?>
+					<?= $participant->athleteClass->title ?>
                 </td>
                 <td><?= \yii\helpers\Html::a($participant->resultTimeHuman, ['athlete-progress', 'id' => $participant->id]) ?>
                     &nbsp;
-                    <a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a></td>
-                <td><?= $participant->percent ? $participant->percent . '%' : '' ?></td>
+                    <a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a>
+                </td>
+                <td>
+					<?= $participant->percent ? $participant->percent . '%' : '' ?>
+					<?php if ($participant->newAthleteClassId
+						&& $participant->newAthleteClassStatus == \common\models\RequestForSpecialStage::STATUS_APPROVE
+					) { ?>
+                        &nbsp;(<?= $participant->newAthleteClass->title ?>)
+					<?php } ?>
+                </td>
             </tr>
 		<?php } ?>
         </tbody>

@@ -162,12 +162,15 @@ class RequestForSpecialStage extends BaseActiveRecord
 			if ($this->resultTime < $bestOldTime) {
 				if ($this->isNewRecord) {
 					self::updateAll(['status' => self::STATUS_IN_ACTIVE], ['stageId'   => $this->stageId,
-					                                                       'athleteId' => $this->athleteId]);
+					                                                       'athleteId' => $this->athleteId,
+					                                                       'status'    => self::STATUS_APPROVE
+					]);
 				} else {
 					self::updateAll(['status' => self::STATUS_IN_ACTIVE], [
 						'and',
 						['stageId' => $this->stageId],
 						['athleteId' => $this->athleteId],
+						['status' => self::STATUS_APPROVE],
 						['not', ['id' => $this->id]]
 					]);
 				}

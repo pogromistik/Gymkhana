@@ -22,6 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'class'   => 'btn btn-my-style btn-yellow',
 			]) ?>
+		<?= Html::a('Итоги', ['/competitions/special-champ/stage-results', 'stageId' => $stage->id],
+			['class' => 'btn btn-my-style btn-lilac']) ?>
 	</div>
 	
 	<?= DetailView::widget([

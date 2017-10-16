@@ -171,7 +171,7 @@ use yii\bootstrap\Html;
                     <tr>
                         <td>
 							<?php $stage = $item->stage; ?>
-							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+							<?= Html::a($stage->title, ['/competitions/special-stage', 'id' => $stage->id]) ?><br>
 							<?= $stage->championship->year->year ?>г.
                         </td>
                         <td><?= $item->motorcycle->getFullTitle() ?></td>

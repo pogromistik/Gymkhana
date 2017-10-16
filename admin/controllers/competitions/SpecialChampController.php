@@ -6,6 +6,7 @@ use admin\controllers\BaseController;
 use admin\models\ParticipantForm;
 use common\models\Athlete;
 use common\models\City;
+use common\models\ClassHistory;
 use common\models\HelpModel;
 use common\models\Motorcycle;
 use common\models\Notice;
@@ -621,10 +622,10 @@ class SpecialChampController extends BaseController
 			throw new UserException($result);
 		}
 		
-		return $this->redirect(['stage-result', 'stageId' => $stageId]);
+		return $this->redirect(['stage-results', 'stageId' => $stageId]);
 	}
 	
-	public function actionStageResult($stageId)
+	public function actionStageResults($stageId)
 	{
 		$stage = SpecialStage::findOne($stageId);
 		if (!$stage) {
@@ -636,5 +637,148 @@ class SpecialChampController extends BaseController
 			'stage'    => $stage,
 			'requests' => $requests
 		]);
+	}
+	
+	public function actionApproveClass($id)
+	{
+		$this->can('competitions');
+		
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Участник не найден';
+		}
+		
+		$result = $this->approveClassForParticipant($request);
+		if ($result !== true) {
+			return $result;
+		}
+		
+		return true;
+	}
+	
+	public function approveClassForParticipant(RequestForSpecialStage $request)
+	{
+		$this->can('competitions');
+		
+		if ($request->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
+		
+		$athlete = $request->athlete;
+
+		if ($athlete->athleteClass->percent <= $request->newAthleteClass->percent) {
+			$request->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
+			if (!$request->save()) {
+				
+				return 'Невозможно сохранить изменения для участника. Свяжитесь с разработчиком.';
+			}
+			
+			return true;
+		}
+		
+		if ($athlete->athleteClassId != $request->newAthleteClassId) {
+			$transaction = \Yii::$app->db->beginTransaction();
+			
+			$event = $request->stage->championship->title . ', ' . $request->stage->title;
+			$history = ClassHistory::create($athlete->id, $request->motorcycleId,
+				$athlete->athleteClassId, $request->newAthleteClassId, $event,
+				$request->resultTime, $request->stage->referenceTime, $request->percent);
+			if (!$history) {
+				$transaction->rollBack();
+				
+				return 'Возникла ошибка при изменении данных. Свяжитесь с разработчиком.';
+			}
+			
+			$athlete->athleteClassId = $request->newAthleteClassId;
+			if (!$athlete->save()) {
+				$transaction->rollBack();
+				
+				return 'Невозможно изменить класс спортсмену ' . $athlete->getFullName() . '. Свяжитесь с разработчиком.';
+			}
+			
+			$request->newAthleteClassStatus = RequestForSpecialStage::NEW_CLASS_STATUS_APPROVE;
+			if (!$request->save()) {
+				$transaction->rollBack();
+				
+				return 'Невозможно сохранить изменения для участника. Свяжитесь с разработчиком.';
+			}
+			$transaction->commit();
+		}
+		
+		return true;
+	}
+	
+	public function actionCancelClass($id)
+	{
+		$this->can('competitions');
+		
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Участник не найден';
+		}
+		
+		if ($request->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) {
+			return 'Запись уже была обработана';
+		}
+		
+		$request->newAthleteClassId = null;
+		$request->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_CANCEL;
+		if (!$request->save()) {
+			return var_dump($request->errors);
+		}
+		
+		return true;
+	}
+	
+	public function actionApproveAllClasses($id)
+	{
+		$this->can('competitions');
+		
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		
+		/** @var RequestForSpecialStage[] $requests */
+		$requests = $stage->getActiveRequests()->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
+		$errors = null;
+		foreach ($requests as $request) {
+			$result = $this->approveClassForParticipant($request);
+			if ($result !== true) {
+				$errors .= $result . PHP_EOL . PHP_EOL;
+			}
+		}
+		if ($errors) {
+			return $errors;
+		}
+		
+		return true;
+	}
+	
+	public function actionCancelAllClasses($id)
+	{
+		$this->can('competitions');
+		
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			return 'Этап не найден';
+		}
+		
+		/** @var RequestForSpecialStage[] $requests */
+		$requests = $stage->getActiveRequests()->andWhere(['not', ['newAthleteClassId' => null]])
+			->andWhere(['newAthleteClassStatus' => RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK])->all();
+		foreach ($requests as $request) {
+			if ($request->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) {
+				return 'Запись уже была обработана';
+			}
+			$request->newAthleteClassId = null;
+			$request->newAthleteClassStatus = RequestForSpecialStage::NEW_CLASS_STATUS_CANCEL;
+			if (!$request->save()) {
+				return var_dump($request->errors);
+			}
+		}
+		
+		return true;
 	}
 }

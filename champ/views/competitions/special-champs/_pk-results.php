@@ -43,7 +43,14 @@ if (!\Yii::$app->user->isGuest) {
                 <td><?= \yii\helpers\Html::a($participant->timeHuman, ['athlete-progress', 'id' => $participant->id]) ?></td>
                 <td><?= $participant->fine ?></td>
                 <td><?= \yii\helpers\Html::a($participant->resultTimeHuman, ['athlete-progress', 'id' => $participant->id]) ?></td>
-                <td><?= $participant->percent ? $participant->percent . '%' : '' ?></td>
+                <td>
+					<?= $participant->percent ? $participant->percent . '%' : '' ?>
+					<?php if ($participant->newAthleteClassId
+						&& $participant->newAthleteClassStatus == \common\models\RequestForSpecialStage::STATUS_APPROVE
+					) { ?>
+                        &nbsp;(<?= $participant->newAthleteClass->title ?>)
+					<?php } ?>
+                </td>
                 <th><a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a>
                 </th>
             </tr>

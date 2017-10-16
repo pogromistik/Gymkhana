@@ -10,7 +10,8 @@ use common\models\RequestForSpecialStage;
  * @var \yii\data\ActiveDataProvider                      $dataProvider
  */
 ?>
-<div class="request-for-special-stage-index">
+<h3><?= $this->context->pageTitle ?></h3>
+<div class="request-for-special-stage-index pt-20">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'columns'      => [
@@ -31,7 +32,12 @@ use common\models\RequestForSpecialStage;
 					return Html::a('посмотреть', $item->videoLink, ['target' => '_blank']);
 				}
 			],
-			'cancelReason',
+			[
+				'attribute' => 'cancelReason',
+				'value'     => function (RequestForSpecialStage $item) {
+					return $item->cancelReason ?: '';
+				}
+			],
 			[
 				'attribute' => 'status',
 				'format'    => 'raw',
