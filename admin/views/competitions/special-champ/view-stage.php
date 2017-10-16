@@ -18,6 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	
 	<div class="buttons">
 		<?= Html::a('Редактировать', ['update-stage', 'id' => $stage->id], ['class' => 'btn btn-blue btn-my-style']) ?>
+		<?= Html::a('Пересчитать результаты', ['/competitions/special-champ/calculation-result', 'stageId' => $stage->id],
+			[
+				'class'   => 'btn btn-my-style btn-yellow',
+			]) ?>
 	</div>
 	
 	<?= DetailView::widget([

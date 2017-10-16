@@ -18,7 +18,7 @@ class m171012_102909_create_RequestsForSpecialStages extends PGMigration
 			'athleteClassId'        => $this->integer(),
 			'newAthleteClassId'     => $this->integer(),
 			'newAthleteClassStatus' => $this->integer(),
-			'percent'               => $this->integer(),
+			'percent'               => $this->double(),
 			'videoLink'             => $this->text()->notNull(),
 			'cancelReason'          => $this->text(),
 			'stageId'               => $this->integer()->notNull(),

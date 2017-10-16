@@ -17,6 +17,7 @@ use common\models\Stage;
 use Yii;
 use common\models\SpecialChamp;
 use common\models\search\SpecialChampsSearch;
+use yii\base\UserException;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -604,5 +605,36 @@ class SpecialChampController extends BaseController
 		}
 		
 		return true;
+	}
+	
+	public function actionCalculationResult($stageId)
+	{
+		$stage = SpecialStage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		if (!$stage->classCalculate()) {
+			throw new UserException('Не удалось рассчитать класс соревнования');
+		}
+		$result = $stage->placesCalculate();
+		if ($result !== true) {
+			throw new UserException($result);
+		}
+		
+		return $this->redirect(['stage-result', 'stageId' => $stageId]);
+	}
+	
+	public function actionStageResult($stageId)
+	{
+		$stage = SpecialStage::findOne($stageId);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$requests = $stage->activeRequests;
+		
+		return $this->render('stage-result', [
+			'stage'    => $stage,
+			'requests' => $requests
+		]);
 	}
 }

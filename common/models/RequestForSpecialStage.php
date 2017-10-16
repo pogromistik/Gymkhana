@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\components\BaseActiveRecord;
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "RequestsForSpecialStages".
@@ -19,7 +20,7 @@ use Yii;
  * @property integer       $athleteClassId
  * @property integer       $newAthleteClassId
  * @property integer       $newAthleteClassStatus
- * @property integer       $percent
+ * @property double        $percent
  * @property string        $videoLink
  * @property string        $cancelReason
  * @property integer       $stageId
@@ -34,6 +35,7 @@ use Yii;
  * @property Motorcycle    $motorcycle
  * @property SpecialStage  $stage
  * @property AthletesClass $athleteClass
+ * @property AthletesClass $newAthleteClass
  * @property City          $city
  */
 class RequestForSpecialStage extends BaseActiveRecord
@@ -48,6 +50,10 @@ class RequestForSpecialStage extends BaseActiveRecord
 	const STATUS_APPROVE = 2;
 	const STATUS_IN_ACTIVE = 3;
 	const STATUS_CANCEL = 4;
+	
+	const NEW_CLASS_STATUS_NEED_CHECK = 1;
+	const NEW_CLASS_STATUS_APPROVE = 2;
+	const NEW_CLASS_STATUS_CANCEL = 3;
 	
 	public static $statusesTitle = [
 		self::STATUS_NEED_CHECK => 'Ожидает проверки',
@@ -72,8 +78,9 @@ class RequestForSpecialStage extends BaseActiveRecord
 		return [
 			[['data', 'videoLink', 'cancelReason', 'dateHuman', 'resultTimeHuman', 'timeHuman'], 'string'],
 			[['athleteId', 'motorcycleId', 'status', 'time', 'fine', 'resultTime', 'athleteClassId',
-				'newAthleteClassId', 'newAthleteClassStatus', 'percent', 'stageId', 'date', 'dateAdded', 'dateUpdated',
+				'newAthleteClassId', 'newAthleteClassStatus', 'stageId', 'date', 'dateAdded', 'dateUpdated',
 				'cityId', 'countryId', 'place'], 'integer'],
+			[['percent'], 'number'],
 			[['time', 'resultTime', 'videoLink', 'stageId', 'date', 'dateAdded', 'dateUpdated', 'countryId'], 'required'],
 			['fine', 'default', 'value' => 0]
 		];
@@ -153,7 +160,17 @@ class RequestForSpecialStage extends BaseActiveRecord
 			}
 			$bestOldTime = $bestOldTime->min('"resultTime"');
 			if ($this->resultTime < $bestOldTime) {
-				self::updateAll(['status' => self::STATUS_IN_ACTIVE], ['stageId' => $this->stageId, 'athleteId' => $this->athleteId]);
+				if ($this->isNewRecord) {
+					self::updateAll(['status' => self::STATUS_IN_ACTIVE], ['stageId'   => $this->stageId,
+					                                                       'athleteId' => $this->athleteId]);
+				} else {
+					self::updateAll(['status' => self::STATUS_IN_ACTIVE], [
+						'and',
+						['stageId' => $this->stageId],
+						['athleteId' => $this->athleteId],
+						['not', ['id' => $this->id]]
+					]);
+				}
 			} else {
 				if ($bestOldTime && $bestOldTime != 0) {
 					$this->status = self::STATUS_IN_ACTIVE;
@@ -212,6 +229,11 @@ class RequestForSpecialStage extends BaseActiveRecord
 		return $this->hasOne(AthletesClass::className(), ['id' => 'athleteClassId']);
 	}
 	
+	public function getNewAthleteClass()
+	{
+		return $this->hasOne(AthletesClass::className(), ['id' => 'newAthleteClassId']);
+	}
+	
 	public static function countNewReg()
 	{
 		return self::find()->where(['status' => self::STATUS_NEED_CHECK])->count();
@@ -263,5 +285,29 @@ class RequestForSpecialStage extends BaseActiveRecord
 		}
 		
 		return $result;
+	}
+	
+	public static function getNewClass(AthletesClass $stageClass, RequestForSpecialStage $request)
+	{
+		if ($request->athleteClassId) {
+			/** @var AthletesClass $resultClass */
+			$resultClass = AthletesClass::find()->where(['>', 'percent', $request->percent])
+				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
+			if ($resultClass && $resultClass->id != $request->id) {
+				if ($stageClass->percent > $resultClass->percent) {
+					if ($stageClass->id != $request->athleteClassId && $stageClass->percent < $request->athleteClass->percent
+						&& $stageClass->id != $request->newAthleteClassId
+					) {
+						return $stageClass->id;
+					}
+				} elseif (!$request->athleteClassId ||
+					$request->athleteClass->percent > $resultClass->percent && $request->newAthleteClassId != $resultClass->id
+				) {
+					return $resultClass->id;
+				}
+			}
+		}
+		
+		return null;
 	}
 }
