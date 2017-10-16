@@ -112,7 +112,7 @@ use yii\bootstrap\Html;
                     <th>Этап</th>
                     <th>Мотоцикл</th>
                     <th>Рейтинг</th>
-                    <th>Место в абсолюте</th>
+                    <th>Место</th>
                 </tr>
 				<?php foreach ($participants as $participant) { ?>
                     <tr>
@@ -147,9 +147,15 @@ use yii\bootstrap\Html;
 								echo $participant->place;
 							} else {
 								if ($stage->referenceTime) {
-									?>
-                                    <span class="fa fa-remove remove"></span>
-									<?php
+								    if ($participant->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+									    ?>
+                                        <span class="fa fa-remove remove"></span>
+									    <?php
+								    } else {
+								        ?>
+                                        <span class="small">вне зачёта</span>
+                                        <?php
+                                    }
 								} else {
 									?>
                                     <span class="green wait">...</span>
