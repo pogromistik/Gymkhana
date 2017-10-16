@@ -5,7 +5,10 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use admin\models\ParticipantForm;
 use common\models\Athlete;
+use common\models\City;
 use common\models\HelpModel;
+use common\models\Motorcycle;
+use common\models\Notice;
 use common\models\Participant;
 use common\models\RequestForSpecialStage;
 use common\models\search\RequestForSpecialStageSearch;
@@ -276,5 +279,174 @@ class SpecialChampController extends BaseController
 		return $this->render('update-participant', [
 			'participant' => $participant
 		]);
+	}
+	
+	public function actionRegistrations()
+	{
+		$requests = RequestForSpecialStage::findAll(['status' => RequestForSpecialStage::STATUS_NEED_CHECK]);
+		$result = [];
+		foreach ($requests as $request) {
+			$item = [
+				'request'      => $request,
+				'coincidences' => []
+			];
+			if (!$request->athleteId) {
+				$item['coincidences'] = $request->getCoincidences();
+			}
+			$result[] = $item;
+		}
+		
+		return $this->render('registrations', ['result' => $result]);
+	}
+	
+	public function actionApprove($id)
+	{
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Заявка не найдена';
+		}
+		
+		if (\Yii::$app->mutex->acquire('SpecialStageRequests-' . $request->id, 10)) {
+			$request = RequestForSpecialStage::findOne($id);
+			if ($request->status !== RequestForSpecialStage::STATUS_NEED_CHECK) {
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Запись уже была обработана. Пожалуйста, перезагрузите страницу.';
+			}
+			if ($request->athleteId) {
+				$request->status = RequestForSpecialStage::STATUS_APPROVE;
+				if (!$request->save()) {
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return 'Возникла ошибка при сохранении';
+				}
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return true;
+			} else {
+				$data = $request->getData();
+				if ($data['cityId']) {
+					$city = City::findOne($data['cityId']);
+					if (!$city) {
+						\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+						
+						return 'Город не найден';
+					}
+				} else {
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return 'Необходимо выбрать город из списка';
+				}
+				
+				$transaction = \Yii::$app->db->beginTransaction();
+				$athlete = new Athlete();
+				$athlete->lastName = $data['lastName'];
+				$athlete->firstName = $data['firstName'];
+				$athlete->cityId = $city->id;
+				$athlete->countryId = $city->countryId;
+				$athlete->regionId = $city->regionId;
+				
+				if (!Athlete::findOne(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])) {
+					$athlete->email = $data['email'];
+				}
+				if (!$athlete->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return var_dump($athlete->errors);
+				}
+				
+				$motorcycle = new Motorcycle();
+				$motorcycle->athleteId = $athlete->id;
+				$motorcycle->mark = $data['motorcycleMark'];
+				$motorcycle->model = $data['motorcycleModel'];
+				if (!$motorcycle->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return var_dump($motorcycle->errors);
+				}
+				
+				$request->athleteId = $athlete->id;
+				$request->motorcycleId = $motorcycle->id;
+				$request->status = RequestForSpecialStage::STATUS_APPROVE;
+				if (!$request->save()) {
+					$transaction->rollBack();
+					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+					
+					return 'Возникла ошибка при сохранении';
+				}
+				
+				$transaction->commit();
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return true;
+			}
+		}
+		\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+		
+		return true;
+	}
+	
+	public function actionCancel()
+	{
+		$id = \Yii::$app->request->post('id');
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Заявка не найдена';
+		}
+		$text = trim(\Yii::$app->request->post('reason'));
+		if (!$text) {
+			return 'Укажите причину отказа!';
+		}
+		
+		if (\Yii::$app->mutex->acquire('SpecialStageRequests-' . $request->id, 10)) {
+			$request = RequestForSpecialStage::findOne($id);
+			if ($request->status !== RequestForSpecialStage::STATUS_NEED_CHECK) {
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Запись уже была обработана. Пожалуйста, перезагрузите страницу.';
+			}
+			$email = null;
+			if ($request->athleteId) {
+				$sendText = 'Результат отклонён';
+				if (mb_strlen($sendText, 'UTF-8') + mb_strlen($sendText, 'UTF-8') < 253) {
+					$sendText .= $sendText . ': ' . $text;
+				} else {
+					$sendText = 'Результат для этапа "' . $request->stage->title . '" отклонён.';
+				}
+				Notice::add($request->athleteId, $sendText);
+				$email = $request->athlete->email;
+			} else {
+				$data = $request->getData();
+				$email = $data['email'];
+			}
+			
+			if (YII_ENV == 'prod') {
+				$text = 'Ваш результат для этапа "' . $request->stage->title . '" чемпионата "' . $request->stage->championship->title . '"' .
+					' отклонён.<br>';
+				if (mb_stripos($email, '@', null, 'UTF-8')) {
+					\Yii::$app->mailer->compose('text', ['text' => $text])
+						->setTo($email)
+						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+						->setSubject('gymkhana-cup: ваш результат отклонён')
+						->send();
+				}
+			}
+			
+			$request->status = RequestForSpecialStage::STATUS_CANCEL;
+			$request->cancelReason = $text;
+			if (!$request->save()) {
+				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+				
+				return 'Возникла ошибка при сохранении';
+			}
+			\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+			
+			return true;
+		}
+		\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+		
+		return true;
 	}
 }

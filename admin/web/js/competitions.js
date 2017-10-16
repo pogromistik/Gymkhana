@@ -1381,3 +1381,24 @@ $('.ajaxDelete').click(function (e) {
         });
     }
 });
+
+
+$(document).on("submit", '#cancelRegForSpecStage', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+        url: '/competitions/special-champ/cancel',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(data);
+            }
+        },
+        error: function (result) {
+           alert(result);
+        }
+    });
+});

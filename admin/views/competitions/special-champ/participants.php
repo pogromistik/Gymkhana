@@ -96,7 +96,7 @@ $this->params['breadcrumbs'][] = 'Участники';
         <div class="color-div out-participant"></div>
         - неактуальные результаты.
     </div>
-    
+	
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
@@ -149,6 +149,10 @@ $this->params['breadcrumbs'][] = 'Участники';
 			[
 				'format' => 'raw',
 				'value'  => function (RequestForSpecialStage $item) {
+					if (!$item->athleteId) {
+						return '';
+					}
+					
 					return Html::a('<span class="fa fa-edit"></span>', ['update-participant', 'id' => $item->id],
 						['class' => 'btn btn-my-style btn-blue small']);
 				}

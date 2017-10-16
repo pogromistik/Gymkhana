@@ -188,4 +188,57 @@ class RequestForSpecialStage extends BaseActiveRecord
 	{
 		return $this->hasOne(AthletesClass::className(), ['id' => 'athleteClassId']);
 	}
+	
+	public static function countNewReg()
+	{
+		return self::find()->where(['status' => self::STATUS_NEED_CHECK])->count();
+	}
+	
+	public function getData()
+	{
+		return $this->data ? json_decode($this->data, true) : null;
+	}
+	
+	public function getCoincidences()
+	{
+		$data = $this->getData();
+		if (!$data) {
+			return null;
+		}
+		/** @var Athlete[] $athletes */
+		$athletes = Athlete::find()->where([
+			'or',
+			['upper("firstName")' => mb_strtoupper($data['firstName'], 'UTF-8'),
+			 'upper("lastName")' => mb_strtoupper($data['lastName'], 'UTF-8')],
+			['upper("firstName")' => mb_strtoupper($data['lastName'], 'UTF-8'),
+			 'upper("lastName")' => mb_strtoupper($data['firstName'], 'UTF-8')]
+		])->all();
+		if (!$athletes) {
+			return null;
+		}
+		$result = [];
+		foreach ($athletes as $athlete) {
+			$result[$athlete->id] = [
+				'athlete'     => $athlete,
+				'motorcycles' => []
+			];
+			/** @var Motorcycle $motorcycle */
+			foreach ($athlete->getMotorcycles()->andWhere(['status' => Motorcycle::STATUS_ACTIVE])->all() as $motorcycle) {
+				$isCoincidences = false;
+				if ((mb_strtoupper($motorcycle->mark, 'UTF-8') == mb_strtoupper($data['motorcycleMark'], 'UTF-8')
+						&& mb_strtoupper($motorcycle->model, 'UTF-8') == mb_strtoupper($data['motorcycleModel'], 'UTF-8'))
+					|| mb_strtoupper($motorcycle->mark, 'UTF-8') == mb_strtoupper($data['motorcycleModel'], 'UTF-8')
+					&& mb_strtoupper($motorcycle->model, 'UTF-8') == mb_strtoupper($data['motorcycleMark'], 'UTF-8')
+				) {
+					$isCoincidences = true;
+				}
+				$result[$athlete->id]['motorcycles'][] = [
+					'motorcycle'     => $motorcycle,
+					'isCoincidences' => $isCoincidences
+				];
+			}
+		}
+		
+		return $result;
+	}
 }

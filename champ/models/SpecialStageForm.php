@@ -45,7 +45,8 @@ class SpecialStageForm extends Model
 				'timeHuman', 'videoLink', 'dateHuman', 'stageId', 'countryId', 'email'], 'required'],
 			[['fine', 'stageId', 'cityId', 'countryId'], 'integer'],
 			[['dateHuman', 'timeHuman', 'videoLink', 'lastName', 'firstName',
-				'motorcycleMark', 'motorcycleModel', 'cityTitle', 'email'], 'string']
+				'motorcycleMark', 'motorcycleModel', 'cityTitle', 'email'], 'string'],
+			['email', 'email']
 		];
 	}
 	
