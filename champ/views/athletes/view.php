@@ -2,12 +2,13 @@
 use yii\bootstrap\Html;
 
 /**
- * @var \common\models\Athlete        $athlete
- * @var array                         $figuresResult
- * @var \common\models\FigureTime     $result
- * @var \common\models\Figure         $figure
- * @var \common\models\ClassHistory[] $history
- * @var \common\models\Participant[]  $participants
+ * @var \common\models\Athlete                  $athlete
+ * @var array                                   $figuresResult
+ * @var \common\models\FigureTime               $result
+ * @var \common\models\Figure                   $figure
+ * @var \common\models\ClassHistory[]           $history
+ * @var \common\models\Participant[]            $participants
+ * @var \common\models\RequestForSpecialStage[] $specialHistory
  */
 ?>
 
@@ -34,7 +35,8 @@ use yii\bootstrap\Html;
 				}
 				?>
                 <div class="item">
-                    <b>Класс: </b><div
+                    <b>Класс: </b>
+                    <div
                             class="circle-class circle-class-<?= $cssClass ?>"><?= $athleteClass->title ?></div>
                 </div>
 			<?php } ?>
@@ -147,20 +149,44 @@ use yii\bootstrap\Html;
 								echo $participant->place;
 							} else {
 								if ($stage->referenceTime) {
-								    if ($participant->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
-									    ?>
+									if ($participant->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+										?>
                                         <span class="fa fa-remove remove"></span>
-									    <?php
-								    } else {
-								        ?>
+										<?php
+									} else {
+										?>
                                         <span class="small">вне зачёта</span>
-                                        <?php
-                                    }
+										<?php
+									}
 								} else {
 									?>
                                     <span class="green wait">...</span>
 									<?php
 								}
+							} ?>
+                        </td>
+                    </tr>
+				<?php } ?>
+				<?php foreach ($specialHistory as $item) { ?>
+                    <tr>
+                        <td>
+							<?php $stage = $item->stage; ?>
+							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
+							<?= $stage->championship->year->year ?>г.
+                        </td>
+                        <td><?= $item->motorcycle->getFullTitle() ?></td>
+                        <td>
+							<?php if ($item->percent) {
+								echo $item->percent . '%';
+								if ($item->videoLink) { ?>
+                                    <a href="<?= $item->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+								<?php }
+							} ?>
+                        <td>
+							<?php if ($item->place) {
+								echo $item->place;
 							} ?>
                         </td>
                     </tr>

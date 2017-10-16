@@ -9,6 +9,7 @@ use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Participant;
 use common\models\Region;
+use common\models\RequestForSpecialStage;
 use common\models\search\AthleteSearch;
 use Yii;
 use yii\db\Expression;
@@ -64,6 +65,9 @@ class AthletesController extends BaseController
 		}
 		$history = $history->all();
 		
+		$specialHistory = RequestForSpecialStage::find()->where(['status'    => RequestForSpecialStage::STATUS_APPROVE,
+		                                                         'athleteId' => $athlete->id])->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();;
+		                                                         
 		$participants = Participant::find()->where(['athleteId' => $athlete->id])
 			->andWhere(['status' => [Participant::STATUS_OUT_COMPETITION, Participant::STATUS_ACTIVE]])
 			->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();
@@ -72,10 +76,11 @@ class AthletesController extends BaseController
 		$this->description = $athlete->getFullName() . ', спортсмен мотоджимханы';
 		
 		return $this->render('view', [
-			'athlete'       => $athlete,
-			'figuresResult' => $figuresResult,
-			'history'       => $history,
-			'participants'  => $participants
+			'athlete'        => $athlete,
+			'figuresResult'  => $figuresResult,
+			'history'        => $history,
+			'participants'   => $participants,
+			'specialHistory' => $specialHistory
 		]);
 	}
 	

@@ -28,6 +28,7 @@ use Yii;
  * @property integer       $dateUpdated
  * @property integer       $cityId
  * @property integer       $countryId
+ * @property integer       $place
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -72,7 +73,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			[['data', 'videoLink', 'cancelReason', 'dateHuman', 'resultTimeHuman', 'timeHuman'], 'string'],
 			[['athleteId', 'motorcycleId', 'status', 'time', 'fine', 'resultTime', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'percent', 'stageId', 'date', 'dateAdded', 'dateUpdated',
-				'cityId', 'countryId'], 'integer'],
+				'cityId', 'countryId', 'place'], 'integer'],
 			[['time', 'resultTime', 'videoLink', 'stageId', 'date', 'dateAdded', 'dateUpdated', 'countryId'], 'required'],
 			['fine', 'default', 'value' => 0]
 		];
@@ -105,7 +106,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 			'dateHuman'             => 'Дата заезда',
 			'dateAdded'             => 'Date Added',
 			'dateUpdated'           => 'Date Updated',
-			'cityId'                => 'Город'
+			'cityId'                => 'Город',
+			'place'                 => 'Место'
 		];
 	}
 	
