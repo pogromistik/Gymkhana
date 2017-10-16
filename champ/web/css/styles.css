@@ -1262,3 +1262,7 @@ th.gray-column {
 .special-stage-form {
     display: none;
 }
+
+.my-row {
+    border: 2px solid #56a025;
+}

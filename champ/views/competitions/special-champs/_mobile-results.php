@@ -2,14 +2,17 @@
 /**
  * @var \common\models\RequestForSpecialStage[] $participants
  */
-$place = 1;
+$id = null;
+if (!\Yii::$app->user->isGuest) {
+	$id = \Yii::$app->user->id;
+}
 ?>
 
 <div class="show-mobile">
     <table class="table results results-with-img">
         <thead>
         <tr>
-            <th>Место вне класса /<br>Место в классе</th>
+            <th>Место</th>
             <th>Участник</th>
             <th>Время</th>
             <th>Рейтинг</th>
@@ -18,12 +21,14 @@ $place = 1;
         <tbody>
 		<?php foreach ($participants as $participant) {
 			$athlete = $participant->athlete;
+			$class = 'default';
+			if ($id && $id == $athlete->id) {
+				$class = 'my-row';
+			}
 			?>
-            <tr>
+            <tr class="<?= $class ?>">
                 <td>
-                    <?= $place++ ?> /
-                    <br>
-                    <a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a>
+                    <?= $participant->place ?>
                 </td>
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
@@ -34,8 +39,10 @@ $place = 1;
                     <br>
 	                <?= $participant->athleteClass->title ?>
                 </td>
-                <td><?= \yii\helpers\Html::a($participant->resultTimeHuman, ['athlete-progress', 'id' => $participant->id]) ?></td>
-                <td><?= $participant->percent ?></td>
+                <td><?= \yii\helpers\Html::a($participant->resultTimeHuman, ['athlete-progress', 'id' => $participant->id]) ?>
+                    &nbsp;
+                    <a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a></td>
+                <td><?= $participant->percent ? $participant->percent . '%' : '' ?></td>
             </tr>
 		<?php } ?>
         </tbody>
