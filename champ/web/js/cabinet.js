@@ -182,12 +182,22 @@ $('.sendResultForStage').click(function (e) {
 $(document).on("submit", '#specialStageForAuth', function (e) {
     e.preventDefault();
     var form = $(this);
+    RegistrationForSpecialStage(form, '/competitions/auth-special-stage-request')
+});
 
+$(document).on("submit", '#specialStageForGuest', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    RegistrationForSpecialStage(form, '/competitions/guest-special-stage-request')
+});
+
+function RegistrationForSpecialStage(form, action) {
     $('.alert').hide();
     showBackDrop();
 
     $.ajax({
-        url: "/competitions/auth-special-stage-request",
+        url: action,
         type: "POST",
         data: form.serialize(),
         success: function (result) {
@@ -201,4 +211,4 @@ $(document).on("submit", '#specialStageForAuth', function (e) {
             }
         }
     });
-});
+}

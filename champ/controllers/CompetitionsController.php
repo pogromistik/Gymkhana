@@ -2,6 +2,7 @@
 
 namespace champ\controllers;
 
+use champ\models\SpecialStageForm;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -1114,6 +1115,131 @@ class CompetitionsController extends BaseController
 			
 			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
 				'В любом случае, Вам будет отправлено соответствующее уведомление.';
+			
+			return $response;
+		}
+		
+		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+		
+		return $response;
+	}
+	
+	public function actionGuestSpecialStageRequest()
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$response = [
+			'error' => false,
+			'data'  => null
+		];
+		
+		$data = [];
+		$form = new SpecialStageForm();
+		if ($form->load(\Yii::$app->request->post())) {
+			$form->lastName = trim($form->lastName);
+			$form->firstName = trim($form->firstName);
+			$form->cityTitle = trim($form->cityTitle);
+			$form->motorcycleModel = trim($form->motorcycleModel);
+			$form->motorcycleMark = trim($form->motorcycleMark);
+			
+			$stage = SpecialStage::findOne($form->stageId);
+			if (!$stage) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			if (!$stage->dateStart || $stage->dateStart > time()) {
+				$response['error'] = 'Приём результатов ещё не начался';
+				
+				return $response;
+			}
+			if ($stage->dateEnd && $stage->dateEnd < time()) {
+				$response['error'] = 'Приём заявок завершен';
+				
+				return $response;
+			}
+			
+			if (!$form->lastName) {
+				$response['error'] = 'Укажите фамилию';
+				
+				return $response;
+			}
+			
+			if (!$form->firstName) {
+				$response['error'] = 'Укажите имя';
+				
+				return $response;
+			}
+			
+			if (!$form->motorcycleMark) {
+				$response['error'] = 'Укажите марку мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->motorcycleMark) {
+				$response['error'] = 'Укажите модель мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->countryId) {
+				$response['error'] = 'Выберите страну';
+				
+				return $response;
+			}
+			
+			if (!$form->cityTitle && !$form->cityId) {
+				$response['error'] = 'Укажите город';
+				
+				return $response;
+			} elseif ($form->cityId) {
+				$city = City::findOne($form->cityId);
+				if (!$city) {
+					$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+					
+					return $response;
+				}
+				$form->cityTitle = $city->title;
+			}
+			
+			if (!$form->dateHuman) {
+				$response['error'] = 'Необходимо указать время';
+				
+				return $response;
+			}
+			if (!$form->timeHuman) {
+				$response['error'] = 'Укажите время';
+				
+				return $response;
+			}
+			if (!$form->videoLink) {
+				$response['error'] = 'Ссылка на видео обязательна';
+				
+				return $response;
+			}
+			if (!$form->fine) {
+				$form->fine = 0;
+			}
+			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
+				$response['error'] = 'Ссылка на видео должна начинаться с http: или https:';
+				
+				return $response;
+			}
+			if (!$form->validate()) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			if (!$form->save(false)) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
+				'В случае отклонения результата, вам будет отправлено письмо на email ' . $form->email . '.';
 			
 			return $response;
 		}

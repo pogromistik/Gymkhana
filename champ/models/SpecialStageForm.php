@@ -12,14 +12,19 @@ use common\models\Athlete;
 use common\models\HelpModel;
 use common\models\RequestForSpecialStage;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * Signup form
  */
 class SpecialStageForm extends Model
 {
-	public $athleteId;
-	public $motorcycleId;
+	public $firstName;
+	public $lastName;
+	public $motorcycleMark;
+	public $motorcycleModel;
+	public $cityId;
+	public $cityTitle;
 	public $timeHuman;
 	public $fine;
 	public $videoLink;
@@ -27,6 +32,8 @@ class SpecialStageForm extends Model
 	public $dateHuman;
 	public $time;
 	public $stageId;
+	public $countryId;
+	public $email;
 	
 	/**
 	 * @inheritdoc
@@ -34,9 +41,11 @@ class SpecialStageForm extends Model
 	public function rules()
 	{
 		return [
-			[['athleteId', 'motorcycleId', 'timeHuman', 'videoLink', 'dateHuman', 'stageId'], 'required'],
-			[['athleteId', 'motorcycleId', 'fine', 'stageId'], 'integer'],
-			[['dateHuman', 'timeHuman', 'videoLink'], 'string']
+			[['lastName', 'firstName', 'motorcycleMark', 'motorcycleModel',
+				'timeHuman', 'videoLink', 'dateHuman', 'stageId', 'countryId', 'email'], 'required'],
+			[['fine', 'stageId', 'cityId', 'countryId'], 'integer'],
+			[['dateHuman', 'timeHuman', 'videoLink', 'lastName', 'firstName',
+				'motorcycleMark', 'motorcycleModel', 'cityTitle', 'email'], 'string']
 		];
 	}
 	
@@ -46,31 +55,33 @@ class SpecialStageForm extends Model
 	public function attributeLabels()
 	{
 		return [
-			'athleteId'    => 'Спортсмен',
-			'motorcycleId' => 'Мотоцикл',
-			'timeHuman'    => 'Время без учёта штрафа',
-			'fine'         => 'Штраф',
-			'videoLink'    => 'Ссылка на видео',
-			'dateHuman'    => 'Дата заезда',
-			'stageId'      => 'Этап'
+			'lastName'        => 'Фамилия',
+			'firstName'       => 'Имя',
+			'motorcycleMark'  => 'Марка мотоцикла',
+			'motorcycleModel' => 'Модель мотоцикла',
+			'motorcycleId'    => 'Мотоцикл',
+			'timeHuman'       => 'Время без учёта штрафа',
+			'fine'            => 'Штраф',
+			'videoLink'       => 'Ссылка на видео',
+			'dateHuman'       => 'Дата заезда',
+			'stageId'         => 'Этап',
+			'cityId'          => 'Город',
+			'cityTitle'       => 'Город',
+			'countryId'       => 'Страна',
+			'email'           => 'Email'
 		];
 	}
 	
 	public function save()
 	{
-		$athlete = Athlete::findOne($this->athleteId);
-		
 		$result = new RequestForSpecialStage();
+		$result->data = json_encode(ArrayHelper::toArray($this));
 		$result->stageId = $this->stageId;
-		$result->athleteId = $this->athleteId;
-		$result->motorcycleId = $this->motorcycleId;
-		$result->athleteClassId = $athlete->athleteClassId;
 		$result->time = HelpModel::convertTime($this->timeHuman);
 		$result->fine = $this->fine;
 		$result->videoLink = $this->videoLink;
 		$result->date = (new \DateTime($this->dateHuman, new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
 			->setTime(6, 0, 0)->getTimestamp();
-		$result->status = RequestForSpecialStage::STATUS_APPROVE;
 		if ($result->save()) {
 			return true;
 		}
