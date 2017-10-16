@@ -8,7 +8,6 @@
 
 namespace champ\models;
 
-use common\models\Athlete;
 use common\models\HelpModel;
 use common\models\RequestForSpecialStage;
 use yii\base\Model;
@@ -83,6 +82,10 @@ class SpecialStageForm extends Model
 		$result->videoLink = $this->videoLink;
 		$result->date = (new \DateTime($this->dateHuman, new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
 			->setTime(6, 0, 0)->getTimestamp();
+		if ($this->cityId) {
+			$result->cityId = $this->cityId;
+		}
+		$result->countryId = $this->countryId;
 		if ($result->save()) {
 			return true;
 		}

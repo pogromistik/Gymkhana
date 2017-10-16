@@ -410,12 +410,15 @@ class SpecialChampController extends BaseController
 			$email = null;
 			if ($request->athleteId) {
 				$sendText = 'Результат отклонён';
-				if (mb_strlen($sendText, 'UTF-8') + mb_strlen($sendText, 'UTF-8') < 253) {
-					$sendText .= $sendText . ': ' . $text;
+				$link = null;
+				if ((mb_strlen($text, 'UTF-8') + mb_strlen($sendText, 'UTF-8')) < 253) {
+					$sendText .= ': ' . $text;
 				} else {
-					$sendText = 'Результат для этапа "' . $request->stage->title . '" отклонён.';
+					$sendText = 'Результат ' . $request->resultTimeHuman . ' для этапа "'
+						. $request->stage->title . '" отклонён. Подробности по ссылке';
+					$link = '/competitions/special-stages-history';
 				}
-				Notice::add($request->athleteId, $sendText);
+				Notice::add($request->athleteId, $sendText, $link);
 				$email = $request->athlete->email;
 			} else {
 				$data = $request->getData();
@@ -570,6 +573,35 @@ class SpecialChampController extends BaseController
 			return true;
 		}
 		\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
+		
+		return true;
+	}
+	
+	public function actionSaveNewCity()
+	{
+		$id = \Yii::$app->request->post('id');
+		$city = \Yii::$app->request->post('city');
+		if (!$id || !$city) {
+			return 'Неверные данные';
+		}
+		
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Запрос не найден';
+		}
+		if ($request->cityId) {
+			return 'Спортсмену уже установлен город';
+		}
+		
+		$city = City::findOne(['countryId' => $request->countryId, 'id' => $city]);
+		if (!$city) {
+			return 'Город не найден';
+		}
+		
+		$request->cityId = $city->id;
+		if (!$request->save()) {
+			return var_dump($request);
+		}
 		
 		return true;
 	}

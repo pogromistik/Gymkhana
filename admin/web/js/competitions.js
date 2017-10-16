@@ -1449,3 +1449,24 @@ $('.approveSpecChampForAthleteOnMotorcycle').click(function (e) {
         console.log(error);
     });
 });
+
+function cityForNewRequest(id) {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/special-champ/save-new-city',
+        type: "POST",
+        data: $('#cityForNewRequest' + id).serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+}

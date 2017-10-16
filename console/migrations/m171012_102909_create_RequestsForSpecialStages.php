@@ -2,7 +2,7 @@
 
 use console\components\PGMigration;
 
-class m171012_102909_create_RequestsOfSpecialStages extends PGMigration
+class m171012_102909_create_RequestsForSpecialStages extends PGMigration
 {
 	public function safeUp()
 	{
@@ -24,7 +24,9 @@ class m171012_102909_create_RequestsOfSpecialStages extends PGMigration
 			'stageId'               => $this->integer()->notNull(),
 			'date'                  => $this->integer()->notNull(),
 			'dateAdded'             => $this->integer()->notNull(),
-			'dateUpdated'           => $this->integer()->notNull()
+			'dateUpdated'           => $this->integer()->notNull(),
+			'cityId'                => $this->integer(),
+			'countryId'             => $this->integer()->notNull()
 		]);
 	}
 	

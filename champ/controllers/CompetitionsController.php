@@ -15,6 +15,7 @@ use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
 use common\models\RequestForSpecialStage;
+use common\models\search\RequestForSpecialStageSearch;
 use common\models\SpecialChamp;
 use common\models\SpecialStage;
 use common\models\Stage;
@@ -1094,7 +1095,7 @@ class CompetitionsController extends BaseController
 				return $response;
 			}
 			if (!$form->validate()) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				$response['error'] = var_dump($form->errors);
 				
 				return $response;
 			}
@@ -1132,7 +1133,6 @@ class CompetitionsController extends BaseController
 			'data'  => null
 		];
 		
-		$data = [];
 		$form = new SpecialStageForm();
 		if ($form->load(\Yii::$app->request->post())) {
 			$form->lastName = trim($form->lastName);
@@ -1201,6 +1201,11 @@ class CompetitionsController extends BaseController
 					return $response;
 				}
 				$form->cityTitle = $city->title;
+			} elseif ($form->cityTitle) {
+				$city = City::findOne(['title' => $form->cityTitle, 'countryId' => $form->countryId]);
+				if ($city) {
+					$form->cityId = $city->id;
+				}
 			}
 			
 			if (!$form->dateHuman) {
@@ -1247,5 +1252,24 @@ class CompetitionsController extends BaseController
 		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
 		
 		return $response;
+	}
+	
+	public function actionSpecialStagesHistory()
+	{
+		if (\Yii::$app->user->isGuest) {
+			return 'Сначала войдите в личный кабинет';
+		}
+		
+		$this->pageTitle = 'История присланных вами результатов на этапы';
+		
+		$searchModel = new RequestForSpecialStageSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('special-champs/special-stages-history', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
 	}
 }

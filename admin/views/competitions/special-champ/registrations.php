@@ -5,7 +5,9 @@
  * @var \common\models\RequestForSpecialStage $request
  */
 
+use kartik\widgets\Select2;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 
 $this->title = 'Регистрации на особые этапы, требующие модерации';
 ?>
@@ -35,16 +37,45 @@ $this->title = 'Регистрации на особые этапы, требу�
 				<?php if ($request->athleteId) { ?>
 					<?= $request->athlete->getFullName() ?>
                     <br>
-                    <small><?= $request->athlete->city->title ?></small>
+                    <small><?= $request->city->title ?></small>
                     <br>
                     <small><?= $request->motorcycle->getFullTitle() ?></small>
 				<?php } else { ?>
 					<?php $data = $request->getData(); ?>
 					<?= $data['lastName'] . ' ' . $data['firstName'] ?>
                     <br>
-                    <small><?= $data['cityTitle'] ?></small>
+                    <small><?= $request->cityId ? $request->city->title : $data['cityTitle'] ?></small>
                     <br>
                     <small><?= $data['motorcycleMark'] . ' ' . $data['motorcycleModel'] ?></small>
+					
+					<?php if (!$request->cityId) { ?>
+						<?= Html::beginForm('', 'post', ['id' => 'cityForNewRequest' . $request->id]) ?>
+						<?= Html::hiddenInput('id', $request->id) ?>
+						<?= Select2::widget([
+							'name'          => 'city',
+							'data'          => [],
+							'maintainOrder' => true,
+							'options'       => ['placeholder' => 'Выберите город...', 'multiple' => false],
+							'pluginOptions' => [
+								'maximumInputLength' => 10,
+								'ajax'               => [
+									'url'      => \yii\helpers\Url::to(['/competitions/help/city-list']),
+									'dataType' => 'json',
+									'data'     => new JsExpression('function(params) { return {title:params.term, countryId:' . $request->countryId . '}; }')
+								],
+								'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+								'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+								'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
+							],
+							'pluginEvents'  => [
+								'change' => 'function(e){
+				cityForNewRequest(' . $request->id . ');
+			}',
+							],
+						]);
+						?>
+						<?= Html::endForm() ?>
+					<?php } ?>
 				<?php } ?>
                 <div class="dark-green-text bold">
                     <div>Дата: <?= $request->dateHuman ?></div>
@@ -71,7 +102,8 @@ $this->title = 'Регистрации на особые этапы, требу�
 								?>
                                 <div>
 									<?= $motorcycle->getFullTitle(); ?>
-                                    <a href="#" class="btn btn-my-style small btn-light-gray approveSpecChampForAthleteOnMotorcycle"
+                                    <a href="#"
+                                       class="btn btn-my-style small btn-light-gray approveSpecChampForAthleteOnMotorcycle"
                                        data-athlete-id="<?= $athlete->id ?>" data-id="<?= $request->id ?>"
                                        data-motorcycle-id="<?= $motorcycle->id ?>">
                                         Принять на этом мотоцикле
@@ -116,9 +148,7 @@ $this->title = 'Регистрации на особые этапы, требу�
             <div class="modal-body">
                 <h3>Укажите причину отказа</h3>
 				<?= Html::hiddenInput('id', '', ['id' => 'id']) ?>
-				<?= Html::textarea('reason', '', ['rows' => 3, 'class' => 'form-control', 'id' => 'smallText']) ?>
-				<?php $length = 255; ?>
-                <div class="text-right color-green" id="length">осталось символов: <?= $length ?></div>
+				<?= Html::textarea('reason', '', ['rows' => 3, 'class' => 'form-control']) ?>
             </div>
             <div class="alert alert-danger" style="display: none"></div>
             <div class="alert alert-success" style="display: none"></div>

@@ -26,11 +26,14 @@ use Yii;
  * @property integer       $date
  * @property integer       $dateAdded
  * @property integer       $dateUpdated
+ * @property integer       $cityId
+ * @property integer       $countryId
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
  * @property SpecialStage  $stage
  * @property AthletesClass $athleteClass
+ * @property City          $city
  */
 class RequestForSpecialStage extends BaseActiveRecord
 {
@@ -67,8 +70,10 @@ class RequestForSpecialStage extends BaseActiveRecord
 	{
 		return [
 			[['data', 'videoLink', 'cancelReason', 'dateHuman', 'resultTimeHuman', 'timeHuman'], 'string'],
-			[['athleteId', 'motorcycleId', 'status', 'time', 'fine', 'resultTime', 'athleteClassId', 'newAthleteClassId', 'newAthleteClassStatus', 'percent', 'stageId', 'date', 'dateAdded', 'dateUpdated'], 'integer'],
-			[['time', 'resultTime', 'videoLink', 'stageId', 'date', 'dateAdded', 'dateUpdated'], 'required'],
+			[['athleteId', 'motorcycleId', 'status', 'time', 'fine', 'resultTime', 'athleteClassId',
+				'newAthleteClassId', 'newAthleteClassStatus', 'percent', 'stageId', 'date', 'dateAdded', 'dateUpdated',
+				'cityId', 'countryId'], 'integer'],
+			[['time', 'resultTime', 'videoLink', 'stageId', 'date', 'dateAdded', 'dateUpdated', 'countryId'], 'required'],
 			['fine', 'default', 'value' => 0]
 		];
 	}
@@ -88,6 +93,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			'timeHuman'             => 'Время (без учёта штрафа)',
 			'fine'                  => 'Штраф',
 			'resultTime'            => 'Итоговое время',
+			'resultTimeHuman'       => 'Итоговое время',
 			'athleteClassId'        => 'Класс участника',
 			'newAthleteClassId'     => 'Новый класс',
 			'newAthleteClassStatus' => 'New Athlete Class Status',
@@ -99,6 +105,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			'dateHuman'             => 'Дата заезда',
 			'dateAdded'             => 'Date Added',
 			'dateUpdated'           => 'Date Updated',
+			'cityId'                => 'Город'
 		];
 	}
 	
@@ -110,9 +117,18 @@ class RequestForSpecialStage extends BaseActiveRecord
 				$this->date = time();
 			}
 		}
-		if ($this->athleteId && !$this->athleteClassId) {
+		if ($this->athleteId) {
 			$athlete = Athlete::findOne($this->athleteId);
-			$this->athleteClassId = $athlete->athleteClassId;
+			if (!$this->athleteClassId) {
+				$this->athleteClassId = $athlete->athleteClassId;
+			}
+			$this->countryId = $athlete->countryId;
+			if (!$this->cityId) {
+				$this->cityId = $athlete->cityId;
+			}
+		}
+		if ($this->cityId && !$this->countryId) {
+			$this->countryId = City::findOne($this->cityId)->countryId;
 		}
 		$this->dateUpdated = time();
 		if ($this->timeHuman) {
@@ -184,6 +200,11 @@ class RequestForSpecialStage extends BaseActiveRecord
 		return $this->hasOne(SpecialStage::className(), ['id' => 'stageId']);
 	}
 	
+	public function getCity()
+	{
+		return $this->cityId ? $this->hasOne(City::className(), ['id' => 'cityId']) : null;
+	}
+	
 	public function getAthleteClass()
 	{
 		return $this->hasOne(AthletesClass::className(), ['id' => 'athleteClassId']);
@@ -209,9 +230,9 @@ class RequestForSpecialStage extends BaseActiveRecord
 		$athletes = Athlete::find()->where([
 			'or',
 			['upper("firstName")' => mb_strtoupper($data['firstName'], 'UTF-8'),
-			 'upper("lastName")' => mb_strtoupper($data['lastName'], 'UTF-8')],
+			 'upper("lastName")'  => mb_strtoupper($data['lastName'], 'UTF-8')],
 			['upper("firstName")' => mb_strtoupper($data['lastName'], 'UTF-8'),
-			 'upper("lastName")' => mb_strtoupper($data['firstName'], 'UTF-8')]
+			 'upper("lastName")'  => mb_strtoupper($data['firstName'], 'UTF-8')]
 		])->all();
 		if (!$athletes) {
 			return null;
