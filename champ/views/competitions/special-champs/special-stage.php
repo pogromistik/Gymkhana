@@ -1,5 +1,6 @@
 <?php
 use common\models\SpecialStage;
+use common\models\Stage;
 
 /**
  * @var \common\models\SpecialStage             $stage
@@ -59,7 +60,7 @@ $championship = $stage->championship;
                 </div>
 			<?php } ?>
 			
-			<?php if ($stage->referenceTime && $stage->class && $stage->classModel->title != Stage::CLASS_UNPERCENT) { ?>
+			<?php if ($stage->referenceTime && $stage->class && $stage->class->title != Stage::CLASS_UNPERCENT) { ?>
                 <div>
                     Эталонное время трассы: <?= $stage->referenceTimeHuman ?>
                     <br>
