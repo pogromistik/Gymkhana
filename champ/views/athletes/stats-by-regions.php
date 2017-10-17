@@ -23,7 +23,7 @@
             <tbody>
 			<?php foreach ($stats as $region => $data) { ?>
                 <tr>
-                    <td><?= $region ?></td>
+                    <td><?= \common\helpers\TranslitHelper::translitRegion($region) ?></td>
 					<?php foreach ($classes as $class) { ?>
                         <td class="text-center"><?= (isset($data['groups'][$class]) && $data['groups'][$class] > 0) ? $data['groups'][$class] : null ?></td>
 					<?php } ?>
