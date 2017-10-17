@@ -36,7 +36,7 @@ use yii\helpers\Html;
                     </li>
 				<?php } ?>
                 <li>
-					<?= Html::a('Итоги чемпионата', ['/competitions/spec-champ-result', 'championshipId' => $championship->id]) ?>
+					<?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $championship->id]) ?>
                 </li>
             </ul>
 			<?php

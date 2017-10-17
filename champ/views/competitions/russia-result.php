@@ -85,7 +85,7 @@ use yii\bootstrap\Html;
                                     <div class="pl-10">
                                         <ul>
                                             <li>
-		                                        <?= Html::a('Итоги чемпионата', ['/competitions/spec-champ-result', 'championshipId' => $champ->id]) ?>
+		                                        <?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $champ->id]) ?>
                                             </li>
 											<?php foreach ($stages as $stage) { ?>
 												<?php

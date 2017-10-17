@@ -787,11 +787,13 @@ class SpecialChampController extends BaseController
 		$championship = $this->findModel($id);
 		$results = $championship->getResults();
 		$stages = $championship->stages;
+		$outOfChampStages = $championship->getStages()->andWhere(['outOfCompetitions' => 1])->all();
 		
 		return $this->render('results', [
-			'championship' => $championship,
-			'results'      => $results,
-			'stages'       => $stages
+			'championship'     => $championship,
+			'results'          => $results,
+			'stages'           => $stages,
+			'outOfChampStages' => $outOfChampStages
 		]);
 	}
 }

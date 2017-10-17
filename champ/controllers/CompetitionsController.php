@@ -1284,11 +1284,13 @@ class CompetitionsController extends BaseController
 		
 		$stages = $championship->stages;
 		$results = $championship->getResults();
+		$outOfChampStages = $championship->getStages()->andWhere(['outOfCompetitions' => 1])->all();
 		
 		return $this->render('special-champs/special-champ-results', [
-			'championship' => $championship,
-			'results'      => $results,
-			'stages'       => $stages
+			'championship'     => $championship,
+			'results'          => $results,
+			'stages'           => $stages,
+			'outOfChampStages' => $outOfChampStages
 		]);
 	}
 }

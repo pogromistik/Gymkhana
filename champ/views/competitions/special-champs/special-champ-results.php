@@ -5,6 +5,7 @@
  * @var array                         $results
  * @var \common\models\SpecialStage[] $stages
  * @var \common\models\Athlete        $athlete
+ * @var \common\models\SpecialStage[] $outOfChampStages
  */
 $this->title = 'Результаты: ' . $championship->title;
 ?>
@@ -26,6 +27,18 @@ $this->title = 'Результаты: ' . $championship->title;
 			<?php } ?>
         </tr>
     </table>
+	
+	<?php if ($outOfChampStages) { ?>
+        <div class="pt-10 pb-10">
+            <b>Следующие этапы проводились вне зачёта:</b><br>
+            <ul>
+				<?php foreach ($outOfChampStages as $outOfChampStage) { ?>
+                    <li><?= $outOfChampStage->title ?></li>
+				<?php } ?>
+            </ul>
+            Баллы за эти этапы не учитываются при подсчёте итоговой суммы. В таблице такие этапы выделены серым цветом.
+        </div>
+	<?php } ?>
 </div>
 
 <div class="pt-10">
@@ -36,8 +49,13 @@ $this->title = 'Результаты: ' . $championship->title;
             <th>Место</th>
             <th>Класс</th>
             <th>Спортсмен</th>
-			<?php foreach ($stages as $stage) { ?>
-                <th><?= \yii\helpers\Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?></th>
+			<?php foreach ($stages as $stage) {
+				$class = '';
+				if ($stage->outOfCompetitions) {
+					$class = 'gray-column';
+				}
+				?>
+                <th class="<?= $class ?>"><?= \yii\helpers\Html::a($stage->title, ['/competitions/special-stage', 'id' => $stage->id]) ?></th>
 			<?php } ?>
             <th>Итого</th>
         </tr>
@@ -67,11 +85,16 @@ $this->title = 'Результаты: ' . $championship->title;
                     <br>
 					<?= $athlete->city->title ?>
                 </td>
-				<?php foreach ($stages as $stage) { ?>
+				<?php foreach ($stages as $stage) {
+					$class = '';
+					if ($stage->outOfCompetitions) {
+						$class = 'gray-column';
+					}
+					?>
 					<?php if (isset($result['stages'][$stage->id])) { ?>
-                        <td><?= $result['stages'][$stage->id] ?></td>
+                        <td class="<?= $class ?>"><?= $result['stages'][$stage->id] ?></td>
 					<?php } else { ?>
-                        <td>0</td>
+                        <td class="<?= $class ?>">0</td>
 					<?php } ?>
 				<?php } ?>
                 <td><?= $result['points'] ?></td>

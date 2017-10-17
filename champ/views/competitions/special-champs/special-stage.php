@@ -19,6 +19,10 @@ $championship = $stage->championship;
 			<?= $championship->title ?>
         </div>
 
+        <div>
+			<?= Html::a('Подробнее о чемпионате', ['/competitions/special-champ', 'id' => $championship->id]) ?>
+        </div>
+
         <div class="pl-10">
             <h4><?= $stage->title ?>
                 <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
@@ -166,7 +170,7 @@ $championship = $stage->championship;
                     </li>
 				<?php } ?>
                 <li>
-		            <?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $stage->championshipId]) ?>
+					<?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $stage->championshipId]) ?>
                 </li>
             </ul>
 			<?php

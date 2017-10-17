@@ -7,6 +7,7 @@ use common\models\SpecialChamp;
  * @var array                         $results
  * @var \common\models\Athlete        $athlete
  * @var \common\models\SpecialStage[] $stages
+ * @var \common\models\SpecialStage[] $outOfChampStages
  */
 $this->title = 'Результаты: ' . $championship->title;
 $this->params['breadcrumbs'][] = ['label' => 'Специальные чемпионаты', 'url' => ['index']];
@@ -14,20 +15,32 @@ $this->params['breadcrumbs'][] = ['label' => $championship->title, 'url' => ['vi
 $this->params['breadcrumbs'][] = 'Результаты';
 ?>
 
+<?php if ($outOfChampStages) { ?>
+    <div class="pt-10">
+        Этапы вне зачёта:<br>
+        <ul>
+			<?php foreach ($outOfChampStages as $outOfChampStage) { ?>
+                <li><?= $outOfChampStage->title ?></li>
+			<?php } ?>
+        </ul>
+        Баллы за эти этапы не учитываются при подсчёте итоговой суммы. В таблице такие этапы выделены серым цветом.
+    </div>
+<?php } ?>
+
 <h4>Система начисления баллов:</h4>
 <table class="table table-bordered">
     <thead>
     <tr>
         <td><b>Место</b></td>
-        <?php foreach (\common\models\SpecialStage::$points as $place => $points) { ?>
+		<?php foreach (\common\models\SpecialStage::$points as $place => $points) { ?>
             <td><?= $place ?></td>
-        <?php } ?>
+		<?php } ?>
     </tr>
     <tr>
         <td><b>Баллы</b></td>
-	    <?php foreach (\common\models\SpecialStage::$points as $place => $points) { ?>
+		<?php foreach (\common\models\SpecialStage::$points as $place => $points) { ?>
             <td><?= $points ?></td>
-	    <?php } ?>
+		<?php } ?>
     </tr>
     </thead>
 </table>
@@ -39,8 +52,13 @@ $this->params['breadcrumbs'][] = 'Результаты';
         <th>Место</th>
         <th>Класс</th>
         <th>Спортсмен</th>
-		<?php foreach ($stages as $stage) { ?>
-            <th><?= $stage->title ?></th>
+		<?php foreach ($stages as $stage) {
+			$class = '';
+			if ($stage->outOfCompetitions) {
+				$class = 'gray-column';
+			}
+		    ?>
+            <th class="<?= $class ?>"><?= $stage->title ?></th>
 		<?php } ?>
         <th>Итого</th>
     </tr>
@@ -67,13 +85,18 @@ $this->params['breadcrumbs'][] = 'Результаты';
             <td>
 				<?= $athlete->getFullName() ?>
                 <br>
-				<small><?= $athlete->city->title ?></small>
+                <small><?= $athlete->city->title ?></small>
             </td>
-			<?php foreach ($stages as $stage) { ?>
+			<?php foreach ($stages as $stage) {
+				$class = '';
+				if ($stage->outOfCompetitions) {
+					$class = 'gray-column';
+				}
+			    ?>
 				<?php if (isset($result['stages'][$stage->id])) { ?>
-                    <td><?= $result['stages'][$stage->id] ?></td>
+                    <td class="<?= $class ?>"><?= $result['stages'][$stage->id] ?></td>
 				<?php } else { ?>
-                    <td>0</td>
+                    <td class="<?= $class ?>">0</td>
 				<?php } ?>
 			<?php } ?>
             <td><?= $result['points'] ?></td>
