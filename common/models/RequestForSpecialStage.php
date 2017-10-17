@@ -156,7 +156,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 	public function beforeSave($insert)
 	{
 		if ($this->athleteId && $this->status == self::STATUS_APPROVE) {
-			$bestOldTime = self::find()->where(['athleteId' => $this->athleteId, 'stageId' => $this->stageId]);
+			$bestOldTime = self::find()->where(['athleteId' => $this->athleteId, 'stageId' => $this->stageId])
+				->andWhere(['status' => self::STATUS_APPROVE]);
 			if (!$this->isNewRecord) {
 				$bestOldTime = $bestOldTime->andWhere(['not', ['id' => $this->id]]);
 			}
@@ -184,6 +185,34 @@ class RequestForSpecialStage extends BaseActiveRecord
 		}
 		
 		return parent::beforeSave($insert);
+	}
+	
+	public function afterSave($insert, $changedAttributes)
+	{
+		parent::afterSave($insert, $changedAttributes);
+		$stage = $this->stage;
+		if ($stage->dateResult < time()) {
+			if (($this->status == self::STATUS_APPROVE && array_key_exists('resultTime', $changedAttributes))
+				|| array_key_exists('status', $changedAttributes)
+			) {
+				$stage->placesCalculate();
+			}
+		}
+		
+		if (array_key_exists('status', $changedAttributes) && $this->status != self::STATUS_APPROVE) {
+			
+			if (!self::find()->where(['athleteId' => $this->athleteId, 'stageId' => $this->stageId])
+				->andWhere(['status' => self::STATUS_APPROVE])->one()
+			) {
+				$oldBest = self::find()->where(['athleteId' => $this->athleteId, 'stageId' => $this->stageId])
+					->andWhere(['status' => self::STATUS_IN_ACTIVE])->andWhere(['not', ['id' => $this->id]])
+					->orderBy(['resultTime' => SORT_ASC])->one();
+				if ($oldBest) {
+					$oldBest->status = self::STATUS_APPROVE;
+					$oldBest->save();
+				}
+			}
+		}
 	}
 	
 	public function afterFind()
