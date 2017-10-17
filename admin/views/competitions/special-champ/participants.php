@@ -129,7 +129,8 @@ $this->params['breadcrumbs'][] = 'Участники';
 				'format'    => 'raw',
 				'value'     => function (RequestForSpecialStage $item) {
 					return $item->athleteId ?
-						Html::a($item->athlete->getFullName(), ['/competitions/athlete/view', 'id' => $item->athleteId]) : '';
+						Html::a($item->athlete->getFullName() . ', ' .
+                            $item->athleteClass->title, ['/competitions/athlete/view', 'id' => $item->athleteId]) : '';
 				}
 			],
 			[
