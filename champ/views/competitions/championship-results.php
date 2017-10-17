@@ -111,7 +111,7 @@ $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $cham
             <td>
 				<?= $athlete->getFullName() ?>
                 <br>
-				<?= $athlete->city->title ?>
+				<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
             </td>
 			<?php foreach ($stages as $stage) { ?>
 				<?php if (isset($result['stages'][$stage->id])) { ?>
