@@ -20,6 +20,7 @@ use common\models\Notice;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
+use common\models\RequestForSpecialStage;
 use common\models\SpecialChamp;
 use common\models\SpecialStage;
 use common\models\Stage;
@@ -1324,7 +1325,7 @@ class RunController extends Controller
 			$athlete2 = $athlete1;
 		}
 		
-		//объединяем время по фигурам
+		
 		$transaction = \Yii::$app->db->beginTransaction();
 		$count = FigureTime::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update FigureTime: ' . $count . PHP_EOL;
@@ -1342,6 +1343,8 @@ class RunController extends Controller
 		echo 'Update TmpParticipant: ' . $count . PHP_EOL;
 		$count = ClassHistory::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		$count = RequestForSpecialStage::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update SpecialStages: ' . $count . PHP_EOL;
 		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
 			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
 			$mainAthlete->save(false);
