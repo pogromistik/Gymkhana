@@ -960,7 +960,7 @@ class CompetitionsController extends BaseController
 		return $this->render('moscow-scheme', ['items' => $items]);
 	}
 	
-	public function actionSpecialStage($id)
+	public function actionSpecialStage($id, array $regionIds = [])
 	{
 		$stage = SpecialStage::findOne($id);
 		if (!$stage) {
@@ -971,7 +971,29 @@ class CompetitionsController extends BaseController
 		$this->keywords = 'Этапы соревнования, ' . $stage->title;
 		$this->layout = 'full-content';
 		
-		$activeParticipants = $stage->getParticipants()->andWhere(['status' => RequestForSpecialStage::STATUS_APPROVE])->all();
+		if ($regionIds) {
+			$query = RequestForSpecialStage::find();
+			$query->select('a.*');
+			$query->from(['a' => RequestForSpecialStage::tableName(), 'b' => Athlete::tableName()]);
+			$query->where(new Expression('"a"."athleteId"="b"."id"'));
+			$query->andWhere(['a.stageId' => $stage->id]);
+			$query->andWhere(['a.status' => RequestForSpecialStage::STATUS_APPROVE]);
+			$query->andWhere(['b.regionId' => $regionIds]);
+			$query->orderBy(['a.resultTime' => SORT_ASC, 'a.dateAdded' => SORT_ASC]);
+			$activeParticipants = $query->all();
+		} else {
+			$activeParticipants = $stage->getParticipants()->andWhere(['status' => RequestForSpecialStage::STATUS_APPROVE])->all();
+		}
+		
+		$query = Region::find();
+		$query->select('a.*');
+		$query->from(['a' => Region::tableName(), 'b' => Athlete::tableName(), 'c' => RequestForSpecialStage::tableName()]);
+		$query->where(new Expression('"a"."id"="b"."regionId"'));
+		$query->andWhere(new Expression('"b"."id"="c"."athleteId"'));
+		$query->andWhere(['c.stageId' => $stage->id]);
+		$query->andWhere(['c.status' => RequestForSpecialStage::STATUS_APPROVE]);
+		$query->orderBy(['a.title' => SORT_ASC]);
+		$regions = $query->all();
 		
 		$needTime = [];
 		if ($stage->referenceTime) {
@@ -1014,6 +1036,8 @@ class CompetitionsController extends BaseController
 			'stage'              => $stage,
 			'needTime'           => $needTime,
 			'activeParticipants' => $activeParticipants,
+			'regionIds'          => $regionIds,
+			'regions'            => $regions
 		]);
 	}
 	

@@ -1,12 +1,15 @@
 <?php
 use common\models\SpecialStage;
 use common\models\Stage;
+use kartik\widgets\Select2;
 use yii\helpers\Html;
 
 /**
  * @var \common\models\SpecialStage             $stage
  * @var array                                   $needTime
  * @var \common\models\RequestForSpecialStage[] $activeParticipants
+ * @var array                                   $regionIds
+ * @var \common\models\Region[]                 $regions
  */
 
 $timezone = '(Москва, UTC +3)';
@@ -147,6 +150,32 @@ $championship = $stage->championship;
 						<?= $this->render($view, ['stage' => $stage]) ?>
                     </div>
 				<?php } ?>
+
+                <div class="filters pt-20 pb-20">
+					<?= \yii\bootstrap\Html::beginForm('/competitions/special-stage', 'get') ?>
+					<?= \yii\bootstrap\Html::hiddenInput('id', $stage->id) ?>
+                    <div class="row">
+                        <div class="col-md-10 col-xs-8 input-with-sm-pt">
+							<?= Select2::widget([
+								'name'          => 'regionIds',
+								'value'         => $regionIds,
+								'data'          => \yii\helpers\ArrayHelper::map($regions, 'id', 'title'),
+								'options'       => [
+									'placeholder' => 'Выберите регионы...',
+									'multiple'    => true
+								],
+								'pluginOptions' => [
+									'allowClear' => true
+								]
+							]) ?>
+                        </div>
+                        <div class="col-md-2 col-xs-4">
+							<?= Html::submitButton('ок', ['class' => 'btn btn-success']) ?>
+                        </div>
+                    </div>
+					<?= \yii\bootstrap\Html::endForm() ?>
+                </div>
+
                 <div class="text-right">
                     Количество участников: <?= count($activeParticipants) ?>
                     <br>
