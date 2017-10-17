@@ -85,24 +85,24 @@ $this->params['breadcrumbs'][] = $this->title;
             <td><?= $request->resultTimeHuman ?></td>
             <td><?= $request->percent ? $request->percent . '%' : '' ?></td>
             <td class="newClass">
-	        <?php if ($request->newAthleteClassId) { ?>
-		        <?= $request->newAthleteClass->title ?>
-		        <?php if ($request->newAthleteClassStatus == \common\models\RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) { ?>
-                    <br>
-                    <a class="btn btn-danger getRequest" href="#"
-                       data-action="/competitions/special-champ/cancel-class"
-                       data-id="<?= $request->id ?>" title="Отменить">
-                        <span class="fa fa-remove"></span>
-                    </a>
-                    <a class="btn btn-success getRequest" href="#"
-                       data-action="/competitions/special-champ/approve-class"
-                       data-id="<?= $request->id ?>" title="Подтвердить">
-                        <span class="fa fa-check"></span>
-                    </a>
-		        <?php } ?>
-	        <?php } ?>
+				<?php if ($request->newAthleteClassId) { ?>
+					<?= $request->newAthleteClass->title ?>
+					<?php if ($request->newAthleteClassStatus == \common\models\RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) { ?>
+                        <br>
+                        <a class="btn btn-danger getRequest" href="#"
+                           data-action="/competitions/special-champ/cancel-class"
+                           data-id="<?= $request->id ?>" title="Отменить">
+                            <span class="fa fa-remove"></span>
+                        </a>
+                        <a class="btn btn-success getRequest" href="#"
+                           data-action="/competitions/special-champ/approve-class"
+                           data-id="<?= $request->id ?>" title="Подтвердить">
+                            <span class="fa fa-check"></span>
+                        </a>
+					<?php } ?>
+				<?php } ?>
             </td>
-            <td></td>
+            <td><?= $request->points ?></td>
         </tr>
 	<?php } ?>
     </tbody>

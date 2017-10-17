@@ -30,6 +30,7 @@ use yii\db\Expression;
  * @property integer       $cityId
  * @property integer       $countryId
  * @property integer       $place
+ * @property integer       $points
  *
  * @property Athlete       $athlete
  * @property Motorcycle    $motorcycle
@@ -79,7 +80,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			[['data', 'videoLink', 'cancelReason', 'dateHuman', 'resultTimeHuman', 'timeHuman'], 'string'],
 			[['athleteId', 'motorcycleId', 'status', 'time', 'fine', 'resultTime', 'athleteClassId',
 				'newAthleteClassId', 'newAthleteClassStatus', 'stageId', 'date', 'dateAdded', 'dateUpdated',
-				'cityId', 'countryId', 'place'], 'integer'],
+				'cityId', 'countryId', 'place', 'points'], 'integer'],
 			[['percent'], 'number'],
 			[['time', 'resultTime', 'videoLink', 'stageId', 'date', 'dateAdded', 'dateUpdated', 'countryId'], 'required'],
 			['fine', 'default', 'value' => 0]
@@ -114,7 +115,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 			'dateAdded'             => 'Date Added',
 			'dateUpdated'           => 'Date Updated',
 			'cityId'                => 'Город',
-			'place'                 => 'Место'
+			'place'                 => 'Место',
+			'points'                => 'Баллы'
 		];
 	}
 	

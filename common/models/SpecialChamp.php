@@ -89,4 +89,38 @@ class SpecialChamp extends BaseActiveRecord
 	{
 		return $this->hasMany(SpecialStage::className(), ['championshipId' => 'id'])->orderBy(['dateResult' => SORT_ASC, 'dateAdded' => SORT_ASC]);
 	}
+	
+	public function getResults()
+	{
+		$stages = $this->stages;
+		$results = [];
+		foreach ($stages as $stage) {
+			/** @var RequestForSpecialStage[] $requests */
+			$requests = RequestForSpecialStage::find()->where(['stageId' => $stage->id])->andWhere([
+				'status' => RequestForSpecialStage::STATUS_APPROVE])
+				->orderBy(['points' => SORT_DESC])->all();
+			foreach ($requests as $request) {
+				if (!isset($results[$request->athleteId])) {
+					$results[$request->athleteId] = [
+						'athlete' => $request->athlete,
+						'points'  => 0,
+						'stages'  => []
+					];
+				}
+				if (!isset($results[$request->athleteId]['stages'][$stage->id])) {
+					$results[$request->athleteId]['stages'][$stage->id] = $request->points;
+					$results[$request->athleteId]['points'] += $request->points;
+				}
+			}
+		}
+		
+		uasort($results, "self::cmpByRackPlaces");
+		
+		return $results;
+	}
+	
+	private function cmpByRackPlaces($a, $b)
+	{
+		return ($a['points'] > $b['points']) ? -1 : 1;
+	}
 }

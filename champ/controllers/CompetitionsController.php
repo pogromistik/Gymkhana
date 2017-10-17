@@ -1272,4 +1272,23 @@ class CompetitionsController extends BaseController
 			'dataProvider' => $dataProvider,
 		]);
 	}
+	
+	public function actionSpecialChampResult($championshipId)
+	{
+		$championship = SpecialChamp::findOne($championshipId);
+		if (!$championship) {
+			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		$this->pageTitle = $championship->title . ': итоги';
+		$this->description = 'Итоги соревнования: ' . $championship->title;
+		
+		$stages = $championship->stages;
+		$results = $championship->getResults();
+		
+		return $this->render('special-champs/special-champ-results', [
+			'championship' => $championship,
+			'results'      => $results,
+			'stages'       => $stages
+		]);
+	}
 }

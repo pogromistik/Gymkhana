@@ -1,6 +1,7 @@
 <?php
 use common\models\SpecialStage;
 use common\models\Stage;
+use yii\helpers\Html;
 
 /**
  * @var \common\models\SpecialStage             $stage
@@ -151,5 +152,25 @@ $championship = $stage->championship;
 				<?= $this->render('_mobile-results', ['participants' => $activeParticipants]) ?>
 			<?php } ?>
         </div>
+    </div>
+
+    <div class="col-bg-4 col-lg-3 col-md-2 col-sm-12 list-nav">
+		<?php
+		$stages = $stage->championship->stages;
+		if ($stages) {
+			?>
+            <ul>
+				<?php foreach ($stages as $item) { ?>
+                    <li>
+						<?= Html::a($item->title, ['/competitions/special-stage', 'id' => $item->id]) ?>
+                    </li>
+				<?php } ?>
+                <li>
+		            <?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $stage->championshipId]) ?>
+                </li>
+            </ul>
+			<?php
+		}
+		?>
     </div>
 </div>

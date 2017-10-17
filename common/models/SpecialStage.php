@@ -50,12 +50,32 @@ class SpecialStage extends BaseActiveRecord
 	const PHOTO_NOT_PUBLISH = 0;
 	const PHOTO_PUBLISH = 1;
 	
+	public $withClassesCalculate = true;
+	
 	public static $statusesTitle = [
 		self::STATUS_UPCOMING          => 'Предстоящий этап',
 		self::STATUS_START             => 'Приём результатов',
 		self::STATUS_CALCULATE_RESULTS => 'Подведение итогов',
 		self::STATUS_PAST              => 'Прошедший этап',
 		self::STATUS_CANCEL            => 'Этап отменён'
+	];
+	
+	public static $points = [
+		1  => 20,
+		2  => 17,
+		3  => 15,
+		4  => 13,
+		5  => 11,
+		6  => 10,
+		7  => 9,
+		8  => 8,
+		9  => 7,
+		10 => 6,
+		11 => 5,
+		12 => 4,
+		13 => 3,
+		14 => 2,
+		15 => 1
 	];
 	
 	/**
@@ -320,15 +340,24 @@ class SpecialStage extends BaseActiveRecord
 				}
 				
 				//Рассчёт класса
-				if ($this->classId && $item->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_APPROVE) {
-					$newClassId = RequestForSpecialStage::getNewClass($this->class, $item);
-					if ($newClassId) {
-						$item->newAthleteClassId = $newClassId;
-						$item->newAthleteClassStatus = RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK;
-					} else {
-						$item->newAthleteClassId = null;
-						$item->newAthleteClassStatus = null;
+				if ($this->withClassesCalculate) {
+					if ($this->classId && $item->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_APPROVE) {
+						$newClassId = RequestForSpecialStage::getNewClass($this->class, $item);
+						if ($newClassId) {
+							$item->newAthleteClassId = $newClassId;
+							$item->newAthleteClassStatus = RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK;
+						} else {
+							$item->newAthleteClassId = null;
+							$item->newAthleteClassStatus = null;
+						}
 					}
+				}
+				
+				//Баллы
+				if (isset(self::$points[$item->place])) {
+					$item->points = self::$points[$item->place];
+				} else {
+					$item->points = 0;
 				}
 				
 				if (!$item->save()) {
@@ -341,6 +370,7 @@ class SpecialStage extends BaseActiveRecord
 				$item->percent = null;
 				$item->newAthleteClassId = null;
 				$item->newAthleteClassStatus = null;
+				$item->point = null;
 				if (!$item->save()) {
 					$transaction->rollBack();
 					

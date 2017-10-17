@@ -665,7 +665,7 @@ class SpecialChampController extends BaseController
 		}
 		
 		$athlete = $request->athlete;
-
+		
 		if ($athlete->athleteClass->percent <= $request->newAthleteClass->percent) {
 			$request->newAthleteClassStatus = Participant::NEW_CLASS_STATUS_APPROVE;
 			if (!$request->save()) {
@@ -780,5 +780,18 @@ class SpecialChampController extends BaseController
 		}
 		
 		return true;
+	}
+	
+	public function actionResults($id)
+	{
+		$championship = $this->findModel($id);
+		$results = $championship->getResults();
+		$stages = $championship->stages;
+		
+		return $this->render('results', [
+			'championship' => $championship,
+			'results'      => $results,
+			'stages'       => $stages
+		]);
 	}
 }

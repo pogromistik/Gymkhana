@@ -17,6 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?= Html::a('Добавить этап', ['/competitions/special-champ/create-stage', 'championshipId' => $model->id], [
 			'class' => 'btn btn-my-style btn-light-green'
 		]); ?>
+		<?= Html::a('Результаты', ['/competitions/special-champ/results', 'id' => $model->id], [
+			'class' => 'btn btn-my-style btn-lilac'
+		]); ?>
+    </p>
     </p>
 	
 	<?= DetailView::widget([
