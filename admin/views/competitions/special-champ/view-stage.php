@@ -17,6 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="stage-view">
 	
 	<div class="buttons">
+		<?= Html::a('Участники', ['/competitions/special-champ/participants', 'stageId' => $stage->id],
+			['class' => 'btn btn-my-style btn-light-aquamarine']) ?>
 		<?= Html::a('Редактировать', ['update-stage', 'id' => $stage->id], ['class' => 'btn btn-blue btn-my-style']) ?>
 		<?= Html::a('Пересчитать результаты', ['/competitions/special-champ/calculation-result', 'stageId' => $stage->id],
 			[

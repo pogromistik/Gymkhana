@@ -109,7 +109,9 @@ class SpecialChamp extends BaseActiveRecord
 				}
 				if (!isset($results[$request->athleteId]['stages'][$stage->id])) {
 					$results[$request->athleteId]['stages'][$stage->id] = $request->points;
-					$results[$request->athleteId]['points'] += $request->points;
+					if (!$stage->outOfCompetitions) {
+						$results[$request->athleteId]['points'] += $request->points;
+					}
 				}
 			}
 		}
