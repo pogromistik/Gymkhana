@@ -91,7 +91,7 @@ use yii\bootstrap\Html;
 										<?= $newStage->title ?>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-										<?= $newStage->city->title ?>
+										<?= \common\helpers\TranslitHelper::translitCity($newStage->city->title) ?>
                                     </div>
                                 </div>
                             </div>
