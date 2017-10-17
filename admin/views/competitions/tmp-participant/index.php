@@ -14,10 +14,57 @@ use yii\web\JsExpression;
 $this->title = 'Заявки на участие, требующие одобрения';
 ?>
 
-<div class="alert alert-danger">
-	<b>ВНИМАНИЕ!</b> Обращайте внимание на город участников - в найденном совпадении может быть полный тёзка из другого города. 
-	Как показывает практика - он даже может ездить на таком же мотоцикле :) Если не уверены в том, что это тот же человек - свяжитесь 
-	с ним по указанному в заявке телефону или email.
+<div class="alert required-alert-info">
+    <b>ВНИМАНИЕ!</b> Обращайте внимание на город участников - в найденном совпадении может быть полный тёзка из другого
+    города.
+</div>
+
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+        <li>
+            <b>ВАЖНО!</b> От того, на сколько правильно вы нажмёте кнопку на этой странице, зависит корректность
+            дальнейшей статистики для спортсмена.
+        </li>
+        <li>
+            Первые две колонки - данные, которые оставил человек в заявке на регистрацию в кабинете. Третья -
+            совпадения с данными, которые уже есть в системе.<br>
+            Если совпадений нет - всё просто: нажмите кнопку "создать нового спортсмена и зарегистрировать" (хотя будет
+            здорово, если на всякий случай вы предварительно посмотрите список всех спортсменов с такой фамилией, т.к.
+            в системе, к примеру, может быть Юрий, а в заявке - Юра).<br>
+            Если же совпадение найдено:
+            <ol>
+                <li>
+                    Проанализируйте данные. Например, если город отличается - значит, это другой спортсмен. Если
+                    отличается мотоцикл, а у спортсмена в совпадении уже есть личный кабинет - возможно, это тоже его
+                    тёзка. Если у вас есть сомнения - попробуйте связаться с человеком по указанному телефону или email
+                    и уточнить этот вопрос. Если окажется, что нет ни одного верного совпадения - создайте нового
+                    спортсмена.
+                </li>
+                <li>
+                    Если есть верное совпадение, но у спортсмена нет нужного мотоцикла - нажмите "зарегистрировать на
+                    новом мотоцикле".
+                </li>
+                <li>
+                    Если есть верное совпадение с указанным мотоциклом, нажмите "зарегистрировать на этом мотоцикле"
+                    рядом с нужной записью
+                </li>
+                <li>
+                    Если спортсмен уже подавал ранее заявку на участие на этом же мотоцикле - отклоните новую.
+                </li>
+            </ol>
+        </li>
+        <li>
+            Если под городом есть выпадающий список с текстом "выберите город" - необходимо найти в нём город
+            спортсмена. Если его нет - создайте на странице <?= Html::a('Города', ['/competitions/help/cities']) ?>
+        </li>
+        <li>
+            <b>Внимание!</b> После обработки на этой странице, все неотклоненные заявки переходят в раздел "участники"
+            вашего этапа. Они требуют совершения всех тех же действий, что и заявки, оставленные из личного кабинета.
+        </li>
+    </ul>
 </div>
 
 <div class="tmp-participant-index">
@@ -84,7 +131,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 					$result .= '<small>' . $participant->city . '</small>';
 					$html = '<br>';
 					if (!$participant->cityId) {
-						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewParticipant'.$participant->id]);
+						$html .= Html::beginForm('', 'post', ['id' => 'cityForNewParticipant' . $participant->id]);
 						$html .= Html::hiddenInput('id', $participant->id);
 						$html .= Select2::widget([
 							'name'          => 'city',
@@ -93,25 +140,25 @@ $this->title = 'Заявки на участие, требующие одобр�
 							'options'       => ['placeholder' => 'Выберите город...', 'multiple' => false],
 							'pluginOptions' => [
 								'maximumInputLength' => 10,
-								'ajax' => [
-									'url' => \yii\helpers\Url::to(['/competitions/help/city-list']),
+								'ajax'               => [
+									'url'      => \yii\helpers\Url::to(['/competitions/help/city-list']),
 									'dataType' => 'json',
-									'data' => new JsExpression('function(params) { return {title:params.term, countryId:'.$participant->countryId.'}; }')
+									'data'     => new JsExpression('function(params) { return {title:params.term, countryId:' . $participant->countryId . '}; }')
 								],
-								'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-								'templateResult' => new JsExpression('function(city) { return city.text; }'),
-								'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+								'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+								'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+								'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
 							],
 							'pluginEvents'  => [
 								'change' => 'function(e){
-				cityForNewParticipant('.$participant->id.');
+				cityForNewParticipant(' . $participant->id . ');
 			}',
 							],
 						]);
 						$html .= Html::endForm();
 						$html .= '<br>';
-                    }
-                    $result .= $html;
+					}
+					$result .= $html;
 					$result .= '<small>' . ($participant->phone ? $participant->phone : '') . '</small>';
 					$result .= '<br>';
 					if ($participant->email) {
@@ -159,7 +206,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 							$result .= ' ' . Html::a('Зарегистрировать на новом мотоцикле',
 									['competitions/tmp-participant/add-motorcycle-and-registration'],
 									[
-										'class'           => 'btn btn-info addMotorcycleAndRegistration',
+										'class'           => 'btn btn-my-style small btn-dirty-blue addMotorcycleAndRegistration',
 										'data-tmp-id'     => $participant->id,
 										'data-athlete-id' => $athlete->id,
 									]);
@@ -175,7 +222,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 								$result .= ' ' . Html::a('Зарегистрировать на этом мотоцикле',
 										['competitions/tmp-participant/registration'],
 										[
-											'class'              => 'btn btn-default registrationAthlete',
+											'class'              => 'btn btn-my-style small btn-light-gray registrationAthlete',
 											'data-tmp-id'        => $participant->id,
 											'data-athlete-id'    => $athlete->id,
 											'data-motorcycle-id' => $motorcycle->id
@@ -194,7 +241,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 						}
 						$result .= '<br>';
 					}
-					$result .= '<a href="#" data-last-name="' . $participant->lastName . '" class="findByFirstName">
+					$result .= '<a href="#" data-last-name="' . $participant->lastName . '" class="findByFirstName btn btn-my-style small btn-default">
 					список всех спортсменов с такой фамилией</a>';
 					
 					return $result;
@@ -203,12 +250,12 @@ $this->title = 'Заявки на участие, требующие одобр�
 			[
 				'format' => 'raw',
 				'value'  => function (TmpParticipant $participant) {
-					$html = '<div class = "pb-10">' . Html::a('Создать спортсмена и зарегистрировать на этап',
+					$html = '<div>' . Html::a('Создать нового спортсмена и зарегистрировать',
 							['/competitions/tmp-participant/add-and-registration', 'id' => $participant->id],
-							['class' => 'btn btn-success addAndRegistration', 'data-id' => $participant->id]) . '</div>';
-					$html .= '<div class = "pb-10">' . Html::a('Отменить заявку',
+							['class' => 'btn btn-my-style btn-green small addAndRegistration', 'data-id' => $participant->id]) . '</div>';
+					$html .= '<div>' . Html::a('Отклонить заявку',
 							['/competitions/tmp-participant/cancel', 'id' => $participant->id],
-							['class' => 'btn btn-warning cancelTmpParticipant', 'data-id' => $participant->id]) . '</div>';
+							['class' => 'btn btn-my-style btn-red small cancelTmpParticipant', 'data-id' => $participant->id]) . '</div>';
 					
 					return $html;
 				}

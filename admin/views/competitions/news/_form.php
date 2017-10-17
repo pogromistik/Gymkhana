@@ -15,7 +15,10 @@ if ($model->previewText) {
 ?>
 
 <div class="assoc-news-form">
-    <div class="alert alert-info">
+    <div class="alert help-alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
         <ul>
             <li>
                 <b>При добавлении изображения обязательно оставьте пустыми поля "ширина" и "высота" или хотя бы поле "высота"</b>
@@ -72,7 +75,8 @@ if ($model->previewText) {
     <?php } ?>
 
     <div class="form-group">
-		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
+            ['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

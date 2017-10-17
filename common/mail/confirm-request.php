@@ -6,7 +6,7 @@
  * @var \common\models\TmpParticipant|null $tmpParticipant
  */
 ?>
-<?= \Yii::t('app', 'Предварительная регистрация на этап принята.') ?>
+<?= \Yii::t('app', 'Предварительная регистрация на этап принята.') ?><br>
 <?php if ($participant) {
 	$athlete = $participant->athlete;
 	?>

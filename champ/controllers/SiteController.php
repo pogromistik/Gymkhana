@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use champ\models\LoginForm;
@@ -20,13 +21,41 @@ use yii\web\NotFoundHttpException;
  */
 class SiteController extends BaseController
 {
-	public function actions()
+	
+	
+	public function actionError()
 	{
-		return [
-			'error' => [
-				'class' => 'yii\web\ErrorAction',
-			]
-		];
+		$exception = Yii::$app->getErrorHandler()->exception;
+		$statusCode = 404;
+		$text = '';
+		$title = 'not found';
+		$this->pageTitle = 'Ошибка!';
+		if ($exception && isset($exception->statusCode)) {
+			$this->pageTitle = 'Ошибка: ' . $exception->statusCode;
+			switch ($exception->statusCode) {
+				case 404:
+					$title = 'not found';
+					$text = 'Монстр в недоумении, потому что не может найти нужную вам страницу. Но вы всегда можете ' .
+						'<a href="/">вернуться на главную</a> или
+<a href="#" data-toggle="modal" data-target="#feedbackForm">сообщить нам об ошибке</a>.';
+					break;
+				case 403:
+					$title = 'forbidden';
+					$text = 'Монстр расстроен, потому что вы пытаетесь зайти на запретную страницу. Но вы всегда можете ' .
+						'<a href="/">вернуться на главную</a> или
+<a href="#" data-toggle="modal" data-target="#feedbackForm">сообщить нам об ошибке</a>.';
+					break;
+				default:
+					$title = 'not found';
+			}
+		}
+		Yii::$app->getErrorHandler()->exception;
+		
+		return $this->render('error', [
+			'title'      => $title,
+			'statusCode' => $statusCode,
+			'text'       => $text
+		]);
 	}
 	
 	public function actionIndex()
@@ -200,7 +229,8 @@ class SiteController extends BaseController
 			}
 			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])
 				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
-			->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()) {
+					->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()
+			) {
 				return \Yii::t('app', 'Указанный email занят');
 			}
 			if (!$form->validate()) {

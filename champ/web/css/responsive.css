@@ -2,27 +2,33 @@
     .col-bg-3 {
         width: 25%;
     }
+
     .col-bg-7 {
         width: 58.33333333%;
     }
+
     .col-bg-5 {
         width: 41.66666667%;
     }
+
     .col-bg-8 {
         width: 66.66666667%;
     }
+
     .col-bg-4 {
         width: 33.33333333%;
     }
+
     .col-bg-4.list-nav ul {
         max-width: 33.33333333%;
     }
 }
 
 @media (max-width: 1512px) {
-    .list-nav ul{
+    .list-nav ul {
         right: 20px;
     }
+
     .col-lg-3.list-nav ul {
         max-width: 25%;
     }
@@ -32,10 +38,12 @@
     .content {
         width: 70%;
     }
+
     .list-nav ul {
         right: 50px;
         max-width: 25%;
     }
+
     .background-img {
         width: 30%;
     }
@@ -100,7 +108,7 @@
     .list-nav ul {
         padding-left: 15px;
         position: static;
-        max-width: 100%!important;
+        max-width: 100% !important;
     }
 
     .list-nav ul li:before {
@@ -126,6 +134,7 @@
     .nav a {
         font-size: 12px;
     }
+
     .modal-notices .text {
         max-height: 200px;
     }
@@ -151,19 +160,23 @@
 
 @media (max-width: 812px) {
     .show-pk {
-        display: none!important;
+        display: none !important;
     }
+
     .show-mobile {
-        display: block!important;
+        display: block !important;
     }
+
     .header {
         position: relative;
         background: #f4f4f4;
         height: 60px;
     }
+
     .content {
         padding-top: 0;
     }
+
     .full-content {
         padding-top: 10px;
     }
@@ -173,12 +186,15 @@
     .nav a {
         font-size: 10px;
     }
+
     .athletes {
         font-size: 12px;
     }
+
     .athletes h4 {
         font-size: 14px;
     }
+
     .nav a {
         font-size: 9px;
     }
@@ -188,26 +204,55 @@
     .navbar-mobile-items {
         display: block;
     }
+
     .pk-menu-items {
-        display: none!important;
+        display: none !important;
     }
     .header {
         height: auto;
     }
+
     .header .white-menu {
         height: auto;
     }
+
     .dropdown-menu > li > a {
         color: #4b4e53;
     }
+
     .navbar-left .dropdown-menu {
         background: #fff;
     }
+
     .nav a {
         font-size: 10px;
     }
+
     .image-cutter .dropzone .img-container .message {
         font-size: 14px;
+    }
+
+    .errors {
+        position: relative;
+        width: 150px;
+        margin-top: 15px;
+    }
+
+    .errors .text .code {
+        position: relative;
+        left: 67px;
+        font-size: 14px;
+        font-weight: bold;
+        top: 100px;
+    }
+
+    .errors .text .message {
+        position: relative;
+        left: 34px;
+        width: 100px;
+        top: 96px;
+        font-size: 10px;
+        text-align: center;
     }
 }
 
@@ -216,7 +261,6 @@
         padding-bottom: 4px;
     }
 }
-
 
 @media (max-width: 560px) {
     .modal-notices {
@@ -228,22 +272,28 @@
     .modal-notices {
         width: 250px;
     }
+
     .athletes .item .card .info h4 {
         font-size: 10px;
     }
+
     .athletes .item .card .info, .athletes .item .card .info h5 {
         font-size: 10px;
     }
+
     .athletes .info {
         height: 146px;
     }
+
     .athletes .img {
         max-width: 110px;
         max-height: 146px;
     }
+
     .athletes .img img {
         max-width: 110px;
     }
+
     body {
         margin-bottom: 90px;
     }
@@ -253,9 +303,11 @@
     .lk .dropdown-menu {
         right: -90px !important;
     }
+
     .modal-notices {
         right: -60px !important;
     }
+
     .image-cutter .dropzone .img-container .message {
         font-size: 12px;
     }

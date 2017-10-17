@@ -56,7 +56,7 @@ use yii\widgets\MaskedInput;
 	<?= $form->field($model, 'fine')->textInput() ?>
 	
 	<?= $form->field($model, 'videoLink', ['inputTemplate' => '<div class="input-with-description"><div class="text">
- ' . \Yii::t('app', 'принимаются результаты, для которых есть видео заезда или запись в группе') . ' <a href="https://vk.com/motogymkhana_ru" target="_blank">vk.com/motogymkhana_ru</a>
+ ' . \Yii::t('app', 'принимаются результаты, для которых есть видео заезда') . ' <a href="https://vk.com/motogymkhana_ru" target="_blank">vk.com/motogymkhana_ru</a>
 </div>{input}</div>'])->textInput(['maxlength' => true]) ?>
 
     <div class="alert alert-danger" style="display: none"></div>

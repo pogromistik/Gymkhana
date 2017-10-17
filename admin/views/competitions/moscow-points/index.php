@@ -13,7 +13,7 @@ $this->title = 'Баллы за чемпионат по Московской с�
 <div class="moscow-point-index">
 
     <p>
-		<?= Html::a('Добавить балл', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить балл', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -59,7 +59,7 @@ $this->title = 'Баллы за чемпионат по Московской с�
 				'format' => 'raw',
 				'value'  => function (\common\models\MoscowPoint $item) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $item->id], [
-						'class' => 'btn btn-primary',
+						'class' => 'btn btn-my-style btn-blue',
 						'title' => 'Редактировать'
 					]);
 				}
@@ -69,7 +69,7 @@ $this->title = 'Баллы за чемпионат по Московской с�
 				'format' => 'raw',
 				'value'  => function (\common\models\MoscowPoint $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['delete', 'id' => $item->id], [
-						'class' => 'btn btn-danger',
+						'class' => 'btn btn-my-style btn-red',
 						'title' => 'Удалить',
 						'data'  => [
 							'confirm' => 'Уверены, что хотите полностью удалить эту запись?'

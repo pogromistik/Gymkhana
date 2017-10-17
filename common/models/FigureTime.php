@@ -161,10 +161,11 @@ class FigureTime extends BaseActiveRecord
 		$this->yearId = $year->id;
 		
 		$this->dateUpdated = time();
-		
 		$figure = Figure::findOne($this->figureId);
 		if ($figure->bestTime) {
-			$this->percent = round($this->resultTime / $figure->bestTime * 100, 2);
+			if (!isset($this->oldAttributes['resultTime']) || $this->oldAttributes['resultTime'] != $this->resultTime) {
+				$this->percent = round($this->resultTime / $figure->bestTime * 100, 2);
+			}
 			if ($this->isNewRecord) {
 				$this->recordInMoment = $figure->bestTime;
 			}

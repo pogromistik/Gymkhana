@@ -1034,7 +1034,7 @@ table.results small.red {
 }
 
 .result-needClarificationParticipant a, .internal-class-needClarificationParticipant a {
-    color: #7c7d7d!important;
+    color: #7c7d7d !important;
 }
 
 .warning {
@@ -1062,8 +1062,8 @@ h2.title small {
 }
 
 .time-blocks .points {
-    float:left;
-    font-size:55px;
+    float: left;
+    font-size: 55px;
 }
 
 .down-time .item {
@@ -1079,7 +1079,7 @@ h2.title small {
     background-size: cover;
 }
 
-.work-page .time-blocks{
+.work-page .time-blocks {
     position: relative;
     left: calc(50% - 124px);
 }
@@ -1087,6 +1087,7 @@ h2.title small {
 .image-cutter .dropzone {
     min-height: 100px;
 }
+
 .image-cutter .dropzone .img-container .preview-image {
     height: 150px;
     width: auto;
@@ -1176,4 +1177,62 @@ h2.title small {
 .circle-class-white {
     background: #ffffff;
     color: #000000;
+}
+
+.errors {
+    position: relative;
+    width: 300px;
+}
+
+.errors img {
+    width: 100%;
+}
+
+.errors {
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.errors .img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.errors .text {
+    position: absolute;
+    z-index: 100;
+}
+
+.errors .text .code {
+    position: relative;
+    left: 135px;
+    font-size: 22px;
+    font-weight: bold;
+    top: 200px;
+}
+
+.errors .text .message {
+    position: relative;
+    left: 90px;
+    width: 150px;
+    top: 200px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.gray-column {
+    background: #dedede;
+    color: #7b7b7b;
+    border-bottom: 1px solid #cacaca;
+}
+
+.gray-column a {
+    color: #7b7b7b;
+}
+
+th.gray-column {
+    border-bottom: 2px solid #cacaca!important;
 }

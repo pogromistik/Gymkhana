@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="buttons">
 		<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
-			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-blue btn-my-style']) ?>
 		<?php } ?>
 		<?= $this->render('_buttons', ['model' => $model, 'championship' => $championship]) ?>
     </div>
@@ -74,6 +74,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'trackPhotoStatus',
 				'label'     => 'Статус публикации фото',
 				'value'     => $model->trackPhotoStatus ? 'опубликовано' : 'не опубликовано'
+			],
+			[
+				'attribute' => 'outOfCompetitions',
+				'label'     => 'Провести этап вне общего зачёта?',
+				'value'     => $model->outOfCompetitions ? 'да' : 'нет'
 			],
 			'referenceTimeHuman',
 			'participantsLimit',

@@ -13,7 +13,10 @@ use yii\bootstrap\Html;
 $this->title = 'Расчёт эталонного времени трассы';
 ?>
 
-    <div class="alert alert-info">
+    <div class="alert help-alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
         Необходимо указать время лучшего заезда (с учётом штрафов) и класс соревнования.<br>
         <b>Внимание!</b> Класс спортсмена, показавшего лучшее время должен совпадать с классом соревнования. Например,
         лучшее время на этапе
@@ -39,17 +42,19 @@ $this->title = 'Расчёт эталонного времени трассы';
 			)) ?></div>
         <div class="col-sm-2">
             <label>&nbsp;</label><br>
-			<?= Html::submitButton('Рассчитать эталонное время', ['class' => 'btn btn-primary']) ?>
+			<?= Html::submitButton('Рассчитать эталонное время', ['class' => 'btn btn-my-style btn-aquamarine']) ?>
         </div>
     </div>
 <?php $form->end(); ?>
 
 <?php if ($model->referenceTime) { ?>
     <div class="calculate-result">
+        Коеффициент для класса <?= $model->classModel->title ?>: <?= $model->coefficient ?><br>
+        Эталонное время рассчитывается по формуле: время/коэффициент<br>
         <b>Эталонное время для указанных данных:</b> <?= $model->referenceTimeForHuman ?>
 		<?php if ($needTime) { ?>
             <div class="pt-20">
-                Время, необходимое для повышения класса:
+                <b>Время, необходимое для повышения класса:</b>
                 <table class="table">
                     <tr>
                         <td>

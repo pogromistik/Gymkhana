@@ -6,6 +6,7 @@
  * @var \common\models\Stage[]      $stages
  * @var \common\models\Athlete      $athlete
  * @var integer                     $showAll
+ * @var \common\models\Stage[]      $outOfChampStages
  */
 $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $championship->title]);
 ?>
@@ -55,6 +56,17 @@ $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $cham
     <?php } else { ?>
         <a href="/competitions/moscow-scheme" target="_blank"><?= \Yii::t('app', 'Подсчёт баллов ведётся по Московской схеме') ?></a> .
     <?php } ?>
+	<?php if ($outOfChampStages) { ?>
+        <div class="pt-10 pb-10">
+            <b><?= \Yii::t('app', 'Следующие этапы проводились вне зачёта:') ?></b><br>
+            <ul>
+				<?php foreach ($outOfChampStages as $outOfChampStage) { ?>
+                    <li><?= $outOfChampStage->title ?></li>
+				<?php } ?>
+            </ul>
+            <?= \Yii::t('app', 'Баллы за эти этапы не учитываются при подсчёте итоговой суммы. В таблице такие этапы выделены серым цветом.') ?>
+        </div>
+	<?php } ?>
 </div>
 
 <div class="pb-10">
@@ -62,7 +74,7 @@ $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $cham
 		'/export/export',
 		'modelId' => $championship->id,
 		'type'    => \champ\controllers\ExportController::TYPE_CHAMPIONSHIP,
-		'showAll'  => $showAll
+		'showAll' => $showAll
 	]), ['class' => 'btn btn-light']) ?>
 </div>
 <?php if ($showAll) { ?>
@@ -82,9 +94,14 @@ $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $cham
         <th><?= \Yii::t('app', 'Место') ?></th>
         <th><?= \Yii::t('app', 'Класс') ?></th>
         <th><?= \Yii::t('app', 'Спортсмен') ?></th>
-		<?php foreach ($stages as $stage) { ?>
-            <th><?= \yii\helpers\Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?></th>
-		<?php } ?>
+	    <?php foreach ($stages as $stage) {
+		    $class = '';
+		    if ($stage->outOfCompetitions) {
+			    $class = 'gray-column';
+		    }
+		    ?>
+            <th class="<?= $class ?>"><?= \yii\helpers\Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?></th>
+	    <?php } ?>
         <th><?= \Yii::t('app', 'Итого') ?></th>
     </tr>
     </thead>
@@ -113,11 +130,16 @@ $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $cham
                 <br>
 				<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
             </td>
-			<?php foreach ($stages as $stage) { ?>
+			<?php foreach ($stages as $stage) {
+				$class = '';
+				if ($stage->outOfCompetitions) {
+					$class = 'gray-column';
+				}
+				?>
 				<?php if (isset($result['stages'][$stage->id])) { ?>
-                    <td><?= $result['stages'][$stage->id] ?></td>
+                    <td class="<?= $class ?>"><?= $result['stages'][$stage->id] ?></td>
 				<?php } else { ?>
-                    <td>0</td>
+                    <td class="<?= $class ?>">0</td>
 				<?php } ?>
 			<?php } ?>
             <td><?= $result['points'] ?></td>

@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php $form = ActiveForm::begin() ?>
 
-<?= $form->field($country, 'title')->textInput(['placeholder' => 'Укажите город']) ?>
+<?= $form->field($country, 'title')->textInput(['placeholder' => 'Укажите страну']) ?>
 <?= $form->field($country, 'title_en')->textInput(['placeholder' => 'Укажите название на английском языке']) ?>
 <?= $form->field($country, 'title_original')->textInput(['placeholder' => 'Укажите название на оригинальном языке']) ?>
 
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
-<?= Html::submitButton('Добавить город', ['class' => 'btn btn-primary']) ?>
+<?= Html::submitButton('Добавить', ['class' => 'btn btn-my-style btn-green']) ?>
 <?php ActiveForm::end() ?>
 
 

@@ -1,25 +1,26 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $name string */
-/* @var $message string */
-/* @var $exception Exception */
+/* @var $text string */
+/* @var $title string */
+/* @var $statusCode integer */
 
 use yii\helpers\Html;
 
 $this->title = $name;
 ?>
 <div class="site-error">
-
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+    <div class="text pt-20 text-center">
+		<?= $text ?>
     </div>
-
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
+    <div class="errors">
+        <div class="img">
+			<?= Html::img('/img/404.png') ?>
+        </div>
+        <div class="text">
+            <div class="code"><?= $statusCode ?></div>
+            <div class="message"><?= $title ?></div>
+        </div>
+    </div>
 
 </div>

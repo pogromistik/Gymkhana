@@ -80,23 +80,19 @@ use yii\helpers\Url;
                                href="#"><?= \Yii::t('app', 'Соревнования') ?> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="/competitions/schedule"><?= \Yii::t('app', 'Расписание') ?></a></li>
-                                <li class="dropdown dropdown-submenu"><a href="#"
-                                                                         data-toggle="dropdown"><?= \Yii::t('app', 'Результаты') ?></a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">
-												<?= \Yii::t('app', 'Базовые фигуры') ?>
-                                            </a></li>
-                                        <li>
-                                            <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">
-												<?= \Yii::t('app', 'Чемпионаты России и мира') ?>
-                                            </a></li>
-                                        <li>
-                                            <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">
-												<?= \Yii::t('app', 'Региональные соревнования') ?>
-                                            </a></li>
-                                    </ul>
+                                <li><a href="/competitions/schedule"><?= \Yii::t('app', 'Календарь') ?></a></li>
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_FIGURES]) ?>">
+										<?= \Yii::t('app', 'Базовые фигуры') ?>
+                                    </a></li>
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_RUSSIA]) ?>">
+										<?= \Yii::t('app', 'Чемпионаты России и мира') ?>
+                                    </a></li>
+                                <li>
+                                    <a href="<?= Url::to(['/competitions/results', 'by' => \champ\controllers\CompetitionsController::RESULTS_REGIONAL]) ?>">
+										<?= \Yii::t('app', 'Региональные соревнования') ?>
+                                    </a></li>
                                 </li>
                             </ul>
                         </li>

@@ -48,7 +48,7 @@ class FigureTimeSearch extends FigureTime
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-			'sort' => ['defaultOrder' => ['yearId' => SORT_DESC, 'resultTime' => SORT_ASC, 'dateAdded' => SORT_DESC]]
+			'sort' => ['defaultOrder' => ['resultTime' => SORT_ASC, 'dateAdded' => SORT_DESC]]
 		]);
 		
 		$this->load($params);

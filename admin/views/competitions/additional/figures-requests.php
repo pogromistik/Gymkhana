@@ -77,7 +77,7 @@ $this->title = 'Обработанные заявки с результатам�
 					return \yii\helpers\Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => TmpFigureResult::class,
 						'modelId'    => $figureResult->id
-					]);
+					], ['class' => 'dev-logs dev-logs-btn']);
 				}
 			]
 		],
