@@ -162,7 +162,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 							'mode'          => 'inline',
 							'clientOptions' => [
 								'pk'        => $motorcycleInfo->id,
-								'value'     => $motorcycleInfo->model,
+								'value'     => $motorcycleInfo->isCruiser,
 								'placement' => 'right',
 							]
 						]); ?>
