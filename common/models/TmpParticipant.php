@@ -25,6 +25,9 @@ use Yii;
  * @property integer      $athleteId
  * @property integer      $countryId
  * @property string       $email
+ * @property integer      $cbm
+ * @property double       $power
+ * @property integer      $isCruiser
  *
  * @property City         $cityModel
  * @property Athlete      $athlete
@@ -54,9 +57,12 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		return [
 			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
-				'dateAdded', 'dateUpdated', 'email'], 'required'],
-			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
+				'dateAdded', 'dateUpdated', 'email', 'cbm', 'power'], 'required'],
+			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded',
+				'dateUpdated', 'status', 'athleteId', 'countryId', 'isCruiser', 'cbm'], 'integer'],
 			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone', 'email'], 'string', 'max' => 255],
+			[['power'], 'number'],
+			[['isCruiser'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -82,7 +88,10 @@ class TmpParticipant extends BaseActiveRecord
 			'status'          => 'Статус',
 			'athleteId'       => 'Спортсмен',
 			'countryId'       => 'Страна',
-			'email'           => 'Email'
+			'email'           => 'Email',
+			'cbm'             => 'Кубатура',
+			'power'           => 'Мощность',
+			'isCruiser'       => 'Круизёр?'
 		];
 	}
 	
