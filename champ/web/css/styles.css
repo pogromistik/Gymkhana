@@ -1231,3 +1231,12 @@ h2.title small {
 th.gray-column {
     border-bottom: 2px solid #cacaca!important;
 }
+
+.is-active-0 {
+    background: #e2e2e2  !important;
+    color: #828282;
+}
+
+.is-active-0 a {
+    color: #828282!important;
+}

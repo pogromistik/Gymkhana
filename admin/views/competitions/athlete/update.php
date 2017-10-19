@@ -168,12 +168,6 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 						]); ?>
                     </td>
                     <td>
-						<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
-                    </td>
-                    <td>
-						<?= date("d.m.Y, H:i", $motorcycleInfo->dateAdded) ?>
-                    </td>
-                    <td>
 						<?php
 						if ($motorcycleInfo->status) {
 							echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
