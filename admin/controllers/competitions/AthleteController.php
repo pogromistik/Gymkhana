@@ -2,6 +2,7 @@
 
 namespace admin\controllers\competitions;
 
+use admin\models\MotorcycleForm;
 use admin\models\PasswordForm;
 use common\helpers\UserHelper;
 use common\models\AthletesClass;
@@ -9,6 +10,7 @@ use common\models\City;
 use common\models\ClassHistory;
 use common\models\Country;
 use common\models\Motorcycle;
+use common\models\TmpAthlete;
 use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Athlete;
@@ -374,6 +376,7 @@ class AthleteController extends BaseController
 		$this->can('competitions');
 		
 		$athlete = Athlete::findOne($athleteId);
+		
 		/* $class = $athlete->athleteClass;
 		
 		return AthletesClass::find()->select(['id', '"title" as "name"'])->where(['not', 'id', $class->percent])
@@ -381,5 +384,54 @@ class AthleteController extends BaseController
 		
 		return AthletesClass::find()->select(['id', '"title" as "name"'])
 			->where(['not', ['id' => $athlete->athleteClassId]])->asArray()->all();
+	}
+	
+	public function actionFindTmpMotorcycle($id, $motorcycleId)
+	{
+		$this->can('competitions');
+		$athlete = TmpAthlete::findOne($id);
+		$motorcycles = $athlete->getMotorcycles();
+		if (!isset($motorcycles[$motorcycleId])) {
+			return 'Мотоцикл не найден';
+		}
+		$model = MotorcycleForm::getModel($motorcycles[$motorcycleId], $id, $motorcycleId);
+		
+		return $this->renderAjax('_tmp-motorcycle', ['model' => $model]);
+	}
+	
+	public function actionChangeTmpMotorcycle()
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		
+		$result = [
+			'errors'  => false,
+			'success' => false,
+			'data'    => null
+		];
+		$model = new MotorcycleForm();
+		if ($model->load(\Yii::$app->request->post())) {
+			if (!$model->validate()) {
+				$result['errors'] = 'Форма не прошла валидацию';
+				
+				return $result;
+			}
+			if (!$model->save()) {
+				$result['errors'] = 'Возникла ошибка при сохранении. Свяжитесь с разработчиком';
+				
+				return $result;
+			}
+			$result['success'] = true;
+			$result['data'] = '';
+			$result['data'] .= $model->mark . ' ' . $model->model;
+			$result['data'] .= '<br>' . $model->cbm . 'м<sup>3</sup>, ' . $model->power . 'л.с.';
+			$result['data'] .= '<br>' . ((isset($model->isCruiser) && (int)$model->isCruiser === 1)
+					? 'круизёр' : 'не круизёр');
+			$result['data'] .= '<br>';
+			
+			return $result;
+		}
+		$result['errors'] = 'Возникла ошибка при сохранении. Свяжитесь с разработчиком';
+		
+		return $result;
 	}
 }

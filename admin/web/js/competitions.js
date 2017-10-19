@@ -1373,3 +1373,45 @@ $('.ajaxDelete').click(function (e) {
         });
     }
 });
+
+$('.changeTmpMotorcycle').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var id = elem.data('id');
+    var motorcycleId = elem.data('motorcycle-id');
+    $.get('/competitions/athlete/find-tmp-motorcycle', {
+        id: id, motorcycleId: motorcycleId
+    }).done(function (data) {
+        hideBackDrop();
+        $('.modalChangeTmpMotorcycle').html(data);
+        $('#modalChangeTmpMotorcycle').modal('show')
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var id = $('#tmp-id').val();
+    var motorcycleId = $('#tmp-motorcycleId').val();
+    $.ajax({
+        url: "/competitions/athlete/change-tmp-motorcycle",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['success'] == true) {
+                $('#modalChangeTmpMotorcycle').modal('hide');
+                $('#tmp-motorcycle-' + id + '-' + motorcycleId).html(result['data']);
+            } else {
+                alert(result['errors']);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
