@@ -19,11 +19,9 @@ use dosamigos\editable\EditableAction;
 use yii\base\UserException;
 use yii\bootstrap\ActiveForm;
 use yii\db\Expression;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\web\UploadedFile;
 
 class ProfileController extends AccessController
 {
