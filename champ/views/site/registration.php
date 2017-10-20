@@ -98,13 +98,13 @@ use kartik\widgets\DepDrop;
         </div>
         <div class="col-sm-6 col-xs-12">
             <div class="form-group field-tmpathlete-cbm has-success">
-                <label class="control-label" for="tmpathlete-cbm">Марка</label>
+                <label class="control-label" for="tmpathlete-cbm">Объём</label>
 			    <?= Html::input('text', 'cbm[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Объём, м3']) ?>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
             <div class="form-group field-tmpathlete-power has-success">
-                <label class="control-label" for="tmpathlete-power">Модель</label>
+                <label class="control-label" for="tmpathlete-power">Мощность</label>
 			    <?= Html::input('text', 'power[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Мощность, л.с.']) ?>
             </div>
         </div>
