@@ -14,6 +14,7 @@ use yii\bootstrap\Html;
 				<?php $form = ActiveForm::begin(['id' => 'changeTmpMotorcycleForm']); ?>
 				<?= $form->field($model, 'id')->hiddenInput(['id' => 'tmp-id'])->error(false)->label(false) ?>
 				<?= $form->field($model, 'motorcycleId')->hiddenInput(['id' => 'tmp-motorcycleId'])->error(false)->label(false) ?>
+				<?= $form->field($model, 'mode')->hiddenInput(['id' => 'tmp-motorcycleId'])->error(false)->label(false) ?>
 				<?= $form->field($model, 'mark')->textInput() ?>
 				<?= $form->field($model, 'model')->textInput() ?>
 				<?= $form->field($model, 'cbm')->textInput() ?>

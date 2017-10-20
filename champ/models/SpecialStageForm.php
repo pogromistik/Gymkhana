@@ -33,6 +33,8 @@ class SpecialStageForm extends Model
 	public $stageId;
 	public $countryId;
 	public $email;
+	public $power;
+	public $cbm;
 	
 	/**
 	 * @inheritdoc
@@ -41,8 +43,9 @@ class SpecialStageForm extends Model
 	{
 		return [
 			[['lastName', 'firstName', 'motorcycleMark', 'motorcycleModel',
-				'timeHuman', 'videoLink', 'dateHuman', 'stageId', 'countryId', 'email'], 'required'],
-			[['fine', 'stageId', 'cityId', 'countryId'], 'integer'],
+				'timeHuman', 'videoLink', 'dateHuman', 'stageId', 'countryId', 'email', 'power', 'cbm'], 'required'],
+			[['fine', 'stageId', 'cityId', 'countryId', 'cbm'], 'integer'],
+			[['power'], 'number'],
 			[['dateHuman', 'timeHuman', 'videoLink', 'lastName', 'firstName',
 				'motorcycleMark', 'motorcycleModel', 'cityTitle', 'email'], 'string'],
 			['email', 'email']
@@ -68,7 +71,9 @@ class SpecialStageForm extends Model
 			'cityId'          => 'Город',
 			'cityTitle'       => 'Город',
 			'countryId'       => 'Страна',
-			'email'           => 'Email'
+			'email'           => 'Email',
+			'power'           => 'Мощность',
+			'cbm'             => 'Объём'
 		];
 	}
 	

@@ -86,6 +86,8 @@ $formModel->countryId = 1;
 	
 	<?= $form->field($formModel, 'motorcycleMark')->textInput(['placeholder' => 'Марка, напр. kawasaki']) ?>
 	<?= $form->field($formModel, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
+	<?= $form->field($formModel, 'cbm')->textInput(['placeholder' => 'Объём, м3']) ?>
+	<?= $form->field($formModel, 'power')->textInput(['placeholder' => 'Мощность, л.с.']) ?>
 	
 	<?= $form->field($formModel, 'dateHuman')->widget(DatePicker::classname(), [
 		'options'       => ['placeholder' => 'Введите дату заезда'],

@@ -46,7 +46,20 @@ $this->title = 'Регистрации на особые этапы, требу�
                     <br>
                     <small><?= $request->cityId ? $request->city->title : $data['cityTitle'] ?></small>
                     <br>
-                    <small><?= $data['motorcycleMark'] . ' ' . $data['motorcycleModel'] ?></small>
+                    <div>
+                        <div id="tmp-motorcycle-<?= $request->id ?>-1" class="small">
+								<?= $data['motorcycleMark'] . ' ' . $data['motorcycleModel'] ?>,
+								<?= $data['cbm'] ?>м<sup>3</sup>, <?= $data['power'] ?>л.с.
+                                <br>
+								<?php if (isset($data['isCruiser']) && $data['isCruiser'] == 1) { ?>
+                                    <b>круизёр</b>
+								<?php } else { ?>
+                                    <b>не круизёр</b>
+								<?php } ?>
+                        </div>
+                        <a href="#" data-id="<?= $request->id ?>" data-motorcycle-id="<?= 1 ?>" data-mode="stage"
+                           class="changeTmpMotorcycle">изменить</a>
+                    </div>
 					
 					<?php if (!$request->cityId) { ?>
 						<?= Html::beginForm('', 'post', ['id' => 'cityForNewRequest' . $request->id]) ?>
@@ -162,3 +175,5 @@ $this->title = 'Регистрации на особые этапы, требу�
         </div>
     </div>
 </div>
+
+<div class="modalChangeTmpMotorcycle"></div>

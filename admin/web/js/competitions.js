@@ -1476,9 +1476,10 @@ $('.changeTmpMotorcycle').click(function (e) {
     showBackDrop();
     var elem = $(this);
     var id = elem.data('id');
+    var mode = elem.data('mode');
     var motorcycleId = elem.data('motorcycle-id');
     $.get('/competitions/athlete/find-tmp-motorcycle', {
-        id: id, motorcycleId: motorcycleId
+        id: id, motorcycleId: motorcycleId, mode: mode
     }).done(function (data) {
         hideBackDrop();
         $('.modalChangeTmpMotorcycle').html(data);
@@ -1507,7 +1508,6 @@ $(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
             }
         },
         error: function (result) {
-            hideBackDrop();
             alert(result);
         }
     });

@@ -3,6 +3,7 @@
 namespace admin\models;
 
 use common\models\AthletesClass;
+use common\models\RequestForSpecialStage;
 use common\models\Time;
 use common\models\TmpAthlete;
 use yii\base\Model;
@@ -16,6 +17,7 @@ class MotorcycleForm extends Model
 	public $isCruiser;
 	public $id;
 	public $motorcycleId;
+	public $mode;
 	
 	/**
 	 * @inheritdoc
@@ -24,7 +26,7 @@ class MotorcycleForm extends Model
 	{
 		return [
 			
-			[['mark', 'model', 'cbm', 'power', 'id', 'motorcycleId'], 'required'],
+			[['mark', 'model', 'cbm', 'power', 'id', 'motorcycleId', 'mode'], 'required'],
 			[['mark', 'model'], 'string'],
 			[['cbm', 'isCruiser'], 'integer'],
 			[['power'], 'number'],
@@ -42,7 +44,7 @@ class MotorcycleForm extends Model
 		];
 	}
 	
-	public static function getModel(array $motorcycle, $id, $motorcycleId)
+	public static function getModel(array $motorcycle, $id, $motorcycleId, $mode)
 	{
 		$model = new self();
 		$model->mark = $motorcycle['mark'];
@@ -56,11 +58,26 @@ class MotorcycleForm extends Model
 		} else {
 			$model->isCruiser = 0;
 		}
+		$model->mode = $mode;
 		
 		return $model;
 	}
 	
 	public function save()
+	{
+		switch ($this->mode) {
+			case 'athlete':
+				return $this->saveForAthlete();
+				break;
+			case 'stage':
+				return $this->saveForStage();
+				break;
+		}
+		
+		return false;
+	}
+	
+	private function saveForAthlete()
 	{
 		$item = TmpAthlete::findOne($this->id);
 		$motorcycles = $item->getMotorcycles();
@@ -75,6 +92,26 @@ class MotorcycleForm extends Model
 			'isCruiser' => (int)$this->isCruiser
 		];
 		$item->motorcycles = json_encode($motorcycles);
+		if ($item->save()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private function saveForStage()
+	{
+		$item = RequestForSpecialStage::findOne($this->id);
+		$data = $item->getData();
+		if (!$data) {
+			return false;
+		}
+		$data['motorcycleMark'] = $this->mark;
+		$data['motorcycleModel'] = $this->model;
+		$data['cbm'] = $this->cbm;
+		$data['power'] = $this->power;
+		$data['isCruiser'] = (int)$this->isCruiser;
+		$item->data = json_encode($data);
 		if ($item->save()) {
 			return true;
 		}

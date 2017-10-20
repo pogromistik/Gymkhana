@@ -1207,6 +1207,18 @@ class CompetitionsController extends BaseController
 				return $response;
 			}
 			
+			if (!$form->cbm) {
+				$response['error'] = 'Укажите объём мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->power) {
+				$response['error'] = 'Укажите мощность мотоцикла';
+				
+				return $response;
+			}
+			
 			if (!$form->countryId) {
 				$response['error'] = 'Выберите страну';
 				
