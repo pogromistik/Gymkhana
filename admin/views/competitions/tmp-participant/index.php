@@ -204,7 +204,7 @@ $this->title = 'Заявки на участие, требующие одобр�
 								'value'     => $participant->cbm,
 								'placement' => 'right',
 							]
-						]) . 'м<sup>3</sup> ' . Editable::widget([
+						]) . 'см<sup>3</sup> ' . Editable::widget([
 							'name'          => 'power',
 							'value'         => $participant->power,
 							'url'           => 'update',

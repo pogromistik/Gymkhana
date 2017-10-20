@@ -21,7 +21,7 @@ $motorcycle->athleteId = $athlete->id;
 			<?= $form->field($motorcycle, 'model')->textInput(['placeholder' => 'модель, напр. ER6-F'])->label(false) ?>
         </div>
         <div class="col-md-5 col-sm-4">
-			<?= $form->field($motorcycle, 'cbm')->textInput(['placeholder' => 'объём, м3'])->label(false) ?>
+			<?= $form->field($motorcycle, 'cbm')->textInput(['placeholder' => 'объём, см3'])->label(false) ?>
         </div>
         <div class="col-md-5 col-sm-4">
 			<?= $form->field($motorcycle, 'power')->textInput(['placeholder' => 'мощность, л.с.'])->label(false) ?>

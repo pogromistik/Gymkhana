@@ -110,7 +110,7 @@ $this->title = 'Заявки на регистрацию в личном каб�
 					foreach ($motorcycles as $i => $motorcycle) {
 						$motorcyclesTitle .= '<li><div id="tmp-motorcycle-' . $athlete->id . '-' . $i . '">';
 						$motorcyclesTitle .= $motorcycle['mark'] . ' ' . $motorcycle['model'];
-						$motorcyclesTitle .= '<br>' . $motorcycle['cbm'] . 'м<sup>3</sup>, ' . $motorcycle['power'] . 'л.с.';
+						$motorcyclesTitle .= '<br>' . $motorcycle['cbm'] . 'см<sup>3</sup>, ' . $motorcycle['power'] . 'л.с.';
 						$motorcyclesTitle .= '<br>' . ((isset($motorcycle['isCruiser']) && $motorcycle['isCruiser'] === 1)
 								? 'круизёр' : 'не круизёр');
 						$motorcyclesTitle .= '<br>' .

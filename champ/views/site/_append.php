@@ -23,7 +23,7 @@ use yii\bootstrap\Html;
 <div class="col-sm-6 col-xs-12">
     <div class="form-group field-tmpathlete-cbm has-success">
         <label class="control-label" for="tmpathlete-cbm">Объём</label>
-		<?= Html::input('text', 'cbm[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Объём, м3']) ?>
+		<?= Html::input('text', 'cbm[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Объём, см3']) ?>
     </div>
 </div>
 <div class="col-sm-6 col-xs-12">
