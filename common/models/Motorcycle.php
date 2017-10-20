@@ -51,6 +51,7 @@ class Motorcycle extends BaseActiveRecord
 		return [
 			[['athleteId', 'mark', 'model', 'dateAdded', 'dateUpdated'], 'required'],
 			[['athleteId', 'internalClassId', 'dateAdded', 'dateUpdated', 'status', 'isCruiser', 'cbm'], 'integer'],
+			[['cbm', 'power'], 'required', 'when' => function () {return $this->isNewRecord;}],
 			[['mark', 'model'], 'string', 'max' => 255],
 			[['power'], 'number'],
 			[['isCruiser'], 'default', 'value' => 0]
