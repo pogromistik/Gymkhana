@@ -217,16 +217,23 @@ $this->title = 'Заявки на участие, требующие одобр�
 							]
 						]) . 'л.с.';
 					$result .= '<br>';
-					$result .= Editable::widget([
+					$result .= 'круизёр? ' . Editable::widget([
 						'name'          => 'isCruiser',
-						'value'         => $participant->isCruiser,
+						'value'         => $participant->isCruiser ? 'Да' : 'Нет',
 						'url'           => 'update',
-						'type'          => 'text',
+						'type'          => 'select',
 						'mode'          => 'inline',
 						'clientOptions' => [
 							'pk'        => $participant->id,
 							'value'     => $participant->isCruiser,
 							'placement' => 'right',
+							'select'    => [
+								'width' => '124px'
+							],
+							'source'    =>  [
+								2 => 'Нет',
+								1 => 'Да'
+							],
 						]
 					]);
 					

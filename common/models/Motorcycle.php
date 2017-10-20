@@ -85,6 +85,13 @@ class Motorcycle extends BaseActiveRecord
 		}
 		$this->model = trim($this->model);
 		$this->mark = trim($this->mark);
+		$this->isCruiser = (int)$this->isCruiser;
+		if (!$this->isNewRecord) {
+			$this->isCruiser = (int)$this->isCruiser;
+			if ($this->isCruiser !== 1) {
+				$this->isCruiser = 0;
+			}
+		}
 		$this->dateUpdated = time();
 		
 		return parent::beforeValidate();

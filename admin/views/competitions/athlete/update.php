@@ -156,14 +156,21 @@ $this->params['breadcrumbs'][] = 'Редактирование';
                     <td>
 						<?= Editable::widget([
 							'name'          => 'isCruiser',
-							'value'         => $motorcycleInfo->isCruiser,
+							'value'         => $motorcycleInfo->isCruiser ? 'Да' : 'Нет',
 							'url'           => 'update-motorcycle',
-							'type'          => 'text',
+							'type'          => 'select',
 							'mode'          => 'inline',
 							'clientOptions' => [
 								'pk'        => $motorcycleInfo->id,
 								'value'     => $motorcycleInfo->isCruiser,
 								'placement' => 'right',
+								'select'    => [
+									'width' => '124px'
+								],
+								'source'    =>  [
+									2 => 'Нет',
+									1 => 'Да'
+								],
 							]
 						]); ?>
                     </td>

@@ -114,6 +114,12 @@ class TmpParticipant extends BaseActiveRecord
 		if ($this->cityId) {
 			$this->city = $this->cityModel->title;
 		}
+		if (!$this->isNewRecord) {
+			$this->isCruiser = (int)$this->isCruiser;
+			if ($this->isCruiser !== 1) {
+				$this->isCruiser = 0;
+			}
+		}
 		
 		return parent::beforeValidate();
 	}
