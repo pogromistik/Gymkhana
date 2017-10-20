@@ -203,75 +203,77 @@ use karpoff\icrop\CropImageUpload;
         </div>
 		<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
 		<?php if ($motorcycles = $athlete->motorcycles) { ?>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Марка и модель</th>
-                    <th>Объём</th>
-                    <th>Мощность</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-				<?php foreach ($motorcycles as $motorcycleInfo) { ?>
-                    <tr class="is-active-<?= $motorcycleInfo->status ?>">
-                        <td>
-							<?= $motorcycleInfo->getFullTitle() ?>
-							<?php if ($motorcycleInfo->isCruiser) { ?>
-                                <br>
-                                <small><b>Круизёр</b></small>
-							<?php } ?>
-                        </td>
-                        <td class="show-pk">
-							<?= Editable::widget([
-								'name'          => 'cbm',
-								'value'         => $motorcycleInfo->cbm,
-								'url'           => 'update-motorcycle',
-								'type'          => 'text',
-								'mode'          => 'inline',
-								'clientOptions' => [
-									'pk'        => $motorcycleInfo->id,
-									'value'     => $motorcycleInfo->cbm,
-									'placement' => 'right',
-								]
-							]); ?>
-                        </td>
-                        <td class="show-pk">
-							<?= Editable::widget([
-								'name'          => 'power',
-								'value'         => $motorcycleInfo->power,
-								'url'           => 'update-motorcycle',
-								'type'          => 'text',
-								'mode'          => 'inline',
-								'clientOptions' => [
-									'pk'        => $motorcycleInfo->id,
-									'value'     => $motorcycleInfo->power,
-									'placement' => 'right',
-								]
-							]); ?>
-                        </td>
-                        <td>
-							<?php
-							if ($motorcycleInfo->status) {
-								echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-									'class'   => 'btn btn-danger changeMotorcycleStatus',
-									'data-id' => $motorcycleInfo->id,
-									'title'   => 'Удалить'
-								]);
-							} else {
-								echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status',
-									'id' => $motorcycleInfo->id], [
-									'class'   => 'btn btn-warning changeMotorcycleStatus',
-									'data-id' => $motorcycleInfo->id,
-									'title'   => 'Вернуть в работу'
-								]);
-							}
-							?>
-                        </td>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Марка и модель</th>
+                        <th>Объём</th>
+                        <th>Мощность</th>
+                        <th></th>
                     </tr>
-				<?php } ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+		            <?php foreach ($motorcycles as $motorcycleInfo) { ?>
+                        <tr class="is-active-<?= $motorcycleInfo->status ?>">
+                            <td>
+					            <?= $motorcycleInfo->getFullTitle() ?>
+					            <?php if ($motorcycleInfo->isCruiser) { ?>
+                                    <br>
+                                    <small><b>Круизёр</b></small>
+					            <?php } ?>
+                            </td>
+                            <td>
+					            <?= Editable::widget([
+						            'name'          => 'cbm',
+						            'value'         => $motorcycleInfo->cbm,
+						            'url'           => 'update-motorcycle',
+						            'type'          => 'text',
+						            'mode'          => 'inline',
+						            'clientOptions' => [
+							            'pk'        => $motorcycleInfo->id,
+							            'value'     => $motorcycleInfo->cbm,
+							            'placement' => 'right',
+						            ]
+					            ]); ?>
+                            </td>
+                            <td>
+					            <?= Editable::widget([
+						            'name'          => 'power',
+						            'value'         => $motorcycleInfo->power,
+						            'url'           => 'update-motorcycle',
+						            'type'          => 'text',
+						            'mode'          => 'inline',
+						            'clientOptions' => [
+							            'pk'        => $motorcycleInfo->id,
+							            'value'     => $motorcycleInfo->power,
+							            'placement' => 'right',
+						            ]
+					            ]); ?>
+                            </td>
+                            <td>
+					            <?php
+					            if ($motorcycleInfo->status) {
+						            echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
+							            'class'   => 'btn btn-danger changeMotorcycleStatus',
+							            'data-id' => $motorcycleInfo->id,
+							            'title'   => 'Удалить'
+						            ]);
+					            } else {
+						            echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status',
+							            'id' => $motorcycleInfo->id], [
+							            'class'   => 'btn btn-warning changeMotorcycleStatus',
+							            'data-id' => $motorcycleInfo->id,
+							            'title'   => 'Вернуть в работу'
+						            ]);
+					            }
+					            ?>
+                            </td>
+                        </tr>
+		            <?php } ?>
+                    </tbody>
+                </table>
+            </div>
 		<?php } ?>
     </div>
 </div>
