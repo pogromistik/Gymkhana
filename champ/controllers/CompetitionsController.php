@@ -990,11 +990,11 @@ class CompetitionsController extends BaseController
 	{
 		$stage = SpecialStage::findOne($id);
 		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
+			throw new NotFoundHttpException(\Yii::t('app', 'Этап не найден'));
 		}
 		$this->pageTitle = $stage->title;
 		$this->description = $stage->title;
-		$this->keywords = 'Этапы соревнования, ' . $stage->title;
+		$this->keywords = \Yii::t('app', 'Этапы соревнования') . ', ' . $stage->title;
 		$this->layout = 'full-content';
 		
 		if ($regionIds) {
@@ -1071,9 +1071,9 @@ class CompetitionsController extends BaseController
 	{
 		$participant = RequestForSpecialStage::findOne($id);
 		if (!$id) {
-			throw new NotFoundHttpException('Участник не найден');
+			throw new NotFoundHttpException(\Yii::t('app', 'Участник не найден'));
 		}
-		$this->pageTitle = 'Все результаты участника: ' . $participant->athlete->getFullName();
+		$this->pageTitle = \Yii::t('app', 'Все результаты участника') . ': ' . $participant->athlete->getFullName();
 		$requests = RequestForSpecialStage::find()->where(['athleteId' => $participant->athleteId, 'stageId' => $participant->stageId])
 			->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
 			->orderBy(['date' => SORT_ASC])->all();
@@ -1096,43 +1096,43 @@ class CompetitionsController extends BaseController
 		$form = new RequestForSpecialStage();
 		if ($form->load(\Yii::$app->request->post())) {
 			if (!$form->athleteId || !$form->stageId) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 				
 				return $response;
 			}
 			$stage = SpecialStage::findOne($form->stageId);
 			if (!$stage) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 				
 				return $response;
 			}
 			if (!$stage->dateStart || $stage->dateStart > time()) {
-				$response['error'] = 'Приём результатов ещё не начался';
+				$response['error'] = \Yii::t('app', 'Приём результатов ещё не начался');
 				
 				return $response;
 			}
 			if ($stage->dateEnd && $stage->dateEnd < time()) {
-				$response['error'] = 'Приём заявок завершен';
+				$response['error'] = \Yii::t('app', 'Приём заявок завершен');
 				
 				return $response;
 			}
 			if (!$form->motorcycle) {
-				$response['error'] = 'Необходимо выбрать мотоцикл';
+				$response['error'] = \Yii::t('app', 'Необходимо выбрать мотоцикл');
 				
 				return $response;
 			}
 			if (!$form->dateHuman) {
-				$response['error'] = 'Необходимо указать время';
+				$response['error'] = \Yii::t('app', 'Необходимо указать дату заезда');
 				
 				return $response;
 			}
 			if (!$form->timeHuman) {
-				$response['error'] = 'Укажите время';
+				$response['error'] = \Yii::t('app', 'Укажите время');
 				
 				return $response;
 			}
 			if (!$form->videoLink) {
-				$response['error'] = 'Ссылка на видео обязательна';
+				$response['error'] = \Yii::t('app', 'Ссылка на видео обязательна');
 				
 				return $response;
 			}
@@ -1140,7 +1140,7 @@ class CompetitionsController extends BaseController
 				$form->fine = 0;
 			}
 			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
-				$response['error'] = 'Ссылка на видео должна начинаться с http: или https:';
+				$response['error'] = \Yii::t('app', 'Ссылка на видео должна начинаться с http: или https:');
 				
 				return $response;
 			}
@@ -1154,23 +1154,22 @@ class CompetitionsController extends BaseController
 				->andWhere(['time' => $form->time, 'fine' => $form->fine])
 				->one();
 			if ($old) {
-				$response['error'] = 'Для данного этапа у вас уже есть такой результат';
+				$response['error'] = \Yii::t('app', 'Для данного этапа у вас уже есть такой результат');
 				
 				return $response;
 			}
 			if (!$form->save(false)) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 				
 				return $response;
 			}
 			
-			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
-				'В любом случае, Вам будет отправлено соответствующее уведомление.';
+			$response['data'] = \Yii::t('app', 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. В любом случае, Вам будет отправлено соответствующее уведомление.');
 			
 			return $response;
 		}
 		
-		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+		$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 		
 		return $response;
 	}
@@ -1193,72 +1192,72 @@ class CompetitionsController extends BaseController
 			
 			$stage = SpecialStage::findOne($form->stageId);
 			if (!$stage) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 				
 				return $response;
 			}
 			
 			if (!$stage->dateStart || $stage->dateStart > time()) {
-				$response['error'] = 'Приём результатов ещё не начался';
+				$response['error'] = \Yii::t('app', 'Приём результатов ещё не начался');
 				
 				return $response;
 			}
 			if ($stage->dateEnd && $stage->dateEnd < time()) {
-				$response['error'] = 'Приём заявок завершен';
+				$response['error'] = \Yii::t('app', 'Приём заявок завершен');
 				
 				return $response;
 			}
 			
 			if (!$form->lastName) {
-				$response['error'] = 'Укажите фамилию';
+				$response['error'] = \Yii::t('app', 'Укажите фамилию');
 				
 				return $response;
 			}
 			
 			if (!$form->firstName) {
-				$response['error'] = 'Укажите имя';
+				$response['error'] = \Yii::t('app', 'Укажите имя');
 				
 				return $response;
 			}
 			
 			if (!$form->motorcycleMark) {
-				$response['error'] = 'Укажите марку мотоцикла';
+				$response['error'] = \Yii::t('app', 'Укажите марку мотоцикла');
 				
 				return $response;
 			}
 			
 			if (!$form->motorcycleMark) {
-				$response['error'] = 'Укажите модель мотоцикла';
+				$response['error'] = \Yii::t('app', 'Укажите модель мотоцикла');
 				
 				return $response;
 			}
 			
 			if (!$form->cbm) {
-				$response['error'] = 'Укажите объём мотоцикла';
+				$response['error'] = \Yii::t('app', 'Укажите объём мотоцикла');
 				
 				return $response;
 			}
 			
 			if (!$form->power) {
-				$response['error'] = 'Укажите мощность мотоцикла';
+				$response['error'] = \Yii::t('app', 'Укажите мощность мотоцикла');
 				
 				return $response;
 			}
 			
 			if (!$form->countryId) {
-				$response['error'] = 'Выберите страну';
+				$response['error'] = \Yii::t('app', 'Выберите страну');
 				
 				return $response;
 			}
 			
 			if (!$form->cityTitle && !$form->cityId) {
-				$response['error'] = 'Укажите город';
+				$response['error'] = \Yii::t('app', 'Укажите город');
 				
 				return $response;
 			} elseif ($form->cityId) {
 				$city = City::findOne($form->cityId);
 				if (!$city) {
-					$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 					
 					return $response;
 				}
@@ -1271,17 +1270,17 @@ class CompetitionsController extends BaseController
 			}
 			
 			if (!$form->dateHuman) {
-				$response['error'] = 'Необходимо указать время';
+				$response['error'] = \Yii::t('app', 'Необходимо указать дату заезда');
 				
 				return $response;
 			}
 			if (!$form->timeHuman) {
-				$response['error'] = 'Укажите время';
+				$response['error'] = \Yii::t('app', 'Укажите время');
 				
 				return $response;
 			}
 			if (!$form->videoLink) {
-				$response['error'] = 'Ссылка на видео обязательна';
+				$response['error'] = \Yii::t('app', 'Ссылка на видео обязательна');
 				
 				return $response;
 			}
@@ -1289,29 +1288,30 @@ class CompetitionsController extends BaseController
 				$form->fine = 0;
 			}
 			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
-				$response['error'] = 'Ссылка на видео должна начинаться с http: или https:';
+				$response['error'] = \Yii::t('app', 'Ссылка на видео должна начинаться с http: или https:');
 				
 				return $response;
 			}
 			if (!$form->validate()) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 				
 				return $response;
 			}
 			
-			if (!$form->save(false)) {
-				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+			if (!$form->save()) {
+				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 				
 				return $response;
 			}
 			
-			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
-				'В случае отклонения результата, вам будет отправлено письмо на email ' . $form->email . '.';
+			$response['data'] = \Yii::t('app', 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. В случае отклонения результата, вам будет отправлено письмо на email {email}.', [
+				'email' => $form->email
+			]);
 			
 			return $response;
 		}
 		
-		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+		$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 		
 		return $response;
 	}
@@ -1319,10 +1319,10 @@ class CompetitionsController extends BaseController
 	public function actionSpecialStagesHistory()
 	{
 		if (\Yii::$app->user->isGuest) {
-			return 'Сначала войдите в личный кабинет';
+			return \Yii::t('app', 'Сначала войдите в личный кабинет');
 		}
 		
-		$this->pageTitle = 'История присланных вами результатов на этапы';
+		$this->pageTitle = \Yii::t('app', 'История присланных вами результатов на этапы');
 		
 		$searchModel = new RequestForSpecialStageSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -1339,10 +1339,10 @@ class CompetitionsController extends BaseController
 	{
 		$championship = SpecialChamp::findOne($championshipId);
 		if (!$championship) {
-			throw new NotFoundHttpException('Чемпионат не найден');
+			throw new NotFoundHttpException(\Yii::t('app', 'Чемпионат не найден'));
 		}
-		$this->pageTitle = $championship->title . ': итоги';
-		$this->description = 'Итоги соревнования: ' . $championship->title;
+		$this->pageTitle = $championship->title . ': ' . \Yii::t('app', 'итоги');
+		$this->description = \Yii::t('app', 'Итоги соревнования') . ': ' . $championship->title;
 		
 		$stages = $championship->stages;
 		$results = $championship->getResults();

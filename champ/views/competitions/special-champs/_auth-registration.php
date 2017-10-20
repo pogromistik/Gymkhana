@@ -32,7 +32,7 @@ $formModel->dateHuman = date("d.m.Y");
 	})) ?>
 	
 	<?= $form->field($formModel, 'dateHuman')->widget(DatePicker::classname(), [
-		'options'       => ['placeholder' => 'Введите дату заезда'],
+		'options'       => ['placeholder' => \Yii::t('app', 'Введите дату заезда')],
 		'removeButton'  => false,
 		'language'      => 'ru',
 		'pluginOptions' => [

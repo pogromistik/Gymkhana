@@ -12,10 +12,10 @@ if (!\Yii::$app->user->isGuest) {
     <table class="table results results-with-img">
         <thead>
         <tr>
-            <th>Место</th>
-            <th>Участник</th>
-            <th>Время</th>
-            <th>Рейтинг</th>
+            <th><?= \Yii::t('app', 'Место') ?></th>
+            <th><?= \Yii::t('app', 'Участник') ?></th>
+            <th><?= \Yii::t('app', 'Время') ?></th>
+            <th><?= \Yii::t('app', 'Рейтинг') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -33,7 +33,7 @@ if (!\Yii::$app->user->isGuest) {
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                     <br>
-					<?= $athlete->city->title ?>
+					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                     <br>
 					<?= $participant->motorcycle->getFullTitle() ?>
                     <br>

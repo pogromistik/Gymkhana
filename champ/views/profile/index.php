@@ -212,7 +212,7 @@ use karpoff\icrop\CropImageUpload;
 					            <?= $motorcycleInfo->getFullTitle() ?>
 					            <?php if ($motorcycleInfo->isCruiser) { ?>
                                     <br>
-                                    <small><b>Круизёр</b></small>
+                                    <small><b><?= \Yii::t('app', 'Круизёр') ?></b></small>
 					            <?php } ?>
                             </td>
                             <td>
@@ -249,14 +249,14 @@ use karpoff\icrop\CropImageUpload;
 						            echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
 							            'class'   => 'btn btn-danger changeMotorcycleStatus',
 							            'data-id' => $motorcycleInfo->id,
-							            'title'   => 'Удалить'
+							            'title'   => \Yii::t('app', 'Удалить')
 						            ]);
 					            } else {
 						            echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status',
 							            'id' => $motorcycleInfo->id], [
 							            'class'   => 'btn btn-warning changeMotorcycleStatus',
 							            'data-id' => $motorcycleInfo->id,
-							            'title'   => 'Вернуть в работу'
+							            'title'   => \Yii::t('app', 'Вернуть')
 						            ]);
 					            }
 					            ?>

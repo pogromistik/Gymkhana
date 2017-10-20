@@ -29,7 +29,7 @@ use common\models\RequestForSpecialStage;
 				'attribute' => 'videoLink',
 				'format'    => 'raw',
 				'value'     => function (RequestForSpecialStage $item) {
-					return Html::a('посмотреть', $item->videoLink, ['target' => '_blank']);
+					return Html::a(\Yii::t('app', 'посмотреть'), $item->videoLink, ['target' => '_blank']);
 				}
 			],
 			[

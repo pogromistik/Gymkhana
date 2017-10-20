@@ -37,7 +37,7 @@ if (!\Yii::$app->user->isGuest) {
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                     <br>
-					<?= $athlete->city->title ?>
+					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                 </td>
                 <td><?= $participant->motorcycle->getFullTitle() ?></td>
                 <td><?= \yii\helpers\Html::a($participant->timeHuman, ['athlete-progress', 'id' => $participant->id]) ?></td>

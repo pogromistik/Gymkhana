@@ -10,7 +10,7 @@ use yii\helpers\Html;
 
 <div class="row">
     <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
-        <b><?= $championship->year->year ?> год</b>
+        <b><?= \Yii::t('app', '{year} год', ['year' => $championship->year->year]) ?></b>
         <span class="label label-info"><?= \common\models\SpecialChamp::$statusesTitle[$championship->status] ?></span>
 		<?php if ($championship->description) { ?>
             <div class="pt-20">
@@ -19,7 +19,7 @@ use yii\helpers\Html;
 		<?php } ?>
 		
 		<div class="pt-10 pb-10">
-			<?= \yii\helpers\Html::a('Вернуться к списку чемпионатов',
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'Вернуться к списку чемпионатов'),
 				['/competitions/results', 'by' => 'russia'], ['class' => 'btn btn-dark']) ?>
         </div>
     </div>
@@ -36,7 +36,7 @@ use yii\helpers\Html;
                     </li>
 				<?php } ?>
                 <li>
-					<?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $championship->id]) ?>
+					<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/special-champ-result', 'championshipId' => $championship->id]) ?>
                 </li>
             </ul>
 			<?php

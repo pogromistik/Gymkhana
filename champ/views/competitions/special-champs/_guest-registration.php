@@ -20,20 +20,20 @@ $formModel->countryId = 1;
 ?>
 
 <div class="registration-form">
-	<h3>Заполните все поля</h3>
+    <h3><?= \Yii::t('app', 'Заполните все поля') ?></h3>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'specialStageForGuest']]); ?>
 	
 	<?= $form->field($formModel, 'stageId')->hiddenInput()->error(false)->label(false) ?>
 	
-	<?= $form->field($formModel, 'lastName')->textInput(['placeholder' => 'Фамилия']) ?>
-	<?= $form->field($formModel, 'firstName')->textInput(['placeholder' => 'Имя']) ?>
+	<?= $form->field($formModel, 'lastName')->textInput(['placeholder' => \Yii::t('app', 'Фамилия')]) ?>
+	<?= $form->field($formModel, 'firstName')->textInput(['placeholder' => \Yii::t('app', 'Имя')]) ?>
 	<?= $form->field($formModel, 'email')->textInput(['placeholder' => 'Email']) ?>
 	
 	<?= $form->field($formModel, 'countryId')->widget(Select2::classname(), [
 		'data'    => \common\models\Country::getAll(true),
 		'options' => [
-			'placeholder' => 'Выберите страну...',
+			'placeholder' => \Yii::t('app', 'Выберите страну') . '...',
 			'id'          => 'country-id',
 		],
 	]); ?>
@@ -44,12 +44,12 @@ $formModel->countryId = 1;
 		->orderBy(['title' => SORT_ASC])->limit(50)->all(),
 		'id', 'title');
 	?>
-	
-	<div class="registration-city">
-		<div id="city-list">
+
+    <div class="registration-city">
+        <div id="city-list">
 			<?= $form->field($formModel, 'cityId')->widget(DepDrop::classname(), [
 				'data'           => $formModel,
-				'options'        => ['placeholder' => 'Выберите город...'],
+				'options'        => ['placeholder' => \Yii::t('app', 'Выберите город') . '...'],
 				'type'           => DepDrop::TYPE_SELECT2,
 				'select2Options' => [
 					'pluginOptions' => [
@@ -75,22 +75,22 @@ $formModel->countryId = 1;
 					'placeholder' => 'Выберите город...',
 				]
 			]); ?>
-		</div>
-		<div class="small">
-			<a href="#" class="list" id="cityNotFound">Нажмите, если вашего города нет в списке</a>
-		</div>
-		<div id="city-text" class="inactive">
-			<?= $form->field($formModel, 'cityTitle')->textInput(['placeholder' => 'Введите Ваш город и регион', 'id' => 'city-text-input']) ?>
-		</div>
-	</div>
+        </div>
+        <div class="small">
+            <a href="#" class="list" id="cityNotFound"><?= \Yii::t('app', 'Нажмите, если вашего города нет в списке') ?></a>
+        </div>
+        <div id="city-text" class="inactive">
+			<?= $form->field($formModel, 'cityTitle')->textInput(['placeholder' => \Yii::t('app', 'Введите Ваш город и регион'), 'id' => 'city-text-input']) ?>
+        </div>
+    </div>
 	
-	<?= $form->field($formModel, 'motorcycleMark')->textInput(['placeholder' => 'Марка, напр. kawasaki']) ?>
-	<?= $form->field($formModel, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
-	<?= $form->field($formModel, 'cbm')->textInput(['placeholder' => 'Объём, м3']) ?>
-	<?= $form->field($formModel, 'power')->textInput(['placeholder' => 'Мощность, л.с.']) ?>
+	<?= $form->field($formModel, 'motorcycleMark')->textInput(['placeholder' => \Yii::t('app', 'Марка, напр. kawasaki')]) ?>
+	<?= $form->field($formModel, 'motorcycleModel')->textInput(['placeholder' => \Yii::t('app', 'Модель, напр. ER6-F')]) ?>
+	<?= $form->field($formModel, 'cbm')->textInput(['placeholder' => \Yii::t('app', 'Объём, м3')]) ?>
+	<?= $form->field($formModel, 'power')->textInput(['placeholder' => \Yii::t('app', 'Мощность, л.с.')]) ?>
 	
 	<?= $form->field($formModel, 'dateHuman')->widget(DatePicker::classname(), [
-		'options'       => ['placeholder' => 'Введите дату заезда'],
+		'options'       => ['placeholder' => \Yii::t('app', 'Введите дату заезда')],
 		'removeButton'  => false,
 		'language'      => 'ru',
 		'pluginOptions' => [
@@ -111,13 +111,13 @@ $formModel->countryId = 1;
 	<?= $form->field($formModel, 'fine')->textInput() ?>
 	
 	<?= $form->field($formModel, 'videoLink')->textInput() ?>
-	
-	<div class="alert alert-danger" style="display: none"></div>
-	<div class="alert alert-success" style="display: none"></div>
-	
-	<div class="form-group">
-		<?= Html::submitButton('Отправить', ['class' => 'btn btn-dark']) ?>
-	</div>
+
+    <div class="alert alert-danger" style="display: none"></div>
+    <div class="alert alert-success" style="display: none"></div>
+
+    <div class="form-group">
+		<?= Html::submitButton(\Yii::t('app', 'Отправить'), ['class' => 'btn btn-dark']) ?>
+    </div>
 	
 	<?php $form->end(); ?>
 </div>

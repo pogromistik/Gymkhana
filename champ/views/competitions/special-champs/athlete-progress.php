@@ -23,4 +23,4 @@
     </table>
 </div>
 
-<?= \yii\helpers\Html::a('Вернуться к этапу', ['/competitions/special-stage', 'id' => $stage->id], ['class' => 'btn btn-dark']) ?>
+<?= \yii\helpers\Html::a(\Yii::t('app', 'Вернуться к этапу'), ['/competitions/special-stage', 'id' => $stage->id], ['class' => 'btn btn-dark']) ?>
