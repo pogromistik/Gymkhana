@@ -20,6 +20,16 @@ use yii\helpers\ArrayHelper;
 	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
 		'preset' => 'full', 'clientOptions' => ['height' => 150]
 	]) ?>
+
+    <a href="#" class="btn btn-my-style btn-gray small" id="enInfo">Добавить информацию на английском</a>
+    <div class="en_info">
+        <small><b>Внимание! Скрытие этого блока не удаляет введённую информацию, т.е. если вы заполните поля, потом
+                скроете блок и нажмёте "сохранить" - информация сохранится</b></small>
+		<?= $form->field($model, 'title_en')->textInput(['maxlength' => true]) ?>
+		<?= $form->field($model, 'descr_en')->widget(CKEditor::className(), [
+			'preset' => 'full', 'clientOptions' => ['height' => 150]
+		]) ?>
+    </div>
 	
 	<?= $form->field($model, 'yearId')->dropDownList(
 		ArrayHelper::map(Year::find()->orderBy(['year' => SORT_DESC])->all(), 'id', 'year')) ?>

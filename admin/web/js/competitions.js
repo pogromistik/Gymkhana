@@ -1512,3 +1512,8 @@ $(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
         }
     });
 });
+
+$('#enInfo').click(function (e) {
+    e.preventDefault();
+    $('.en_info').slideToggle();
+});
