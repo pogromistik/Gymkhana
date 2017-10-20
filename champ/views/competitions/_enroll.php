@@ -95,11 +95,13 @@ $championship = $stage->championship;
                 </div>
             </div>
 			<?= $form->field($participant, 'phone')->textInput(['placeholder' => 'Номер телефона']) ?>
-	        <?= $form->field($participant, 'email')->textInput(['placeholder' => 'Email']) ?>
+			<?= $form->field($participant, 'email')->textInput(['placeholder' => 'Email']) ?>
 
             <h4 class="text-center">Укажите мотоцикл, на котором будете участвовать</h4>
 			<?= $form->field($participant, 'motorcycleMark')->textInput(['placeholder' => 'Марка, напр. kawasaki']) ?>
 			<?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
+			<?= $form->field($participant, 'cbm')->textInput(['placeholder' => 'Объём, м3']) ?>
+			<?= $form->field($participant, 'power')->textInput(['placeholder' => 'Мощность, л.с.']) ?>
 
             <div class="alerts"></div>
 

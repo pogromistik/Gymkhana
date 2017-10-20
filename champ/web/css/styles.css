@@ -1266,3 +1266,12 @@ th.gray-column {
 .my-row {
     border: 2px solid #56a025;
 }
+
+.is-active-0 {
+    background: #e2e2e2  !important;
+    color: #828282;
+}
+
+.is-active-0 a {
+    color: #828282!important;
+}

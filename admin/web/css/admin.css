@@ -370,6 +370,11 @@ small.very {
     background: #dff0d8 !important;
 }
 
+.is-active-0 {
+    background: #e2e2e2  !important;
+    color: #828282;
+}
+
 .calculate-result {
     background: #e4e4e4;
     padding: 10px 20px;

@@ -19,6 +19,10 @@ $this->title = 'Заявки на участие, требующие одобр�
     города.
 </div>
 
+<div class="alert required-alert-info">
+    <b>ВНИМАНИЕ!</b> Не забывайте проверять информацию о мотоциклах в заявке - объём, мощность, параметр "круизёр".
+</div>
+
 <div class="alert help-alert alert-info">
     <div class="text-right">
         <span class="fa fa-remove closeHintBtn"></span>
@@ -188,6 +192,50 @@ $this->title = 'Заявки на участие, требующие одобр�
 								'placement' => 'right',
 							]
 						]);
+					$result .= '<br>';
+					$result .= Editable::widget([
+							'name'          => 'cbm',
+							'value'         => $participant->cbm,
+							'url'           => 'update',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $participant->id,
+								'value'     => $participant->cbm,
+								'placement' => 'right',
+							]
+						]) . 'м<sup>3</sup> ' . Editable::widget([
+							'name'          => 'power',
+							'value'         => $participant->power,
+							'url'           => 'update',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $participant->id,
+								'value'     => $participant->power,
+								'placement' => 'right',
+							]
+						]) . 'л.с.';
+					$result .= '<br>';
+					$result .= 'круизёр? ' . Editable::widget([
+						'name'          => 'isCruiser',
+						'value'         => $participant->isCruiser ? 'Да' : 'Нет',
+						'url'           => 'update',
+						'type'          => 'select',
+						'mode'          => 'inline',
+						'clientOptions' => [
+							'pk'        => $participant->id,
+							'value'     => $participant->isCruiser,
+							'placement' => 'right',
+							'select'    => [
+								'width' => '124px'
+							],
+							'source'    =>  [
+								2 => 'Нет',
+								1 => 'Да'
+							],
+						]
+					]);
 					
 					return $result;
 				}

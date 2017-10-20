@@ -1,4 +1,5 @@
 <?php
+use dosamigos\editable\Editable;
 use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
 use yii\bootstrap\Html;
@@ -29,16 +30,16 @@ use karpoff\icrop\CropImageUpload;
 		<?= $form->field($password, 'pass_repeat')->passwordInput()->label('Подтвердите пароль') ?>
 		<?= Html::submitButton('изменить', ['class' => 'btn btn-success']) ?>
 		<?php $form->end() ?>
-        
+
         <div class="hr-motorcycle hr-motorcycle-8"></div>
-        
+
         <h3>Изменение фотографии</h3>
         <div class="help-for-athlete">
             <small>Размер загружаемого изображения не должен превышать 300КБ. Допустимые форматы: png, jpg.
                 Необходимые пропорции: 3x4 (300x400 pixels)
             </small>
         </div>
-		<div class="pt-10">
+        <div class="pt-10">
 			<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 			<?php if ($athlete->photo) { ?>
                 <div class="row">
@@ -80,7 +81,7 @@ use karpoff\icrop\CropImageUpload;
         </div>
 
         <div class="hr-motorcycle hr-motorcycle-6"></div>
-        
+
         <h3><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id], ['target' => '_blank']) ?></h3>
         <div class="athlete-form">
 			<?php $form = ActiveForm::begin(['enableAjaxValidation' => true, 'options' => ['id' => 'updateAthlete', 'enctype' => 'multipart/form-data']]); ?>
@@ -183,7 +184,7 @@ use karpoff\icrop\CropImageUpload;
         </div>
 
         <div class="hr-motorcycle hr-motorcycle-7"></div>
-        
+
         <h3>Мотоциклы</h3>
         <div class="help-for-athlete">
             <small>
@@ -202,47 +203,77 @@ use karpoff\icrop\CropImageUpload;
         </div>
 		<?= $this->render('_motorcycle-form', ['athlete' => $athlete]) ?>
 		<?php if ($motorcycles = $athlete->motorcycles) { ?>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Марка и модель</th>
-                    <th class="show-pk">Статус</th>
-                    <th class="show-pk">Добавлен</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-				<?php foreach ($motorcycles as $motorcycleInfo) { ?>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td><?= $motorcycleInfo->mark ?> <?= $motorcycleInfo->model ?></td>
-                        <td class="show-pk">
-							<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
-                        </td>
-                        <td class="show-pk">
-							<?= date("d.m.Y, H:i", $motorcycleInfo->dateAdded) ?>
-                        </td>
-                        <td>
-							<?php
-							if ($motorcycleInfo->status) {
-								echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-									'class'   => 'btn btn-danger changeMotorcycleStatus',
-									'data-id' => $motorcycleInfo->id,
-									'title'   => 'Удалить'
-								]);
-							} else {
-								echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status',
-									'id' => $motorcycleInfo->id], [
-									'class'   => 'btn btn-warning changeMotorcycleStatus',
-									'data-id' => $motorcycleInfo->id,
-									'title'   => 'Вернуть в работу'
-								]);
-							}
-							?>
-                        </td>
+                        <th>Марка и модель</th>
+                        <th>Объём</th>
+                        <th>Мощность</th>
+                        <th></th>
                     </tr>
-				<?php } ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+		            <?php foreach ($motorcycles as $motorcycleInfo) { ?>
+                        <tr class="is-active-<?= $motorcycleInfo->status ?>">
+                            <td>
+					            <?= $motorcycleInfo->getFullTitle() ?>
+					            <?php if ($motorcycleInfo->isCruiser) { ?>
+                                    <br>
+                                    <small><b>Круизёр</b></small>
+					            <?php } ?>
+                            </td>
+                            <td>
+					            <?= Editable::widget([
+						            'name'          => 'cbm',
+						            'value'         => $motorcycleInfo->cbm,
+						            'url'           => 'update-motorcycle',
+						            'type'          => 'text',
+						            'mode'          => 'inline',
+						            'clientOptions' => [
+							            'pk'        => $motorcycleInfo->id,
+							            'value'     => $motorcycleInfo->cbm,
+							            'placement' => 'right',
+						            ]
+					            ]); ?>
+                            </td>
+                            <td>
+					            <?= Editable::widget([
+						            'name'          => 'power',
+						            'value'         => $motorcycleInfo->power,
+						            'url'           => 'update-motorcycle',
+						            'type'          => 'text',
+						            'mode'          => 'inline',
+						            'clientOptions' => [
+							            'pk'        => $motorcycleInfo->id,
+							            'value'     => $motorcycleInfo->power,
+							            'placement' => 'right',
+						            ]
+					            ]); ?>
+                            </td>
+                            <td>
+					            <?php
+					            if ($motorcycleInfo->status) {
+						            echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
+							            'class'   => 'btn btn-danger changeMotorcycleStatus',
+							            'data-id' => $motorcycleInfo->id,
+							            'title'   => 'Удалить'
+						            ]);
+					            } else {
+						            echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status',
+							            'id' => $motorcycleInfo->id], [
+							            'class'   => 'btn btn-warning changeMotorcycleStatus',
+							            'data-id' => $motorcycleInfo->id,
+							            'title'   => 'Вернуть в работу'
+						            ]);
+					            }
+					            ?>
+                            </td>
+                        </tr>
+		            <?php } ?>
+                    </tbody>
+                </table>
+            </div>
 		<?php } ?>
     </div>
 </div>

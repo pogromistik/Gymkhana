@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
                 <a href="http://www.onlinepasswordgenerator.ru/" target="_blank">www.onlinepasswordgenerator.ru</a>
             </div>
         </div>
-        
+
         <div class="with-bottom-border pb-20">
             <h3>Изменение пароля</h3>
 			<?php $form = \yii\bootstrap\ActiveForm::begin() ?>
@@ -68,9 +68,11 @@ $this->params['breadcrumbs'][] = 'Редактирование';
             </div>
             Постарайтесь не перепутать марку и модель :)<br>
             Параметры для уже созданных мотоциклов можно редактировать - для этого необходимо нажать на нужное поле.
-            Если ничего не происходит - значит, у вас недостаточно прав для совершения этого действия. Для решения проблемы вы можете обратиться
+            Если ничего не происходит - значит, у вас недостаточно прав для совершения этого действия. Для решения
+            проблемы вы можете обратиться
             к организатору своего региона или напрямую к <a href="https://vk.com/id19792817" target="_blank">разработчику</a>.<br>
-            Красная кнопка - "удаление" мотоцикла. Фактически, при этом он лишь блокируется и в любой момент его можно вернуть обратно
+            Красная кнопка - "удаление" мотоцикла. Фактически, при этом он лишь блокируется и в любой момент его можно
+            вернуть обратно
             (кнопка удаления сменится на кнопку возврата).
         </div>
     </div>
@@ -85,14 +87,16 @@ $this->params['breadcrumbs'][] = 'Редактирование';
             <tr>
                 <th>Марка</th>
                 <th>Модель</th>
-                <th>Статус</th>
-                <th>Добавлен</th>
+                <th>Объём</th>
+                <th>Мощность</th>
+                <th>Круизёр</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-			<?php foreach ($motorcycles as $motorcycleInfo) { ?>
-                <tr>
+			<?php foreach ($motorcycles as $motorcycleInfo) {
+				?>
+                <tr class="is-active-<?= $motorcycleInfo->status ?>">
                     <td>
 						<?= Editable::widget([
 							'name'          => 'mark',
@@ -122,10 +126,53 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 						]); ?>
                     </td>
                     <td>
-						<?= \common\models\Motorcycle::$statusesTitle[$motorcycleInfo->status] ?>
+						<?= Editable::widget([
+							'name'          => 'cbm',
+							'value'         => $motorcycleInfo->cbm,
+							'url'           => 'update-motorcycle',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $motorcycleInfo->id,
+								'value'     => $motorcycleInfo->cbm,
+								'placement' => 'right',
+							]
+						]); ?>
                     </td>
                     <td>
-						<?= date("d.m.Y, H:i", $motorcycleInfo->dateAdded) ?>
+						<?= Editable::widget([
+							'name'          => 'power',
+							'value'         => $motorcycleInfo->power,
+							'url'           => 'update-motorcycle',
+							'type'          => 'text',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $motorcycleInfo->id,
+								'value'     => $motorcycleInfo->power,
+								'placement' => 'right',
+							]
+						]); ?>
+                    </td>
+                    <td>
+						<?= Editable::widget([
+							'name'          => 'isCruiser',
+							'value'         => $motorcycleInfo->isCruiser ? 'Да' : 'Нет',
+							'url'           => 'update-motorcycle',
+							'type'          => 'select',
+							'mode'          => 'inline',
+							'clientOptions' => [
+								'pk'        => $motorcycleInfo->id,
+								'value'     => $motorcycleInfo->isCruiser,
+								'placement' => 'right',
+								'select'    => [
+									'width' => '124px'
+								],
+								'source'    =>  [
+									2 => 'Нет',
+									1 => 'Да'
+								],
+							]
+						]); ?>
                     </td>
                     <td>
 						<?php
