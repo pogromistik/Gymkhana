@@ -49,7 +49,7 @@ class Motorcycle extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['athleteId', 'mark', 'model', 'dateAdded', 'dateUpdated', 'cbm', 'power'], 'required'],
+			[['athleteId', 'mark', 'model', 'dateAdded', 'dateUpdated'], 'required'],
 			[['athleteId', 'internalClassId', 'dateAdded', 'dateUpdated', 'status', 'isCruiser', 'cbm'], 'integer'],
 			[['mark', 'model'], 'string', 'max' => 255],
 			[['power'], 'number'],
