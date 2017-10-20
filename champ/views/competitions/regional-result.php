@@ -42,7 +42,7 @@ use yii\bootstrap\Html;
 										<?php } ?>
 										<?php foreach ($stages as $stage) { ?>
 											<?php
-											$title = $stage->title . ', ' . $stage->city->title;
+											$title = $stage->getTitle() . ', ' . \common\helpers\TranslitHelper::translitCity($stage->city->title);
 											if ($stage->dateOfThe) {
 												$title .= ' ' . $stage->dateOfTheHuman;
 											}

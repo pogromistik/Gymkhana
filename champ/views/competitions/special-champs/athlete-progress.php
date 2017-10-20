@@ -6,7 +6,7 @@
  */
 ?>
 
-<h3><?= '"' . $stage->title . '": ' . $athlete->getFullName() ?></h3>
+<h3><?= '"' . $stage->getTitle() . '": ' . $athlete->getFullName() ?></h3>
 
 <div class="table-responsive">
     <table class="table">

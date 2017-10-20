@@ -23,6 +23,8 @@ use yii\web\UploadedFile;
  * @property integer                  $referenceTime
  * @property integer                  $outOfCompetitions
  * @property integer                  $championshipId
+ * @property string                   $title_en
+ * @property string                   $descr_en
  *
  * @property AthletesClass            $class
  * @property Championship             $championship
@@ -93,9 +95,10 @@ class SpecialStage extends BaseActiveRecord
 	{
 		return [
 			[['title', 'dateAdded', 'dateUpdated', 'status', 'championshipId'], 'required'],
-			[['dateAdded', 'dateUpdated', 'dateStart', 'dateEnd', 'dateResult', 'classId', 'status', 'referenceTime', 'championshipId'], 'integer'],
-			[['description'], 'string'],
-			[['title', 'photoPath'], 'string', 'max' => 255],
+			[['dateAdded', 'dateUpdated', 'dateStart', 'dateEnd', 'dateResult', 'classId', 'status',
+				'referenceTime', 'championshipId'], 'integer'],
+			[['description', 'descr_en'], 'string'],
+			[['title', 'photoPath', 'title_en'], 'string', 'max' => 255],
 			[['dateResultHuman', 'dateStartHuman', 'dateEndHuman', 'referenceTimeHuman'], 'string', 'max' => 255],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
@@ -127,7 +130,9 @@ class SpecialStage extends BaseActiveRecord
 			'photoFile'          => 'Фото трассы',
 			'referenceTime'      => 'Эталонное время',
 			'referenceTimeHuman' => 'Эталонное время',
-			'outOfCompetitions'  => 'Вне зачёта'
+			'outOfCompetitions'  => 'Вне зачёта',
+			'title_en'           => 'Название',
+			'descr_en'           => 'Описание'
 		];
 	}
 	
@@ -382,5 +387,35 @@ class SpecialStage extends BaseActiveRecord
 		$transaction->commit();
 		
 		return true;
+	}
+	
+	public function getTitle()
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		switch (\Yii::$app->language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr()
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		switch (\Yii::$app->language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
+		}
 	}
 }

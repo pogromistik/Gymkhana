@@ -8,13 +8,13 @@
  * @var integer                     $showAll
  * @var \common\models\Stage[]      $outOfChampStages
  */
-$this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $championship->title]);
+$this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $championship->getTitle()]);
 ?>
 <?php if ($championship->showResults) { ?>
 <h3><?= $championship->title ?>: <?= ($championship->status == \common\models\Championship::STATUS_PAST)
     ? \Yii::t('app', 'итоги') : \Yii::t('app', 'предварительные итоги') ?></h3>
 <?php } else { ?>
-    <h3><?= $championship->title ?></h3>
+    <h3><?= $championship->getTitle() ?></h3>
 <?php } ?>
 
 <div class="about">
@@ -61,7 +61,7 @@ $this->title = \Yii::t('app', 'Результаты: {title}', ['title' => $cham
             <b><?= \Yii::t('app', 'Следующие этапы проводились вне зачёта:') ?></b><br>
             <ul>
 				<?php foreach ($outOfChampStages as $outOfChampStage) { ?>
-                    <li><?= $outOfChampStage->title ?></li>
+                    <li><?= $outOfChampStage->getTitle() ?></li>
 				<?php } ?>
             </ul>
             <?= \Yii::t('app', 'Баллы за эти этапы не учитываются при подсчёте итоговой суммы. В таблице такие этапы выделены серым цветом.') ?>

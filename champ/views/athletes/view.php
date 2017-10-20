@@ -122,8 +122,10 @@ use yii\bootstrap\Html;
                     <tr>
                         <td>
 							<?php $stage = $participant->stage; ?>
-							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
-                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman . ', ' . $stage->city->title : $stage->city->title ?></small>
+							<?= Html::a($stage->getTitle(), ['/competitions/stage', 'id' => $stage->id]) ?><br>
+                            <small><?= $stage->dateOfThe ?
+                                    $stage->dateOfTheHuman . ', ' . \common\helpers\TranslitHelper::translitCity($stage->city->title)
+                                    : \common\helpers\TranslitHelper::translitCity($stage->city->title) ?></small>
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
                         <td>
@@ -173,7 +175,7 @@ use yii\bootstrap\Html;
                     <tr>
                         <td>
 							<?php $stage = $item->stage; ?>
-							<?= Html::a($stage->title, ['/competitions/special-stage', 'id' => $stage->id]) ?><br>
+							<?= Html::a($stage->getTitle(), ['/competitions/special-stage', 'id' => $stage->id]) ?><br>
 							<?= $stage->championship->year->year ?>г.
                         </td>
                         <td><?= $item->motorcycle->getFullTitle() ?></td>

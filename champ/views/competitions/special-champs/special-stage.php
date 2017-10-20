@@ -19,7 +19,7 @@ $championship = $stage->championship;
 <div class="row stage">
     <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
         <div class="title-with-bg">
-			<?= $championship->title ?>
+			<?= $championship->getTitle() ?>
         </div>
 
         <div>
@@ -27,7 +27,7 @@ $championship = $stage->championship;
         </div>
 
         <div class="pl-10">
-            <h4><?= $stage->title ?>
+            <h4><?= $stage->getTitle() ?>
                 <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
 					'label-danger' : 'label-success' ?>"><?= SpecialStage::$statusesTitle[$stage->status] ?></span></h4>
 			
@@ -199,7 +199,7 @@ $championship = $stage->championship;
             <ul>
 				<?php foreach ($stages as $item) { ?>
                     <li>
-						<?= Html::a($item->title, ['/competitions/special-stage', 'id' => $item->id]) ?>
+						<?= Html::a($item->getTitle(), ['/competitions/special-stage', 'id' => $item->id]) ?>
                     </li>
 				<?php } ?>
                 <li>

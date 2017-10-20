@@ -29,7 +29,7 @@ use yii\bootstrap\Html;
 							/** @var \common\models\Championship $champ */
 							$champ = $data['championship']; ?>
                             <div class="pl-10">
-								<?= Html::a($champ->title, ['/competitions/championship', 'id' => $champ->id]) ?>
+								<?= Html::a($champ->getTitle(), ['/competitions/championship', 'id' => $champ->id]) ?>
 								<?php
 								/** @var \common\models\Stage[] $stages */
 								$stages = $data['stages'];
@@ -52,7 +52,7 @@ use yii\bootstrap\Html;
 											<?php } ?>
 											<?php foreach ($stages as $stage) { ?>
 												<?php
-												$title = $stage->title . ', ' . $stage->city->title;
+												$title = $stage->getTitle() . ', ' . \common\helpers\TranslitHelper::translitCity($stage->city->title);
 												if ($stage->dateOfThe) {
 													$title .= ' ' . $stage->dateOfTheHuman;
 												}
@@ -72,7 +72,7 @@ use yii\bootstrap\Html;
 							$champ = $data['championship']; ?>
                             <div class="pl-10">
 								<div class="green-title">
-									<?= Html::a($champ->title, ['/competitions/special-champ', 'id' => $champ->id]) ?>
+									<?= Html::a($champ->getTitle(), ['/competitions/special-champ', 'id' => $champ->id]) ?>
                                 </div>
 								<?php
 								/** @var \common\models\SpecialStage[] $stages */
@@ -89,7 +89,7 @@ use yii\bootstrap\Html;
                                             </li>
 											<?php foreach ($stages as $stage) { ?>
 												<?php
-												$title = $stage->title;
+												$title = $stage->getTitle();
 												if ($stage->dateStart) {
 													$title .= ' ' . $stage->dateStartHuman;
 												}

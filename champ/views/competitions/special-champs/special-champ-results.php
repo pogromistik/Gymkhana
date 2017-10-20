@@ -7,7 +7,7 @@
  * @var \common\models\Athlete        $athlete
  * @var \common\models\SpecialStage[] $outOfChampStages
  */
-$this->title = 'Результаты: ' . $championship->title;
+$this->title = 'Результаты: ' . $championship->getTitle();
 ?>
 <h3><?= $this->title ?></h3>
 
@@ -33,7 +33,7 @@ $this->title = 'Результаты: ' . $championship->title;
             <b><?= \Yii::t('app', 'Следующие этапы проводились вне зачёта:') ?></b><br>
             <ul>
 				<?php foreach ($outOfChampStages as $outOfChampStage) { ?>
-                    <li><?= $outOfChampStage->title ?></li>
+                    <li><?= $outOfChampStage->getTitle() ?></li>
 				<?php } ?>
             </ul>
             <?= \Yii::t('app', 'Баллы за эти этапы не учитываются при подсчёте итоговой суммы. В таблице такие этапы выделены серым цветом.') ?>
@@ -83,7 +83,7 @@ $this->title = 'Результаты: ' . $championship->title;
                 <td>
 					<?= $athlete->getFullName() ?>
                     <br>
-					<?= $athlete->city->title ?>
+					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                 </td>
 				<?php foreach ($stages as $stage) {
 					$class = '';

@@ -5,10 +5,10 @@
  */
 use yii\bootstrap\Html;
 
-$this->title = $championship->title;
+$this->title = $championship->getTitle();
 ?>
 
-<h3><?= $championship->title ?></h3>
+<h3><?= $championship->getTitle() ?></h3>
 
 <div class="row">
     <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
@@ -17,7 +17,8 @@ $this->title = $championship->title;
 		        \common\models\Championship::$statusesTitle[$championship->status]) ?></span>
 		<?php if ($championship->regionId) { ?>
             <div class="pb-10">
-				<?= \Yii::t('app', 'Регион проведения: {regionTitle}', ['regionTitle' => $championship->region->title]) ?>
+				<?= \Yii::t('app', 'Регион проведения: {regionTitle}', [
+				        'regionTitle' => \common\helpers\TranslitHelper::translitRegion($championship->region->title)]) ?>
             </div>
 		<?php } ?>
 		<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
@@ -76,7 +77,7 @@ $this->title = $championship->title;
             <ul>
 				<?php foreach ($stages as $item) { ?>
                     <li>
-						<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
+						<?= Html::a($item->getTitle(), ['/competitions/stage', 'id' => $item->id]) ?>
                     </li>
 				<?php } ?>
 				<?php if ($championship->showResults) { ?>

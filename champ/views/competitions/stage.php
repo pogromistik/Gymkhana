@@ -16,7 +16,7 @@ use yii\bootstrap\Html;
 $time = time();
 $city = $stage->city;
 if ($city->timezone) {
-	$timezone = '(' . $city->title . ', UTC ' . $city->utc . ')';
+	$timezone = '(' . \common\helpers\TranslitHelper::translitCity($city->title) . ', UTC ' . $city->utc . ')';
 } else {
 	$timezone = '(' . \Yii::t('app', 'Москва') . ', UTC +3)';
 }
@@ -28,12 +28,12 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
     <div class="row stage">
         <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
             <div class="title-with-bg">
-				<?= $championship->title ?>
+				<?= $championship->getTitle() ?>
             </div>
 
             <div class="pl-10">
-                <h4><?= $stage->title ?>
-                    , <?= $stage->city->title ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
+                <h4><?= $stage->getTitle() ?>
+                    , <?= \common\helpers\TranslitHelper::translitCity($stage->city->title) ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
                     <span class="label <?= ($stage->status == Stage::STATUS_CANCEL) ?
 						'label-danger' : 'label-success' ?>"><?= \Yii::t('app', Stage::$statusesTitle[$stage->status]) ?></span>
                 </h4>
@@ -355,7 +355,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                 <ul>
 					<?php foreach ($stages as $item) { ?>
                         <li>
-							<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
+							<?= Html::a($item->getTitle(), ['/competitions/stage', 'id' => $item->id]) ?>
                         </li>
 					<?php } ?>
 					<?php if ($championship->showResults) { ?>

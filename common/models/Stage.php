@@ -34,6 +34,8 @@ use yii\web\UploadedFile;
  * @property integer       $participantsLimit
  * @property integer       $fastenClassFor
  * @property integer       $outOfCompetitions
+ * @property string        $title_en
+ * @property string        $descr_en
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -129,8 +131,9 @@ class Stage extends BaseActiveRecord
 				'fastenClassFor',
 				'outOfCompetitions'
 			], 'integer'],
-			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
-			[['description'], 'string'],
+			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman',
+				'trackPhoto', 'title_en'], 'string', 'max' => 255],
+			[['description', 'descr_en'], 'string'],
 			[['documentIds'], 'safe'],
 			[['countRace'], 'integer', 'max' => 5],
 			[['countRace'], 'integer', 'min' => 1],
@@ -173,7 +176,9 @@ class Stage extends BaseActiveRecord
 			'documentIds'            => 'Документы',
 			'participantsLimit'      => 'Допустимое количество участников',
 			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа',
-			'outOfCompetitions'      => 'Вне общего зачёта'
+			'outOfCompetitions'      => 'Вне общего зачёта',
+			'title_en'               => 'Название',
+			'descr_en'               => 'Описание'
 		];
 	}
 	
@@ -606,6 +611,36 @@ LIMIT 1) order by "bestTime" asc) n'])
 			return $class;
 		} else {
 			return null;
+		}
+	}
+	
+	public function getTitle()
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		switch (\Yii::$app->language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr()
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		switch (\Yii::$app->language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
 		}
 	}
 }

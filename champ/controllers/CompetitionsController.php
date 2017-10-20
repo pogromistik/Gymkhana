@@ -3,6 +3,7 @@
 namespace champ\controllers;
 
 use champ\models\SpecialStageForm;
+use common\helpers\TranslitHelper;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -77,7 +78,7 @@ class CompetitionsController extends BaseController
 			$background = '#a9a9a9';
 			if (!$stage->dateOfThe) {
 				$notDate[] = [
-					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+					'title' => $stage->championship->getTitle() . ': ' . $stage->getTitle() . ', ' . TranslitHelper::translitCity($stage->city->title),
 					'url'   => Url::to(['/competitions/stage', 'id' => $stage->id])
 				];
 			} else {
@@ -90,7 +91,7 @@ class CompetitionsController extends BaseController
 				}
 				$dates[$month][] = [
 					'date'  => $stage->dateOfThe,
-					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+					'title' => $stage->championship->getTitle() . ': ' . $stage->getTitle() . ', ' . TranslitHelper::translitCity($stage->city->title),
 					'url'   => Url::to(['/competitions/stage', 'id' => $stage->id])
 				];
 				if ($stage->dateOfThe + 86400 > time()) {
@@ -99,7 +100,7 @@ class CompetitionsController extends BaseController
 			}
 			$event = new Event();
 			$event->id = $stage->id;
-			$event->title = $stage->title . ' ' . $stage->city->title;
+			$event->title = $stage->getTitle() . ' ' . TranslitHelper::translitCity($stage->city->title);
 			$event->allDay = true;
 			$event->backgroundColor = $background;
 			$event->color = $background;
@@ -115,7 +116,7 @@ class CompetitionsController extends BaseController
 			$background = '#a9a9a9';
 			if (!$stage->dateStart) {
 				$notDate[] = [
-					'title' => $stage->championship->title . ': ' . $stage->title,
+					'title' => $stage->championship->getTitle() . ': ' . $stage->getTitle(),
 					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
 				];
 			} else {
@@ -128,7 +129,7 @@ class CompetitionsController extends BaseController
 				}
 				$dates[$month][] = [
 					'date'  => $stage->dateStart,
-					'title' => $stage->championship->title . ': ' . $stage->title,
+					'title' => $stage->championship->getTitle() . ': ' . $stage->getTitle(),
 					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
 				];
 				if ($stage->dateStart + 86400 > time()) {
@@ -137,7 +138,7 @@ class CompetitionsController extends BaseController
 			}
 			$event = new Event();
 			$event->id = $stage->id;
-			$event->title = $stage->title;
+			$event->title = $stage->getTitle();
 			$event->allDay = true;
 			$event->backgroundColor = $background;
 			$event->color = $background;
@@ -277,9 +278,9 @@ class CompetitionsController extends BaseController
 		if (!$stage) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Этап не найден'));
 		}
-		$this->pageTitle = $stage->title;
-		$this->description = $stage->title;
-		$this->keywords = \Yii::t('app', 'Этапы соревнования') . ': ' . $stage->title;
+		$this->pageTitle = $stage->getTitle();
+		$this->description = $stage->getTitle();
+		$this->keywords = \Yii::t('app', 'Этапы соревнования') . ': ' . $stage->getTitle();
 		$this->layout = 'full-content';
 		
 		$qualification = $stage->getQualificationResults();
@@ -454,9 +455,9 @@ class CompetitionsController extends BaseController
 		if (!$stage) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Этап не найден'));
 		}
-		$this->pageTitle = $stage->title . ': ' . \Yii::t('app', 'Квалификационные заезды');
-		$this->description = $stage->title . ': ' . \Yii::t('app', 'Квалификационные заезды');
-		$this->keywords = \Yii::t('app', 'Квалификационные заезды') . ', ' . $stage->title;
+		$this->pageTitle = $stage->getTitle() . ': ' . \Yii::t('app', 'Квалификационные заезды');
+		$this->description = $stage->getTitle() . ': ' . \Yii::t('app', 'Квалификационные заезды');
+		$this->keywords = \Yii::t('app', 'Квалификационные заезды') . ', ' . $stage->getTitle();
 		$this->layout = 'full-content';
 		
 		return $this->render('qualification', [
@@ -924,10 +925,10 @@ class CompetitionsController extends BaseController
 			throw new UserException(\Yii::t('app', 'Для данного чемпионата не ведётся подсчёт итогов'));
 		}
 		$this->pageTitle = \Yii::t('app', '{champTitle}: итоги', [
-			'champTitle' => $championship->title
+			'champTitle' => $championship->getTitle()
 		]);
 		$this->description = \Yii::t('app', 'Итоги соревнования: {champTitle}', [
-			'champTitle' => $championship->title
+			'champTitle' => $championship->getTitle()
 		]);
 		
 		$stages = $championship->stages;
@@ -949,9 +950,9 @@ class CompetitionsController extends BaseController
 		if (!$championship) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Чемпионат не найден'));
 		}
-		$this->pageTitle = $championship->title;
+		$this->pageTitle = $championship->getTitle();
 		$this->description = \Yii::t('app', 'Информация о чемпионате: {champTitle}', [
-			'champTitle' => $championship->title
+			'champTitle' => $championship->getTitle()
 		]);
 		$this->layout = 'full-content';
 		
@@ -964,8 +965,8 @@ class CompetitionsController extends BaseController
 		if (!$championship) {
 			throw new NotFoundHttpException('Чемпионат не найден');
 		}
-		$this->pageTitle = $championship->title;
-		$this->description = 'Информация о соревновании: ' . $championship->title;
+		$this->pageTitle = $championship->getTitle();
+		$this->description = 'Информация о соревновании: ' . $championship->getTitle();
 		$this->layout = 'full-content';
 		
 		return $this->render('special-champs/special-champ', ['championship' => $championship]);
@@ -992,9 +993,9 @@ class CompetitionsController extends BaseController
 		if (!$stage) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Этап не найден'));
 		}
-		$this->pageTitle = $stage->title;
-		$this->description = $stage->title;
-		$this->keywords = \Yii::t('app', 'Этапы соревнования') . ', ' . $stage->title;
+		$this->pageTitle = $stage->getTitle();
+		$this->description = $stage->getTitle();
+		$this->keywords = \Yii::t('app', 'Этапы соревнования') . ', ' . $stage->getTitle();
 		$this->layout = 'full-content';
 		
 		if ($regionIds) {
@@ -1261,7 +1262,7 @@ class CompetitionsController extends BaseController
 					
 					return $response;
 				}
-				$form->cityTitle = $city->title;
+				$form->cityTitle = TranslitHelper::translitCity($city->title);
 			} elseif ($form->cityTitle) {
 				$city = City::findOne(['title' => $form->cityTitle, 'countryId' => $form->countryId]);
 				if ($city) {
@@ -1341,8 +1342,8 @@ class CompetitionsController extends BaseController
 		if (!$championship) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Чемпионат не найден'));
 		}
-		$this->pageTitle = $championship->title . ': ' . \Yii::t('app', 'итоги');
-		$this->description = \Yii::t('app', 'Итоги соревнования') . ': ' . $championship->title;
+		$this->pageTitle = $championship->getTitle() . ': ' . \Yii::t('app', 'итоги');
+		$this->description = \Yii::t('app', 'Итоги соревнования') . ': ' . $championship->getTitle();
 		
 		$stages = $championship->stages;
 		$results = $championship->getResults();

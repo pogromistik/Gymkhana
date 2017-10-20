@@ -31,6 +31,8 @@ use yii\db\Query;
  * @property integer         $useCheScheme
  * @property integer         $showResults
  * @property integer         $useMoscowPoints
+ * @property string          $title_en
+ * @property string          $descr_en
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -102,7 +104,7 @@ class Championship extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['description'], 'string'],
+			[['description', 'descr_en'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber',
 				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount', 'showResults'], 'required'],
 			[[
@@ -114,7 +116,7 @@ class Championship extends BaseActiveRecord
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
 			}],
-			[['title'], 'string', 'max' => 255],
+			[['title', 'title_en'], 'string', 'max' => 255],
 			[['minNumber', 'maxNumber'], 'integer', 'min' => 0],
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
@@ -162,7 +164,9 @@ class Championship extends BaseActiveRecord
 			'onlyRegions'          => 'Регионы, которые могут принимать участие',
 			'useCheScheme'         => 'Использовать Челябинскую схему для награждения',
 			'showResults'          => 'Показывать итоги чемпионата',
-			'useMoscowPoints'      => 'Считать баллы по Московской схеме'
+			'useMoscowPoints'      => 'Считать баллы по Московской схеме',
+			'title_en'             => 'Название',
+			'descr_en'             => 'Описание'
 		];
 	}
 	
@@ -492,5 +496,35 @@ class Championship extends BaseActiveRecord
 		}
 		
 		return in_array($regionId, $regions);
+	}
+	
+	public function getTitle()
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		switch (\Yii::$app->language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr()
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		switch (\Yii::$app->language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
+		}
 	}
 }
