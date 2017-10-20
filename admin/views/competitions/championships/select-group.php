@@ -12,4 +12,5 @@ $this->title = 'Выберите раздел Чемпионата';
 <?php foreach (Championship::$groupsTitle as $groupId => $title) { ?>
 	<li><?= Html::a($title, ['index', 'groupId' => $groupId]) ?></li>
 <?php } ?>
+    <li><?= Html::a('Специальные чемпионаты', ['/competitions/special-champ']) ?></li>
 </ul>

@@ -2,11 +2,11 @@
 use yii\bootstrap\Html;
 
 /**
- * @var \yii\web\View        $this
- * @var array                $dates
- * @var array                $notDate
- * @var \common\models\Stage $stage
- * @var array                $events
+ * @var \yii\web\View $this
+ * @var array         $dates
+ * @var array         $notDate
+ * @var array         $stage
+ * @var array         $events
  */
 ?>
     <h2><?= \Yii::t('app', 'Расписание соревнований') ?></h2>
@@ -52,8 +52,7 @@ use yii\bootstrap\Html;
                                     <div class="col-md-2 col-sm-3 col-xs-4">
                                     </div>
                                     <div class="col-md-10 col-sm-9 col-xs-8">
-										<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
-											['/competitions/stage', 'id' => $stage->id]) ?>
+										<?= Html::a($stage['title'], $stage['url']) ?>
                                     </div>
                                 </div>
                             </td>
@@ -72,7 +71,7 @@ use yii\bootstrap\Html;
                             </th>
                         </tr>
 						<?php foreach ($stages as $stage) { ?>
-							<?php if ($stage->dateOfThe + 86400 < time()) { ?>
+							<?php if ($stage['date'] + 86400 < time()) { ?>
                                 <tr>
 							<?php } else { ?>
                                 <tr class="future">
@@ -80,11 +79,10 @@ use yii\bootstrap\Html;
                             <td>
                                 <div class="row item">
                                     <div class="col-md-2 col-sm-3 col-xs-4">
-										<?= date("d.m.Y", $stage->dateOfThe) ?>
+										<?= date("d.m.Y", $stage['date']) ?>
                                     </div>
                                     <div class="col-md-10 col-sm-9 col-xs-8">
-										<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
-											['/competitions/stage', 'id' => $stage->id]) ?>
+										<?= Html::a($stage['title'], $stage['url']) ?>
                                     </div>
                                 </div>
                             </td>

@@ -96,6 +96,18 @@ use kartik\widgets\DepDrop;
 				<?= Html::input('text', 'model[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => \Yii::t('app', 'Модель, напр. ER6-F')]) ?>
             </div>
         </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="form-group field-tmpathlete-cbm has-success">
+                <label class="control-label" for="tmpathlete-cbm">Объём</label>
+			    <?= Html::input('text', 'cbm[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Объём, м3']) ?>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="form-group field-tmpathlete-power has-success">
+                <label class="control-label" for="tmpathlete-power">Мощность</label>
+			    <?= Html::input('text', 'power[' . $i . ']', null, ['class' => 'form-control', 'placeholder' => 'Мощность, л.с.']) ?>
+            </div>
+        </div>
     </div>
 
     <a href="#" class="appendMotorcycle" data-i= <?= $i ?>><?= \Yii::t('app', 'Добавить ещё один мотоцикл') ?></a>

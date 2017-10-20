@@ -219,7 +219,7 @@ class HelpModel extends Model
 	{
 		list($min, $secs) = explode(':', $time);
 		$result = ($min * 60000) + round($secs * 1000);
-		if ($result > Time::FAIL_TIME) {
+		if ($result > Time::FAIL_TIME || $result === (float)0) {
 			$result = Time::FAIL_TIME;
 		}
 		

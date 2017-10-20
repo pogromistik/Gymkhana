@@ -195,14 +195,28 @@ class SiteController extends BaseController
 		if ($form->load(\Yii::$app->request->post())) {
 			$marks = \Yii::$app->request->post('mark');
 			$models = \Yii::$app->request->post('model');
+			$cbm = \Yii::$app->request->post('cbm');
+			$power = \Yii::$app->request->post('power');
 			if (!$marks) {
 				return \Yii::t('app', 'Необходимо указать марку мотоцикла');
 			}
 			if (!$models) {
 				return \Yii::t('app', 'Необходимо указать модель мотоцикла');
 			}
+			if (!$cbm) {
+				return 'Необходимо указать объём';
+			}
+			if (!$power) {
+				return 'Необходимо указать мощность';
+			}
 			if (count($marks) != count($models)) {
 				return \Yii::t('app', 'Для каждого мотоцикла необходимо указать марку и модель');
+			}
+			if (count($cbm) != count($marks)) {
+				return 'Для каждого мотоцикла необходимо указать объём двигателя';
+			}
+			if (count($power) != count($marks)) {
+				return 'Для каждого мотоцикла необходимо указать мощность мотоцикла';
 			}
 			$motorcycles = [];
 			foreach ($marks as $i => $mark) {
@@ -212,9 +226,14 @@ class SiteController extends BaseController
 				if (!$mark || !$models[$i]) {
 					return \Yii::t('app', 'Для каждого мотоцикла необходимо указать марку и модель');
 				}
+				if (!isset($cbm[$i]) || !$cbm[$i] || !isset($power[$i]) || !$power[$i]) {
+					return 'Для каждого мотоцикла необходимо указать мощность и объём';
+				}
 				$motorcycles[] = [
 					'mark'  => (string)$mark,
-					'model' => (string)$models[$i]
+					'model' => (string)$models[$i],
+					'cbm'   => (int)$cbm[$i],
+					'power' => $power[$i]
 				];
 			}
 			if (!$motorcycles) {

@@ -20,6 +20,9 @@ use common\models\Notice;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
+use common\models\RequestForSpecialStage;
+use common\models\SpecialChamp;
+use common\models\SpecialStage;
 use common\models\Stage;
 use common\models\Time;
 use common\models\TmpAthlete;
@@ -788,6 +791,20 @@ class RunController extends Controller
 			$count++;
 		}
 		
+		$championships = SpecialChamp::findAll(['status' => SpecialChamp::STATUS_PRESENT]);
+		foreach ($championships as $championship) {
+			$stages = $championship->stages;
+			/** @var SpecialStage $stage */
+			foreach ($stages as $stage) {
+				if (!$stage->dateEnd || $stage->dateEnd > $time) {
+					continue 2;
+				}
+			}
+			$championship->status = SpecialChamp::STATUS_PAST;
+			$championship->save();
+			$count++;
+		}
+		
 		//чемпионат начался
 		$championships = Championship::findAll(['status' => Championship::STATUS_UPCOMING]);
 		foreach ($championships as $championship) {
@@ -800,6 +817,17 @@ class RunController extends Controller
 			}
 		}
 		
+		$championships = SpecialChamp::findAll(['status' => SpecialChamp::STATUS_UPCOMING]);
+		foreach ($championships as $championship) {
+			if (SpecialStage::find()->where(['championshipId' => $championship->id])
+				->andWhere(['<=', 'dateEnd', $time])->one()
+			) {
+				$championship->status = SpecialChamp::STATUS_PRESENT;
+				$championship->save();
+				$count++;
+			}
+		}
+		
 		//чемпионат завершился и снова начался
 		$year = Year::findOne(['year' => date('Y')]);
 		if ($year) {
@@ -807,6 +835,17 @@ class RunController extends Controller
 			foreach ($championships as $championship) {
 				if (Stage::find()->where(['championshipId' => $championship->id])
 					->andWhere(['>=', 'dateOfThe', $time])->one()
+				) {
+					$championship->status = Championship::STATUS_PRESENT;
+					$championship->save();
+					$count++;
+				}
+			}
+			
+			$championships = SpecialChamp::findAll(['status' => SpecialChamp::STATUS_PAST, 'yearId' => $year->id]);
+			foreach ($championships as $championship) {
+				if (SpecialStage::find()->where(['championshipId' => $championship->id])
+					->andWhere(['>=', 'dateEnd', $time])->one()
 				) {
 					$championship->status = Championship::STATUS_PRESENT;
 					$championship->save();
@@ -852,6 +891,32 @@ class RunController extends Controller
 		$stages = Stage::find()->where(['not', ['status' => Stage::STATUS_PAST]])->all();
 		foreach ($stages as $stage) {
 			if ($stage->dateOfThe && ($stage->dateOfThe + 86400) <= $time) {
+				$stage->status = Stage::STATUS_PAST;
+				$stage->save();
+			}
+		}
+		
+		//Приём результатов
+		SpecialStage::updateAll(['status' => SpecialStage::STATUS_START], [
+			'and',
+			['status' => SpecialStage::STATUS_UPCOMING],
+			['not', ['dateStart' => null]],
+			['<=', 'dateStart', $time]
+		]);
+		
+		//Приём результатов завершен
+		SpecialStage::updateAll(['status' => SpecialStage::STATUS_CALCULATE_RESULTS], [
+			'and',
+			['status' => SpecialStage::STATUS_START],
+			['not', ['dateEnd' => null]],
+			['<=', 'dateEnd', $time]
+		]);
+		
+		//прошедший этап
+		/** @var SpecialStage[] $stages */
+		$stages = SpecialStage::find()->where(['not', ['status' => SpecialStage::STATUS_PAST]])->all();
+		foreach ($stages as $stage) {
+			if ($stage->dateEnd && ($stage->dateEnd + 86400) <= $time) {
 				$stage->status = Stage::STATUS_PAST;
 				$stage->save();
 			}
@@ -1260,7 +1325,7 @@ class RunController extends Controller
 			$athlete2 = $athlete1;
 		}
 		
-		//объединяем время по фигурам
+		
 		$transaction = \Yii::$app->db->beginTransaction();
 		$count = FigureTime::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update FigureTime: ' . $count . PHP_EOL;
@@ -1278,6 +1343,8 @@ class RunController extends Controller
 		echo 'Update TmpParticipant: ' . $count . PHP_EOL;
 		$count = ClassHistory::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		$count = RequestForSpecialStage::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update SpecialStages: ' . $count . PHP_EOL;
 		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
 			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
 			$mainAthlete->save(false);
@@ -1494,6 +1561,7 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
 	public function actionCancelClasses()
 	{
 		$notCancel = [577, 549, 550, 578, 572, 590, 571, 605];
@@ -1511,9 +1579,10 @@ class RunController extends Controller
 			if (!$athlete->save()) {
 				$transaction->rollBack();
 				var_dump($athlete->errors);
+				
 				return false;
 			}
-			$history = ClassHistory::find()->where(['athleteId' => $athlete->id, 'oldClassId' => $participant->athleteClassId,
+			$history = ClassHistory::find()->where(['athleteId'  => $athlete->id, 'oldClassId' => $participant->athleteClassId,
 			                                        'newClassId' => $participant->newAthleteClassId])->one();
 			$history->delete();
 			if ($athlete->hasAccount) {
@@ -1525,12 +1594,14 @@ class RunController extends Controller
 			if (!$participant->save()) {
 				$transaction->rollBack();
 				var_dump($participant->errors);
+				
 				return false;
 			}
 			$transaction->commit();
 			$count++;
 		}
 		echo 'Update: ' . $count . ' items' . PHP_EOL;
+		
 		return true;
 	}
 }

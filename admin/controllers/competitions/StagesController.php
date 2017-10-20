@@ -9,6 +9,7 @@ use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
+use common\models\HelpModel;
 use common\models\Participant;
 use common\models\Time;
 use dosamigos\editable\EditableAction;
@@ -506,6 +507,9 @@ class StagesController extends BaseStageController
 		$participants = $stage->participants;
 		if ($participants) {
 			return 'На данный этап зарегистрированы участники. Удаление невозможно';
+		}
+		if ($stage->trackPhoto) {
+			HelpModel::deleteFile($stage->trackPhoto);
 		}
 		if ($stage->delete()) {
 			return true;

@@ -2,6 +2,7 @@
 
 namespace champ\controllers;
 
+use champ\models\SpecialStageForm;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -13,6 +14,10 @@ use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
+use common\models\RequestForSpecialStage;
+use common\models\search\RequestForSpecialStageSearch;
+use common\models\SpecialChamp;
+use common\models\SpecialStage;
 use common\models\Stage;
 use common\models\TmpParticipant;
 use common\models\Year;
@@ -57,14 +62,24 @@ class CompetitionsController extends BaseController
 		$stages = Stage::find()->where(['championshipId' => $championshipIds])
 			->orderBy(['dateOfThe' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
 		
+		$specialChampIds = SpecialChamp::find()->select('id')
+			->andWhere(['yearId' => $yearIds])->orderBy(['dateAdded' => SORT_DESC])->asArray()->column();
+		$specialStages = SpecialStage::find()->where(['championshipId' => $specialChampIds])
+			->orderBy(['dateStart' => SORT_ASC, 'dateAdded' => SORT_DESC])->all();
+		
 		$color = '#fff';
 		$dates = [];
 		$notDate = [];
+		
+		//обычные чемпионаты
 		/** @var Stage[] $stages */
 		foreach ($stages as $stage) {
 			$background = '#a9a9a9';
 			if (!$stage->dateOfThe) {
-				$notDate[] = $stage;
+				$notDate[] = [
+					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+					'url'   => Url::to(['/competitions/stage', 'id' => $stage->id])
+				];
 			} else {
 				$month = (new \DateTime(date('01.m.Y', $stage->dateOfThe),
 					new \DateTimeZone('Asia/Yekaterinburg')))
@@ -73,7 +88,11 @@ class CompetitionsController extends BaseController
 				if (!isset($dates[$month])) {
 					$dates[$month] = [];
 				}
-				$dates[$month][] = $stage;
+				$dates[$month][] = [
+					'date'  => $stage->dateOfThe,
+					'title' => $stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
+					'url'   => Url::to(['/competitions/stage', 'id' => $stage->id])
+				];
 				if ($stage->dateOfThe + 86400 > time()) {
 					$background = '#5cb85c';
 				}
@@ -87,6 +106,44 @@ class CompetitionsController extends BaseController
 			$event->textColor = $color;
 			$event->url = Url::to(['/competitions/stage', 'id' => $stage->id]);
 			$event->start = date('Y-m-d', $stage->dateOfThe);
+			$events[] = $event;
+		}
+		
+		//специальные чемпионаты
+		/** @var SpecialStage[] $specialStages */
+		foreach ($specialStages as $stage) {
+			$background = '#a9a9a9';
+			if (!$stage->dateStart) {
+				$notDate[] = [
+					'title' => $stage->championship->title . ': ' . $stage->title,
+					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+				];
+			} else {
+				$month = (new \DateTime(date('01.m.Y', $stage->dateStart),
+					new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
+					->setTime(06, 00,
+						00)->getTimestamp();
+				if (!isset($dates[$month])) {
+					$dates[$month] = [];
+				}
+				$dates[$month][] = [
+					'date'  => $stage->dateStart,
+					'title' => $stage->championship->title . ': ' . $stage->title,
+					'url'   => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+				];
+				if ($stage->dateStart + 86400 > time()) {
+					$background = '#5cb85c';
+				}
+			}
+			$event = new Event();
+			$event->id = $stage->id;
+			$event->title = $stage->title;
+			$event->allDay = true;
+			$event->backgroundColor = $background;
+			$event->color = $background;
+			$event->textColor = $color;
+			$event->url = Url::to(['/competitions/special-stage', 'id' => $stage->id]);
+			$event->start = date('Y-m-d', $stage->dateStart);
 			$events[] = $event;
 		}
 		
@@ -141,18 +198,33 @@ class CompetitionsController extends BaseController
 						if (!isset($results[$championship->yearId])) {
 							$results[$championship->yearId] =
 								[
-									'data' => [],
-									'year' => $championship->year->year
+									'specialChamps' => [],
+									'champs'        => [],
+									'year'          => $championship->year->year
 								];
 						}
-						$results[$championship->yearId]['data'][] = [
-							'year'        => $championship->year->year,
-							'stages'      => $championship->stages,
-							'status'      => $championship->status,
-							'id'          => $championship->id,
-							'showResults' => $championship->showResults
+						$results[$championship->yearId]['champs'][] = [
+							'championship' => $championship,
+							'stages'       => $championship->stages
 						];
 					}
+					/** @var SpecialChamp[] $specialChamps */
+					$specialChamps = SpecialChamp::find()->orderBy(['dateAdded' => SORT_DESC])->all();
+					foreach ($specialChamps as $championship) {
+						if (!isset($results[$championship->yearId])) {
+							$results[$championship->yearId] =
+								[
+									'specialChamps' => [],
+									'champs'        => [],
+									'year'          => $championship->year->year
+								];
+						}
+						$results[$championship->yearId]['specialChamps'][] = [
+							'championship' => $championship,
+							'stages'       => $championship->stages
+						];
+					}
+					
 					if (isset($results)) {
 						krsort($results);
 					}
@@ -797,7 +869,7 @@ class CompetitionsController extends BaseController
 				}
 			}
 			if (!$form->validate()) {
-				return \Yii::t('app', 'Необходимо указать имя, фамилию, город, email, а так же марку и модель мотоцикла.');
+				return \Yii::t('app', 'Необходимо указать имя, фамилию, город, email, а так же всю информацию о мотоцикле.');
 			}
 			if ($form->save(false)) {
 				\Yii::$app->mutex->release('setNumber' . $stage->id);
@@ -886,6 +958,19 @@ class CompetitionsController extends BaseController
 		return $this->render('championship', ['championship' => $championship]);
 	}
 	
+	public function actionSpecialChamp($id)
+	{
+		$championship = SpecialChamp::findOne($id);
+		if (!$championship) {
+			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		$this->pageTitle = $championship->title;
+		$this->description = 'Информация о соревновании: ' . $championship->title;
+		$this->layout = 'full-content';
+		
+		return $this->render('special-champs/special-champ', ['championship' => $championship]);
+	}
+	
 	public function actionMoscowScheme()
 	{
 		$this->pageTitle = \Yii::t('app', 'Московская схема начисления баллов');
@@ -899,5 +984,375 @@ class CompetitionsController extends BaseController
 			'place', 'point', 'title');
 		
 		return $this->render('moscow-scheme', ['items' => $items]);
+	}
+	
+	public function actionSpecialStage($id, array $regionIds = [])
+	{
+		$stage = SpecialStage::findOne($id);
+		if (!$stage) {
+			throw new NotFoundHttpException('Этап не найден');
+		}
+		$this->pageTitle = $stage->title;
+		$this->description = $stage->title;
+		$this->keywords = 'Этапы соревнования, ' . $stage->title;
+		$this->layout = 'full-content';
+		
+		if ($regionIds) {
+			$query = RequestForSpecialStage::find();
+			$query->select('a.*');
+			$query->from(['a' => RequestForSpecialStage::tableName(), 'b' => Athlete::tableName()]);
+			$query->where(new Expression('"a"."athleteId"="b"."id"'));
+			$query->andWhere(['a.stageId' => $stage->id]);
+			$query->andWhere(['a.status' => RequestForSpecialStage::STATUS_APPROVE]);
+			$query->andWhere(['b.regionId' => $regionIds]);
+			$query->orderBy(['a.resultTime' => SORT_ASC, 'a.dateAdded' => SORT_ASC]);
+			$activeParticipants = $query->all();
+		} else {
+			$activeParticipants = $stage->getParticipants()->andWhere(['status' => RequestForSpecialStage::STATUS_APPROVE])->all();
+		}
+		
+		$query = Region::find();
+		$query->select('a.*');
+		$query->from(['a' => Region::tableName(), 'b' => Athlete::tableName(), 'c' => RequestForSpecialStage::tableName()]);
+		$query->where(new Expression('"a"."id"="b"."regionId"'));
+		$query->andWhere(new Expression('"b"."id"="c"."athleteId"'));
+		$query->andWhere(['c.stageId' => $stage->id]);
+		$query->andWhere(['c.status' => RequestForSpecialStage::STATUS_APPROVE]);
+		$query->orderBy(['a.title' => SORT_ASC]);
+		$regions = $query->all();
+		
+		$needTime = [];
+		if ($stage->referenceTime) {
+			/** @var AthletesClass[] $allClasses */
+			$allClasses = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
+			/** @var AthletesClass $prev */
+			$prev = null;
+			$last = null;
+			$prevTime = 0;
+			foreach ($allClasses as $class) {
+				if (!$prev || $prev->percent == $class->percent) {
+					$startTime = '00:00.00';
+				} else {
+					$time = $prevTime + 10;
+					$startTime = HelpModel::convertTimeToHuman($time);
+				}
+				$time = floor($stage->referenceTime * ($class->percent) / 100);
+				$time = ((int)($time / 10)) * 10;
+				if (round($time / $stage->referenceTime * 100, 2) >= $class->percent) {
+					$time -= 10;
+				}
+				$prevTime = $time;
+				$endTime = HelpModel::convertTimeToHuman($time);
+				$needTime[$class->id] = [
+					'classModel' => $class,
+					'startTime'  => $startTime,
+					'endTime'    => $endTime,
+					'percent'    => $class->percent
+				];
+				$prev = $class;
+				$last = $class->id;
+			}
+			$needTime[$last]['endTime'] = '59:59.59';
+			if ($prev = AthletesClass::find()->where(['not', ['id' => $last]])->orderBy(['percent' => SORT_DESC])->one()) {
+				$needTime[$last]['percent'] = '> ' . $prev->percent;
+			}
+		}
+		
+		return $this->render('special-champs/special-stage', [
+			'stage'              => $stage,
+			'needTime'           => $needTime,
+			'activeParticipants' => $activeParticipants,
+			'regionIds'          => $regionIds,
+			'regions'            => $regions
+		]);
+	}
+	
+	public function actionAthleteProgress($id)
+	{
+		$participant = RequestForSpecialStage::findOne($id);
+		if (!$id) {
+			throw new NotFoundHttpException('Участник не найден');
+		}
+		$this->pageTitle = 'Все результаты участника: ' . $participant->athlete->getFullName();
+		$requests = RequestForSpecialStage::find()->where(['athleteId' => $participant->athleteId, 'stageId' => $participant->stageId])
+			->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
+			->orderBy(['date' => SORT_ASC])->all();
+		
+		return $this->render('special-champs/athlete-progress', [
+			'stage'    => $participant->stage,
+			'requests' => $requests,
+			'athlete'  => $participant->athlete
+		]);
+	}
+	
+	public function actionAuthSpecialStageRequest()
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$response = [
+			'error' => false,
+			'data'  => null
+		];
+		
+		$form = new RequestForSpecialStage();
+		if ($form->load(\Yii::$app->request->post())) {
+			if (!$form->athleteId || !$form->stageId) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			$stage = SpecialStage::findOne($form->stageId);
+			if (!$stage) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			if (!$stage->dateStart || $stage->dateStart > time()) {
+				$response['error'] = 'Приём результатов ещё не начался';
+				
+				return $response;
+			}
+			if ($stage->dateEnd && $stage->dateEnd < time()) {
+				$response['error'] = 'Приём заявок завершен';
+				
+				return $response;
+			}
+			if (!$form->motorcycle) {
+				$response['error'] = 'Необходимо выбрать мотоцикл';
+				
+				return $response;
+			}
+			if (!$form->dateHuman) {
+				$response['error'] = 'Необходимо указать время';
+				
+				return $response;
+			}
+			if (!$form->timeHuman) {
+				$response['error'] = 'Укажите время';
+				
+				return $response;
+			}
+			if (!$form->videoLink) {
+				$response['error'] = 'Ссылка на видео обязательна';
+				
+				return $response;
+			}
+			if (!$form->fine) {
+				$form->fine = 0;
+			}
+			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
+				$response['error'] = 'Ссылка на видео должна начинаться с http: или https:';
+				
+				return $response;
+			}
+			if (!$form->validate()) {
+				$response['error'] = var_dump($form->errors);
+				
+				return $response;
+			}
+			$old = RequestForSpecialStage::find()->where(['athleteId' => $form->athleteId, 'stageId' => $form->stageId])
+				->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
+				->andWhere(['time' => $form->time, 'fine' => $form->fine])
+				->one();
+			if ($old) {
+				$response['error'] = 'Для данного этапа у вас уже есть такой результат';
+				
+				return $response;
+			}
+			if (!$form->save(false)) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
+				'В любом случае, Вам будет отправлено соответствующее уведомление.';
+			
+			return $response;
+		}
+		
+		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+		
+		return $response;
+	}
+	
+	public function actionGuestSpecialStageRequest()
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$response = [
+			'error' => false,
+			'data'  => null
+		];
+		
+		$form = new SpecialStageForm();
+		if ($form->load(\Yii::$app->request->post())) {
+			$form->lastName = trim($form->lastName);
+			$form->firstName = trim($form->firstName);
+			$form->cityTitle = trim($form->cityTitle);
+			$form->motorcycleModel = trim($form->motorcycleModel);
+			$form->motorcycleMark = trim($form->motorcycleMark);
+			
+			$stage = SpecialStage::findOne($form->stageId);
+			if (!$stage) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			if (!$stage->dateStart || $stage->dateStart > time()) {
+				$response['error'] = 'Приём результатов ещё не начался';
+				
+				return $response;
+			}
+			if ($stage->dateEnd && $stage->dateEnd < time()) {
+				$response['error'] = 'Приём заявок завершен';
+				
+				return $response;
+			}
+			
+			if (!$form->lastName) {
+				$response['error'] = 'Укажите фамилию';
+				
+				return $response;
+			}
+			
+			if (!$form->firstName) {
+				$response['error'] = 'Укажите имя';
+				
+				return $response;
+			}
+			
+			if (!$form->motorcycleMark) {
+				$response['error'] = 'Укажите марку мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->motorcycleMark) {
+				$response['error'] = 'Укажите модель мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->cbm) {
+				$response['error'] = 'Укажите объём мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->power) {
+				$response['error'] = 'Укажите мощность мотоцикла';
+				
+				return $response;
+			}
+			
+			if (!$form->countryId) {
+				$response['error'] = 'Выберите страну';
+				
+				return $response;
+			}
+			
+			if (!$form->cityTitle && !$form->cityId) {
+				$response['error'] = 'Укажите город';
+				
+				return $response;
+			} elseif ($form->cityId) {
+				$city = City::findOne($form->cityId);
+				if (!$city) {
+					$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+					
+					return $response;
+				}
+				$form->cityTitle = $city->title;
+			} elseif ($form->cityTitle) {
+				$city = City::findOne(['title' => $form->cityTitle, 'countryId' => $form->countryId]);
+				if ($city) {
+					$form->cityId = $city->id;
+				}
+			}
+			
+			if (!$form->dateHuman) {
+				$response['error'] = 'Необходимо указать время';
+				
+				return $response;
+			}
+			if (!$form->timeHuman) {
+				$response['error'] = 'Укажите время';
+				
+				return $response;
+			}
+			if (!$form->videoLink) {
+				$response['error'] = 'Ссылка на видео обязательна';
+				
+				return $response;
+			}
+			if (!$form->fine) {
+				$form->fine = 0;
+			}
+			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
+				$response['error'] = 'Ссылка на видео должна начинаться с http: или https:';
+				
+				return $response;
+			}
+			if (!$form->validate()) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			if (!$form->save(false)) {
+				$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+				
+				return $response;
+			}
+			
+			$response['data'] = 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. ' .
+				'В случае отклонения результата, вам будет отправлено письмо на email ' . $form->email . '.';
+			
+			return $response;
+		}
+		
+		$response['error'] = 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком';
+		
+		return $response;
+	}
+	
+	public function actionSpecialStagesHistory()
+	{
+		if (\Yii::$app->user->isGuest) {
+			return 'Сначала войдите в личный кабинет';
+		}
+		
+		$this->pageTitle = 'История присланных вами результатов на этапы';
+		
+		$searchModel = new RequestForSpecialStageSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
+		$dataProvider->query->orderBy(['dateAdded' => SORT_DESC]);
+		
+		return $this->render('special-champs/special-stages-history', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionSpecialChampResult($championshipId)
+	{
+		$championship = SpecialChamp::findOne($championshipId);
+		if (!$championship) {
+			throw new NotFoundHttpException('Чемпионат не найден');
+		}
+		$this->pageTitle = $championship->title . ': итоги';
+		$this->description = 'Итоги соревнования: ' . $championship->title;
+		
+		$stages = $championship->stages;
+		$results = $championship->getResults();
+		$outOfChampStages = $championship->getStages()->andWhere(['outOfCompetitions' => 1])->all();
+		
+		return $this->render('special-champs/special-champ-results', [
+			'championship'     => $championship,
+			'results'          => $results,
+			'stages'           => $stages,
+			'outOfChampStages' => $outOfChampStages
+		]);
 	}
 }

@@ -64,6 +64,18 @@ use yii\helpers\Html;
                 </li>
 			<?php } ?>
 			
+			<?php if (\Yii::$app->user->can('changeSpecialChamps')) { ?>
+				<?php $countNewSpecialReg = \common\models\RequestForSpecialStage::countNewReg();
+				?>
+				<?php if ($countNewSpecialReg) { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/special-champ/registrations']) ?>"><i
+                                    class="fa fa-registered fa-fw"></i> Спец. этап
+                            <?= $countNewSpecialReg ? '(' . $countNewSpecialReg . ')' : '' ?></a>
+                    </li>
+				<?php } ?>
+			<?php } ?>
+			
 			<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                 <li>
 					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>

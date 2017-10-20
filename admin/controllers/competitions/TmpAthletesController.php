@@ -312,6 +312,13 @@ class TmpAthletesController extends BaseController
 				$new->athleteId = $oldAthlete->id;
 				$new->mark = $data['mark'];
 				$new->model = $data['model'];
+				$new->cbm = $data['cbm'];
+				$new->power = $data['power'];
+				if (isset($data['isCruiser']) && $data['isCruiser'] == 1) {
+					$new->isCruiser = 1;
+				} else {
+					$new->isCruiser = 0;
+				}
 				if (!$new->save()) {
 					$transaction->rollBack();
 					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
@@ -405,6 +412,13 @@ class TmpAthletesController extends BaseController
 				$new = new Motorcycle();
 				$new->mark = $motorcycle['mark'];
 				$new->model = $motorcycle['model'];
+				$new->cbm = $motorcycle['cbm'];
+				$new->power = $motorcycle['power'];
+				if (isset($motorcycle['isCruiser']) && $motorcycle['isCruiser'] == 1) {
+					$new->isCruiser = 1;
+				} else {
+					$new->isCruiser = 0;
+				}
 				$new->athleteId = $athlete->id;
 				if (!$new->save()) {
 					$transaction->rollBack();

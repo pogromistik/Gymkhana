@@ -101,6 +101,8 @@ $championship = $stage->championship;
             <h4 class="text-center"><?= \Yii::t('app', 'Укажите мотоцикл, на котором будете участвовать') ?></h4>
 			<?= $form->field($participant, 'motorcycleMark')->textInput(['placeholder' => \Yii::t('app', 'Марка, напр. kawasaki')]) ?>
 			<?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => \Yii::t('app', 'Модель, напр. ER6-F')]) ?>
+			<?= $form->field($participant, 'cbm')->textInput(['placeholder' => \Yii::t('app', 'Объём, м3')]) ?>
+			<?= $form->field($participant, 'power')->textInput(['placeholder' => \Yii::t('app', 'Мощность, л.с.')]) ?>
 
             <div class="alerts"></div>
 

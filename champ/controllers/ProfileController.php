@@ -15,6 +15,7 @@ use common\models\Participant;
 use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
 use common\models\Year;
+use dosamigos\editable\EditableAction;
 use yii\base\UserException;
 use yii\bootstrap\ActiveForm;
 use yii\db\Expression;
@@ -30,6 +31,17 @@ class ProfileController extends AccessController
 	{
 		parent::init();
 		$this->layout = 'full-content';
+	}
+	
+	public function actions()
+	{
+		return [
+			'update-motorcycle' => [
+				'class'       => EditableAction::className(),
+				'modelClass'  => Motorcycle::className(),
+				'forceCreate' => false
+			]
+		];
 	}
 	
 	public function actionUploadImg()

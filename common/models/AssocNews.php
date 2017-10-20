@@ -25,6 +25,7 @@ class AssocNews extends \yii\db\ActiveRecord
 {
 	const TEMPLATE_CHAMPIONSHIP = 1;
 	const TEMPLATE_STAGE = 2;
+	const TEMPLATE_SPECIAL_STAGE = 3;
 	
 	public $datePublishHuman;
 	public $autoCreate = false;
@@ -167,6 +168,21 @@ class AssocNews extends \yii\db\ActiveRecord
 				}
 				$news->previewText .= '.';
 				$news->link = \Yii::$app->urlManager->createUrl(['/competitions/stage', 'id' => $stage->id]);
+				break;
+			case self::TEMPLATE_SPECIAL_STAGE:
+				/** @var SpecialStage $stage */
+				$stage = $model;
+				$news->previewText = 'Анонсирован этап "' . $stage->title . '" соревнования "'
+					. $stage->championship->title . '".';
+				if ($stage->dateStart) {
+					$news->previewText .= '<br>Начало приёма результатов: ' . $stage->dateStartHuman;
+				}
+				if ($stage->dateEnd) {
+					$news->previewText .= '<br>Завершение приёма результатов: ' . $stage->dateEndHuman;
+				}
+				if ($stage->dateResult) {
+					$news->previewText .= '<br>Подведение итогов: ' . $stage->dateResultHuman;
+				}
 				break;
 		}
 		$news->save();
