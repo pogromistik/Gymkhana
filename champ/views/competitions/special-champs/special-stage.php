@@ -31,8 +31,8 @@ $championship = $stage->championship;
                 <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
 					'label-danger' : 'label-success' ?>"><?= SpecialStage::$statusesTitle[$stage->status] ?></span></h4>
 			
-			<?php if ($stage->description) { ?>
-                <p><?= $stage->description ?></p>
+			<?php if ($stage->getDescr()) { ?>
+                <p><?= $stage->getDescr() ?></p>
 			<?php } ?>
 			
 			<?php if ($stage->dateStart) { ?>

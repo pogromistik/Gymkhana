@@ -27,9 +27,9 @@ $this->title = $championship->getTitle();
 					['regionTitles' => $championship->getRegionsFor(true)]) ?>
             </div>
 		<?php } ?>
-		<?php if ($championship->description) { ?>
+		<?php if ($championship->getDescr()) { ?>
             <div class="pt-20">
-				<?= $championship->description ?>
+				<?= $championship->getDescr() ?>
             </div>
 		<?php } ?>
         <div>

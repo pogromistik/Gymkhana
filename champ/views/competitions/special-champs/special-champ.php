@@ -12,9 +12,9 @@ use yii\helpers\Html;
     <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
         <b><?= \Yii::t('app', '{year} год', ['year' => $championship->year->year]) ?></b>
         <span class="label label-info"><?= \common\models\SpecialChamp::$statusesTitle[$championship->status] ?></span>
-		<?php if ($championship->description) { ?>
+		<?php if ($championship->getDescr()) { ?>
             <div class="pt-20">
-				<?= $championship->description ?>
+				<?= $championship->getDescr() ?>
             </div>
 		<?php } ?>
 		

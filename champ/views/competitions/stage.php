@@ -43,8 +43,8 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 						]) ?></p>
 				<?php } ?>
 				
-				<?php if ($stage->description) { ?>
-                    <p><?= $stage->description ?></p>
+				<?php if ($stage->getDescr()) { ?>
+                    <p><?= $stage->getDescr() ?></p>
 				<?php } ?>
 				<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
 					<?php if ($stage->startRegistration || $stage->endRegistration) { ?>
