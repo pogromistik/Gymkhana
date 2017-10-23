@@ -18,6 +18,13 @@ $this->params['breadcrumbs'][] = 'Добавление видео';
 $place = 1;
 ?>
 
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    Для добавление видео нажмите на поле "Empty" напротив соответствующей записи. Редактирование производится таким же образом.
+</div>
+
 <table class="table results">
     <thead>
     <tr>

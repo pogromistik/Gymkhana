@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\components\BaseActiveRecord;
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
@@ -32,6 +33,7 @@ use yii\web\UploadedFile;
  * @property string        $documentIds
  * @property integer       $participantsLimit
  * @property integer       $fastenClassFor
+ * @property integer       $outOfCompetitions
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -44,6 +46,8 @@ use yii\web\UploadedFile;
 class Stage extends BaseActiveRecord
 {
 	protected static $enableLogging = true;
+	
+	const CLASS_UNPERCENT = 'N';
 	
 	public $photoFile;
 	
@@ -122,7 +126,8 @@ class Stage extends BaseActiveRecord
 				'trackPhotoStatus',
 				'countryId',
 				'participantsLimit',
-				'fastenClassFor'
+				'fastenClassFor',
+				'outOfCompetitions'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
 			[['description'], 'string'],
@@ -131,7 +136,8 @@ class Stage extends BaseActiveRecord
 			[['countRace'], 'integer', 'min' => 1],
 			[['participantsLimit'], 'integer', 'min' => 3],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
-			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
+			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['outOfCompetitions', 'default', 'value' => 0]
 		];
 	}
 	
@@ -166,7 +172,8 @@ class Stage extends BaseActiveRecord
 			'countryId'              => 'Страна',
 			'documentIds'            => 'Документы',
 			'participantsLimit'      => 'Допустимое количество участников',
-			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа'
+			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа',
+			'outOfCompetitions'      => 'Вне общего зачёта'
 		];
 	}
 	
@@ -396,7 +403,11 @@ class Stage extends BaseActiveRecord
 							->andWhere(['athleteClassId' => $participant->athleteClassId])
 							->andWhere(['not', ['placeOfAthleteClass' => null]])->count() + 1;
 				}*/
-				$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				if ($this->class && $this->classModel->title == self::CLASS_UNPERCENT) {
+					$participant->percent = null;
+				} else {
+					$participant->percent = round($participant->bestTime / $this->referenceTime * 100, 2);
+				}
 				
 				//баллы
 				if (isset($points[$participant->place]) && $participant->percent != 0) {
@@ -556,5 +567,45 @@ LIMIT 1) order by "bestTime" asc) n'])
 		$figureTitles = Figure::find()->select('title')->where(['id' => $figureIds])->asArray()->column();
 		
 		return ['results' => $results, 'figureIds' => $figureIds, 'figureTitles' => $figureTitles];
+	}
+	
+	/**
+	 * @return AthletesClass | null
+	 */
+	public function classCalculate()
+	{
+		$participants = Participant::findAll(['stageId' => $this->id, 'status' => [Participant::STATUS_ACTIVE], 'isArrived' => 1]);
+		if ($participants) {
+			$classIds = Participant::find()->select('athleteClassId')
+				->where(['stageId' => $this->id, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])->distinct()->asArray()->column();
+			$class = null;
+			while ($classIds) {
+				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
+				/** @var AthletesClass $presumablyClass */
+				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
+				if (Participant::find()
+						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
+			from "Participants" WHERE "stageId"=' . $this->id . ') b'))
+						->where(new Expression('n=1'))
+						->andWhere(['a.stageId' => $this->id, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
+						->andWhere(['a.athleteClassId' => $presumablyClass->id])
+						->andWhere(new Expression('"a"."id"="b"."id"'))
+						->count() >= 3
+				) {
+					$class = $presumablyClass;
+					break;
+				}
+				$key = array_search($presumablyClass->id, $classIds);
+				unset($classIds[$key]);
+			}
+			if (!$class) {
+				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
+					->orderBy(['percent' => SORT_DESC])->one();
+			}
+			
+			return $class;
+		} else {
+			return null;
+		}
 	}
 }

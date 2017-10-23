@@ -20,13 +20,28 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
 
 <h3><?= date("d.m.Y", $date) ?></h3>
 
-<div class="alert alert-info">
+<div class="alert required-alert-info">
     После добавления результатов зайдите на
 	<?= \yii\bootstrap\Html::a('страницу фигуры', ['update', 'id' => $figure->id], ['target' => '_blank']) ?>
-    и в случае необходимости подтвердите новые классы и рекорды.
-    <br>
-    Формат времени: минуты:секунды.миллисекунды. Необходимо обязательно указывать все 6 цифр.<br>
-    Если штрафа нет - введите 0 или оставьте поле пустым.
+    и в случае необходимости подтвердите новые классы и рекорды.<br>
+    <b>Принимаются только результаты, полученные с использованием телеметрии</b>
+</div>
+
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    <ul>
+        <li>
+            Формат времени: минуты:секунды.миллисекунды. Необходимо обязательно указывать все 6 цифр.
+        </li>
+        <li>
+            Если штрафа нет - введите 0 или оставьте поле пустым.
+        </li>
+        <li>
+            Ссылка на видео не обязательна только в том случае, если вы лично видели этот результат.
+        </li>
+    </ul>
 </div>
 
 <?php if ($success) { ?>
@@ -95,7 +110,7 @@ $this->params['breadcrumbs'][] = 'Добавление результатов';
     <div class="col-sm-1"><?= $form->field($figureTime, 'fine')->textInput()->label(false) ?></div>
     <div class="col-sm-2"><?= $form->field($figureTime, 'videoLink')->textInput()->label(false) ?></div>
     <div class="col-sm-1">
-        <button type="submit" class="btn btn-primary btn-circle fa fa-save" title="Сохранить"></button>
+        <button type="submit" class="btn btn-my-style btn-green btn-circle fa fa-save" title="Сохранить"></button>
     </div>
 </div>
 

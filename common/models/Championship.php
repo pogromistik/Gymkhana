@@ -321,7 +321,8 @@ class Championship extends BaseActiveRecord
 				//если участник уже принимал участие в этапе - он может зарегистрироваться под этим же номером
 				$prevStages = Participant::find()->where(['championshipId' => $championship->id])
 					->andWhere(['athleteId' => $athleteId])
-					->andWhere(['status' => Participant::STATUS_ACTIVE])
+					->andWhere(['not', ['status' => [Participant::STATUS_DISQUALIFICATION, Participant::STATUS_CANCEL_ATHLETE,
+						Participant::STATUS_CANCEL_ADMINISTRATION]]])
 					->one();
 				if ($prevStages) {
 					$addOldNumber = $prevStages->number;
@@ -333,7 +334,9 @@ class Championship extends BaseActiveRecord
 		$busyNumbers = array_merge($busyNumbers, $tmpBusyNumbers);
 		$oldParticipantsNumbers = Participant::find()->select('number')
 			->where(['not', ['stageId' => $stage->id]])
-			->andWhere(['championshipId' => $stage->championshipId]);
+			->andWhere(['championshipId' => $stage->championshipId])
+			->andWhere(['not', ['status' => [Participant::STATUS_DISQUALIFICATION, Participant::STATUS_CANCEL_ATHLETE,
+				Participant::STATUS_CANCEL_ADMINISTRATION]]]);
 		if ($athleteId) {
 			$oldParticipantsNumbers = $oldParticipantsNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
@@ -374,13 +377,15 @@ class Championship extends BaseActiveRecord
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
 					$results[$participant->athleteId]['stages'][$stage->id] = $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
-					$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
-					$results[$participant->athleteId]['countStages'] += 1;
-					if (!$results[$participant->athleteId]['cityId']) {
-						$results[$participant->athleteId]['cityId'] = $stage->cityId;
-					} else {
-						if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
-							$results[$participant->athleteId]['severalRegions'] = true;
+					if (!$stage->outOfCompetitions) {
+						$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+						$results[$participant->athleteId]['countStages'] += 1;
+						if (!$results[$participant->athleteId]['cityId']) {
+							$results[$participant->athleteId]['cityId'] = $stage->cityId;
+						} else {
+							if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
+								$results[$participant->athleteId]['severalRegions'] = true;
+							}
 						}
 					}
 				}

@@ -18,6 +18,9 @@ use Yii;
  * @property integer $dateUpdated
  * @property integer $status
  * @property integer $creatorUserId
+ * @property integer $cbm
+ * @property double  $power
+ * @property integer $isCruiser
  *
  * @property Athlete $athlete
  */
@@ -47,8 +50,11 @@ class Motorcycle extends BaseActiveRecord
 	{
 		return [
 			[['athleteId', 'mark', 'model', 'dateAdded', 'dateUpdated'], 'required'],
-			[['athleteId', 'internalClassId', 'dateAdded', 'dateUpdated', 'status'], 'integer'],
+			[['athleteId', 'internalClassId', 'dateAdded', 'dateUpdated', 'status', 'isCruiser', 'cbm'], 'integer'],
+			[['cbm', 'power'], 'required', 'when' => function () {return $this->isNewRecord;}],
 			[['mark', 'model'], 'string', 'max' => 255],
+			[['power'], 'number'],
+			[['isCruiser'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -66,6 +72,9 @@ class Motorcycle extends BaseActiveRecord
 			'dateAdded'       => 'Добавлен',
 			'dateUpdated'     => 'Обновлен',
 			'status'          => 'Статус',
+			'cbm'             => 'Кубатура',
+			'power'           => 'Мощность',
+			'isCruiser'       => 'Круизёр?'
 		];
 	}
 	
@@ -77,6 +86,13 @@ class Motorcycle extends BaseActiveRecord
 		}
 		$this->model = trim($this->model);
 		$this->mark = trim($this->mark);
+		$this->isCruiser = (int)$this->isCruiser;
+		if (!$this->isNewRecord) {
+			$this->isCruiser = (int)$this->isCruiser;
+			if ($this->isCruiser !== 1) {
+				$this->isCruiser = 0;
+			}
+		}
 		$this->dateUpdated = time();
 		
 		return parent::beforeValidate();

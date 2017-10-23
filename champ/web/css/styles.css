@@ -643,6 +643,9 @@ a.deletePhoto {
     height: 159px;
     padding-right: 10px;
     overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }
 
 .athletes .info {
@@ -652,10 +655,6 @@ a.deletePhoto {
     height: 159px;
     z-index: 10;
     width: calc(100% - 130px);
-}
-
-.athletes .img img {
-    max-width: 120px;
 }
 
 .athletes .item .card .athleteClass {
@@ -1035,7 +1034,7 @@ table.results small.red {
 }
 
 .result-needClarificationParticipant a, .internal-class-needClarificationParticipant a {
-    color: #7c7d7d!important;
+    color: #7c7d7d !important;
 }
 
 .warning {
@@ -1050,6 +1049,231 @@ table.results small.red {
 
 h2.title small {
     font-size: 14px;
+}
+
+.down-time {
+    float: left;
+    text-align: center;
+}
+
+.time-blocks .points {
+    float: left;
+    font-size: 55px;
+}
+
+.down-time .item {
+    font-family: Stencil;
+    font-size: 65px;
+}
+
+.work-page {
+    text-align: center;
+    padding-top: 50px;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.work-page .time-blocks {
+    position: relative;
+    left: calc(50% - 124px);
+}
+
+.image-cutter .dropzone {
+    min-height: 100px;
+}
+
+.image-cutter .dropzone .img-container .preview-image {
+    height: 150px;
+    width: auto;
+}
+
+.hr-motorcycle {
+    margin-top: 15px;
+    width: 100%;
+    height: 25px;
+    background-size: contain;
+}
+
+.hr-motorcycle-1 {
+    background: url('../img/icons/1.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-2 {
+    background: url('../img/icons/2.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-3 {
+    background: url('../img/icons/3.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-4 {
+    background: url('../img/icons/4.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-5 {
+    background: url('../img/icons/5.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-6 {
+    background: url('../img/icons/6.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-7 {
+    background: url('../img/icons/7.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-8 {
+    background: url('../img/icons/8.png') repeat;
+    background-size: contain;
+}
+
+.hr-motorcycle-9 {
+    background: url('../img/icons/9.png') repeat;
+    background-size: contain;
+}
+
+.circle-class {
+    padding: 5px;
+    text-align: center;
+    border-radius: 100%;
+    width: 32px;
+    height: 30px;
+    display: inline-block;
+}
+
+.circle-class-green {
+    background: #00bb04;
+    color: #f4f4f4;
+}
+
+.circle-class-red {
+    background: #ff014a;
+    color: #f4f4f4;
+}
+
+.circle-class-blue {
+    background: #0082f4;
+    color: #f4f4f4;
+}
+
+.circle-class-yellow {
+    background: #ffcd00;
+    color: #f4f4f4;
+}
+
+.circle-class-white {
+    background: #ffffff;
+    color: #000000;
+}
+
+.errors {
+    position: relative;
+    width: 300px;
+}
+
+.errors img {
+    width: 100%;
+}
+
+.errors {
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.errors .img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.errors .text {
+    position: absolute;
+    z-index: 100;
+}
+
+.errors .text .code {
+    position: relative;
+    left: 135px;
+    font-size: 22px;
+    font-weight: bold;
+    top: 200px;
+}
+
+.errors .text .message {
+    position: relative;
+    left: 90px;
+    width: 150px;
+    top: 200px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.gray-column {
+    background: #dedede;
+    color: #7b7b7b;
+    border-bottom: 1px solid #cacaca;
+}
+
+.gray-column a {
+    color: #7b7b7b;
+}
+
+th.gray-column {
+    border-bottom: 2px solid #cacaca!important;
+}
+
+.green-title, .green-title a {
+    color: #56a025;
+}
+
+.green-title:hover, .green-title a:hover {
+    color: #4b4e53;
+}
+
+.big-icon {
+    font-size: 18px;
+}
+
+.btn-green {
+    color: #fff;
+    background-color: #56a025;
+    border-color: #4cae4c;
+}
+
+.btn-green:hover {
+    background-color: #4cae4c;
+    color: #fff!important;
+}
+
+.toggle .btn {
+    text-decoration: none;
+}
+
+.special-stage-form {
+    display: none;
+}
+
+.my-row {
+    border: 2px solid #56a025;
+}
+
+.is-active-0 {
+    background: #e2e2e2  !important;
+    color: #828282;
+}
+
+.is-active-0 a {
+    color: #828282!important;
 }
 
 .href-menu ul li {

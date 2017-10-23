@@ -11,7 +11,7 @@ $this->title = 'Классы награждения: Челябинская сх
 ?>
 <div class="che-scheme-index">
 	<p>
-		<?= Html::a('Добавить класс награждения', ['create-class'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить класс награждения', ['create-class'], ['class' => 'btn btn-my-style btn-green']) ?>
 	</p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -27,7 +27,7 @@ $this->title = 'Классы награждения: Челябинская сх
 				'format' => 'raw',
 				'value'  => function (\common\models\CheScheme $item) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update-class', 'id' => $item->id], [
-						'class' => 'btn btn-primary',
+						'class' => 'btn btn-my-style btn-blue',
 						'title' => 'Редактировать'
 					]);
 				}

@@ -18,7 +18,39 @@ use dosamigos\ckeditor\CKEditor;
 ?>
 
 <div class="stage-form">
-	
+    <div class="alert help-alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
+        <ul>
+            <li>
+                Поля, обязательные для заполнения: "Страна", "Город проведения", "Название", "Количество заездов".
+            </li>
+            <li>
+                Обратите внимание - если у вас ограниченное количество участников, то все заявки будут нуждаться в предварительной
+                модерации (осуществляется на странице
+                <?= $model->isNewRecord ? 'со списком участников' :
+                    Html::a('со списком участников', ['/competitions/participants/index', 'stageId' => $model->id]) ?>).
+                Таким образом, при необходимости вы принудительно сможете зарегистрировать больше людей, чем указано в этом поле.
+            </li>
+            <li>
+                Поля "Начало регистрации" и "Завершение регистрации" нужны для предворительной регистрации (с сайта).
+            </li>
+            <li>
+                Никто не увидит фото трассы, пока вы не отметите пункт "Опубликовать трассу".
+            </li>
+            <li>
+                Класс соревнования рассчитывается автоматически после завершения регистрации и квалификационных заездов.
+                Его изменение имеет смысл только в случае, если рассчёты по этому классу могут привести к некорректным изменениям  (например,
+                у вас на этап приехало 3 спортсмена класса C3. Двое из них полностью завалили обе попытки, а третий проехал, но очень плохо.
+                В такой ситуации многие спортсмены попадут в класс C3, фактически едва дотягивая до D2. Мы бы рекомендовали в такой ситуации
+                принудительно понизить класс до D1 или другого, по которому рассчёт будет произведён более корректно.)
+            </li>
+            <li>
+                Если отмечен пункт "вне зачёта", баллы за этот этап не будут суммироваться при подсчёте итогов чемпионата.
+            </li>
+        </ul>
+    </div>
 	<?php $form = ActiveForm::begin(); ?>
 	<?= $form->field($model, 'countryId')->widget(Select2::classname(), [
 		'data'    => Country::getAll(true),
@@ -70,6 +102,8 @@ use dosamigos\ckeditor\CKEditor;
 	<?= $form->field($model, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
 	
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'outOfCompetitions')->checkbox() ?>
 	
 	<?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
 	
@@ -178,7 +212,8 @@ use dosamigos\ckeditor\CKEditor;
 	
 	<?= $form->field($model, 'status')->dropDownList(\common\models\Stage::$statusesTitle) ?>
     <div class="form-group">
-		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
+            ['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

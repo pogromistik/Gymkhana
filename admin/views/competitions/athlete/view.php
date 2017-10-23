@@ -11,29 +11,20 @@ use dosamigos\editable\Editable;
 $this->title = $model->lastName . ' ' . $model->firstName;
 $this->params['breadcrumbs'][] = ['label' => 'Спортсмены', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$motorcycles = '';
 ?>
-<?php
-if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all()) {
-	$motorcycles = '<ul>';
-	foreach ($motorcyclesModels as $motorcycleItem) {
-		$motorcycles .= '<li>' . $motorcycleItem->model . ' ' . $motorcycleItem->mark . '</li>';
-	}
-	$motorcycles .= '</ul>';
-}
-?>
+
 <div class="athlete-view">
 
     <p>
 		<?php if (\common\helpers\UserHelper::accessAverage($model->regionId, $model->creatorUserId)) { ?>
-			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-my-style btn-blue']) ?>
 		<?php } ?>
 		<?php if (!$model->hasAccount) { ?>
 			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-				['class' => 'btn btn-default createCabinet', 'data-id' => $model->id]) ?>
+				['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
 		<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
 			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
-				['class' => 'btn btn-danger deleteCabinet', 'data-id' => $model->id]) ?>
+				['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
 		<?php } ?>
     </p>
 	
@@ -78,7 +69,20 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 				'attribute' => 'motorcycles',
 				'label'     => 'Мотоциклы',
 				'format'    => 'raw',
-				'value'     => $motorcycles
+				'value'     => function ($model) {
+					$html = '<ul>';
+					foreach ($model->activeMotorcycles as $motorcycle) {
+						$html .= '<li>' . $motorcycle->getFullTitle() . '</li>';
+					}
+					$html .= '</ul>';
+					
+					return $html;
+				}
+			],
+			[
+				'attribute' => 'photo',
+				'format'    => 'raw',
+				'value'     => Html::img(\Yii::getAlias('@filesView') . '/' . $model->photo)
 			]
 		],
 	]) ?>
@@ -86,6 +90,17 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 
 
 <h3>Мотоциклы</h3>
+<div class="alert help-alert alert-info">
+    <div class="text-right">
+        <span class="fa fa-remove closeHintBtn"></span>
+    </div>
+    Постарайтесь не перепутать марку и модель :)<br>
+    Параметры для уже созданных мотоциклов можно редактировать - для этого необходимо нажать на нужное поле.
+    Если ничего не происходит - значит, у вас недостаточно прав для совершения этого действия. Для решения проблемы вы можете обратиться
+    к организатору своего региона или напрямую к <a href="https://vk.com/id19792817" target="_blank">разработчику</a>.<br>
+    Красная кнопка - "удаление" мотоцикла. Фактически, при этом он лишь блокируется и в любой момент его можно вернуть обратно
+    (кнопка удаления сменится на кнопку возврата).
+</div>
 <?= $this->render('_motorcycle-form', [
 	'motorcycle' => $motorcycle,
 ]) ?>
@@ -138,13 +153,13 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 						<?php
 						if ($motorcycleInfo->status) {
 							echo Html::a('<span class="fa fa-remove"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-danger changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-red changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Удалить'
 							]);
 						} else {
 							echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-warning changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-boggy changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Вернуть в работу'
 							]);
@@ -168,7 +183,7 @@ if ($motorcyclesModels = $model->getMotorcycles()->andWhere(['status' => \common
 						if ($motorcycleInfo->status) {
 						} else {
 							echo Html::a('<span class="fa fa-check"></span>', ['/competitions/motorcycles/change-status', 'id' => $motorcycleInfo->id], [
-								'class'   => 'btn btn-warning changeMotorcycleStatus',
+								'class'   => 'btn btn-my-style btn-boggy changeMotorcycleStatus',
 								'data-id' => $motorcycleInfo->id,
 								'title'   => 'Вернуть в работу'
 							]);

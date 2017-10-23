@@ -18,41 +18,91 @@ use yii\bootstrap\Html;
                     <div class="title-with-bg">
 						<?= $yearInfo['year'] ?>
                     </div>
-					<?php foreach ($yearInfo['data'] as $data) { ?>
-						<?php
-						/** @var \common\models\Stage[] $stages */
-						$stages = $data['stages'];
-						if (!$stages) { ?>
+					<?php if (empty($yearInfo['champs']) && empty($yearInfo['specialChamps'])) { ?>
+                        <div class="pl-10">
+                            Не создано ни одного чемпионата.
+                        </div>
+					<?php } else { ?>
+                        <!-- Обычные чемпионаты -->
+						<?php foreach ($yearInfo['champs'] as $data) { ?>
+							<?php
+							/** @var \common\models\Championship $champ */
+							$champ = $data['championship']; ?>
                             <div class="pl-10">
-                                Для чемпионата пока не создано ни одного этапа.
-                            </div>
-						<?php } else { ?>
-                            <div class="pl-10">
-								<?php if ($data['showResults']) { ?>
-									<?php if ($data['status'] == \common\models\Championship::STATUS_PAST) { ?>
-										<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
-                                        <br>
-									<?php } else { ?>
-										<?= Html::a('Предварительные итоги чемпионата',
-											['/competitions/championship-result', 'championshipId' => $data['id'], 'showAll' => 1]) ?>
-                                        <br>
-									<?php } ?>
+								<?= Html::a($champ->title, ['/competitions/championship', 'id' => $champ->id]) ?>
+								<?php
+								/** @var \common\models\Stage[] $stages */
+								$stages = $data['stages'];
+								if (!$stages) { ?>
+                                    <div class="pl-10">
+                                        Для чемпионата пока не создано ни одного этапа.
+                                    </div>
+								<?php } else { ?>
+                                    <div class="pl-10">
+                                        <ul>
+											<?php if ($champ->showResults) { ?>
+												<?php if ($champ->status == \common\models\Championship::STATUS_PAST) { ?>
+                                                    <li>
+														<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $champ->id]) ?>
+                                                    </li>
+												<?php } else { ?>
+                                                    <li><?= Html::a('Предварительные итоги чемпионата',
+															['/competitions/championship-result', 'championshipId' => $champ->id, 'showAll' => 1]) ?></li>
+												<?php } ?>
+											<?php } ?>
+											<?php foreach ($stages as $stage) { ?>
+												<?php
+												$title = $stage->title . ', ' . $stage->city->title;
+												if ($stage->dateOfThe) {
+													$title .= ' ' . $stage->dateOfTheHuman;
+												}
+												?>
+                                                <li><?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?></li>
+											<?php } ?>
+                                        </ul>
+                                    </div>
 								<?php } ?>
-								<?php foreach ($stages as $stage) { ?>
-									<?php
-									$title = $stage->title . ', ' . $stage->city->title;
-									if ($stage->dateOfThe) {
-										$title .= ' ' . $stage->dateOfTheHuman;
-									}
-									?>
-									<?= Html::a($title, ['/competitions/stage', 'id' => $stage->id]) ?>
-                                    <br>
+                            </div>
+						<?php } ?>
+						
+                        <!-- специальные чемпионаты -->
+						<?php foreach ($yearInfo['specialChamps'] as $data) { ?>
+							<?php
+							/** @var \common\models\SpecialChamp $champ */
+							$champ = $data['championship']; ?>
+                            <div class="pl-10">
+								<div class="green-title">
+									<?= Html::a($champ->title, ['/competitions/special-champ', 'id' => $champ->id]) ?>
+                                </div>
+								<?php
+								/** @var \common\models\SpecialStage[] $stages */
+								$stages = $data['stages'];
+								if (!$stages) { ?>
+                                    <div class="pl-10">
+                                        Для чемпионата пока не создано ни одного этапа.
+                                    </div>
+								<?php } else { ?>
+                                    <div class="pl-10">
+                                        <ul>
+                                            <li>
+		                                        <?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $champ->id]) ?>
+                                            </li>
+											<?php foreach ($stages as $stage) { ?>
+												<?php
+												$title = $stage->title;
+												if ($stage->dateStart) {
+													$title .= ' ' . $stage->dateStartHuman;
+												}
+												?>
+                                                <li><?= Html::a($title, ['/competitions/special-stage', 'id' => $stage->id]) ?></li>
+											<?php } ?>
+                                        </ul>
+                                    </div>
 								<?php } ?>
                             </div>
 						<?php } ?>
 					<?php } ?>
-				<?php }
-				?>
+				<?php } ?>
 			<?php } ?>
         </div>
     </div>

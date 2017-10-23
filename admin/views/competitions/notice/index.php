@@ -12,7 +12,7 @@ $this->title = 'Уведомления для зарегистрировавши
 <div class="notice-index">
 
     <p>
-        <?= Html::a('Отправить уведомление', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Отправить уведомление', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

@@ -2,12 +2,13 @@
 use yii\bootstrap\Html;
 
 /**
- * @var \common\models\Athlete        $athlete
- * @var array                         $figuresResult
- * @var \common\models\FigureTime     $result
- * @var \common\models\Figure         $figure
- * @var \common\models\ClassHistory[] $history
- * @var \common\models\Participant[]  $participants
+ * @var \common\models\Athlete                  $athlete
+ * @var array                                   $figuresResult
+ * @var \common\models\FigureTime               $result
+ * @var \common\models\Figure                   $figure
+ * @var \common\models\ClassHistory[]           $history
+ * @var \common\models\Participant[]            $participants
+ * @var \common\models\RequestForSpecialStage[] $specialHistory
  */
 ?>
 
@@ -26,9 +27,17 @@ use yii\bootstrap\Html;
             <div class="item">
                 <b>Город: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
             </div>
-			<?php if ($athlete->athleteClassId) { ?>
+			<?php if ($athlete->athleteClassId) {
+				$athleteClass = $athlete->athleteClass;
+				$cssClass = 'default';
+				if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title, 'UTF-8')])) {
+					$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($athleteClass->title, 'UTF-8')];
+				}
+				?>
                 <div class="item">
-                    <b>Класс: </b><?= $athlete->athleteClass->title ?>
+                    <b>Класс: </b>
+                    <div
+                            class="circle-class circle-class-<?= $cssClass ?>"><?= $athleteClass->title ?></div>
                 </div>
 			<?php } ?>
         </div>
@@ -81,11 +90,11 @@ use yii\bootstrap\Html;
                             </div>
                         </td>
                         <td><?= $result->actualPercent ? $result->actualPercent : $result->percent ?>%
-	                        <?php if ($result->videoLink) { ?>
+							<?php if ($result->videoLink) { ?>
                                 <a href="<?= $result->videoLink ?>" target="_blank">
                                     <i class="fa fa-youtube"></i>
                                 </a>
-	                        <?php } ?>
+							<?php } ?>
                         </td>
                     </tr>
 				<?php } ?>
@@ -105,7 +114,7 @@ use yii\bootstrap\Html;
                     <th>Этап</th>
                     <th>Мотоцикл</th>
                     <th>Рейтинг</th>
-                    <th>Место в абсолюте</th>
+                    <th>Место</th>
                 </tr>
 				<?php foreach ($participants as $participant) { ?>
                     <tr>
@@ -116,28 +125,14 @@ use yii\bootstrap\Html;
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
                         <td>
-	                        <?php if ($participant->percent) {
-		                        echo $participant->percent . '%';
-		                        $bestTime = $participant->getBestTimeItem();
-		                        if ($bestTime && $bestTime->videoLink) { ?>
+							<?php if ($participant->percent) {
+								echo $participant->percent . '%';
+								$bestTime = $participant->getBestTimeItem();
+								if ($bestTime && $bestTime->videoLink) { ?>
                                     <a href="<?= $bestTime->videoLink ?>" target="_blank">
                                         <i class="fa fa-youtube"></i>
                                     </a>
-		                        <?php }
-	                        } else {
-		                        if ($stage->referenceTime) {
-			                        ?>
-                                    <span class="fa fa-remove remove"></span>
-			                        <?php
-		                        } else {
-		                            ?>
-                                    <span class="green wait">...</span>
-                            <?php
-                                }
-	                        } ?>
-                        <td>
-							<?php if ($participant->place) {
-								echo $participant->place;
+								<?php }
 							} else {
 								if ($stage->referenceTime) {
 									?>
@@ -148,6 +143,50 @@ use yii\bootstrap\Html;
                                     <span class="green wait">...</span>
 									<?php
 								}
+							} ?>
+                        <td>
+							<?php if ($participant->place) {
+								echo $participant->place;
+							} else {
+								if ($stage->referenceTime) {
+									if ($participant->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+										?>
+                                        <span class="fa fa-remove remove"></span>
+										<?php
+									} else {
+										?>
+                                        <span class="small">вне зачёта</span>
+										<?php
+									}
+								} else {
+									?>
+                                    <span class="green wait">...</span>
+									<?php
+								}
+							} ?>
+                        </td>
+                    </tr>
+				<?php } ?>
+				<?php foreach ($specialHistory as $item) { ?>
+                    <tr>
+                        <td>
+							<?php $stage = $item->stage; ?>
+							<?= Html::a($stage->title, ['/competitions/special-stage', 'id' => $stage->id]) ?><br>
+							<?= $stage->championship->year->year ?>г.
+                        </td>
+                        <td><?= $item->motorcycle->getFullTitle() ?></td>
+                        <td>
+							<?php if ($item->percent) {
+								echo $item->percent . '%';
+								if ($item->videoLink) { ?>
+                                    <a href="<?= $item->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+								<?php }
+							} ?>
+                        <td>
+							<?php if ($item->place) {
+								echo $item->place;
 							} ?>
                         </td>
                     </tr>

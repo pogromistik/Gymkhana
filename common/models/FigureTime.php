@@ -142,7 +142,10 @@ class FigureTime extends BaseActiveRecord
 			list($min, $secs) = explode(':', $this->timeForHuman);
 			$this->time = ($min * 60000) + round($secs * 1000);
 		}
-		$this->resultTime = $this->time + $this->fine * 1000;
+		$this->resultTime = $this->time;
+		if ($this->fine) {
+			$this->resultTime += $this->fine * 1000;
+		}
 		if ($this->dateForHuman) {
 			$this->date = (new \DateTime($this->dateForHuman, new \DateTimeZone('Asia/Yekaterinburg')))->getTimestamp();
 		}
@@ -158,10 +161,11 @@ class FigureTime extends BaseActiveRecord
 		$this->yearId = $year->id;
 		
 		$this->dateUpdated = time();
-		
 		$figure = Figure::findOne($this->figureId);
 		if ($figure->bestTime) {
-			$this->percent = round($this->resultTime / $figure->bestTime * 100, 2);
+			if (!isset($this->oldAttributes['resultTime']) || $this->oldAttributes['resultTime'] != $this->resultTime) {
+				$this->percent = round($this->resultTime / $figure->bestTime * 100, 2);
+			}
 			if ($this->isNewRecord) {
 				$this->recordInMoment = $figure->bestTime;
 			}

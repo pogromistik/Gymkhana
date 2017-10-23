@@ -193,6 +193,11 @@ $(document).on("submit", '.raceTimeForm', function (e) {
                 clickCount = 0;
                 if (result['success'] == true) {
                     form.find('.row').addClass('result-line');
+                    var btn = form.find('.btn');
+                    if (btn.hasClass('btn-green')) {
+                        btn.removeClass('btn-green');
+                        btn.addClass('btn-blue');
+                    }
                     form.find('.timeId').val(result['id']);
                     var next = form.next();
                     next.find('input[name="Time[timeForHuman]"]').focus();
@@ -603,7 +608,7 @@ $('.getRequestWithConfirm').click(function (e) {
 $('.cancelFigureResult').click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $('#id').val(id);
     $('#cancelFigureResult').modal('show')
 });
@@ -1083,7 +1088,7 @@ $('.processClassRequest').click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
     var status = $(this).data('status');
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $('#id').val(id);
     $('#status').val(status);
     if (status == 1) {
@@ -1119,7 +1124,7 @@ $(document).on("submit", '#processClassRequestForm', function (e) {
 $(document).on("submit", '#sendMessagesForm', function (e) {
     e.preventDefault();
     var form = $(this);
-    $('.alert').hide();
+    $('.alert:not(.required-alert-info):not(.help-alert)').hide();
     $.ajax({
         url: '/competitions/additional/send-message',
         type: "POST",
@@ -1249,6 +1254,261 @@ $(document).on("submit", '#importParticipants', function (e) {
             alert(result);
             wait.hide();
             btn.show();
+        }
+    });
+});
+
+var equalizer = function (equalizer) {
+    var maxHeight = 0;
+
+    equalizer.each(function () {
+        console.log($(this).height());
+        if ($(this).height() > maxHeight) {
+            maxHeight = $(this).height()
+        }
+    });
+    equalizer.height(maxHeight);
+};
+
+$(window).load(function () {
+    if ($(document).width() >= 975) {
+        equalizer($('.with-hr-border > div'));
+    }
+});
+
+$('.closeHintBtn').click(function () {
+    var elem = $(this);
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Отключение подсказок',
+        message: 'Отключить подсказки полностью? Они будут отключены на ВСЕХ страницах в админке. ' +
+        'При необходимости вы сможете включить их в своём профиле. ',
+        className: 'info',
+        buttons: {
+            cancel: {
+                label: 'Скрыть эту подсказку',
+                className: "btn-primary",
+                callback: function () {
+                    elem.parent().parent().hide();
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Отключить все подсказки',
+                className: "btn-warning",
+                callback: function () {
+                    $.get('/competitions/additional/close-hint').done(function (data) {
+                        location.reload();
+                    }).fail(function (error) {
+                        alert(error.responseText);
+                    });
+                }
+            }
+        }
+    });
+});
+
+function countDown(second, endMinute, endHour, endDay, endMonth) {
+    var now = new Date();
+    second = (arguments.length == 1) ? second + now.getSeconds() : second;
+    endHour = typeof(endHour) != 'undefined' ? endHour : now.getHours();
+    endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();
+    endDay = typeof(endDay) != 'undefined' ? endDay : now.getDate();
+    endMonth = typeof(endMonth) != 'undefined' ? endMonth : now.getMonth();
+//добавляем секунду к конечной дате (таймер показывает время уже спустя 1с.)
+    var endDate = new Date(now.getFullYear(), endMonth, endDay, endHour, endMinute, second + 1);
+    var interval = setInterval(function () { //запускаем таймер с интервалом 1 секунду
+        var time = endDate.getTime() - now.getTime();
+        if (time < 0) {                      //если конечная дата меньше текущей
+            var seconds = 0;
+            var hours = 0;
+            var minutes = 0;
+        } else {
+            var hours = Math.floor(time / 36e5) % 24;
+            var minutes = Math.floor(time / 6e4) % 60;
+            var seconds = Math.floor(time / 1e3) % 60;
+        }
+        $('#hours').text(hours);
+        $('#mins').text(minutes);
+        $('#secs').text(seconds);
+        if (!seconds && !minutes && !days && !hours) {
+            clearInterval(interval);
+            // alert("Время вышло!");
+        }
+        now.setSeconds(now.getSeconds() + 1); //увеличиваем текущее время на 1 секунду
+    }, 1000);
+}
+
+$('.ajaxDelete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var actionId = elem.data('action');
+    var id = elem.data('id');
+    var text = '';
+    var action = '';
+    switch (actionId) {
+        case 'stage':
+            text = 'Уверены, что хотите удалить этот этап? Действие необратимо.';
+            action = '/competitions/stages/delete';
+            break;
+        case 'champ':
+            text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
+            action = '/competitions/championships/delete';
+            break;
+        case 'special-champ':
+            text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
+            action = '/competitions/special-champ/delete';
+            break;
+        case 'special-stage':
+            text = 'Уверены, что хотите удалить этот этап? Действие необратимо.';
+            action = '/competitions/special-champ/delete-stage';
+            break;
+    }
+    if (confirm(text)) {
+        showBackDrop();
+        $.get(action, {
+            id: id
+        }).done(function (data) {
+            hideBackDrop();
+            if (data == true) {
+                location.href = '/competitions/championships';
+            } else {
+                BootboxError(data);
+            }
+        }).fail(function (error) {
+            hideBackDrop();
+            alert(error.responseText);
+        });
+    }
+});
+
+
+$(document).on("submit", '#cancelRegForSpecStage', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+        url: '/competitions/special-champ/cancel',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(data);
+            }
+        },
+        error: function (result) {
+            alert(result);
+        }
+    });
+});
+
+$('.approveSpecChampForAthlete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var athleteId = elem.data('athlete-id');
+    showBackDrop();
+    $.get('/competitions/special-champ/approve-for-athlete', {
+        id: id, athleteId: athleteId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            BootboxError(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+        console.log(error);
+    });
+});
+
+$('.approveSpecChampForAthleteOnMotorcycle').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var athleteId = elem.data('athlete-id');
+    var motorcycleId = elem.data('motorcycle-id');
+    showBackDrop();
+    $.get('/competitions/special-champ/approve-for-athlete-on-motorcycle', {
+        id: id, athleteId: athleteId, motorcycleId: motorcycleId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            BootboxError(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+        console.log(error);
+    });
+});
+
+function cityForNewRequest(id) {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/special-champ/save-new-city',
+        type: "POST",
+        data: $('#cityForNewRequest' + id).serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+}
+
+$('.changeTmpMotorcycle').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var id = elem.data('id');
+    var mode = elem.data('mode');
+    var motorcycleId = elem.data('motorcycle-id');
+    $.get('/competitions/athlete/find-tmp-motorcycle', {
+        id: id, motorcycleId: motorcycleId, mode: mode
+    }).done(function (data) {
+        hideBackDrop();
+        $('.modalChangeTmpMotorcycle').html(data);
+        $('#modalChangeTmpMotorcycle').modal('show')
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var id = $('#tmp-id').val();
+    var motorcycleId = $('#tmp-motorcycleId').val();
+    $.ajax({
+        url: "/competitions/athlete/change-tmp-motorcycle",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['success'] == true) {
+                $('#modalChangeTmpMotorcycle').modal('hide');
+                $('#tmp-motorcycle-' + id + '-' + motorcycleId).html(result['data']);
+            } else {
+                alert(result['errors']);
+            }
+        },
+        error: function (result) {
+            alert(result);
         }
     });
 });
