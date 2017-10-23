@@ -286,81 +286,87 @@ use yii\web\JsExpression;
                 </table>
             </div>
 		<?php } ?>
-    </div>
-    <div id="newsletters-link">
-        <h3>Подписаться на новости</h3>
-        <div class="help-for-athlete">
-            <small>
-                Подписываясь на новости, вы даёте согласие на отправку писем, содержащих информацию о
-                предстоящих этапах, на ваш email (<?= $athlete->email ?>).<br>
-                Вы можете подписаться на все новости всех регионов (просто отметив пункт "Подписаться на новостную рассылку");
-                можете выбрать  страны и регионы, новости которых вас интересуют; можете выбрать тип новостей. (Поля для выбора
-                появятся после выбора пункта "Подписаться на новостную рассылку").
-                Если вы выберите страну, но не укажите ни одного региона, вам будут приходить все новости этой страны.<br>
-                В любой момент вы можете отписаться от рассылки, сняв отметку в личном кабинете.
-            </small>
-        </div>
-        <div class="form pt-10">
-			<?php $form = ActiveForm::begin(['id' => 'newslettersForm']); ?>
-
-            <div class="pb-10">
-				<?= Html::checkbox('subscription', !$subscription->isNewRecord, [
-					'label' => 'Подписаться на новостную рассылку',
-					'id'    => 'subscriptionNews'
-				]) ?>
+        <div id="newsletters-link">
+            <h3>Подписаться на новости</h3>
+            <div class="help-for-athlete">
+                <small>
+                    Подписываясь на новости, вы даёте согласие на отправку писем, содержащих информацию о
+                    предстоящих этапах, на ваш email (<?= $athlete->email ?>).<br>
+                    Вы можете подписаться на все новости всех регионов (просто отметив пункт "Подписаться на новостную рассылку");
+                    можете выбрать  страны и регионы, новости которых вас интересуют; можете выбрать тип новостей. (Поля для выбора
+                    появятся после выбора пункта "Подписаться на новостную рассылку").
+                    Если вы выберите страну, но не укажите ни одного региона, вам будут приходить все новости этой страны.<br>
+                    В любой момент вы можете отписаться от рассылки, сняв отметку в личном кабинете.
+                </small>
             </div>
+            <div class="form pt-10">
+			    <?php $form = ActiveForm::begin(['id' => 'newslettersForm']); ?>
 
-            <div class="subscription-info" style="display: <?= $subscription->isNewRecord ? 'none' : 'block' ?>">
-				<?= $form->field($subscription, 'type')
-					->dropDownList(\common\models\NewsSubscription::$typesTitle)->label(false) ?>
-                <div class="row">
-                    <div class="col-md-6 col-sm-12">
-						<?= $form->field($subscription, 'countryIds')->widget(Select2::classname(), [
-							'data'    => Country::getAll(true),
-							'options' => [
-								'placeholder' => 'Выберите страну...',
-								'id'          => 'subscript-country-id',
-								'multiple' => true,
-							],
-						])->label('Выберите страны'); ?>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-						<?= $form->field($subscription, 'regionIds')->widget(DepDrop::classname(), [
-							'data'           => $subscription->getRegions(true),
-							'options'        => ['placeholder' => 'Выберите регионы...'],
-							'type'           => DepDrop::TYPE_SELECT2,
-							'select2Options' => [
-								'pluginOptions' => [
-									'multiple'           => true,
-									'allowClear'         => true,
-									'minimumInputLength' => 3,
-									'language'           => [
-										'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
-									],
-									'ajax'               => [
-										'url'      => \yii\helpers\Url::to(['/help/regions-list']),
-										'dataType' => 'json',
-										'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#subscript-country-id").val()}; }')
-									],
-									'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
-									'templateResult'     => new JsExpression('function(region) { return region.text; }'),
-									'templateSelection'  => new JsExpression('function (region) { return region.text; }'),
-								],
-							],
-							'pluginOptions'  => [
-								'depends'     => ['subscript-country-id'],
-								'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
-								'loadingText' => 'Для выбранной страны нет регионов...',
-								'placeholder' => 'Выберите регион...'
-							]
-						])->label('Выберите регионы'); ?>
+                <div class="pb-10">
+				    <?= Html::checkbox('subscription', !$subscription->isNewRecord, [
+					    'label' => 'Подписаться на новостную рассылку',
+					    'id'    => 'subscriptionNews'
+				    ]) ?>
+                </div>
+
+                <div class="subscription-info" style="display: <?= $subscription->isNewRecord ? 'none' : 'block' ?>">
+				    <?= $form->field($subscription, 'types')->widget(Select2::classname(), [
+						    'data'    => \common\models\NewsSubscription::$typesTitle,
+						    'options' => [
+							    'placeholder' => 'Выберите типы...',
+							    'id'          => 'subscript-types',
+							    'multiple' => true,
+						    ],
+					    ])->label('Выберите типы'); ?>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+						    <?= $form->field($subscription, 'countryIds')->widget(Select2::classname(), [
+							    'data'    => Country::getAll(true),
+							    'options' => [
+								    'placeholder' => 'Выберите страну...',
+								    'id'          => 'subscript-country-id',
+								    'multiple' => true,
+							    ],
+						    ])->label('Выберите страны'); ?>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+						    <?= $form->field($subscription, 'regionIds')->widget(DepDrop::classname(), [
+							    'data'           => $subscription->getRegions(true),
+							    'options'        => ['placeholder' => 'Выберите регионы...'],
+							    'type'           => DepDrop::TYPE_SELECT2,
+							    'select2Options' => [
+								    'pluginOptions' => [
+									    'multiple'           => true,
+									    'allowClear'         => true,
+									    'minimumInputLength' => 3,
+									    'language'           => [
+										    'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+									    ],
+									    'ajax'               => [
+										    'url'      => \yii\helpers\Url::to(['/help/regions-list']),
+										    'dataType' => 'json',
+										    'data'     => new JsExpression('function(params) { return {title:params.term, countryId:$("#subscript-country-id").val()}; }')
+									    ],
+									    'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+									    'templateResult'     => new JsExpression('function(region) { return region.text; }'),
+									    'templateSelection'  => new JsExpression('function (region) { return region.text; }'),
+								    ],
+							    ],
+							    'pluginOptions'  => [
+								    'depends'     => ['subscript-country-id'],
+								    'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
+								    'loadingText' => 'Для выбранной страны нет регионов...',
+								    'placeholder' => 'Выберите регион...'
+							    ]
+						    ])->label('Выберите регионы'); ?>
+                        </div>
                     </div>
                 </div>
+                <div class="pt-10 text-right">
+				    <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
+                </div>
+			    <?php $form->end(); ?>
             </div>
-            <div class="pt-10 text-right">
-				<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
-            </div>
-			<?php $form->end(); ?>
         </div>
     </div>
 </div>

@@ -52,6 +52,7 @@ class ProfileController extends AccessController
 		
 		if ($model->load(\Yii::$app->request->post())) {
 			$model->save();
+			
 			return $this->redirect('index');
 		}
 		
@@ -93,6 +94,7 @@ class ProfileController extends AccessController
 		} else {
 			$subscription->regionIds = $subscription->getRegionIds();
 			$subscription->countryIds = $subscription->getCountryIds();
+			$subscription->types = $subscription->getTypes();
 		}
 		
 		return $this->render('index', [
@@ -134,7 +136,7 @@ class ProfileController extends AccessController
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
 			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
 			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]]);
-		if($withoutRegistrationIds) {
+		if ($withoutRegistrationIds) {
 			$newStages->andWhere(['not', ['id' => $withoutRegistrationIds]]);
 		}
 		$newStages = $newStages->all();
@@ -583,6 +585,11 @@ class ProfileController extends AccessController
 			$subscription->countryIds = json_encode($subscription->countryIds);
 		} else {
 			$subscription->countryIds = null;
+		}
+		if ($subscription->types) {
+			$subscription->types = json_encode($subscription->types);
+		} else {
+			$subscription->types = null;
 		}
 		if (!$subscription->save()) {
 			return var_dump($subscription->errors);

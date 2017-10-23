@@ -12,22 +12,22 @@ use yii\helpers\ArrayHelper;
  * @property integer $athleteId
  * @property string  $regionIds
  * @property integer $dateAdded
- * @property integer $type
+ * @property string  $types
  * @property integer $isActive
  * @property integer $dateEnd
  * @property string  $countryIds
  */
 class NewsSubscription extends \yii\db\ActiveRecord
 {
-	const TYPE_ALL = 1;
-	const TYPE_STAGES = 2;
-	const TYPE_REGISTRATIONS = 3;
-	const TYPE_RECORDS = 4;
+	const TYPE_STAGES = 1;
+	const TYPE_REGISTRATIONS = 2;
+	const TYPE_WORLD_RECORDS = 3;
+	const TYPE_RUSSIA_RECORDS = 3;
 	public static $typesTitle = [
-		self::TYPE_ALL           => 'все новости',
 		self::TYPE_STAGES        => 'о новых этапах',
 		self::TYPE_REGISTRATIONS => 'об открытых регистрациях',
-		self::TYPE_RECORDS       => 'о новых рекордах'
+		self::TYPE_WORLD_RECORDS => 'о новых мировых рекордах',
+		self::TYPE_WORLD_RECORDS => 'о новых Российских рекордах',
 	];
 	
 	const IS_ACTIVE_NO = 0;
@@ -47,8 +47,8 @@ class NewsSubscription extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['athleteId', 'dateAdded'], 'required'],
-			[['athleteId', 'dateAdded', 'type', 'dateEnd', 'isActive'], 'integer'],
+			[['athleteId', 'dateAdded', 'types'], 'required'],
+			[['athleteId', 'dateAdded', 'dateEnd', 'isActive'], 'integer'],
 			[['regionIds', 'countryIds'], 'safe'],
 			[['isActive'], 'default', 'value' => 1]
 		];
@@ -79,6 +79,15 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function getTypes()
+	{
+		if ($this->types) {
+			return json_decode($this->types, true);
+		}
+		
+		return null;
 	}
 	
 	public function getRegionIds()

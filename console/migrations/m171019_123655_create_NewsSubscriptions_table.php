@@ -5,7 +5,7 @@ use console\components\PGMigration;
 /**
  * Handles the creation of table `NewsSubscriptions`.
  */
-class m170915_071227_create_NewsSubscriptions_table extends PGMigration
+class m171019_123655_create_NewsSubscriptions_table extends PGMigration
 {
 	/**
 	 * @inheritdoc
@@ -18,7 +18,7 @@ class m170915_071227_create_NewsSubscriptions_table extends PGMigration
 			'regionIds'  => $this->jsonb(),
 			'countryIds' => $this->jsonb(),
 			'dateAdded'  => $this->integer()->notNull(),
-			'type'       => $this->integer()->notNull()->defaultValue(1),
+			'types'      => $this->jsonb(),
 			'dateEnd'    => $this->integer(),
 			'isActive'   => $this->integer()->notNull()->defaultValue(1)
 		]);
