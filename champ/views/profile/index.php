@@ -8,7 +8,6 @@ use kartik\widgets\DepDrop;
 use common\models\Country;
 use yii\helpers\Url;
 use yii\web\JsExpression;
-use karpoff\icrop\CropImageUpload;
 
 /**
  * @var \common\models\Athlete     $athlete
@@ -269,4 +268,3 @@ use karpoff\icrop\CropImageUpload;
 		<?php } ?>
     </div>
 </div>
-        
