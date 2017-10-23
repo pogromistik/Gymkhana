@@ -16,6 +16,7 @@ use common\models\MoscowPoint;
 use common\models\Region;
 use common\models\search\CitySearch;
 use common\models\search\YearSearch;
+use common\models\SpecialStage;
 use common\models\Stage;
 use common\models\Year;
 use yii\db\Expression;
@@ -33,6 +34,7 @@ class HelpController extends BaseController
 	const PHOTO_STAGE = 1;
 	const PHOTO_FIGURE = 2;
 	const PHOTO_ATHLETE = 3;
+	const PHOTO_SPECIAL_STAGE = 4;
 	
 	const TYPE_CITY = 1;
 	const TYPE_REGION = 2;
@@ -182,6 +184,11 @@ class HelpController extends BaseController
 			case self::PHOTO_ATHLETE:
 				$model = Athlete::findOne($id);
 				$varName = 'photo';
+				break;
+			case self::PHOTO_SPECIAL_STAGE:
+				$model = SpecialStage::findOne($id);
+				$varName = 'photoPath';
+				break;
 		}
 		if (!$model) {
 			return 'Возникла ошибка при удалении фотографии';

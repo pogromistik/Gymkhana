@@ -10,6 +10,7 @@ use common\models\City;
 use common\models\ClassHistory;
 use common\models\Country;
 use common\models\Motorcycle;
+use common\models\RequestForSpecialStage;
 use common\models\TmpAthlete;
 use dosamigos\editable\EditableAction;
 use Yii;
@@ -386,15 +387,32 @@ class AthleteController extends BaseController
 			->where(['not', ['id' => $athlete->athleteClassId]])->asArray()->all();
 	}
 	
-	public function actionFindTmpMotorcycle($id, $motorcycleId)
+	public function actionFindTmpMotorcycle($id, $motorcycleId, $mode)
 	{
 		$this->can('competitions');
-		$athlete = TmpAthlete::findOne($id);
-		$motorcycles = $athlete->getMotorcycles();
-		if (!isset($motorcycles[$motorcycleId])) {
-			return 'Мотоцикл не найден';
+		switch ($mode) {
+			case 'athlete':
+				$athlete = TmpAthlete::findOne($id);
+				$motorcycles = $athlete->getMotorcycles();
+				if (!isset($motorcycles[$motorcycleId])) {
+					return 'Мотоцикл не найден';
+				}
+				$data = $motorcycles[$motorcycleId];
+				break;
+			case 'stage':
+				$request = RequestForSpecialStage::findOne($id);
+				if (!$request || !$request->data) {
+					return 'Ошибка!';
+				}
+				$data = $request->getData();
+				$data['model'] = $data['motorcycleModel'];
+				$data['mark'] = $data['motorcycleMark'];
+				break;
+			default:
+				return 'Ошибка!';
 		}
-		$model = MotorcycleForm::getModel($motorcycles[$motorcycleId], $id, $motorcycleId);
+		
+		$model = MotorcycleForm::getModel($data, $id, $motorcycleId, $mode);
 		
 		return $this->renderAjax('_tmp-motorcycle', ['model' => $model]);
 	}

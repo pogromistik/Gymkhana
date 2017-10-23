@@ -70,6 +70,11 @@ use yii\helpers\Url;
 					<?php foreach (\common\models\Championship::$groupsTitle as $groupId => $title) { ?>
                         <li><?= Html::a($title, ['/competitions/championships/index', 'groupId' => $groupId]) ?></li>
 					<?php } ?>
+					<?php if (\Yii::$app->user->can('changeSpecialChamps')) { ?>
+                        <li>
+							<?= Html::a('Особые чемпионаты', ['/competitions/special-champ/index']) ?>
+                        </li>
+					<?php } ?>
                 </ul>
             </li>
 			<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>

@@ -1355,6 +1355,14 @@ $('.ajaxDelete').click(function (e) {
             text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
             action = '/competitions/championships/delete';
             break;
+        case 'special-champ':
+            text = 'Уверены, что хотите удалить этот чемпионат? Действие необратимо.';
+            action = '/competitions/special-champ/delete';
+            break;
+        case 'special-stage':
+            text = 'Уверены, что хотите удалить этот этап? Действие необратимо.';
+            action = '/competitions/special-champ/delete-stage';
+            break;
     }
     if (confirm(text)) {
         showBackDrop();
@@ -1374,14 +1382,104 @@ $('.ajaxDelete').click(function (e) {
     }
 });
 
+
+$(document).on("submit", '#cancelRegForSpecStage', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+        url: '/competitions/special-champ/cancel',
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(data);
+            }
+        },
+        error: function (result) {
+            alert(result);
+        }
+    });
+});
+
+$('.approveSpecChampForAthlete').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var athleteId = elem.data('athlete-id');
+    showBackDrop();
+    $.get('/competitions/special-champ/approve-for-athlete', {
+        id: id, athleteId: athleteId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            BootboxError(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+        console.log(error);
+    });
+});
+
+$('.approveSpecChampForAthleteOnMotorcycle').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var id = elem.data('id');
+    var athleteId = elem.data('athlete-id');
+    var motorcycleId = elem.data('motorcycle-id');
+    showBackDrop();
+    $.get('/competitions/special-champ/approve-for-athlete-on-motorcycle', {
+        id: id, athleteId: athleteId, motorcycleId: motorcycleId
+    }).done(function (data) {
+        hideBackDrop();
+        if (data == true) {
+            location.reload();
+        } else {
+            BootboxError(data);
+            console.log(data);
+        }
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+        console.log(error);
+    });
+});
+
+function cityForNewRequest(id) {
+    showBackDrop();
+    $.ajax({
+        url: '/competitions/special-champ/save-new-city',
+        type: "POST",
+        data: $('#cityForNewRequest' + id).serialize(),
+        success: function (result) {
+            hideBackDrop();
+            if (result == true) {
+                alert('Город сохранен');
+            } else {
+                BootboxError(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            BootboxError(result.responseText);
+        }
+    });
+}
+
 $('.changeTmpMotorcycle').click(function (e) {
     e.preventDefault();
     showBackDrop();
     var elem = $(this);
     var id = elem.data('id');
+    var mode = elem.data('mode');
     var motorcycleId = elem.data('motorcycle-id');
     $.get('/competitions/athlete/find-tmp-motorcycle', {
-        id: id, motorcycleId: motorcycleId
+        id: id, motorcycleId: motorcycleId, mode: mode
     }).done(function (data) {
         hideBackDrop();
         $('.modalChangeTmpMotorcycle').html(data);
@@ -1410,7 +1508,6 @@ $(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
             }
         },
         error: function (result) {
-            hideBackDrop();
             alert(result);
         }
     });

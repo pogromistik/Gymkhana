@@ -114,8 +114,8 @@ $this->title = 'Заявки на регистрацию в личном каб�
 						$motorcyclesTitle .= '<br>' . ((isset($motorcycle['isCruiser']) && $motorcycle['isCruiser'] === 1)
 								? 'круизёр' : 'не круизёр');
 						$motorcyclesTitle .= '<br>' .
-							'</div><a href="#" data-id="' . $athlete->id . '" data-motorcycle-id="' . $i . '" class="changeTmpMotorcycle">
-					изменить</a>';
+							'</div><a href="#" data-id="' . $athlete->id . '" data-motorcycle-id="' . $i
+                            . '" data-mode="athlete" class="changeTmpMotorcycle">изменить</a>';
 						$motorcyclesTitle .= '<hr></li>';;
 					}
 					$motorcyclesTitle .= '</ul>';

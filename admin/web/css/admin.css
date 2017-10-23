@@ -924,3 +924,11 @@ a.red-button {
 th.gray-column {
     border-bottom: 2px solid #cacaca!important;
 }
+
+.bold {
+    font-weight: bold;
+}
+
+.dark-green-text {
+    color: #177500;
+}
