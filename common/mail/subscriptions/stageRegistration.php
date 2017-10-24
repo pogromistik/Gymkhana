@@ -1,26 +1,26 @@
 <?php
 /**
- * @var \common\models\Stage $stage
+ * @var \common\models\Stage $model
  */
-$championship = $stage->championship;
+$championship = $model->championship;
 ?>
-<b>Открыта регистрация на этап <?= $championship->title ?>: "<?= $stage->title ?>"!</b>
+<b>Открыта регистрация на этап <?= $championship->title ?>: "<?= $model->title ?>"!</b>
 
-<?php if ($stage->dateOfThe) { ?>
-    <br>Этап пройдёт <?= $stage->dateOfTheHuman ?>.&nbsp;
+<?php if ($model->dateOfThe) { ?>
+    <br>Этап пройдёт <?= $model->dateOfTheHuman ?>.&nbsp;
 <?php } ?>
 
-<?php if ($stage->location) { ?>
-    Место проведения: <?= $stage->location ?>.
+<?php if ($model->location) { ?>
+    Место проведения: <?= $model->location ?>.
 <?php } ?>
 
-<?php if ($stage->participantsLimit) { ?>
+<?php if ($model->participantsLimit) { ?>
     <br><b>Обратите
-        внимание</b> - количество участников для этапа ограничено числом <?= $stage->participantsLimit ?>.
+        внимание</b> - количество участников для этапа ограничено числом <?= $model->participantsLimit ?>.
 <?php } ?>
 
-<br><?php if ($stage->endRegistration) { ?>
-    Успейте зарегистрироваться до <?= $stage->dateOfTheHuman ?>!
+<br><?php if ($model->endRegistration) { ?>
+    Успейте зарегистрироваться до <?= $model->dateOfTheHuman ?>!
 <?php } else { ?>
     Успейте зарегистрироваться!
 <?php } ?>
@@ -33,5 +33,5 @@ $championship = $stage->championship;
 <?php } ?>
 
 <br><br>
-Подробнее о этапе вы можете узнать на сайте <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $stage->id ?>">gymkhana-cup.ru</a>
+Подробнее о этапе вы можете узнать на сайте <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>">gymkhana-cup.ru</a>
 

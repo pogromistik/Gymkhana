@@ -1,28 +1,28 @@
 <?php
 /**
- * @var \common\models\SpecialStage $stage
+ * @var \common\models\SpecialStage $model
  */
-$championship = $stage->championship;
+$championship = $model->championship;
 ?>
-<b>Анонсирован новый этап чемпионата <?= $championship->title ?>: "<?= $stage->title ?>"!</b>
+<b>Анонсирован новый этап чемпионата <?= $championship->title ?>: "<?= $model->title ?>"!</b>
 <br><br>
 
-<?php if ($stage->description) { ?>
-	<?= $stage->description ?><br>
+<?php if ($model->description) { ?>
+	<?= $model->description ?><br>
 <?php } ?>
 
-<?php if ($stage->dateStart) { ?>
-    <br>Приём результатов начнётся <?= $stage->dateStart ?>.
+<?php if ($model->dateStart) { ?>
+    <br>Приём результатов начнётся <?= $model->dateStart ?>.
 <?php } ?>
 
-<?php if ($stage->dateResult) { ?>
-    <br>Результаты будут опубликованы <?= $stage->dateResultHuman ?>.&nbsp;
+<?php if ($model->dateResult) { ?>
+    <br>Результаты будут опубликованы <?= $model->dateResultHuman ?>.&nbsp;
 <?php } ?>
 
 <br><br>
 Подробнее о этаеп вы можете узнать на сайте
-<a href="//gymkhana-cup.ru/competitions/special-stage?id=<?= $stage->id ?>">gymkhana-cup.ru</a>.&nbsp;
-<?php if ($stage->photoPath) { ?>
+<a href="//gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>">gymkhana-cup.ru</a>.&nbsp;
+<?php if ($model->photoPath) { ?>
     Там же можно посмотреть фото трассы.
 <?php } else { ?>
     Фотография трассы будет опубликована позже на том же сайте.
