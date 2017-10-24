@@ -1301,9 +1301,9 @@ class RunController extends Controller
 		return true;
 	}
 	
-	public function actionTestForFigureSubscr($email)
+	public function actionTestForStageSubscr($email)
 	{
-		$stage = Stage::find()->where(['not', ['startRegistration']])->one();
+		$stage = Stage::find()->where(['not', ['startRegistration' => null]])->one();
 		if (!$stage) {
 			echo 'Stage not found' . PHP_EOL;
 		}
