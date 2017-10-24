@@ -1,10 +1,10 @@
 <?php
 /**
- * @var \common\models\Figure $figure
+ * @var \common\models\Figure $model
  */
 ?>
 
-Установлен новый Российский рекорд для фигуры <?= $figure->title ?>!
+Установлен новый Российский рекорд для фигуры <?= $model->title ?>!
 <br>
 
-Рекорд установлен спортсменом <?= $figure->bestAthleteInRussia ?> и составляет <?= $figure->bestTimeInRussiaForHuman ?>.
+Рекорд установлен спортсменом <?= $model->bestAthleteInRussia ?> и составляет <?= $model->bestTimeInRussiaForHuman ?>.
