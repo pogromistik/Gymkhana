@@ -1,10 +1,14 @@
 <?php
 /**
  * @var \common\models\Stage $model
+ * @var string               $token
  */
 $championship = $model->championship;
 ?>
-<b>Открыта регистрация на этап <?= $championship->title ?>: "<?= $model->title ?>"!</b>
+<b>Открыта регистрация на этап
+    <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>" target="_blank"><?= $championship->title ?>:
+        "<?= $model->title ?>"</a>!
+</b>
 
 <?php if ($model->dateOfThe) { ?>
     <br>Этап пройдёт <?= $model->dateOfTheHuman ?>.&nbsp;
@@ -33,5 +37,10 @@ $championship = $model->championship;
 <?php } ?>
 
 <br><br>
-Подробнее о этапе вы можете узнать на сайте <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>">gymkhana-cup.ru</a>
+Подробнее о этапе вы можете узнать на сайте <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>"
+                                               target="_blank">gymkhana-cup.ru</a>
+
+<br><br>
+<hr>
+<a href="//gymkhana-cup.ru/unsubscription?token=<?= $token ?>" target="_blank">нажмите, чтобы отписаться от рассылки</a>
 

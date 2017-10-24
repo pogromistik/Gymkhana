@@ -1300,4 +1300,12 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionTest()
+	{
+		$emails = NewsSubscription::getEmails(NewsSubscription::TYPE_STAGES);
+		var_dump($emails);
+		
+		return true;
+	}
 }
