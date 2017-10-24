@@ -1274,8 +1274,8 @@ class RunController extends Controller
 			return false;
 		}
 		
-		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_SPECIAL_STAGE, $stage->id);
-		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_SPECIAL_REGISTRATIONS, $stage->id);
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_STAGE, $stage->id);
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_REGISTRATIONS, $stage->id);
 		
 		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_RUSSIA_RECORDS, NewsSubscription::MSG_FOR_RUSSIA_RECORDS, $figure->id);
 		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_WORLD_RECORDS, NewsSubscription::MSG_FOR_WORLD_RECORDS, $figure->id);
