@@ -7,7 +7,7 @@ use yii\db\pgsql\Schema;
 
 class PGSchema extends Schema
 {
-	const TYPE_JSONB = 'json';
+	const TYPE_JSONB = 'jsonb';
 	const NOT_NULL = ' NOT NULL';
 	
 	public function createColumnSchemaBuilder($type, $length = null)
