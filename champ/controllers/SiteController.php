@@ -9,6 +9,7 @@ use common\models\AssocNews;
 use common\models\Athlete;
 use common\models\DocumentSection;
 use common\models\Feedback;
+use common\models\NewsSubscription;
 use common\models\TmpAthlete;
 use Yii;
 use yii\base\InvalidParamException;
@@ -309,5 +310,23 @@ class SiteController extends BaseController
 		return $this->render('set-new-password', [
 			'model' => $model,
 		]);
+	}
+	
+	public function actionUnsubscription($token)
+	{
+		$this->pageTitle = 'Отмена рассылки';
+		$subscription = NewsSubscription::findOne(['token' => $token]);
+		$error = false;
+		if ($subscription && $subscription->isActive == 1) {
+			$subscription->isActive = 0;
+			$subscription->dateEnd = time();
+			if (!$subscription->save()) {
+				$error = 'Возникла ошибка при сохранении данных.';
+			}
+		} else {
+			$error = 'Подписка не найдена.';
+		}
+		
+		return $this->render('unsubscription', ['error' => $error]);
 	}
 }

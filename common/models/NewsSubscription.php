@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $isActive
  * @property integer $dateEnd
  * @property string  $countryIds
+ * @property string  $token
  */
 class NewsSubscription extends \yii\db\ActiveRecord
 {
@@ -57,7 +58,8 @@ class NewsSubscription extends \yii\db\ActiveRecord
 			[['athleteId', 'dateAdded', 'types'], 'required'],
 			[['athleteId', 'dateAdded', 'dateEnd', 'isActive'], 'integer'],
 			[['regionIds', 'countryIds'], 'safe'],
-			[['isActive'], 'default', 'value' => 1]
+			[['isActive'], 'default', 'value' => 1],
+			[['token'], 'string']
 		];
 	}
 	
@@ -83,9 +85,21 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		if ($this->isNewRecord) {
 			$this->dateAdded = time();
 			$this->athleteId = \Yii::$app->user->id;
+			$this->token = $this->generateUniqueRandomString('token');
 		}
 		
 		return parent::beforeValidate();
+	}
+	
+	public function generateUniqueRandomString($attribute, $length = 64) {
+		
+		$randomString = Yii::$app->getSecurity()->generateRandomString($length);
+		
+		if(!$this->findOne([$attribute => $randomString]))
+			return $randomString;
+		else
+			return $this->generateUniqueRandomString($attribute, $length);
+		
 	}
 	
 	public function getTypes()
