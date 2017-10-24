@@ -6,7 +6,7 @@
 $championship = $model->championship;
 ?>
 <b>Начался приём результатов для этапа
-    <a href="//gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>"
+    <a href="http://gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>"
        target="_blank" style="color: #56a025"><?= $championship->title ?>: "<?= $model->title ?>"</a>!</b>
 
 <br><?php if ($model->dateEnd) { ?>
@@ -21,7 +21,7 @@ $championship = $model->championship;
 
 <br><br>
 Подробнее о этапе вы можете узнать на сайте
-<a href="//gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;
+<a href="http://gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;
 <?php if ($model->photoPath) { ?>
     Там же можно посмотреть фото трассы.
 <?php } else { ?>
