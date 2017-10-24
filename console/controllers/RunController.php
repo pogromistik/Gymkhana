@@ -1301,10 +1301,18 @@ class RunController extends Controller
 		return true;
 	}
 	
-	public function actionTest()
+	public function actionTestForFigureSubscr($email)
 	{
-		$emails = NewsSubscription::getEmails(NewsSubscription::TYPE_STAGES);
-		var_dump($emails);
+		$stage = Stage::find()->where(['not', ['startRegistration']])->one();
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+		}
+		\Yii::$app->mailer->compose('subscriptions/_content', ['msgType' => NewsSubscription::MSG_FOR_REGISTRATIONS,
+		                                                       'model' => $stage, 'token' => 'test'])
+			->setTo($email)
+			->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
+			->setSubject('gymkhana-cup: тест рассылки')
+			->send();
 		
 		return true;
 	}
