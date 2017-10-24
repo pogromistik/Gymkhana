@@ -6,7 +6,7 @@
 $championship = $model->championship;
 ?>
 <b>Анонсирован новый этап чемпионата
-    <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>" target="_blank"><?= $championship->title ?>:
+    <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>" target="_blank" style="color: #56a025"><?= $championship->title ?>:
         "<?= $model->title ?>"</a>!</b>
 <br><br>
 
@@ -39,9 +39,5 @@ $championship = $model->championship;
 
 <br><br>
 Подробнее о этапе вы можете узнать на сайте <a href="//gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>"
-                                               target="_blank">gymkhana-cup.ru</a>
-
-<br><br>
-<hr>
-<a href="//gymkhana-cup.ru/unsubscription?token=<?= $token ?>" target="_blank">нажмите, чтобы отписаться от рассылки</a>
+                                               target="_blank" style="color: #56a025">gymkhana-cup.ru</a>
 

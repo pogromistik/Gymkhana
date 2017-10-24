@@ -27,10 +27,10 @@ class NewsSubscription extends \yii\db\ActiveRecord
 	const TYPE_WORLD_RECORDS = 3;
 	const TYPE_RUSSIA_RECORDS = 4;
 	public static $typesTitle = [
-		self::TYPE_STAGES        => 'о новых этапах',
-		self::TYPE_REGISTRATIONS => 'об открытых регистрациях',
-		self::TYPE_WORLD_RECORDS => 'о новых мировых рекордах',
-		self::TYPE_WORLD_RECORDS => 'о новых Российских рекордах',
+		self::TYPE_STAGES         => 'о новых этапах',
+		self::TYPE_REGISTRATIONS  => 'об открытых регистрациях',
+		self::TYPE_WORLD_RECORDS  => 'о новых мировых рекордах',
+		self::TYPE_RUSSIA_RECORDS => 'о новых Российских рекордах',
 	];
 	
 	const MSG_FOR_STAGE = 1;
@@ -93,11 +93,12 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		return parent::beforeValidate();
 	}
 	
-	public function generateUniqueRandomString($attribute, $length = 64) {
+	public function generateUniqueRandomString($attribute, $length = 64)
+	{
 		
 		$randomString = Yii::$app->getSecurity()->generateRandomString($length);
 		
-		if(!$this->findOne([$attribute => $randomString]))
+		if (!$this->findOne([$attribute => $randomString]))
 			return $randomString;
 		else
 			return $this->generateUniqueRandomString($attribute, $length);
@@ -122,7 +123,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		return null;
 	}
 	
-	public function getRegions($isArray = false)
+	public function getRegions($isArray = false, array $countryIds = null)
 	{
 		if (!$this->regionIds || is_array($this->regionIds)) {
 			$regionIds = $this->regionIds;
@@ -132,6 +133,9 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		if ($regionIds && $isArray) {
 			return ArrayHelper::map(
 				Region::findAll(['id' => $regionIds]), 'id', 'title');
+		} elseif ($countryIds && !empty($countryIds)) {
+			return ArrayHelper::map(
+				Region::findAll(['countryId' => $countryIds]), 'id', 'title');
 		}
 		
 		return [];
@@ -170,6 +174,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 			]);
 		}
 		$query->andWhere(new Expression('"a"."athleteId"="b"."id"'));
+		
 		return $query->all();
 	}
 	
@@ -180,38 +185,32 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		switch ($msgFor) {
 			case self::MSG_FOR_STAGE:
 				$model = Stage::findOne($modelId);
-				$layout = 'stage';
 				$emails = self::getEmails(self::TYPE_STAGES, $model->countryId, $model->regionId);
 				$theme = 'Анонс этапа';
 				break;
 			case self::MSG_FOR_SPECIAL_STAGE:
 				$model = SpecialStage::findOne($modelId);
-				$layout = 'specialStage';
 				$emails = self::getEmails(self::TYPE_STAGES);
 				$theme = 'Анонс этапа';
 				break;
 			case self::MSG_FOR_REGISTRATIONS:
 				$model = Stage::findOne($modelId);
-				$layout = 'stageRegistration';
 				$emails = self::getEmails(self::TYPE_REGISTRATIONS, $model->countryId, $model->regionId);
 				$theme = 'Открыта регистрация на этап';
 				break;
 			case self::MSG_FOR_SPECIAL_REGISTRATIONS:
 				$model = SpecialStage::findOne($modelId);
-				$layout = 'specialStageRegistration';
 				$emails = self::getEmails(self::TYPE_REGISTRATIONS);
 				$theme = 'Открыта регистрация на этап';
 				break;
 			case self::MSG_FOR_WORLD_RECORDS:
 				$model = Figure::findOne($modelId);
-				$layout = 'worldRecord';
 				$emails = self::getEmails(self::TYPE_WORLD_RECORDS);
 				$theme = 'Новый мировой рекорд';
 				break;
 			case self::MSG_FOR_RUSSIA_RECORDS:
 				$model = Figure::findOne($modelId);
-				$layout = 'russiaRecord';
-				$emails = self::getEmails(self::TYPE_WORLD_RECORDS, Country::RUSSIA_ID);
+				$emails = self::getEmails(self::TYPE_WORLD_RECORDS);
 				$theme = 'Новый Российский рекорд';
 				break;
 			default:
@@ -223,7 +222,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		$count = 0;
 		foreach ($emails as $item) {
 			if (YII_ENV == 'prod') {
-				\Yii::$app->mailer->compose('subscriptions/' . $layout, ['model' => $model, 'token' => $item['token']])
+				\Yii::$app->mailer->compose('subscriptions/_content', ['msgType' => $msgFor, 'model' => $model, 'token' => $item['token']])
 					->setTo($item['email'])
 					->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
 					->setSubject('gymkhana-cup: ' . $theme)

@@ -331,7 +331,7 @@ use yii\web\JsExpression;
                         </div>
                         <div class="col-md-6 col-sm-12">
 						    <?= $form->field($subscription, 'regionIds')->widget(DepDrop::classname(), [
-							    'data'           => $subscription->getRegions(true),
+							    'data'           => $subscription->getRegions(true, $subscription->countryIds),
 							    'options'        => ['placeholder' => 'Выберите регионы...'],
 							    'type'           => DepDrop::TYPE_SELECT2,
 							    'select2Options' => [

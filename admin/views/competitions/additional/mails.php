@@ -6,200 +6,132 @@
 $this->title = 'Текста писем';
 ?>
 
-<div class="alert help-alert alert-info">
-    <div class="text-right">
-        <span class="fa fa-remove closeHintBtn"></span>
+    <div class="alert help-alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
+        На данной странице отображаются текста всех писем, которые могут быть когда-либо отправлены спортсмену на его
+        email.
+        Внешнний вид, пунктуация, орфография совпадают с тем, что увидит человек. Слова в скобках {} будут заменены на
+        соответствующие значения.<br>
+        Если вы не согласны с какими-либо формулировками - свяжитесь с <a href="https://vk.com/id19792817"
+                                                                          target="_blank">разработчиком</a>.
     </div>
-    На данной странице отображаются текста всех писем, которые могут быть когда-либо отправлены спортсмену на его email.
-    Внешнний вид, пунктуация, орфография совпадают с тем, что увидит человек. Слова в скобках {} будут заменены на
-    соответствующие значения.<br>
-    Если вы не согласны с какими-либо формулировками - свяжитесь с <a href="https://vk.com/id19792817" target="_blank">разработчиком</a>.
-</div>
 
-<div class="with-bottom-border">
-    <h3>1. Создание личного кабинета</h3>
-    <div class="mail-text">
-        Ваша регистрация на сайте <a href="http://gymkhana-cup.ru/" target="_blank">gymkhana-cup.ru</a>
-        подтверждена.<br>
-        Данные для входа в личный кабинет:<br>
-        <b>Логин:</b> {логин} или {email}<br>
-        <b>Пароль:</b> {пароль}<br>
-        Ссылка на вход в личный кабинет: <a href="http://gymkhana-cup.ru/site/login/" target="_blank">gymkhana-cup.ru/site/login/</a>.<br>
-        <br>
-        Пожалуйста, проверьте данные профиля в своём кабинете. В случае, если они слишком далеки от реальности -
-        обязательно
-        свяжитесь с нами:
-        <br>
-        <a href="https://vk.com/famalata" target="_blank">vk.com/famalata</a><br>
-        <a href="https://vk.com/id19792817" target="_blank">vk.com/id19792817</a><br>
-        Или по почте: lyadetskaya.ns@yandex.ru
+<?php
+$athlete = \common\models\Athlete::find()->where(['hasAccount' => 1])->one();
+if ($athlete) {
+	?>
+    <div class="with-bottom-border">
+        <h3>1. Создание личного кабинета</h3>
+        <div class="mail-text">
+			<?= $this->render('@common/mail/new-account', ['athlete' => $athlete, 'password' => 'test']) ?>
+        </div>
     </div>
-</div>
+<?php } ?>
 
-<div class="with-bottom-border">
-    <h3>2. Предварительная регистрация на этап
-        <small>(если этап с ограниченным количеством участников)</small>
-    </h3>
-    <div class="mail-text">
-        Предварительная регистрация на этап принята.<br>
-        <hr>
-        <small>&#60;следующий текст будет отправлен, если регистрация была не из личного кабинета&#62;</small>
-        <br>
-        В случае отклонения вашей заявки, вам будет отправлено соответствующее письмо на этот email и уведомление в
-        личный
-        кабинет.<br>
-        При успешном подтверждении заявки - только уведомление.<br>
-        <hr>
-        <small>&#60;следующий текст будет отправлен, если регистрация была из личного кабинета&#62;</small>
-        <br>
-        В случае отклонения вашей заявки, будет отправлено соответствующее письмо на этот email.<br>
-        На сайте <a href="http://gymkhana-cup.ru" target="_blank">gymkhana-cup.ru</a> неподтверждённые заявки выделены
-        серым
-        цветом.
-        Если ваша заявка другого цвета - значит, ваше участие подтверждено.
-        <hr>
-        <br><br>
-        <b>Чемпионат:</b> {название чемпионата}<br>
-        <b>Этап:</b> {название этапа}<br>
-        <b>Участник:</b> {Имя Фамилия}<br>
-        <b>Мотоцикл:</b> {Марка Модель}
+    <div class="with-bottom-border">
+        <h3>2. Предварительная регистрация на этап
+            <small>(если этап с ограниченным количеством участников)</small>
+        </h3>
+        <div class="mail-text">
+            Предварительная регистрация на этап принята.<br>
+            <hr>
+            <small>&#60;следующий текст будет отправлен, если регистрация была не из личного кабинета&#62;</small>
+            <br>
+            В случае отклонения вашей заявки, вам будет отправлено соответствующее письмо на этот email и уведомление в
+            личный
+            кабинет.<br>
+            При успешном подтверждении заявки - только уведомление.<br>
+            <hr>
+            <small>&#60;следующий текст будет отправлен, если регистрация была из личного кабинета&#62;</small>
+            <br>
+            В случае отклонения вашей заявки, будет отправлено соответствующее письмо на этот email.<br>
+            На сайте <a href="http://gymkhana-cup.ru" target="_blank">gymkhana-cup.ru</a> неподтверждённые заявки
+            выделены
+            серым
+            цветом.
+            Если ваша заявка другого цвета - значит, ваше участие подтверждено.
+            <hr>
+            <br><br>
+            <b>Чемпионат:</b> {название чемпионата}<br>
+            <b>Этап:</b> {название этапа}<br>
+            <b>Участник:</b> {Имя Фамилия}<br>
+            <b>Мотоцикл:</b> {Марка Модель}
+        </div>
     </div>
-</div>
 
-<div class="with-bottom-border">
-    <h3>3. Восстановление пароля</h3>
-    Для восстановления пароля от личного кабинета на сайте gymkhana-cup.ru пройдите по ссылке:
-    <br>
-    {ссылка для восстановления пароля}
-</div>
+    <div class="with-bottom-border">
+        <h3>3. Восстановление пароля</h3>
+        Для восстановления пароля от личного кабинета на сайте gymkhana-cup.ru пройдите по ссылке:
+        <br>
+        {ссылка для восстановления пароля}
+    </div>
 
 
-<div class="with-bottom-border">
-    <h3>4. Рассылка: новый Российский рекорд</h3>
-    Установлен новый Российский рекорд для фигуры
-    <a href="#" target="_blank">{название}</a>!
-    <br>
-    Рекорд установлен спортсменом {фамилия и мотоцикл} и составляет {время}>.
-    <br><br>
-    <hr>
-    <a href="#" target="_blank">нажмите, чтобы отписаться от рассылки</a>
-</div>
+<?php
+$figure = \common\models\Figure::find()->where(['not', ['bestTimeInRussia' => null]])->one();
+if ($figure) {
+	?>
+    <div class="with-bottom-border">
+        <h3>4. Рассылка: новый Российский рекорд</h3>
+		<?= $this->render('@common/mail/subscriptions/_content',
+			['msgType' => \common\models\NewsSubscription::MSG_FOR_RUSSIA_RECORDS, 'model' => $figure, 'token' => 'token']) ?>
+    </div>
+<?php } ?>
 
-<div class="with-bottom-border">
-    <h3>5. Рассылка: новый мировой рекорд</h3>
-    Установлен новый мировой рекорд для фигуры
-    <a href="#" target="_blank">{Название}</a>!
-    <br>
+<?php
+$figure = \common\models\Figure::find()->where(['not', ['bestTime' => null]])->one();
+if ($figure) {
+	?>
+    <div class="with-bottom-border">
+        <h3>5. Рассылка: новый мировой рекорд</h3>
+	    <?= $this->render('@common/mail/subscriptions/_content',
+		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_WORLD_RECORDS, 'model' => $figure, 'token' => 'token']) ?>
+    </div>
+<?php } ?>
 
-    Рекорд установлен спортсменом {фамилия и мотоцикл} и составляет {время}.
-    <br><br>
-    <small>Обратите внимание - результаты, присланные ранее, НЕ пересчитываются; если спортсмен приехал, к примеру, в C1
-        -
-        он
-        останется в C1, даже если рейтинг от нового рекорда составляет более 110%.
-    </small>
+<?php
+$stage = \common\models\Stage::find()->where(['not', ['dateOfThe' => null]])->andWhere(['not', ['description' => null]])
+	->andWhere(['!=', 'description', ''])->orderBy(['dateAdded' => SORT_DESC])->one();
+if ($stage) {
+	?>
+    <div class="with-bottom-border">
+        <h3>6. Рассылка: Анонс этапа</h3>
+	    <?= $this->render('@common/mail/subscriptions/_content',
+		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_STAGE, 'model' => $stage, 'token' => 'token']) ?>
+    </div>
+<?php } ?>
 
-    <br><br>
-    <hr>
-    <a href="#" target="_blank">нажмите, чтобы отписаться от рассылки</a>
-</div>
+<?php
+$stage = \common\models\SpecialStage::find()->one();
+if ($stage) {
+	?>
+    <div class="with-bottom-border">
+        <h3>7. Рассылка: Анонс особого этапа</h3>
+	    <?= $this->render('@common/mail/subscriptions/_content',
+		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_SPECIAL_STAGE, 'model' => $stage, 'token' => 'token']) ?>
+    </div>
+<?php } ?>
 
-<div class="with-bottom-border">
-    <h3>6. Рассылка: Анонс этапа</h3>
-    <b>Анонсирован новый этап чемпионата
-        <a href="#" target="_blank">{название чемпионата}:
-            "{название этапа}"</a>!</b>
-    <br><br>
-	
-	{описание}<br>
+<?php
+$stage = \common\models\Stage::find()->where(['not', ['startRegistration' => null]])->one();
+if ($stage) {
+	?>
+    <div class="with-bottom-border">
+        <h3>8. Рассылка: Открыта регистрация на этап</h3>
+	    <?= $this->render('@common/mail/subscriptions/_content',
+		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_REGISTRATIONS, 'model' => $stage, 'token' => 'token']) ?>
+    </div>
+<?php } ?>
 
-    <br>Этап пройдёт {дата}.&nbsp;
-	
-	Место проведения: {место}.
-
-    <br>Регистрация начнётся {дата и время{.
-	
-	<br><b>Обратите
-        внимание</b> - количество участников для этапа ограничено числом {количество}. Успейте зарегистрироваться!
-
-    <br>
-    <small>Этап проводится в рамках закрытого чемпионата, к участию допускаются только перечисленные
-        регионы: {регионы}</small>
-
-    <br><br>
-    Подробнее о этапе вы можете узнать на сайте <a href="#"
-                                                   target="_blank">gymkhana-cup.ru</a>
-
-    <br><br>
-    <hr>
-    <a href="#" target="_blank">нажмите, чтобы отписаться от рассылки</a>
-</div>
-
-<div class="with-bottom-border">
-    <h3>7. Рассылка: Анонс особого этапа</h3>
-    <b>Анонсирован новый этап чемпионата
-        <a href="#">{название чемпионата}: "{название этапа}"</a>!</b>
-    <br><br>
-	
-	{описание}<br>
-
-    <br>Приём результатов начнётся {дата и время}.
-
-    <br>Результаты будут опубликованы {дата}.&nbsp;
-
-    <br><br>
-    Подробнее о этаеп вы можете узнать на сайте
-    <a href="#" target="_blank">gymkhana-cup.ru</a>.&nbsp;
-    Фотография трассы будет опубликована позже на том же сайте.
-
-    <br><br>
-    <hr>
-    <a href="#" target="_blank">нажмите, чтобы отписаться от рассылки</a>
-</div>
-
-<div class="with-bottom-border">
-    <h3>8. Рассылка: Открыта регистрация на этап</h3>
-    <b>Открыта регистрация на этап
-        <a href="#">{название чемпионата}: "{название этапа}"</a>!
-    </b>
-
-    <br>Этап пройдёт {дата}.&nbsp;
-
-    Место проведения: {место}.
-
-    <br><b>Обратите
-        внимание</b> - количество участников для этапа ограничено числом {число}.
-
-    <br>Успейте зарегистрироваться до {дата завершения регистрации}!
-    
-    <br>
-    <small>Этап проводится в рамках закрытого чемпионата, к участию допускаются только перечисленные
-        регионы: {регионы}</small>
-
-    <br><br>
-    Подробнее о этапе вы можете узнать на сайте <a href="#"
-                                                   target="_blank">gymkhana-cup.ru</a>
-
-    <br><br>
-    <hr>
-    <a href="#" target="_blank">нажмите, чтобы отписаться от рассылки</a>
-</div>
-
-<div class="with-bottom-border">
-    <h3>9. Рассылка: Начат приём результатов на особый этап</h3>
-    <b>Начался приём результатов для этапа
-        <a href="#">{название чемпионата}: "{название этапа}"</a>!</b>
-
-    <br>Успейте прислать результат до {дата завершения приёма результатов}!
-
-    <br>Результаты будут опубликованы {дата}.
-
-    <br><br>
-    Подробнее о этаеп вы можете узнать на сайте
-    <a href="#" target="_blank">gymkhana-cup.ru</a>.
-    Там же можно посмотреть фото трассы.
-
-    <br><br>
-    <hr>
-    <a href="#" target="_blank">нажмите, чтобы отписаться от рассылки</a>
-</div>
+<?php
+$stage = \common\models\SpecialStage::find()->where(['not', ['dateStart' => null]])->one();
+if ($stage) {
+	?>
+    <div class="with-bottom-border">
+        <h3>9. Рассылка: Начат приём результатов на особый этап</h3>
+	    <?= $this->render('@common/mail/subscriptions/_content',
+		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_SPECIAL_REGISTRATIONS, 'model' => $stage, 'token' => 'token']) ?>
+    </div>
+<?php } ?>
