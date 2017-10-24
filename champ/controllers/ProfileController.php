@@ -577,16 +577,25 @@ class ProfileController extends AccessController
 		}
 		$subscription->load(\Yii::$app->request->post());
 		if ($subscription->regionIds) {
+			$subscription->regionIds = array_map(function ($item) {
+				return (int)$item;
+			}, $subscription->regionIds);
 			$subscription->regionIds = json_encode($subscription->regionIds);
 		} else {
 			$subscription->regionIds = null;
 		}
 		if ($subscription->countryIds) {
+			$subscription->countryIds = array_map(function ($item) {
+				return (int)$item;
+			}, $subscription->countryIds);
 			$subscription->countryIds = json_encode($subscription->countryIds);
 		} else {
 			$subscription->countryIds = null;
 		}
 		if ($subscription->types) {
+			$subscription->types = array_map(function ($item) {
+				return (int)$item;
+			}, $subscription->types);
 			$subscription->types = json_encode($subscription->types);
 		} else {
 			$subscription->types = null;

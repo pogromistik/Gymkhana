@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
 use common\models\ClassHistory;
+use common\models\Country;
 use common\models\FigureTime;
 use common\models\Notice;
 use common\models\search\FigureTimeSearch;
@@ -231,9 +232,12 @@ class FiguresController extends BaseController
 					return 'Вы пытаетесь установить в качестве рекорда худший результат, чем текущий';
 				}
 				$figure->bestTime = $item->resultTime;
-				$figure->bestTimeInRussia = $item->resultTime;
 				$figure->bestAthlete = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
-				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				
+				if ($item->athlete->countryId == Country::RUSSIA_ID) {
+					$figure->bestTimeInRussia = $item->resultTime;
+					$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				}
 				
 				$text = 'Поздравляем! Вы установили новый мировой рекорд для фигуры ' .
 					$figure->title . '!! Это восхитительно! Вы - восхитительны!!';

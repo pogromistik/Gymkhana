@@ -278,6 +278,8 @@ class Stage extends BaseActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_STAGE, $this);
+			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES,
+				NewsSubscription::MSG_FOR_STAGE, $this->id);
 		}
 	}
 	
