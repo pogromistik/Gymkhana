@@ -1258,4 +1258,46 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionInsertForSubscriptions()
+	{
+		$stage = Stage::find()->where(['not', ['dateOfThe' => null]])->andWhere(['not', ['startRegistration' => null]])->one();
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+			
+			return false;
+		}
+		$figure = Figure::find()->one();
+		if (!$figure) {
+			echo 'Figure not found' . PHP_EOL;
+			
+			return false;
+		}
+		
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_SPECIAL_STAGE, $stage->id);
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_SPECIAL_REGISTRATIONS, $stage->id);
+		
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_RUSSIA_RECORDS, NewsSubscription::MSG_FOR_RUSSIA_RECORDS, $figure->id);
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_WORLD_RECORDS, NewsSubscription::MSG_FOR_WORLD_RECORDS, $figure->id);
+		
+		return true;
+	}
+	
+	public function actionCheckSubscriptions()
+	{
+		$items = SubscriptionQueue::findAll(['isActual' => 1]);
+		$countLetters = 0;
+		foreach ($items as $item) {
+			$count = NewsSubscription::sendMsg($item->messageType, $item->modelId);
+			$item->countEmails = $count;
+			$item->dateSend = time();
+			$item->isActual = 0;
+			$item->save();
+			$countLetters += $count;
+		}
+		
+		echo 'send ' . $countLetters . ' letters' . PHP_EOL;
+		
+		return true;
+	}
 }
