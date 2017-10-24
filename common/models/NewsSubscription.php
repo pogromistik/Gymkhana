@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -146,32 +148,29 @@ class NewsSubscription extends \yii\db\ActiveRecord
 	
 	public static function getEmails($type = null, $countryId = null, $regionId = null)
 	{
-		$query = self::find()->select('athleteId')->where(['isActive' => self::IS_ACTIVE_YES]);
+		$query = new Query();
+		$query->from(['a' => self::tableName(), 'b' => Athlete::tableName()])
+			->select(['"b"."email"', '"a"."token"'])->where(['isActive' => self::IS_ACTIVE_YES]);
 		if ($type) {
 			$query->andWhere(['or',
-				['types' => null],
-				['@>', 'types', json_encode($type)]
+				['a.types' => null],
+				['@>', 'a.types', json_encode($type)]
 			]);
 		}
 		if ($countryId) {
 			$query->andWhere(['or',
-				['countryIds' => null],
-				['@>', 'countryIds', json_encode($countryId)]
+				['a.countryIds' => null],
+				['@>', 'a.countryIds', json_encode($countryId)]
 			]);
 		}
 		if ($regionId) {
 			$query->andWhere(['or',
-				['regionIds' => null],
-				['@>', 'regionIds', json_encode($regionId)]
+				['a.regionIds' => null],
+				['@>', 'a.regionIds', json_encode($regionId)]
 			]);
 		}
-		$athleteIds = $query->asArray()->column();
-		
-		if ($athleteIds) {
-			return Athlete::find()->select('email')->where(['id' => $athleteIds])->asArray()->column();
-		}
-		
-		return null;
+		$query->andWhere(new Expression('"a"."athleteId"="b"."id"'));
+		return $query->all();
 	}
 	
 	public static function sendMsg($msgFor, $modelId)
@@ -222,11 +221,11 @@ class NewsSubscription extends \yii\db\ActiveRecord
 			return null;
 		}
 		$count = 0;
-		foreach ($emails as $email) {
+		foreach ($emails as $item) {
 			if (YII_ENV == 'prod') {
-				\Yii::$app->mailer->compose('subscriptions/' . $layout, ['model' => $model])
-					->setTo($email)
-					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+				\Yii::$app->mailer->compose('subscriptions/' . $layout, ['model' => $model, 'token' => $item['token']])
+					->setTo($item['email'])
+					->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
 					->setSubject('gymkhana-cup: ' . $theme)
 					->send();
 			}
