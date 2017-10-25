@@ -321,10 +321,10 @@ class SiteController extends BaseController
 			$subscription->isActive = 0;
 			$subscription->dateEnd = time();
 			if (!$subscription->save()) {
-				$error = 'Возникла ошибка при сохранении данных.';
+				$error = \Yii::t('app', 'Возникла ошибка при сохранении данных.');
 			}
 		} else {
-			$error = 'Подписка не найдена.';
+			$error = \Yii::t('app', 'Подписка не найдена.');
 		}
 		
 		return $this->render('unsubscription', ['error' => $error]);
