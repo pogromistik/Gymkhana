@@ -2,6 +2,7 @@
 /**
  * @var string $language
  * @var string $content
+ * @var string $token
  */
 ?>
 
@@ -98,7 +99,8 @@
                                                 <em>Gymkhana Cup, <?= date('Y') ?></em><br>
                                                 <br>
                                                 <a style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #bfbfbf;font-weight: normal;text-decoration: underline;"
-                                                   href="#" target="_blank" rel=" noopener noreferrer">
+                                                   href="http://gymkhana-cup.ru/unsubscription?token=<?= $token ?>"
+                                                   target="_blank" rel=" noopener noreferrer">
 													<?= \Yii::t('app', 'нажмите, чтобы отписаться от рассылки', [], $language) ?>
                                                 </a>
                                             </td>

@@ -32,4 +32,4 @@ switch ($msgType) {
 }
 ?>
 
-<?= $this->render('_layout', ['content' => $content, 'language' => $language]) ?>
+<?= $this->render('_layout', ['content' => $content, 'language' => $language, 'token' => $token]) ?>
