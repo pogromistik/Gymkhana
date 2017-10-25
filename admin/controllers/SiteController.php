@@ -1,6 +1,8 @@
 <?php
 namespace admin\controllers;
 
+use common\models\TranslateMessage;
+use common\models\TranslateMessageSource;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -54,5 +56,23 @@ class SiteController extends BaseController
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+    
+    public function actionDownloadTranslate()
+    {
+	    /** @var TranslateMessageSource[] $items */
+	    $items = TranslateMessageSource::find()->all();
+	    $res = '';
+	    foreach ($items as $item) {
+		    $message = TranslateMessage::findOne(['id' => $item->id]);
+		    if ($message && $message->translation) {
+			
+		    } else {
+			    $res .= $item->message . ';';
+			    $res .= PHP_EOL;
+		    }
+	    }
+	
+	    return $res;
     }
 }
