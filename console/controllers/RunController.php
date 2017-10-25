@@ -1471,12 +1471,13 @@ class RunController extends Controller
 		$items = TranslateMessageSource::find()->all();
 		foreach ($items as $item) {
 			$message = TranslateMessage::findOne(['id' => $item->id]);
-			$res = $item->message . ';';
 			if ($message && $message->translation) {
-				$res .= $message->translation;
+			
+			} else {
+				$res = $item->message . ';';
+				$res .= PHP_EOL;
+				file_put_contents('/var/www/gymkhana/admin/web/messages.csv', $res, FILE_APPEND);
 			}
-			$res .= PHP_EOL;
-			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
 		}
 		
 		return true;
