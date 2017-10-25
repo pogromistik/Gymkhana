@@ -60,6 +60,7 @@ class MotorcyclesController extends BaseController
 	
 	public function actionUpdate($id)
 	{
+		$this->can('developer');
 		$model = $this->findModel($id);
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
