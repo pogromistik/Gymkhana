@@ -1275,3 +1275,12 @@ th.gray-column {
 .is-active-0 a {
     color: #828282!important;
 }
+
+.href-menu ul li {
+    display: inline-block;
+}
+
+.href-menu ul li:before {
+    content: "\2022";
+    padding-right: 5px;
+}

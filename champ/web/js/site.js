@@ -198,6 +198,13 @@ $(document).on("submit", '#resetPasswordForm', function (e) {
     });
 });
 
+$(".href-menu").on("click","a", function (event) {
+    event.preventDefault();
+    var id  = $(this).attr('href'),
+        top = $(id).offset().top;
+    $('body,html').animate({scrollTop: top}, 500);
+});
+
 function countDown(second,endMinute,endHour,endDay,endMonth) {
     var now = new Date();
     second = (arguments.length == 1) ? second + now.getSeconds() : second;

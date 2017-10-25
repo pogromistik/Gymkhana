@@ -16,6 +16,7 @@ use Yii;
 class TranslateMessage extends \yii\db\ActiveRecord
 {
 	const LANGUAGE_EN = 'en-US';
+	const LANGUAGE_RU = 'ru-RU';
 	
 	public static $languagesTitle = [
 		self::LANGUAGE_EN => 'Английский'
