@@ -63,6 +63,12 @@ use yii\helpers\Url;
                 <a data-addr="/competitions/athlete"
                    href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
             </li>
+	        <?php if (\Yii::$app->user->can('developer')) { ?>
+                <li>
+                    <a data-addr="/competitions/motorcycles"
+                       href="<?= Url::to(['/competitions/motorcycles/index']) ?>"> Мотоциклы</a>
+                </li>
+	        <?php } ?>
             <li class="level-2 active">
                 <a href="#"> Чемпионаты<span
                             class="fa arrow"></span></a>

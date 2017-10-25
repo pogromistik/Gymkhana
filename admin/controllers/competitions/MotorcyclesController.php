@@ -3,16 +3,11 @@
 namespace admin\controllers\competitions;
 
 use common\helpers\UserHelper;
-use common\models\City;
 use common\models\Motorcycle;
-use dosamigos\editable\EditableAction;
+use common\models\search\MotorcyclesSearch;
 use Yii;
-use common\models\Athlete;
-use common\models\search\AthleteSearch;
 use admin\controllers\BaseController;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\web\Response;
 
 /**
  * AthleteController implements the CRUD actions for Athlete model.
@@ -48,6 +43,31 @@ class MotorcyclesController extends BaseController
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+	
+	public function actionIndex()
+	{
+		$this->can('developer');
+		$searchModel = new MotorcyclesSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		return $this->render('index', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['index', 'id' => $model->id]);
+		} else {
+			return $this->render('update', [
+				'model' => $model,
+			]);
 		}
 	}
 }
