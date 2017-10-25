@@ -1126,11 +1126,9 @@ class RunController extends Controller
 		foreach ($items as $item) {
 			$message = TranslateMessage::findOne(['id' => $item->id]);
 			if ($message && $message->translation) {
-			} else {
-				$res = $item->message . ';';
-				$res .= PHP_EOL;
-				file_put_contents('/var/www/gymkhana/admin/web/messages.csv', $res, FILE_APPEND);
-			}
+			} else {	$res = $item->message. ';';
+			$res .= PHP_EOL;
+			file_put_contents('/var/www/gymkhana/admin/web/messages.csv', $res, FILE_APPEND);}
 		}
 		
 		return true;
