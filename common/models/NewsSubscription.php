@@ -222,7 +222,12 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		$count = 0;
 		foreach ($emails as $item) {
 			if (YII_ENV == 'prod') {
-				\Yii::$app->mailer->compose('subscriptions/_content', ['msgType' => $msgFor, 'model' => $model, 'token' => $item['token']])
+				\Yii::$app->mailer->compose('subscriptions/_content', [
+					'msgType' => $msgFor,
+					'model'   => $model,
+					'token'   => $item['token'],
+					TranslateMessage::LANGUAGE_RU
+				])
 					->setTo($item['email'])
 					->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
 					->setSubject('gymkhana-cup: ' . $theme)

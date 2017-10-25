@@ -2,12 +2,17 @@
 /**
  * @var \common\models\Stage $model
  * @var string               $token
+ * @var string               $language
  */
 $championship = $model->championship;
 ?>
-<b>Анонсирован новый этап чемпионата
-    <a href="http://gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>" target="_blank" style="color: #56a025"><?= $championship->title ?>:
-        "<?= $model->title ?>"</a>!</b>
+<b>
+	<?= \Yii::t('app', 'Анонсирован новый этап чемпионата {champTitle}: "{stageTitle}"!', [
+		'champTitle' => $championship->title,
+		'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id="' . $model->id
+			. 'target="_blank" style="color: #56a025">' . $model->title . '</a>'
+	], $language) ?>
+</b>
 <br><br>
 
 <?php if ($model->description) { ?>
@@ -15,29 +20,32 @@ $championship = $model->championship;
 <?php } ?>
 
 <?php if ($model->dateOfThe) { ?>
-    <br>Этап пройдёт <?= $model->dateOfTheHuman ?>.&nbsp;
+    <br><?= \Yii::t('app', 'Этап пройдёт {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
 <?php } ?>
 
 <?php if ($model->location) { ?>
-    Место проведения: <?= $model->location ?>.
+    &nbsp;<?= \Yii::t('app', 'Место проведения: {location}.', ['location' => $model->location], $language) ?>
 <?php } ?>
 
 <?php if ($model->startRegistration) { ?>
-    <br>Регистрация начнётся <?= $model->dateOfTheHuman ?>.
+    <br<?= \Yii::t('app', '>Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
 <?php } ?>
 
 <?php if ($model->participantsLimit) { ?>
-    <br><b>Обратите
-        внимание</b> - количество участников для этапа ограничено числом <?= $model->participantsLimit ?>. Успейте зарегистрироваться!
+    <br><b><?= \Yii::t('app', 'Обратите внимание', [], $language) ?></b>
+    - <?= \Yii::t('app', 'количество участников для этапа ограничено числом {count}. Успейте зарегистрироваться!',
+        ['count' => $model->participantsLimit], $language) ?>
 <?php } ?>
 
 <?php if ($championship->onlyRegions) { ?>
     <br>
-    <small>Этап проводится в рамках закрытого чемпионата, к участию допускаются только перечисленные
-        регионы: <?= $championship->getRegionsFor(true) ?></small>
+    <small><?= \Yii::t('app', 'Этап проводится в рамках закрытого чемпионата, к участию допускаются только перечисленные регионы: {regions}.', [
+                'regions' => $championship->getRegionsFor(true)
+        ], $language) ?></small>
 <?php } ?>
 
 <br><br>
-Подробнее о этапе вы можете узнать на сайте <a href="http://gymkhana-cup.ru/competitions/stage?id=<?= $model->id ?>"
-                                               target="_blank" style="color: #56a025">gymkhana-cup.ru</a>
+<?= \Yii::t('app', 'Подробнее о этапе вы можете узнать на сайте {site}.', [
+	'site' => '<a href="http://gymkhana-cup.ru/competitions/stage?id=' . $model->id . '" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;'
+], $language) ?>
 

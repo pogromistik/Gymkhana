@@ -76,7 +76,8 @@ if ($figure) {
     <div class="with-bottom-border">
         <h3>4. Рассылка: новый Российский рекорд</h3>
 		<?= $this->render('@common/mail/subscriptions/_content',
-			['msgType' => \common\models\NewsSubscription::MSG_FOR_RUSSIA_RECORDS, 'model' => $figure, 'token' => 'token']) ?>
+			['msgType' => \common\models\NewsSubscription::MSG_FOR_RUSSIA_RECORDS, 'model' => $figure, 'token' => 'token',
+			 'language' => \common\models\TranslateMessage::LANGUAGE_RU]) ?>
     </div>
 <?php } ?>
 
@@ -86,8 +87,9 @@ if ($figure) {
 	?>
     <div class="with-bottom-border">
         <h3>5. Рассылка: новый мировой рекорд</h3>
-	    <?= $this->render('@common/mail/subscriptions/_content',
-		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_WORLD_RECORDS, 'model' => $figure, 'token' => 'token']) ?>
+		<?= $this->render('@common/mail/subscriptions/_content',
+			['msgType'  => \common\models\NewsSubscription::MSG_FOR_WORLD_RECORDS, 'model' => $figure, 'token' => 'token',
+			 'language' => \common\models\TranslateMessage::LANGUAGE_RU]) ?>
     </div>
 <?php } ?>
 
@@ -98,8 +100,9 @@ if ($stage) {
 	?>
     <div class="with-bottom-border">
         <h3>6. Рассылка: Анонс этапа</h3>
-	    <?= $this->render('@common/mail/subscriptions/_content',
-		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_STAGE, 'model' => $stage, 'token' => 'token']) ?>
+		<?= $this->render('@common/mail/subscriptions/_content',
+			['msgType'  => \common\models\NewsSubscription::MSG_FOR_STAGE, 'model' => $stage, 'token' => 'token',
+			 'language' => \common\models\TranslateMessage::LANGUAGE_RU]) ?>
     </div>
 <?php } ?>
 
@@ -109,8 +112,9 @@ if ($stage) {
 	?>
     <div class="with-bottom-border">
         <h3>7. Рассылка: Анонс особого этапа</h3>
-	    <?= $this->render('@common/mail/subscriptions/_content',
-		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_SPECIAL_STAGE, 'model' => $stage, 'token' => 'token']) ?>
+		<?= $this->render('@common/mail/subscriptions/_content',
+			['msgType'  => \common\models\NewsSubscription::MSG_FOR_SPECIAL_STAGE, 'model' => $stage, 'token' => 'token',
+			 'language' => \common\models\TranslateMessage::LANGUAGE_RU]) ?>
     </div>
 <?php } ?>
 
@@ -120,8 +124,9 @@ if ($stage) {
 	?>
     <div class="with-bottom-border">
         <h3>8. Рассылка: Открыта регистрация на этап</h3>
-	    <?= $this->render('@common/mail/subscriptions/_content',
-		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_REGISTRATIONS, 'model' => $stage, 'token' => 'token']) ?>
+		<?= $this->render('@common/mail/subscriptions/_content',
+			['msgType'  => \common\models\NewsSubscription::MSG_FOR_REGISTRATIONS, 'model' => $stage, 'token' => 'token',
+			 'language' => \common\models\TranslateMessage::LANGUAGE_RU]) ?>
     </div>
 <?php } ?>
 
@@ -131,7 +136,8 @@ if ($stage) {
 	?>
     <div class="with-bottom-border">
         <h3>9. Рассылка: Начат приём результатов на особый этап</h3>
-	    <?= $this->render('@common/mail/subscriptions/_content',
-		    ['msgType' => \common\models\NewsSubscription::MSG_FOR_SPECIAL_REGISTRATIONS, 'model' => $stage, 'token' => 'token']) ?>
+		<?= $this->render('@common/mail/subscriptions/_content',
+			['msgType'  => \common\models\NewsSubscription::MSG_FOR_SPECIAL_REGISTRATIONS, 'model' => $stage, 'token' => 'token',
+			 'language' => \common\models\TranslateMessage::LANGUAGE_RU]) ?>
     </div>
 <?php } ?>

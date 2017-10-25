@@ -2,11 +2,16 @@
 /**
  * @var \common\models\Figure $model
  * @var string                $token
+ * @var string                $language
  */
 ?>
 
-Установлен новый Российский рекорд для фигуры
-<a href="http://gymkhana-cup.ru/competitions/figure?id=<?= $model->id ?>" target="_blank" style="color: #56a025"><?= $model->title ?></a>!
-<br>
+<?= \Yii::t('app', 'Установлен новый Российский рекорд для фигуры {$figure}!', [
+	'figure' => '<a href="http://gymkhana-cup.ru/competitions/figure?id=' . $model->id . '" target="_blank" style="color: #56a025">'
+		. $model->title . '</a>'
+], $language) ?>
+    <br>
 
-Рекорд установлен спортсменом <?= $model->bestAthleteInRussia ?> и составляет <?= $model->bestTimeInRussiaForHuman ?>.
+<?= \Yii::t('app', 'Рекорд установлен спортсменом {rider} и составляет {time}.', [
+	'rider' => $model->bestAthleteInRussia, 'time' => 'bestTimeInRussiaForHuman'
+], $language) ?>

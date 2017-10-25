@@ -2,31 +2,40 @@
 /**
  * @var \common\models\SpecialStage $model
  * @var string                      $token
+ * @var string                      $language
  */
 $championship = $model->championship;
 ?>
-<b>Анонсирован новый этап чемпионата
-    <a href="http://gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>"
-       target="_blank" style="color: #56a025"><?= $championship->title ?>: "<?= $model->title ?>"</a>!</b>
-<br><br>
+    <b>
+		<?= \Yii::t('app', 'Анонсирован новый этап чемпионата {champTitle}: "{stageTitle}"!', [
+			'champTitle' => $championship->title,
+			'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id="' . $model->id
+				. 'target="_blank" style="color: #56a025">' . $model->title . '</a>'
+		], $language) ?>
+    </b>
+    <br><br>
 
 <?php if ($model->description) { ?>
 	<?= $model->description ?><br>
 <?php } ?>
 
 <?php if ($model->dateStart) { ?>
-    <br>Приём результатов начнётся <?= $model->dateStart ?>.
+    <br><?= \Yii::t('app', 'Приём результатов начнётся {date}.', ['date' => $model->dateStartHuman], $language) ?>
 <?php } ?>
 
 <?php if ($model->dateResult) { ?>
-    <br>Результаты будут опубликованы <?= $model->dateResultHuman ?>.&nbsp;
+    <br><?= \Yii::t('app', 'Результаты будут опубликованы {date}.', ['date' => $model->dateResultHuman], $language) ?>
 <?php } ?>
 
-<br><br>
-Подробнее о этаеп вы можете узнать на сайте
-<a href="http://gymkhana-cup.ru/competitions/special-stage?id=<?= $model->id ?>" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;
+    <br><br>
+
+
 <?php if ($model->photoPath) { ?>
-    Там же можно посмотреть фото трассы.
+	<?= \Yii::t('app', 'Подробнее о этапе вы можете узнать на сайте {site}. Там же можно посмотреть фото трассы.', [
+		'site' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id=' . $model->id . '" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;'
+	], $language) ?>
 <?php } else { ?>
-    Фотография трассы будет опубликована позже на том же сайте.
+	<?= \Yii::t('app', 'Подробнее о этапе вы можете узнать на сайте {site}. Фотография трассы будет опубликована позже на том же сайте.', [
+		'site' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id=' . $model->id . '" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;'
+	], $language) ?>
 <?php } ?>
