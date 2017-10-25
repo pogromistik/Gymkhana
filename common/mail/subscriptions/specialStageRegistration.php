@@ -24,7 +24,7 @@ $championship = $model->championship;
     <br><?= \Yii::t('app', 'Результаты будут опубликованы {date}.', ['date' => $model->dateResultHuman], $language) ?>
 <?php } ?>
 
-<br><br>
+<br>
 <?php if ($model->photoPath) { ?>
 	<?= \Yii::t('app', 'Подробнее о этапе вы можете узнать на сайте {site}. Там же можно посмотреть фото трассы.', [
 		'site' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id=' . $model->id . '" target="_blank" style="color: #56a025">gymkhana-cup.ru</a>.&nbsp;'

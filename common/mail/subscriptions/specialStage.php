@@ -13,10 +13,9 @@ $championship = $model->championship;
 				. 'target="_blank" style="color: #56a025">' . $model->title . '</a>'
 		], $language) ?>
     </b>
-    <br><br>
 
 <?php if ($model->description) { ?>
-	<?= $model->description ?><br>
+    <br><?= $model->description ?>
 <?php } ?>
 
 <?php if ($model->dateStart) { ?>
@@ -27,7 +26,7 @@ $championship = $model->championship;
     <br><?= \Yii::t('app', 'Результаты будут опубликованы {date}.', ['date' => $model->dateResultHuman], $language) ?>
 <?php } ?>
 
-    <br><br>
+    <br>
 
 
 <?php if ($model->photoPath) { ?>

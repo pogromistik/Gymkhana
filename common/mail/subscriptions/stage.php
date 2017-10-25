@@ -13,10 +13,9 @@ $championship = $model->championship;
 			. 'target="_blank" style="color: #56a025">' . $model->title . '</a>'
 	], $language) ?>
 </b>
-<br><br>
 
 <?php if ($model->description) { ?>
-	<?= $model->description ?><br>
+    <br><?= $model->description ?>
 <?php } ?>
 
 <?php if ($model->dateOfThe) { ?>
@@ -28,7 +27,7 @@ $championship = $model->championship;
 <?php } ?>
 
 <?php if ($model->startRegistration) { ?>
-    <br<?= \Yii::t('app', '>Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
+    <br><?= \Yii::t('app', '>Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
 <?php } ?>
 
 <?php if ($model->participantsLimit) { ?>
