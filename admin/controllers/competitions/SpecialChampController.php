@@ -379,6 +379,11 @@ class SpecialChampController extends BaseController
 					return 'Возникла ошибка при сохранении';
 				}
 				
+				if ($athlete->hasAccount) {
+					$text = 'Результат ' . $request->resultTimeHuman . ' для этапа ' . $request->stage->title . ' подтверждён';
+					Notice::add($request->athleteId, $text);
+				}
+				
 				$transaction->commit();
 				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
 				
@@ -411,17 +416,20 @@ class SpecialChampController extends BaseController
 			}
 			$email = null;
 			if ($request->athleteId) {
-				$sendText = 'Результат отклонён';
-				$link = null;
-				if ((mb_strlen($text, 'UTF-8') + mb_strlen($sendText, 'UTF-8')) < 253) {
-					$sendText .= ': ' . $text;
-				} else {
-					$sendText = 'Результат ' . $request->resultTimeHuman . ' для этапа "'
-						. $request->stage->title . '" отклонён. Подробности по ссылке';
-					$link = '/competitions/special-stages-history';
+				$athlete = $request->athlete;
+				if ($athlete->hasAccount) {
+					$sendText = 'Результат отклонён';
+					$link = null;
+					if ((mb_strlen($text, 'UTF-8') + mb_strlen($sendText, 'UTF-8')) < 253) {
+						$sendText .= ': ' . $text;
+					} else {
+						$sendText = 'Результат ' . $request->resultTimeHuman . ' для этапа "'
+							. $request->stage->title . '" отклонён. Подробности по ссылке';
+						$link = '/competitions/special-stages-history';
+					}
+					Notice::add($request->athleteId, $sendText, $link);
 				}
-				Notice::add($request->athleteId, $sendText, $link);
-				$email = $request->athlete->email;
+				$email = $athlete->email;
 			} else {
 				$data = $request->getData();
 				$email = $data['email'];
