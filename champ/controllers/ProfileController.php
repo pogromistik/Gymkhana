@@ -8,6 +8,7 @@ use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\ClassesRequest;
 use common\models\ClassHistory;
+use common\models\Country;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
@@ -585,10 +586,15 @@ class ProfileController extends AccessController
 			$subscription->regionIds = null;
 		}
 		if ($subscription->countryIds) {
-			$subscription->countryIds = array_map(function ($item) {
-				return (int)$item;
-			}, $subscription->countryIds);
-			$subscription->countryIds = json_encode($subscription->countryIds);
+			if (count($subscription->countryIds) == count(Country::find()->all())) {
+				$subscription->countryIds = null;
+				$subscription->regionIds = null;
+			} else {
+				$subscription->countryIds = array_map(function ($item) {
+					return (int)$item;
+				}, $subscription->countryIds);
+				$subscription->countryIds = json_encode($subscription->countryIds);
+			}
 		} else {
 			$subscription->countryIds = null;
 		}
