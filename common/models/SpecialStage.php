@@ -27,7 +27,7 @@ use yii\web\UploadedFile;
  * @property string                   $descr_en
  *
  * @property AthletesClass            $class
- * @property Championship             $championship
+ * @property SpecialChamp             $championship
  * @property RequestForSpecialStage[] $participants
  * @property RequestForSpecialStage[] $activeRequests
  */
@@ -212,6 +212,8 @@ class SpecialStage extends BaseActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_SPECIAL_STAGE, $this);
+			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES,
+				NewsSubscription::MSG_FOR_SPECIAL_STAGE, $this->id);
 		}
 	}
 	

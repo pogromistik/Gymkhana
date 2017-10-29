@@ -8,9 +8,11 @@ use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\ClassesRequest;
 use common\models\ClassHistory;
+use common\models\Country;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
+use common\models\NewsSubscription;
 use common\models\Participant;
 use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
@@ -51,6 +53,7 @@ class ProfileController extends AccessController
 		
 		if ($model->load(\Yii::$app->request->post())) {
 			$model->save();
+			
 			return $this->redirect('index');
 		}
 		
@@ -86,7 +89,21 @@ class ProfileController extends AccessController
 			return $this->redirect(['index', 'success' => true]);
 		}
 		
-		return $this->render('index', ['athlete' => $athlete, 'success' => $success, 'password' => $password]);
+		$subscription = NewsSubscription::findOne(['athleteId' => $athlete->id, 'isActive' => NewsSubscription::IS_ACTIVE_YES]);
+		if (!$subscription) {
+			$subscription = new NewsSubscription();
+		} else {
+			$subscription->regionIds = $subscription->getRegionIds();
+			$subscription->countryIds = $subscription->getCountryIds();
+			$subscription->types = $subscription->getTypes();
+		}
+		
+		return $this->render('index', [
+			'athlete'      => $athlete,
+			'success'      => $success,
+			'password'     => $password,
+			'subscription' => $subscription
+		]);
 	}
 	
 	public function actionChangeStatus($id)
@@ -120,7 +137,7 @@ class ProfileController extends AccessController
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
 			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
 			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]]);
-		if($withoutRegistrationIds) {
+		if ($withoutRegistrationIds) {
 			$newStages->andWhere(['not', ['id' => $withoutRegistrationIds]]);
 		}
 		$newStages = $newStages->all();
@@ -537,5 +554,64 @@ class ProfileController extends AccessController
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
+	}
+	
+	public function actionSubscriptions()
+	{
+		$athlete = Athlete::findOne(\Yii::$app->user->identity->id);
+		if (!$athlete) {
+			throw new NotFoundHttpException('Ошибка! Спортсмен не найден');
+		}
+		$isActive = \Yii::$app->request->post('subscription');
+		$subscription = NewsSubscription::findOne(['athleteId' => $athlete->id, 'isActive' => NewsSubscription::IS_ACTIVE_YES]);
+		if (!$isActive && !$subscription) {
+			return true;
+		}
+		if (!$subscription) {
+			$subscription = new NewsSubscription();
+		} elseif (!$isActive) {
+			$subscription->isActive = NewsSubscription::IS_ACTIVE_NO;
+			$subscription->dateEnd = time();
+			if (!$subscription->save()) {
+				return var_dump($subscription->errors);
+			}
+			
+			return true;
+		}
+		$subscription->load(\Yii::$app->request->post());
+		if ($subscription->regionIds) {
+			$subscription->regionIds = array_map(function ($item) {
+				return (int)$item;
+			}, $subscription->regionIds);
+			$subscription->regionIds = json_encode($subscription->regionIds);
+		} else {
+			$subscription->regionIds = null;
+		}
+		if ($subscription->countryIds) {
+			if (count($subscription->countryIds) == count(Country::find()->all())) {
+				$subscription->countryIds = null;
+				$subscription->regionIds = null;
+			} else {
+				$subscription->countryIds = array_map(function ($item) {
+					return (int)$item;
+				}, $subscription->countryIds);
+				$subscription->countryIds = json_encode($subscription->countryIds);
+			}
+		} else {
+			$subscription->countryIds = null;
+		}
+		if ($subscription->types) {
+			$subscription->types = array_map(function ($item) {
+				return (int)$item;
+			}, $subscription->types);
+			$subscription->types = json_encode($subscription->types);
+		} else {
+			$subscription->types = null;
+		}
+		if (!$subscription->save()) {
+			return var_dump($subscription->errors);
+		}
+		
+		return true;
 	}
 }

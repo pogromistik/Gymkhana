@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
  */
 class Country extends \yii\db\ActiveRecord
 {
+	const RUSSIA_ID = 1;
 	/**
 	 * @inheritdoc
 	 */
