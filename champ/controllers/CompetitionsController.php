@@ -710,6 +710,10 @@ class CompetitionsController extends BaseController
 			return 'Регистрация на этап ещё не началась';
 		}
 		
+		if (!$stage->registrationFromSite) {
+			return 'Регистрация с сайта невозможна';
+		}
+		
 		if (time() < $stage->startRegistration) {
 			return 'Регистрация на этап начнётся ' . $stage->startRegistrationHuman;
 		}
@@ -802,6 +806,10 @@ class CompetitionsController extends BaseController
 		$stage = Stage::findOne($form->stageId);
 		if (!$stage->startRegistration) {
 			return 'Регистрация на этап ещё не началась';
+		}
+		
+		if (!$stage->registrationFromSite) {
+			return 'Регистрация с сайта невозможна';
 		}
 		
 		if (time() < $stage->startRegistration) {

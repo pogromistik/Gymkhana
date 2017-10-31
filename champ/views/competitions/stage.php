@@ -150,7 +150,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         Класс соревнования: <?= $stageClassTitle ?>
 						<?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
                             <div><b>Т.к. класс соревнования <?= $stageClassTitle ?>, рейтинг спортсменов
-                                     и эталонное время трассы не
+                                    и эталонное время трассы не
                                     рассчитывается</b></div>
 						<?php } ?>
                     </div>
@@ -184,37 +184,42 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                             Для уточнения подробностей обратитесь к организаторам соревнования.
                         </div>
                     </div>
-				<?php } else { ?>
-					<?php if ($stage->startRegistration && $time >= $stage->startRegistration
-						&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
-					) { ?>
-                        <div class="pt-30 enroll">
-							<?php if ($stage->participantsLimit > 0) { ?>
-                                <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению
-                                    организатора соревнований. В
-                                    этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки,
-                                    требующие
-                                    подтверждения организатора, выделены на сайте серым цветом.
-                                </div>
-							<?php } ?>
-							<?php if (\Yii::$app->user->isGuest) { ?>
-                                <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
-                                <div class="enrollForm">
-									<?= $this->render('_enroll', ['stage' => $stage]) ?>
-                                </div>
-                                <div class="enrollForm-success pt-10"></div>
-							<?php } else { ?>
-								<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
-                                    <a href="#" class="btn btn-dark" data-toggle="modal"
-                                       data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
-								<?php } else { ?>
-                                    Чемпионат закрыт для вашего города, регистрация невозможна.
+				<?php } else {
+					if ($stage->registrationFromSite == 1) {
+						?>
+						<?php if ($stage->startRegistration && $time >= $stage->startRegistration
+							&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
+						) { ?>
+                            <div class="pt-30 enroll">
+								<?php if ($stage->participantsLimit > 0) { ?>
+                                    <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению
+                                        организатора соревнований. В
+                                        этом случае вам придёт сообщение на почту и уведомление в личный кабинет.
+                                        Заявки,
+                                        требующие
+                                        подтверждения организатора, выделены на сайте серым цветом.
+                                    </div>
 								<?php } ?>
-							<?php } ?>
-                        </div>
-					<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
-                        <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
-					<?php } ?>
+								<?php if (\Yii::$app->user->isGuest) { ?>
+                                    <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
+                                    <div class="enrollForm">
+										<?= $this->render('_enroll', ['stage' => $stage]) ?>
+                                    </div>
+                                    <div class="enrollForm-success pt-10"></div>
+								<?php } else { ?>
+									<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
+                                        <a href="#" class="btn btn-dark" data-toggle="modal"
+                                           data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
+									<?php } else { ?>
+                                        Чемпионат закрыт для вашего города, регистрация невозможна.
+									<?php } ?>
+								<?php } ?>
+                            </div>
+						<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
+                            <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
+						<?php }
+					}
+					?>
 					
 					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
 						|| $time >= $stage->dateOfThe

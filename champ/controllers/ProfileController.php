@@ -136,7 +136,7 @@ class ProfileController extends AccessController
 		
 		$newStages = Stage::find()->where(['or', ['<=', 'startRegistration', $time], ['startRegistration' => null]])
 			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
-			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]]);
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->andWhere(['registrationFromSite' => 1]);
 		if ($withoutRegistrationIds) {
 			$newStages->andWhere(['not', ['id' => $withoutRegistrationIds]]);
 		}
