@@ -13,5 +13,5 @@
     <br>
 
 <?= \Yii::t('app', 'Рекорд установлен спортсменом {rider} и составляет {time}.', [
-	'rider' => $model->bestAthleteInRussia, 'time' => 'bestTimeInRussiaForHuman'
+	'rider' => $model->bestAthleteInRussia, 'time' => $model->bestTimeInRussiaForHuman
 ], $language) ?>
