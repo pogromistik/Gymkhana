@@ -320,6 +320,12 @@ nav .navbar-toggle .icon-bar {
     margin-top: 10px;
     padding: 5px;
 }
+.title-with-bg.green-title-with-bg {
+    background: #56a025;
+}
+.title-with-bg.yellow-title-with-bg {
+    background: #ffcd00;
+}
 
 h2 {
     text-transform: uppercase;

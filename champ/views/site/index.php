@@ -13,15 +13,22 @@ use yii\bootstrap\Html;
 <h2>Новости</h2>
 <div class="z-100">
     <div class="news">
-		<?php foreach ($news as $item) { ?>
+		<?php foreach ($news as $item) {
+		    $class = 'title-with-bg';
+			if ($item->datePublish+2*86400 >= time()) {
+				$class .= ' green-title-with-bg';
+			} elseif ($item->datePublish+7*86400 >= time()) {
+				$class .= ' yellow-title-with-bg';
+			}
+		    ?>
             <div class="item">
 				<?php if ($item->title) { ?>
-                    <div class="title-with-bg">
+                    <div class="<?= $class ?>">
                         <?= $item->title ?>
                     </div>
                     <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
 				<?php } else { ?>
-                    <div class="title-with-bg date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
+                    <div class="<?= $class ?> date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
 				<?php } ?>
                 <div class="preview_text">
 					<?= $item->previewText ?>
