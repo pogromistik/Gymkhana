@@ -388,6 +388,10 @@ h2 {
     width: 80%;
 }
 
+.detail-news img {
+    width: 50%;
+}
+
 .white-menu {
     border-top: 2px solid #4b4e53
 }

@@ -70,6 +70,10 @@
 }
 
 @media (max-width: 991px) {
+    .detail-news img {
+        width: 70%;
+    }
+
     .nav a {
         font-size: 12px;
     }
@@ -265,6 +269,10 @@
 @media (max-width: 560px) {
     .modal-notices {
         width: 400px;
+    }
+
+    .detail-news img {
+        width: 100%;
     }
 }
 
