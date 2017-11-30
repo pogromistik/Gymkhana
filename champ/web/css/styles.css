@@ -1294,3 +1294,7 @@ th.gray-column {
     content: "\2022";
     padding-right: 5px;
 }
+
+.owl-theme .owl-controls .owl-page span {
+    background: #56a025!important;
+}

@@ -21,7 +21,8 @@ if ($model->previewText) {
         </div>
         <ul>
             <li>
-                <b>При добавлении изображения обязательно оставьте пустыми поля "ширина" и "высота" или хотя бы поле "высота"</b>
+                <b>При добавлении изображения обязательно оставьте пустыми поля "ширина" и "высота" или хотя бы поле
+                    "высота"</b>
             </li>
             <li>Для создания новости необходимо заполнить поле "Короткий текст". Этот текст будет отображаться на
                 главной странице.
@@ -41,6 +42,34 @@ if ($model->previewText) {
                 новостей несколько -
                 все они будут наверху страницы, но между собой будут сортироваться по дате публикации.
             </li>
+            <li><b>Если вы хотите вставить слайдер из изображений:</b><br>
+                Слайдер запустится, если на странице будет код вида:<br>
+                &lt;ul class="news-carousel"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;img src="ссылка на изображение"&gt;&lt;/li&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;img src="ссылка на изображение"&gt;&lt;/li&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;...<br>
+                &lt;/ul&gt;<br>
+                Для этого сперва необходимо добавить ваши изображения.<br>
+                а) Загрузка изображений с компьютера.
+                Нажмите на кнопку вставки изображения в панели "Подробный текст"
+                (<span class="fa fa-image"></span>), переидите во вкладку "загрузить", выберите ваш файл, нажмите
+                "загрузить на
+                сервер", уберите ширину и высоту, нажмите "ок".<br>
+                б) Загрузка изображений со сторонних ресурсов. Нажмите на кнопку вставки изображения в панели "Подробный
+                текст"
+                (<span class="fa fa-image"></span>), вставьте ссылку на изображение, уберите ширину и высоту, нажмите
+                "ок".<br>
+                Добавите таким образом все ваши изображения, после чего нажмите "Источник" в панели редактирования
+                текста.
+                Теперь вы видите код вашего текста. Найдите то место, где расположены изображения. Они выглядят так:
+                &lt;img src="ссылка на изображение"&gt;&lt;/li&gt;<br>
+                Вставьте &lt;ul class="news-carousel"&gt; перед первым изображением, &lt;/ul&gt; - после последнего, а
+                каждое изображение заключите в &lt;li&gt;&lt;/li&gt;.<br>
+                Обратите внимание! Если вы добавите слайдер, сохраните новость, а потом отредактируете её, изображения
+                перестанут отображаться в виде слайдера. За его включение отвечает часть class="news-carousel", поэтому
+                перед сохранением отредактированной новости перейдите во вкладку "источник" и вновь добавьте этот класс
+                тэгу &lt;ul&gt;
+            </li>
         </ul>
     </div>
 	
@@ -50,11 +79,11 @@ if ($model->previewText) {
 	
 	<?= $form->field($model, 'previewText',
 		['inputTemplate' => '<div class="input-with-description">{input}</div><div class="text-left color-green" id="length">осталось символов: ' . $length . '</div>'])->textarea(['rows'        => 3,
-	                                                                                                                                                                                 'placeholder' => 'краткий текст, обязательное поле',
-	                                                                                                                                                                                 'id'          => 'smallText']) ?>
+	                                                                                                                                                                                'placeholder' => 'краткий текст, обязательное поле',
+	                                                                                                                                                                                'id'          => 'smallText']) ?>
 	
 	<?= $form->field($model, 'fullText')->widget(CKEditor::className(), [
-		'preset' => 'full',
+		'preset'        => 'full',
 		'clientOptions' => [
 			'filebrowserImageUploadUrl' => '/help/upload'
 		],
@@ -73,13 +102,13 @@ if ($model->previewText) {
 		]
 	]) ?>
 	
-    <?php if (\Yii::$app->user->can('admin')) { ?>
-	<?= $form->field($model, 'secure')->checkbox() ?>
-    <?php } ?>
+	<?php if (\Yii::$app->user->can('admin')) { ?>
+		<?= $form->field($model, 'secure')->checkbox() ?>
+	<?php } ?>
 
     <div class="form-group">
 		<?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
-            ['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
+			['class' => $model->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>
