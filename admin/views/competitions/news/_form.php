@@ -54,7 +54,10 @@ if ($model->previewText) {
 	                                                                                                                                                                                 'id'          => 'smallText']) ?>
 	
 	<?= $form->field($model, 'fullText')->widget(CKEditor::className(), [
-		'preset' => 'full'
+		'preset' => 'full',
+		'clientOptions' => [
+			'filebrowserImageUploadUrl' => '/help/upload'
+		],
 	]) ?>
 	
 	<?= $form->field($model, 'link')->textInput(['placeholder' => 'сторонняя ссылка, не обязательна']) ?>
