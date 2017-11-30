@@ -1298,3 +1298,11 @@ th.gray-column {
 .owl-theme .owl-controls .owl-page span {
     background: #56a025!important;
 }
+
+ul.news-carousel li {
+    list-style-type: none;
+}
+ul.news-carousel {
+    margin-left: 0;
+    padding-left: 0;
+}
