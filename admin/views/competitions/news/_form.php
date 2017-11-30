@@ -85,7 +85,8 @@ if ($model->previewText) {
 	<?= $form->field($model, 'fullText')->widget(CKEditor::className(), [
 		'preset'        => 'full',
 		'clientOptions' => [
-			'filebrowserImageUploadUrl' => '/help/upload'
+			'filebrowserImageUploadUrl' => '/help/upload',
+			'allowedContent' => true
 		],
 	]) ?>
 	
