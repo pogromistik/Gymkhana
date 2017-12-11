@@ -1270,7 +1270,7 @@ var equalizer = function (equalizer) {
     equalizer.height(maxHeight);
 };
 
-$(window).load(function () {
+$(window).on('load', function() {
     if ($(document).width() >= 975) {
         equalizer($('.with-hr-border > div'));
     }
