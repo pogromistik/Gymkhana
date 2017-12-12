@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Url;
 use yii\helpers\Html;
 
@@ -71,7 +72,7 @@ use yii\helpers\Html;
                     <li>
                         <a href="<?= Url::to(['/competitions/special-champ/registrations']) ?>"><i
                                     class="fa fa-registered fa-fw"></i> Спец. этап
-                            <?= $countNewSpecialReg ? '(' . $countNewSpecialReg . ')' : '' ?></a>
+							<?= $countNewSpecialReg ? '(' . $countNewSpecialReg . ')' : '' ?></a>
                     </li>
 				<?php } ?>
 			<?php } ?>
@@ -210,6 +211,10 @@ use yii\helpers\Html;
                             <li>
                                 <a href="<?= Url::to(['/competitions/developer/repeat-figures-time']) ?>"> Повторы
                                     времени фигур</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/competitions/developer/merge-athletes']) ?>"> Объединение
+                                    спортсменов</a>
                             </li>
                         </ul>
                     </li>

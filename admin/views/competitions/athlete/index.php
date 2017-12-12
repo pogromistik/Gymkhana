@@ -22,6 +22,10 @@ $this->title = 'Спортсмены';
 			['class' => 'yii\grid\SerialColumn'],
 			
 			[
+				'attribute' => 'id',
+				'visible'   => \Yii::$app->user->can('developer')
+			],
+			[
 				'label'  => 'Имя',
 				'format' => 'raw',
 				'filter' => '<div class="input-group">
