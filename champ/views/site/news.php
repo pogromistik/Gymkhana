@@ -9,11 +9,11 @@ use yii\helpers\Url;
 use yii\bootstrap\Html;
 
 $this->registerMetaTag([
-	'name'    => 'description',
+	'property'    => 'description',
 	'content' => $news->previewText
 ]);
 $this->registerMetaTag([
-	'name'    => 'og:description',
+	'property'    => 'og:description',
 	'content' => $news->previewText
 ]);
 ?>
