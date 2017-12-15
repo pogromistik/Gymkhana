@@ -8,6 +8,14 @@ use yii\widgets\LinkPager;
 use yii\helpers\Url;
 use yii\bootstrap\Html;
 
+$this->registerMetaTag([
+	'name'    => 'description',
+	'content' => $news->previewText
+]);
+$this->registerMetaTag([
+	'name'    => 'og:description',
+	'content' => $news->previewText
+]);
 ?>
 
 <h2><?= $this->context->pageTitle ?></h2>
