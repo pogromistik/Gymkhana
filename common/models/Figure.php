@@ -140,8 +140,8 @@ class Figure extends BaseActiveRecord
 		}
 		
 		//очередь на рассылку о новом российском рекорде
-		if (array_key_exists('bestTimeInRussia', $changedAttributes) && $this->bestTime
-			&& $changedAttributes['bestTimeInRussia'] && $this->bestTime != $changedAttributes['bestTimeInRussia']) {
+		if (array_key_exists('bestTimeInRussia', $changedAttributes) && $this->bestTimeInRussia
+			&& $changedAttributes['bestTimeInRussia'] && $this->bestTimeInRussia != $changedAttributes['bestTimeInRussia']) {
 			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_RUSSIA_RECORDS,
 				NewsSubscription::MSG_FOR_RUSSIA_RECORDS, $this->id);
 		}

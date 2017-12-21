@@ -70,6 +70,10 @@
 }
 
 @media (max-width: 991px) {
+    .detail-news img {
+        width: 70%;
+    }
+
     .nav a {
         font-size: 12px;
     }
@@ -143,6 +147,10 @@
 @media (max-width: 860px) {
     .background-img {
         display: none;
+    }
+
+    .detail-news {
+        width: 100%;
     }
 
     .content {
@@ -265,6 +273,10 @@
 @media (max-width: 560px) {
     .modal-notices {
         width: 400px;
+    }
+
+    .detail-news img {
+        width: 100%;
     }
 }
 

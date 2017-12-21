@@ -729,6 +729,10 @@ class CompetitionsController extends BaseController
 			return \Yii::t('app', 'Регистрация на этап ещё не началась');
 		}
 		
+		if (!$stage->registrationFromSite) {
+			return 'Регистрация с сайта невозможна';
+		}
+		
 		if (time() < $stage->startRegistration) {
 			return \Yii::t('app', 'Регистрация на этап начнётся {startRegistration}',
 				['startRegistration' => $stage->startRegistrationHuman]);
@@ -822,6 +826,10 @@ class CompetitionsController extends BaseController
 		$stage = Stage::findOne($form->stageId);
 		if (!$stage->startRegistration) {
 			return \Yii::t('app', 'Регистрация на этап ещё не началась');
+		}
+		
+		if (!$stage->registrationFromSite) {
+			return 'Регистрация с сайта невозможна';
 		}
 		
 		if (time() < $stage->startRegistration) {

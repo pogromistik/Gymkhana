@@ -320,6 +320,12 @@ nav .navbar-toggle .icon-bar {
     margin-top: 10px;
     padding: 5px;
 }
+.title-with-bg.green-title-with-bg {
+    background: #56a025;
+}
+.title-with-bg.yellow-title-with-bg {
+    background: #ffcd00;
+}
 
 h2 {
     text-transform: uppercase;
@@ -380,6 +386,10 @@ h2 {
 
 .detail-news {
     width: 80%;
+}
+
+.detail-news img {
+    width: 50%;
 }
 
 .white-menu {
@@ -1288,4 +1298,16 @@ th.gray-column {
 .href-menu ul li:before {
     content: "\2022";
     padding-right: 5px;
+}
+
+.owl-theme .owl-controls .owl-page span {
+    background: #56a025!important;
+}
+
+ul.news-carousel li {
+    list-style-type: none;
+}
+ul.news-carousel {
+    margin-left: 0;
+    padding-left: 0;
 }

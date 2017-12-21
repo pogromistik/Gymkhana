@@ -161,6 +161,8 @@ use dosamigos\ckeditor\CKEditor;
 			]
 		]) ?>
 	
+	<?= $form->field($model, 'registrationFromSite')->checkbox() ?>
+	
 	<?= $form->field($model, 'startRegistrationHuman',
 		['inputTemplate' => '<div class="input-with-description"><div class="text">если для выбранного города не установлен часовой 
 пояс - по умолчанию будет установлено Московское время. Изменить пояс можно в разделе "города"</div>{input}</div>'])

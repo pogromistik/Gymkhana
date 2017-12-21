@@ -154,8 +154,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 						<?php $stageClassTitle = $stage->classModel->title; ?>
                         <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
 						<?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
-                            <div><b>
-									<?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
+                            <div><b><?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
 										'classTitle' => $stageClassTitle
 									]) ?></b></div>
 						<?php } ?>
@@ -190,8 +189,9 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 							<?= \Yii::t('app', 'Для уточнения подробностей обратитесь к организаторам соревнования.') ?>
                         </div>
                     </div>
-				<?php } else { ?>
-					<?php if ($stage->startRegistration && $time >= $stage->startRegistration
+				<?php } else {
+					if ($stage->registrationFromSite == 1) {
+						?><?php if ($stage->startRegistration && $time >= $stage->startRegistration
 						&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
 					) { ?>
                         <div class="pt-30 enroll">
@@ -201,8 +201,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                                 </div>
 							<?php } ?>
 							<?php if (\Yii::$app->user->isGuest) { ?>
-                                <a href="#" class="btn btn-dark"
-                                   id="enrollFormHref"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
+                                <a href="#" class="btn btn-dark" id="enrollFormHref"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
                                 <div class="enrollForm">
 									<?= $this->render('_enroll', ['stage' => $stage]) ?>
                                 </div>
@@ -212,13 +211,13 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                                     <a href="#" class="btn btn-dark" data-toggle="modal"
                                        data-target="#enrollAuthorizedForm"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
 								<?php } else { ?>
-									<?= \Yii::t('app', 'Чемпионат закрыт для вашего города, регистрация невозможна.') ?>
+                                    <?= \Yii::t('app', 'Чемпионат закрыт для вашего города, регистрация невозможна.') ?>
 								<?php } ?>
 							<?php } ?>
                         </div>
 					<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
-                        <div class="warning text-center text-uppercase"><?= \Yii::t('app', 'Предварительная регистрация на этап завершена') ?></div>
-					<?php } ?>
+                        <div class="warning text-centertext-uppercase"><?= \Yii::t('app', 'Предварительная регистрация на этап завершена') ?></div>
+					<?php } }?>
 					
 					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
 						|| $time >= $stage->dateOfThe

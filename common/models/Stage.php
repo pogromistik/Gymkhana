@@ -36,6 +36,7 @@ use yii\web\UploadedFile;
  * @property integer       $outOfCompetitions
  * @property string        $title_en
  * @property string        $descr_en
+ * @property integer       $registrationFromSite
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -102,6 +103,7 @@ class Stage extends BaseActiveRecord
 		parent::init();
 		if ($this->isNewRecord) {
 			$this->countRace = 2;
+			$this->registrationFromSite = 1;
 		}
 	}
 	
@@ -129,7 +131,8 @@ class Stage extends BaseActiveRecord
 				'countryId',
 				'participantsLimit',
 				'fastenClassFor',
-				'outOfCompetitions'
+				'outOfCompetitions',
+				'registrationFromSite'
 			], 'integer'],
 			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman',
 				'trackPhoto', 'title_en'], 'string', 'max' => 255],
@@ -140,7 +143,8 @@ class Stage extends BaseActiveRecord
 			[['participantsLimit'], 'integer', 'min' => 3],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
-			['outOfCompetitions', 'default', 'value' => 0]
+			['outOfCompetitions', 'default', 'value' => 0],
+			['registrationFromSite', 'default', 'value' => 1]
 		];
 	}
 	
@@ -178,7 +182,8 @@ class Stage extends BaseActiveRecord
 			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа',
 			'outOfCompetitions'      => 'Вне общего зачёта',
 			'title_en'               => 'Название',
-			'descr_en'               => 'Описание'
+			'descr_en'               => 'Описание',
+			'registrationFromSite'   => 'Регистрация с сайта'
 		];
 	}
 	
