@@ -621,12 +621,15 @@ LIMIT 1) order by "bestTime" asc) n'])
 		}
 	}
 	
-	public function getTitle()
+	public function getTitle($language = null)
 	{
 		if (!$this->title_en) {
 			return $this->title;
 		}
-		switch (\Yii::$app->language) {
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
 			case TranslateMessage::LANGUAGE_EN:
 				return $this->title_en;
 			case TranslateMessage::LANGUAGE_RU:
@@ -636,12 +639,15 @@ LIMIT 1) order by "bestTime" asc) n'])
 		}
 	}
 	
-	public function getDescr()
+	public function getDescr($language = null)
 	{
 		if (!$this->descr_en) {
 			return $this->description;
 		}
-		switch (\Yii::$app->language) {
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
 			case TranslateMessage::LANGUAGE_EN:
 				return $this->descr_en;
 			case TranslateMessage::LANGUAGE_RU:

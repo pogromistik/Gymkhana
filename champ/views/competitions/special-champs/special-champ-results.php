@@ -7,7 +7,9 @@
  * @var \common\models\Athlete        $athlete
  * @var \common\models\SpecialStage[] $outOfChampStages
  */
-$this->title = 'Результаты: ' . $championship->getTitle();
+$this->title = \Yii::t('app', 'Результаты: {title}', [
+        'title' => $championship->getTitle()
+    ]);
 ?>
 <h3><?= $this->title ?></h3>
 

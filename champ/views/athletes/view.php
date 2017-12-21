@@ -159,7 +159,7 @@ use yii\bootstrap\Html;
 										<?php
 									} else {
 										?>
-                                        <span class="small">вне зачёта</span>
+                                        <span class="small"><?= \Yii::t('app', 'вне зачёта') ?></span>
 										<?php
 									}
 								} else {
@@ -176,7 +176,9 @@ use yii\bootstrap\Html;
                         <td>
 							<?php $stage = $item->stage; ?>
 							<?= Html::a($stage->getTitle(), ['/competitions/special-stage', 'id' => $stage->id]) ?><br>
-							<?= $stage->championship->year->year ?>г.
+							<?= \Yii::t('app', '{year}г.', [
+							        'year' => $stage->championship->year->year
+                            ]) ?>
                         </td>
                         <td><?= $item->motorcycle->getFullTitle() ?></td>
                         <td>

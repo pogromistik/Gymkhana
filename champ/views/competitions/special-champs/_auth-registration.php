@@ -18,7 +18,7 @@ $formModel->dateHuman = date("d.m.Y");
 ?>
 
 <div class="registration-form">
-    <h3>Заполните все поля</h3>
+    <h3><?= \Yii::t('ap', 'Заполните все поля') ?></h3>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'specialStageForAuth']]); ?>
 	
@@ -58,7 +58,7 @@ $formModel->dateHuman = date("d.m.Y");
     <div class="alert alert-success" style="display: none"></div>
 
     <div class="form-group">
-		<?= Html::submitButton('Отправить', ['class' => 'btn btn-dark']) ?>
+		<?= Html::submitButton(\Yii::t('app', 'Отправить'), ['class' => 'btn btn-dark']) ?>
     </div>
 	
 	<?php $form->end(); ?>

@@ -291,20 +291,17 @@ use yii\web\JsExpression;
 		<?php } ?></div>
 
         <div id="newsletters-link">
-            <h3>Подписаться на новости</h3>
+            <h3><?= \Yii::t('app', 'Подписаться на новости') ?></h3>
             <div class="help-for-athlete">
                 <small>
-                    Подписываясь на новости, вы даёте согласие на отправку писем, содержащих информацию о
-                    предстоящих этапах, на ваш email (<?= $athlete->email ?>).<br>
-                    Вы можете подписаться на все новости всех регионов (просто отметив пункт "Подписаться на новостную
-                    рассылку");
-                    можете выбрать страны и регионы, новости которых вас интересуют; можете выбрать тип новостей. (Поля
-                    для выбора
-                    появятся после выбора пункта "Подписаться на новостную рассылку").
-                    Если вы выберите страну, но не укажите ни одного региона, вам будут приходить все новости этой
-                    страны.<br>
-                    В любой момент вы можете отписаться от рассылки, сняв отметку в личном кабинете.<br>
-                    <b>Не нужно выбирать все страны</b>, просто оставьте поле пустым для получения всех новостей.
+                    <?= \Yii::t('app',
+                        'Подписываясь на новости, вы даёте согласие на отправку писем, содержащих информацию о предстоящих этапах, на ваш email ({email}).',
+                        ['email' => $athlete->email]) ?>
+                    <br>
+                    <?= \Yii::t('app', 'Вы можете подписаться на все новости всех регионов (просто отметив пункт "Подписаться на новостную рассылку"); можете выбрать страны и регионы, новости которых вас интересуют; можете выбрать тип новостей. (Поля для выбора появятся после выбора пункта "Подписаться на новостную рассылку"). Если вы выберите страну, но не укажите ни одного региона, вам будут приходить все новости этой страны.') ?>
+                    <br>
+                    <?= \Yii::t('app', 'В любой момент вы можете отписаться от рассылки, сняв отметку в личном кабинете.') ?><br>
+                    <b><?= \Yii::t('app', 'Не нужно выбирать все страны, просто оставьте поле пустым для получения всех новостей.') ?></b>
                 </small>
             </div>
             <div class="form pt-10">
@@ -312,38 +309,38 @@ use yii\web\JsExpression;
 
                 <div class="pb-10">
 					<?= Html::checkbox('subscription', !$subscription->isNewRecord, [
-						'label' => 'Подписаться на новостную рассылку',
+						'label' => \Yii::t('app', 'Подписаться на новостную рассылку'),
 						'id'    => 'subscriptionNews'
 					]) ?>
                 </div>
 
                 <div class="subscription-info" style="display: <?= $subscription->isNewRecord ? 'none' : 'block' ?>">
 					<?= $form->field($subscription, 'types')->widget(Select2::classname(), [
-						'data'    => \common\models\NewsSubscription::$typesTitle,
+						'data'    => \common\helpers\TranslateHelper::translateArray(\common\models\NewsSubscription::$typesTitle),
 						'options' => [
-							'placeholder' => 'Выберите типы...',
+							'placeholder' => \Yii::t('app', 'Выберите типы...'),
 							'id'          => 'subscript-types',
 							'multiple'    => true,
 						],
-					])->label('Выберите типы'); ?>
+					])->label(\Yii::t('app', 'Выберите типы')); ?>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
 							<?= $form->field($subscription, 'countryIds')->widget(Select2::classname(), [
 								'data'          => Country::getAll(true),
 								'options'       => [
-									'placeholder' => 'Выберите страну...',
+									'placeholder' => \Yii::t('app', 'Выберите страну...'),
 									'id'          => 'subscript-country-id',
 									'multiple'    => true,
 								],
 								'pluginOptions' => [
 									'allowClear' => true
 								]
-							])->label('Выберите страны'); ?>
+							])->label(\Yii::t('app', 'Выберите страны')); ?>
                         </div>
                         <div class="col-md-6 col-sm-12">
 							<?= $form->field($subscription, 'regionIds')->widget(DepDrop::classname(), [
 								'data'           => $subscription->getRegions(true, $subscription->countryIds),
-								'options'        => ['placeholder' => 'Выберите регионы...'],
+								'options'        => ['placeholder' => \Yii::t('app', 'Выберите регионы...')],
 								'type'           => DepDrop::TYPE_SELECT2,
 								'select2Options' => [
 									'pluginOptions' => [
@@ -366,15 +363,15 @@ use yii\web\JsExpression;
 								'pluginOptions'  => [
 									'depends'     => ['subscript-country-id'],
 									'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
-									'loadingText' => 'Для выбранной страны нет регионов...',
-									'placeholder' => 'Выберите регион...'
+									'loadingText' => \Yii::t('app', 'Для выбранной страны нет регионов') . '...',
+									'placeholder' => \Yii::t('app', 'Выберите регион') . '...'
 								]
-							])->label('Выберите регионы'); ?>
+							])->label(\Yii::t('app', 'Выберите регионы')); ?>
                         </div>
                     </div>
                 </div>
                 <div class="pt-10 text-right">
-					<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
+					<?= Html::submitButton(\Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
                 </div>
 				<?php $form->end(); ?>
             </div>

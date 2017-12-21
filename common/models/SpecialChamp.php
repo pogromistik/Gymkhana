@@ -130,12 +130,15 @@ class SpecialChamp extends BaseActiveRecord
 		return ($a['points'] > $b['points']) ? -1 : 1;
 	}
 	
-	public function getTitle()
+	public function getTitle($language = null)
 	{
 		if (!$this->title_en) {
 			return $this->title;
 		}
-		switch (\Yii::$app->language) {
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
 			case TranslateMessage::LANGUAGE_EN:
 				return $this->title_en;
 			case TranslateMessage::LANGUAGE_RU:
@@ -145,12 +148,15 @@ class SpecialChamp extends BaseActiveRecord
 		}
 	}
 	
-	public function getDescr()
+	public function getDescr($language = null)
 	{
 		if (!$this->descr_en) {
 			return $this->description;
 		}
-		switch (\Yii::$app->language) {
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
 			case TranslateMessage::LANGUAGE_EN:
 				return $this->descr_en;
 			case TranslateMessage::LANGUAGE_RU:

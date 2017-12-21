@@ -8,7 +8,7 @@ $city = $stage->city;
 if ($city->timezone) {
 	$timezone = '(' . \common\helpers\TranslitHelper::translitCity($city->title) . ', UTC ' . $city->utc . ')';
 } else {
-	$timezone = '(Москва, UTC +3)';
+	$timezone = '(' . \Yii::t('app', 'Москва') . ', UTC +3)';
 }
 
 $championship = $stage->championship;

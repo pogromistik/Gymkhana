@@ -141,7 +141,7 @@ $listView = new \yii\widgets\ListView([
 
 <div class="athletes">
 	<?= $listView->renderPager() ?>
-    <div class="text-right">Всего спортсменов: <?= $countAthletes ?></div>
+    <div class="text-right"><?= \Yii::t('app', 'Всего спортсменов: {count}', ['count' => $countAthletes]) ?></div>
     <div class="text-right">
 		<?php if ($pg) { ?>
 			<?= Html::a(($countAthletes <= 500) ? \Yii::t('app', 'Вернуться к постраничной навигации') : \Yii::t('app', 'Показывать по 20 на странице'),
