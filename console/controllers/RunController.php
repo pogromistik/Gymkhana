@@ -1150,7 +1150,6 @@ class RunController extends Controller
 	
 	public static function actionInsertTranslate()
 	{
-		Country::deleteAll();
 		$filePath = 'admin/web/files/Perevody.xlsx';
 		
 		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
