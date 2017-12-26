@@ -170,7 +170,7 @@ ul {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100000;
+    z-index: 99991;
 }
 
 /*==== Шапка сайта ====*/
@@ -320,9 +320,11 @@ nav .navbar-toggle .icon-bar {
     margin-top: 10px;
     padding: 5px;
 }
+
 .title-with-bg.green-title-with-bg {
     background: #56a025;
 }
+
 .title-with-bg.yellow-title-with-bg {
     background: #ffcd00;
 }
@@ -1239,7 +1241,7 @@ h2.title small {
 }
 
 th.gray-column {
-    border-bottom: 2px solid #cacaca!important;
+    border-bottom: 2px solid #cacaca !important;
 }
 
 .green-title, .green-title a {
@@ -1262,7 +1264,7 @@ th.gray-column {
 
 .btn-green:hover {
     background-color: #4cae4c;
-    color: #fff!important;
+    color: #fff !important;
 }
 
 .toggle .btn {
@@ -1278,12 +1280,12 @@ th.gray-column {
 }
 
 .is-active-0 {
-    background: #e2e2e2  !important;
+    background: #e2e2e2 !important;
     color: #828282;
 }
 
 .is-active-0 a {
-    color: #828282!important;
+    color: #828282 !important;
 }
 
 .href-menu ul li {
@@ -1296,13 +1298,37 @@ th.gray-column {
 }
 
 .owl-theme .owl-controls .owl-page span {
-    background: #56a025!important;
+    background: #56a025 !important;
 }
 
 ul.news-carousel li {
     list-style-type: none;
 }
+
 ul.news-carousel {
     margin-left: 0;
     padding-left: 0;
+}
+
+.tracks-gallery .item .info {
+    margin-bottom: 20px;
+    background: #686c73;
+    color: #fff;
+    height: 100px;
+    padding: 4px;
+}
+
+.tracks-gallery .item .info a {
+    color: #56a025;
+}
+
+.tracks-gallery .item .img {
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid #eee;
+}
+
+.tracks-gallery .item .img img {
+    object-fit: cover;
 }
