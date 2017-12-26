@@ -5,23 +5,27 @@
  * @var \common\models\TmpParticipant[] $tmpParticipants
  * @var \common\models\Participant[]    $outCompetitionParticipants
  */
+$path = '/img/table/';
+if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
+	$path = '/img/table/en/';
+}
 ?>
 
 <div class="show-pk">
     <table class="table results results-with-img">
         <thead>
         <tr>
-            <th><img src="/img/table/class.png"></th>
-            <th><img src="/img/table/placeInClass.png"></th>
-            <th><img src="/img/table/number.png"></th>
-            <th><img src="/img/table/participant.png"></th>
-            <th><img src="/img/table/motorcycle.png"></th>
-            <th><img src="/img/table/attempt.png"></th>
-            <th><img src="/img/table/time.png"></th>
-            <th><img src="/img/table/fine.png"></th>
-            <th><img src="/img/table/bestTime.png"></th>
-            <th><img src="/img/table/place.png"></th>
-            <th><img src="/img/table/percent.png"></th>
+            <th><img src="<?= $path ?>class.png"></th>
+            <th><img src="<?= $path ?>placeInClass.png"></th>
+            <th><img src="<?= $path ?>number.png"></th>
+            <th><img src="<?= $path ?>participant.png"></th>
+            <th><img src="<?= $path ?>motorcycle.png"></th>
+            <th><img src="<?= $path ?>attempt.png"></th>
+            <th><img src="<?= $path ?>time.png"></th>
+            <th><img src="<?= $path ?>fine.png"></th>
+            <th><img src="<?= $path ?>bestTime.png"></th>
+            <th><img src="<?= $path ?>place.png"></th>
+            <th><img src="<?= $path ?>percent.png"></th>
         </tr>
         </thead>
         <tbody>

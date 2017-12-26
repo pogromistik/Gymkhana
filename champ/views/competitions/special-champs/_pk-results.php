@@ -6,20 +6,24 @@ $id = null;
 if (!\Yii::$app->user->isGuest) {
 	$id = \Yii::$app->user->id;
 }
+$path = '/img/table/';
+if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
+	$path = '/img/table/en/';
+}
 ?>
 
 <div class="show-pk">
     <table class="table results results-with-img">
         <thead>
         <tr>
-            <th><img src="/img/table/placeWithoutClass.png"></th>
-            <th><img src="/img/table/class.png"></th>
-            <th><img src="/img/table/participant.png"></th>
-            <th><img src="/img/table/motorcycle.png"></th>
-            <th><img src="/img/table/time.png"></th>
-            <th><img src="/img/table/fine.png"></th>
-            <th><img src="/img/table/resultTime.png"></th>
-            <th><img src="/img/table/percent.png"></th>
+            <th><img src="<?= $path ?>placeWithoutClass.png"></th>
+            <th><img src="<?= $path ?>class.png"></th>
+            <th><img src="<?= $path ?>participant.png"></th>
+            <th><img src="<?= $path ?>motorcycle.png"></th>
+            <th><img src="<?= $path ?>time.png"></th>
+            <th><img src="<?= $path ?>fine.png"></th>
+            <th><img src="<?= $path ?>resultTime.png"></th>
+            <th><img src="<?= $path ?>percent.png"></th>
             <th></th>
         </tr>
         </thead>
