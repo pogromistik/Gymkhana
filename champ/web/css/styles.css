@@ -1320,12 +1320,12 @@ ul.news-carousel {
 
 .tracks-gallery .item .info a {
     color: #56a025;
+    display: flex;
 }
 
 .tracks-gallery .item .img {
     height: 250px;
     overflow: hidden;
-    display: flex;
     border: 1px solid #eee;
 }
 
