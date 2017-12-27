@@ -101,7 +101,7 @@ use yii\helpers\Url;
 							<?php } else { ?>
                         <li class="dropdown pk-menu-items">
                             <a data-toggle="dropdown" class="dropdown-toggle"
-                               href="#"><?= \Yii::$app->user->identity->getFullName() ?> <b
+                               href="#"><span class="fa fa-user green"></span> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
                                 <li><a href="/profile/index"><?= \Yii::t('app', 'Профиль') ?></a></li>
