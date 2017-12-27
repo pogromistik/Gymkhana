@@ -1344,7 +1344,7 @@ ul.news-carousel {
 }
 
 .mobile-menu-items {
-    display: none;
+    display: none !important;
 }
 
 .grid {
