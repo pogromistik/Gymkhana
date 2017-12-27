@@ -1,7 +1,11 @@
 function showBackDrop() {
     $('<div class="modal-backdrop fade in"></div>').appendTo(document.body);
 }
-
+$("[data-fancybox]").fancybox({
+    buttons : [
+        'close',
+    ]
+});
 function hideBackDrop() {
     $(".modal-backdrop").remove();
 }
