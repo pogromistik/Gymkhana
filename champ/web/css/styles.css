@@ -1337,6 +1337,10 @@ ul.news-carousel {
     width: 100%;
 }
 
+.mobile-menu-items {
+    display: none;
+}
+
 .grid {
     position: relative;
     clear: both;

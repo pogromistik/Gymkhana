@@ -58,7 +58,7 @@ use yii\helpers\Url;
                         <li>
                             <a href="/"><?= \Yii::t('app', 'Главная') ?></a>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown pk-menu-items">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::t('app', 'Информация') ?> <b
                                         class="caret"></b></a>
@@ -67,6 +67,8 @@ use yii\helpers\Url;
                                 <li><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
                             </ul>
                         </li>
+                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a></li>
+                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::t('app', 'Соревнования') ?> <b

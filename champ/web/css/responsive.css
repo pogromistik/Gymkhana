@@ -213,7 +213,7 @@
 }
 
 @media (max-width: 768px) {
-    .navbar-mobile-items {
+    .navbar-mobile-items, .mobile-menu-items {
         display: block;
     }
 
