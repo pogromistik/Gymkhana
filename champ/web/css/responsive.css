@@ -69,7 +69,7 @@
     }
 }
 
-@media (max-width: 1004px) {
+@media (max-width: 1061px) {
     .nav a {
         font-size: 12px;
     }
@@ -136,7 +136,7 @@
     }
 }
 
-@media (max-width: 902px) {
+@media (max-width: 959px) {
     .nav a {
         font-size: 10px;
     }
@@ -166,7 +166,7 @@
     }
 
     .nav a {
-        font-size: 10px;
+        font-size: 9px;
     }
 }
 
@@ -195,7 +195,7 @@
 
 @media (max-width: 800px) {
     .nav a {
-        font-size: 9px;
+        font-size: 8px;
     }
 }
 @media (max-width: 788px) {
@@ -205,10 +205,6 @@
 
     .athletes h4 {
         font-size: 14px;
-    }
-
-    .nav a {
-        font-size: 9px;
     }
 }
 
