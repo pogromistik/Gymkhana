@@ -97,7 +97,7 @@ class SiteController extends BaseController
 			return ($a['date'] <= $b['date']);
 		});
 		
-		$pages = new Pagination(['totalCount' => count($items), 'pageSize' => 18]);
+		$pages = new Pagination(['totalCount' => count($items), 'pageSize' => 12]);
 		$items = array_slice($items, $pages->offset, $pages->limit);
 		
 		$data = [];
