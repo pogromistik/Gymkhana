@@ -1318,9 +1318,12 @@ ul.news-carousel {
     padding: 4px;
 }
 
+.tracks-gallery .item .img a {
+    display: flex;
+}
+
 .tracks-gallery .item .info a {
     color: #56a025;
-    display: flex;
 }
 
 .tracks-gallery .item .img {
@@ -1331,6 +1334,7 @@ ul.news-carousel {
 
 .tracks-gallery .item .img img {
     object-fit: cover;
+    width: 100%;
 }
 
 .grid {
@@ -1451,15 +1455,15 @@ figure.effect-julia p {
     display: inline-block;
     margin: 0 0 0.25em;
     padding: 0.4em 1em;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     color: #2f3238;
     text-transform: none;
     font-weight: 500;
     font-size: 75%;
     -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
     transition: opacity 0.35s, transform 0.35s;
-    -webkit-transform: translate3d(-360px,0,0);
-    transform: translate3d(-360px,0,0);
+    -webkit-transform: translate3d(-360px, 0, 0);
+    transform: translate3d(-360px, 0, 0);
 }
 
 figure.effect-julia p:first-child {
@@ -1494,14 +1498,14 @@ figure.effect-julia:hover p:nth-of-type(3) {
 
 figure.effect-julia:hover img {
     opacity: 0.4;
-    -webkit-transform: scale3d(1.1,1.1,1);
-    transform: scale3d(1.1,1.1,1);
+    -webkit-transform: scale3d(1.1, 1.1, 1);
+    transform: scale3d(1.1, 1.1, 1);
 }
 
 figure.effect-julia:hover p {
     opacity: 1;
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }
 
 /* Media queries */
@@ -1510,6 +1514,7 @@ figure.effect-julia:hover p {
         padding: 0 10px;
         text-align: center;
     }
+
     .grid figure {
         display: inline-block;
         float: none;
