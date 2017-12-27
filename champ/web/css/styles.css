@@ -1258,8 +1258,14 @@ th.gray-column {
 
 .btn-green {
     color: #fff;
-    background-color: #56a025;
+    background-color: #5cb85c;
     border-color: #4cae4c;
+    border-radius: 0;
+}
+
+a.btn-green {
+    color: #fff;
+    text-decoration: none;
 }
 
 .btn-green:hover {

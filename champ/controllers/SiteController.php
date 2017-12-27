@@ -45,7 +45,7 @@ class SiteController extends BaseController
 		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
 		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
 		
-		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
+		$news = AssocNews::find()->where(['<=', 'datePublish', time()])->andWhere(['status' => AssocNews::STATUS_ACTIVE]);
 		$pagination = new Pagination([
 			'defaultPageSize' => 10,
 			'totalCount'      => $news->count(),
@@ -420,5 +420,21 @@ class SiteController extends BaseController
 		}
 		
 		return $this->render('unsubscription', ['error' => $error]);
+	}
+	
+	public function actionOfferNews()
+	{
+		$news = new AssocNews();
+		$this->pageTitle = 'Новая новость';
+		
+		if ($news->load(\Yii::$app->request->post())) {
+			$news->isOffer = true;
+			$news->status = AssocNews::STATUS_MODERATION;
+			if ($news->save()) {
+				return $this->render('confirm-news');
+			}
+		}
+		
+		return $this->render('offer-news', ['news' => $news]);
 	}
 }
