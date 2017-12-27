@@ -80,8 +80,8 @@ class SiteController extends BaseController
 	
 	public function actionTracks()
 	{
-		$this->pageTitle = 'Трассы соревнований';
-		$this->description = 'Трассы соревнований по мотоджимхане';
+		$this->pageTitle = \Yii::t('app', 'Трассы соревнований');
+		$this->description = \Yii::t('app', 'Трассы соревнований по мотоджимхане');
 		$this->keywords = 'джимхана трассы, трассы по мотоджимхане, трассы джимханы';
 		$this->layout = 'full-content';
 		
@@ -433,7 +433,7 @@ class SiteController extends BaseController
 	public function actionOfferNews()
 	{
 		$news = new AssocNews();
-		$this->pageTitle = 'Новая новость';
+		$this->pageTitle = \Yii::t('app', 'Новая новость');
 		
 		if ($news->load(\Yii::$app->request->post())) {
 			$news->isOffer = true;

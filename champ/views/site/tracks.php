@@ -11,8 +11,7 @@ use yii\widgets\LinkPager;
 
     <h1><?= $this->context->pageTitle ?></h1>
     <p>
-        Обратите внимание - указан не класс соревнований, а класс спортсмена, показавшего лучшее время трассы. Чтобы
-        узнать подробную информацию о результатах этапа, перейдите на его страницу.
+        <?= \Yii::t('app', 'Обратите внимание - указан не класс соревнований, а класс спортсмена, показавшего лучшее время трассы. Чтобы узнать подробную информацию о результатах этапа, перейдите на его страницу.') ?>
     </p>
 
     <div class="tracks-gallery">
@@ -33,10 +32,10 @@ use yii\widgets\LinkPager;
                         </div>
                         <div class="info">
 							<?php if ($info['year']) { ?>
-                                <div>Год: <?= $info['year'] ?></div>
-                                <div>Лучшее время: <?= $item['bestTime'] ?></div>
-                                <div>Класс спортсмена: <?= $item['class'] ?></div>
-                                <div><?= \yii\helpers\Html::a('Страница этапа', $item['url']) ?></div>
+                                <div><?= \Yii::t('app', 'Год') ?>: <?= $info['year'] ?></div>
+                                <div><?= \Yii::t('app', 'Лучшее время') ?>: <?= $item['bestTime'] ?></div>
+                                <div><?= \Yii::t('app', 'Класс спортсмена') ?>: <?= $item['class'] ?></div>
+                                <div><?= \yii\helpers\Html::a(\Yii::t('app', 'Страница этапа'), $item['url']) ?></div>
 							<?php } ?>
                         </div>
                     </div>
