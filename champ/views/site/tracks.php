@@ -24,8 +24,7 @@ use yii\widgets\LinkPager;
                         </figure>
                         <figure class="effect-julia">
 		                    <?= yii\helpers\Html::a(\yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $item['photoPath']),
-			                    \Yii::getAlias('@filesView') . '/' . $item['photoPath'],
-			                    ['data-fancybox' => 'gallery']) ?>
+			                    \Yii::getAlias('@filesView') . '/' . $item['photoPath']) ?>
                         </figure>
                     </div>
                     <div class="info">
