@@ -17,9 +17,16 @@ use yii\widgets\LinkPager;
 			<?php foreach ($info['items'] as $item) { ?>
                 <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 item">
                     <div class="img">
-						<?= yii\helpers\Html::a(\yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $item['photoPath']),
-							\Yii::getAlias('@filesView') . '/' . $item['photoPath'],
-							['data-fancybox' => 'gallery']) ?>
+                        <figure class="effect-julia">
+		                    <?= yii\helpers\Html::a(\yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $item['photoPath']),
+			                    \Yii::getAlias('@filesView') . '/' . $item['photoPath'],
+			                    ['data-fancybox' => 'gallery']) ?>
+                        </figure>
+                        <figure class="effect-julia">
+		                    <?= yii\helpers\Html::a(\yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $item['photoPath']),
+			                    \Yii::getAlias('@filesView') . '/' . $item['photoPath'],
+			                    ['data-fancybox' => 'gallery']) ?>
+                        </figure>
                     </div>
                     <div class="info">
 						<?php if ($info['year']) { ?>
