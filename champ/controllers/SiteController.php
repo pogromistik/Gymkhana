@@ -85,58 +85,78 @@ class SiteController extends BaseController
 		/** @var SpecialStage[] $specialStages */
 		$specialStages = SpecialStage::find()->where(['not', ['photoPath' => null]])->all();
 		
-		$data = [];
+		$items = [];
 		foreach ($stages as $stage) {
-			/** @var Participant $bestItem */
-			$bestItem = $stage->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC, 'id' => SORT_ASC])->one();
-			if (!$bestItem) {
-				continue;
-			}
-			$date = $stage->dateOfThe ? $stage->dateOfThe : 0;
-			if (!isset($data[$date])) {
-				$data[$date] = [
-					'year'  => $stage->dateOfThe ? date('Y', $stage->dateOfThe) : null,
-					'items' => []
-				];
-			}
-			$data[$date]['items'][] = [
-				'photoPath'  => $stage->trackPhoto,
-				'bestTime'   => $bestItem->humanBestTime,
-				'athlete'    => $bestItem->athlete->getFullName(),
-				'motorcycle' => $bestItem->motorcycle->getFullTitle(),
-				'class'      => $bestItem->athleteClass->title,
-				'stage'      => $stage->title,
-				'url'        => Url::to(['/competitions/stage', 'id' => $stage->id])
-			];
+			$items[] = ['type' => 'stage', 'stage' => $stage, 'date' => $stage->dateOfThe ? $stage->dateOfThe : 0];
+		}
+		foreach ($specialStages as $stage) {
+			$items[] = ['type' => 'specialStage', 'stage' => $stage, 'date' => $stage->dateStart ? $stage->dateStart : 0];
 		}
 		
-		foreach ($specialStages as $stage) {
-			/** @var RequestForSpecialStage $bestItem */
-			$bestItem = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_APPROVE, 'stageId' => $stage->id])
-				->orderBy(['time' => SORT_ASC, 'id' => SORT_ASC])->one();
-			if (!$bestItem) {
-				continue;
+		usort($items, function($a, $b){
+			return ($a['date'] <= $b['date']);
+		});
+		
+		$pages = new Pagination(['totalCount' => count($items), 'pageSize' => 18]);
+		$items = array_slice($items, $pages->offset, $pages->limit);
+		
+		$data = [];
+		foreach ($items as $item) {
+			$stage = $item['stage'];
+			switch ($item['type']) {
+				case 'stage':
+					/** @var Participant $bestItem */
+					$bestItem = $stage->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC, 'id' => SORT_ASC])->one();
+					if (!$bestItem) {
+						continue;
+					}
+					$date = $stage->dateOfThe ? $stage->dateOfThe : 0;
+					if (!isset($data[$date])) {
+						$data[$date] = [
+							'year'  => $stage->dateOfThe ? date('Y', $stage->dateOfThe) : null,
+							'items' => []
+						];
+					}
+					$data[$date]['items'][] = [
+						'photoPath'  => $stage->trackPhoto,
+						'bestTime'   => $bestItem->humanBestTime,
+						'athlete'    => $bestItem->athlete->getFullName(),
+						'motorcycle' => $bestItem->motorcycle->getFullTitle(),
+						'class'      => $bestItem->athleteClass->title,
+						'stage'      => $stage->title,
+						'url'        => Url::to(['/competitions/stage', 'id' => $stage->id])
+					];
+					break;
+				case 'specialStage':
+					/** @var RequestForSpecialStage $bestItem */
+					$bestItem = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_APPROVE, 'stageId' => $stage->id])
+						->orderBy(['time' => SORT_ASC, 'id' => SORT_ASC])->one();
+					if (!$bestItem) {
+						continue;
+					}
+					$date = $stage->dateStart ? $stage->dateStart : 0;
+					if (!isset($data[$date])) {
+						$data[$date] = [
+							'year'  => $stage->dateStart ? date('Y', $stage->dateStart) : null,
+							'items' => []
+						];
+					}
+					$data[$date]['items'][] = [
+						'photoPath'  => $stage->photoPath,
+						'bestTime'   => $bestItem->resultTimeHuman,
+						'athlete'    => $bestItem->athlete->getFullName(),
+						'motorcycle' => $bestItem->motorcycle->getFullTitle(),
+						'class'      => $bestItem->athleteClass->title,
+						'stage'      => $stage->title,
+						'url'        => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+					];
+					break;
 			}
-			$date = $stage->dateStart ? $stage->dateStart : 0;
-			if (!isset($data[$date])) {
-				$data[$date] = [
-					'year'  => $stage->dateStart ? date('Y', $stage->dateStart) : null,
-					'items' => []
-				];
-			}
-			$data[$date]['items'][] = [
-				'photoPath'  => $stage->photoPath,
-				'bestTime'   => $bestItem->resultTimeHuman,
-				'athlete'    => $bestItem->athlete->getFullName(),
-				'motorcycle' => $bestItem->motorcycle->getFullTitle(),
-				'class'      => $bestItem->athleteClass->title,
-				'stage'      => $stage->title,
-				'url'        => Url::to(['/competitions/special-stage', 'id' => $stage->id])
-			];
 		}
+		
 		krsort($data);
 		
-		return $this->render('tracks', ['data' => $data]);
+		return $this->render('tracks', ['data' => $data, 'pages' => $pages]);
 	}
 	
 	public function actionDocuments()
