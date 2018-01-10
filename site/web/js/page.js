@@ -155,11 +155,10 @@ var equalizer = function (equalizer) {
         if ($(this).height() > maxHeight) {
             maxHeight = $(this).height()
         }
-        ;
     });
 
     equalizer.height(maxHeight);
-}
+};
 
 
 $(window).on('load', function () {
@@ -325,9 +324,9 @@ function init() {
 }
 
 //активный пункт меню
-(function() {
+(function () {
     var current = '/' + window.location.pathname.split('/')[1];
-    $( ".nav a" ).each(function() {
+    $(".nav a").each(function () {
         var elem = $(this);
         if (elem.attr('href') == current) {
             var ul = elem.closest('ul');
@@ -340,16 +339,16 @@ function init() {
     });
 })();
 
-function countDown(second,endMinute,endHour,endDay,endMonth) {
+function countDown(second, endMinute, endHour, endDay, endMonth) {
     var now = new Date();
     second = (arguments.length == 1) ? second + now.getSeconds() : second;
-    endHour = typeof(endHour) != 'undefined' ?  endHour : now.getHours();
+    endHour = typeof(endHour) != 'undefined' ? endHour : now.getHours();
     endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();
-    endDay = typeof(endDay) != 'undefined' ?  endDay : now.getDate();
+    endDay = typeof(endDay) != 'undefined' ? endDay : now.getDate();
     endMonth = typeof(endMonth) != 'undefined' ? endMonth : now.getMonth();
 //добавляем секунду к конечной дате (таймер показывает время уже спустя 1с.)
-    var endDate = new Date(now.getFullYear(),endMonth,endDay,endHour,endMinute,second+1);
-    var interval = setInterval(function() { //запускаем таймер с интервалом 1 секунду
+    var endDate = new Date(now.getFullYear(), endMonth, endDay, endHour, endMinute, second + 1);
+    var interval = setInterval(function () { //запускаем таймер с интервалом 1 секунду
         var time = endDate.getTime() - now.getTime();
         if (time < 0) {                      //если конечная дата меньше текущей
             var seconds = 0;
