@@ -14,9 +14,12 @@ class AppAsset extends AssetBundle
 	public $baseUrl = '@web';
 	public $css = [
 		'css/admin.css',
-		'css/font-awesome.min.css'
+		'css/font-awesome.min.css',
+		'css/owl.carousel.css',
+		'css/owl.theme.css',
 	];
 	public $js = [
+		'js/owl.carousel.min.js',
 		'js/main.js',
 		'js/competitions.js'
 	];

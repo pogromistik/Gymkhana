@@ -58,9 +58,17 @@ use yii\helpers\Url;
                         <li>
                             <a href="/"><?= \Yii::t('app', 'Главная') ?></a>
                         </li>
-                        <li>
-                            <a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a>
+                        <li class="dropdown pk-menu-items">
+                            <a data-toggle="dropdown" class="dropdown-toggle"
+                               href="#"><?= \Yii::t('app', 'Информация') ?> <b
+                                        class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a></li>
+                                <li><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
+                            </ul>
                         </li>
+                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a></li>
+                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::t('app', 'Соревнования') ?> <b
@@ -93,7 +101,7 @@ use yii\helpers\Url;
 							<?php } else { ?>
                         <li class="dropdown pk-menu-items">
                             <a data-toggle="dropdown" class="dropdown-toggle"
-                               href="#"><?= \Yii::$app->user->identity->getFullName() ?> <b
+                               href="#"><span class="fa fa-user green"></span> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
                                 <li><a href="/profile/index"><?= \Yii::t('app', 'Профиль') ?></a></li>

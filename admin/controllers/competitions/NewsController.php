@@ -45,6 +45,7 @@ class NewsController extends BaseController
 	{
 		$searchModel = new AssocNewsSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['status' => AssocNews::STATUS_ACTIVE]);
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			if (\Yii::$app->user->can('projectOrganizer')) {
 				$dataProvider->query->andWhere(['or',
@@ -61,6 +62,19 @@ class NewsController extends BaseController
 		}
 		
 		return $this->render('index', [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+	
+	public function actionModeration()
+	{
+		$this->can('projectAdmin');
+		$searchModel = new AssocNewsSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->query->andWhere(['status' => AssocNews::STATUS_MODERATION]);
+		
+		return $this->render('moderation', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
@@ -124,6 +138,23 @@ class NewsController extends BaseController
 		return $this->redirect(['index']);
 	}
 	
+	public function actionPublish($id)
+	{
+		$model = $this->findModel($id);
+		$model->status = AssocNews::STATUS_ACTIVE;
+		$model->datePublish = time();
+		$model->save();
+		
+		return $this->redirect(['index']);
+	}
+	
+	public function actionView($id)
+	{
+		$model = $this->findModel($id);
+		
+		return $this->render('view', ['model' => $model]);
+	}
+	
 	/**
 	 * Finds the AssocNews model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
@@ -152,6 +183,7 @@ class NewsController extends BaseController
 					}
 				}
 			}
+			
 			return $model;
 		} else {
 			throw new NotFoundHttpException('Новость не найдена.');

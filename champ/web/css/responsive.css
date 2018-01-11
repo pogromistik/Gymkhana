@@ -69,13 +69,15 @@
     }
 }
 
+@media (max-width: 1061px) {
+    .nav a {
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 991px) {
     .detail-news img {
         width: 70%;
-    }
-
-    .nav a {
-        font-size: 12px;
     }
 
     .pb-10-md {
@@ -134,11 +136,13 @@
     }
 }
 
-@media (max-width: 876px) {
+@media (max-width: 959px) {
     .nav a {
-        font-size: 12px;
+        font-size: 10px;
     }
+}
 
+@media (max-width: 876px) {
     .modal-notices .text {
         max-height: 200px;
     }
@@ -162,7 +166,7 @@
     }
 
     .nav a {
-        font-size: 10px;
+        font-size: 9px;
     }
 }
 
@@ -189,11 +193,13 @@
     }
 }
 
-@media (max-width: 788px) {
+@media (max-width: 800px) {
     .nav a {
-        font-size: 10px;
+        font-size: 8px;
     }
+}
 
+@media (max-width: 788px) {
     .athletes {
         font-size: 12px;
     }
@@ -201,15 +207,11 @@
     .athletes h4 {
         font-size: 14px;
     }
-
-    .nav a {
-        font-size: 9px;
-    }
 }
 
 @media (max-width: 768px) {
-    .navbar-mobile-items {
-        display: block;
+    .navbar-mobile-items, .mobile-menu-items {
+        display: block !important;
     }
 
     .pk-menu-items {
@@ -317,6 +319,19 @@
     }
 
     .image-cutter .dropzone .img-container .message {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 1454px) and (min-width: 1364px) {
+    .tracks-gallery .item .info {
+        height: 110px;
+    }
+}
+
+@media (max-width: 1364px) and (min-width: 1200px) {
+    .tracks-gallery .item .info {
+        height: 100px;
         font-size: 12px;
     }
 }

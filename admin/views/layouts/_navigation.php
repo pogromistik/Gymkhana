@@ -77,6 +77,17 @@ use yii\helpers\Html;
 				<?php } ?>
 			<?php } ?>
 			
+			<?php if (\Yii::$app->user->can('projectAdmin')) { ?>
+				<?php $count = \common\models\AssocNews::find()->where(['status' => \common\models\AssocNews::STATUS_MODERATION])->count() ?>
+				<?php if ($count > 0) { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/news/moderation']) ?>"><i
+                                    class="fa fa-rss fa-fw"></i> Новости <?= $count ? '(' . $count . ')' : '' ?>
+                        </a>
+                    </li>
+				<?php } ?>
+			<?php } ?>
+   
 			<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                 <li>
 					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>

@@ -11,20 +11,21 @@ use yii\bootstrap\Html;
 
 ?>
 <h2>Новости</h2>
+<?= Html::a('Предложить новость', ['/site/offer-news'], ['class' => 'btn btn-green']) ?>
 <div class="z-100">
     <div class="news">
 		<?php foreach ($news as $item) {
-		    $class = 'title-with-bg';
-			if ($item->datePublish+2*86400 >= time()) {
+			$class = 'title-with-bg';
+			if ($item->datePublish + 2 * 86400 >= time()) {
 				$class .= ' green-title-with-bg';
-			} elseif ($item->datePublish+7*86400 >= time()) {
+			} elseif ($item->datePublish + 7 * 86400 >= time()) {
 				$class .= ' yellow-title-with-bg';
 			}
-		    ?>
+			?>
             <div class="item">
 				<?php if ($item->title) { ?>
                     <div class="<?= $class ?>">
-                        <?= $item->title ?>
+						<?= $item->title ?>
                     </div>
                     <div class="date"><?= \Yii::$app->formatter->asDate($item->datePublish, "dd.MM.Y") ?></div>
 				<?php } else { ?>

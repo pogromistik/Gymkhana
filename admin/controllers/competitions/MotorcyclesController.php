@@ -3,7 +3,10 @@
 namespace admin\controllers\competitions;
 
 use common\helpers\UserHelper;
+use common\models\FigureTime;
 use common\models\Motorcycle;
+use common\models\Participant;
+use common\models\RequestForSpecialStage;
 use common\models\search\MotorcyclesSearch;
 use Yii;
 use admin\controllers\BaseController;
@@ -22,6 +25,11 @@ class MotorcyclesController extends BaseController
 		if ($motorcycle->status) {
 			if (!UserHelper::accessAverage($motorcycle->athlete->regionId, $motorcycle->creatorUserId)) {
 				return 'У вас недостаточно прав для совершения данного действия';
+			}
+			if (!FigureTime::findOne(['motorcycleId' => $motorcycle->id]) && !Participant::findOne(['motorcycleId' => $motorcycle->id])
+				&& !RequestForSpecialStage::findOne(['motorcycleId' => $motorcycle->id])) {
+				$motorcycle->delete();
+				return true;
 			}
 			$motorcycle->status = Motorcycle::STATUS_INACTIVE;
 		} else {

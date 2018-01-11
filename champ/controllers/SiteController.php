@@ -10,11 +10,16 @@ use common\models\Athlete;
 use common\models\DocumentSection;
 use common\models\Feedback;
 use common\models\NewsSubscription;
+use common\models\Participant;
+use common\models\RequestForSpecialStage;
+use common\models\SpecialStage;
+use common\models\Stage;
 use common\models\TmpAthlete;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\base\UserException;
 use yii\data\Pagination;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -27,7 +32,7 @@ class SiteController extends BaseController
 	public function actions()
 	{
 		return [
-			'error'   => [
+			'error' => [
 				'class' => 'yii\web\ErrorAction',
 			]
 		];
@@ -40,7 +45,7 @@ class SiteController extends BaseController
 		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
 		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
 		
-		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
+		$news = AssocNews::find()->where(['<=', 'datePublish', time()])->andWhere(['status' => AssocNews::STATUS_ACTIVE]);
 		$pagination = new Pagination([
 			'defaultPageSize' => 10,
 			'totalCount'      => $news->count(),
@@ -65,6 +70,93 @@ class SiteController extends BaseController
 		return $this->render('news', [
 			'news' => $news
 		]);
+	}
+	
+	public function actionTracks()
+	{
+		$this->pageTitle = 'Трассы соревнований';
+		$this->description = 'Трассы соревнований по мотоджимхане';
+		$this->keywords = 'джимхана трассы, трассы по мотоджимхане, трассы джимханы';
+		$this->layout = 'full-content';
+		
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->where(['not', ['trackPhoto' => null]])->andWhere(['status' => Stage::STATUS_PAST])
+			->andWhere(['trackPhotoStatus' => Stage::PHOTO_PUBLISH])->all();
+		/** @var SpecialStage[] $specialStages */
+		$specialStages = SpecialStage::find()->where(['not', ['photoPath' => null]])->all();
+		
+		$items = [];
+		foreach ($stages as $stage) {
+			$items[] = ['type' => 'stage', 'stage' => $stage, 'date' => $stage->dateOfThe ? $stage->dateOfThe : 0];
+		}
+		foreach ($specialStages as $stage) {
+			$items[] = ['type' => 'specialStage', 'stage' => $stage, 'date' => $stage->dateStart ? $stage->dateStart : 0];
+		}
+		
+		usort($items, function($a, $b){
+			return ($a['date'] <= $b['date']);
+		});
+		
+		$pages = new Pagination(['totalCount' => count($items), 'pageSize' => 12]);
+		$items = array_slice($items, $pages->offset, $pages->limit);
+		
+		$data = [];
+		foreach ($items as $item) {
+			$stage = $item['stage'];
+			switch ($item['type']) {
+				case 'stage':
+					/** @var Participant $bestItem */
+					$bestItem = $stage->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC, 'id' => SORT_ASC])->one();
+					if (!$bestItem) {
+						continue;
+					}
+					$date = $stage->dateOfThe ? $stage->dateOfThe : 0;
+					if (!isset($data[$date])) {
+						$data[$date] = [
+							'year'  => $stage->dateOfThe ? date('Y', $stage->dateOfThe) : null,
+							'items' => []
+						];
+					}
+					$data[$date]['items'][] = [
+						'photoPath'  => $stage->trackPhoto,
+						'bestTime'   => $bestItem->humanBestTime,
+						'athlete'    => $bestItem->athlete->getFullName(),
+						'motorcycle' => $bestItem->motorcycle->getFullTitle(),
+						'class'      => $bestItem->athleteClass->title,
+						'stage'      => $stage->title,
+						'url'        => Url::to(['/competitions/stage', 'id' => $stage->id])
+					];
+					break;
+				case 'specialStage':
+					/** @var RequestForSpecialStage $bestItem */
+					$bestItem = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_APPROVE, 'stageId' => $stage->id])
+						->orderBy(['time' => SORT_ASC, 'id' => SORT_ASC])->one();
+					if (!$bestItem) {
+						continue;
+					}
+					$date = $stage->dateStart ? $stage->dateStart : 0;
+					if (!isset($data[$date])) {
+						$data[$date] = [
+							'year'  => $stage->dateStart ? date('Y', $stage->dateStart) : null,
+							'items' => []
+						];
+					}
+					$data[$date]['items'][] = [
+						'photoPath'  => $stage->photoPath,
+						'bestTime'   => $bestItem->resultTimeHuman,
+						'athlete'    => $bestItem->athlete->getFullName(),
+						'motorcycle' => $bestItem->motorcycle->getFullTitle(),
+						'class'      => $bestItem->athleteClass->title,
+						'stage'      => $stage->title,
+						'url'        => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+					];
+					break;
+			}
+		}
+		
+		krsort($data);
+		
+		return $this->render('tracks', ['data' => $data, 'pages' => $pages]);
 	}
 	
 	public function actionDocuments()
@@ -328,5 +420,21 @@ class SiteController extends BaseController
 		}
 		
 		return $this->render('unsubscription', ['error' => $error]);
+	}
+	
+	public function actionOfferNews()
+	{
+		$news = new AssocNews();
+		$this->pageTitle = 'Новая новость';
+		
+		if ($news->load(\Yii::$app->request->post())) {
+			$news->isOffer = true;
+			$news->status = AssocNews::STATUS_MODERATION;
+			if ($news->save()) {
+				return $this->render('confirm-news');
+			}
+		}
+		
+		return $this->render('offer-news', ['news' => $news]);
 	}
 }

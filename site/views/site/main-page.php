@@ -1,4 +1,5 @@
 <?php
+
 use yii\bootstrap\Html;
 
 /**
@@ -83,7 +84,7 @@ use yii\bootstrap\Html;
 		END OUR SERVICES
 	============================== -->
 
-    <section id="bottom-menu-pk" class="main-menu-content">
+    <section id="bottom-menu-pk" class="main-menu-content sliphover-active">
         <div class="menu-bottom">
             <div class="row c-black">
                 <div class="col-md-6 main_news">
@@ -112,15 +113,15 @@ use yii\bootstrap\Html;
 									$page = $menuItem->page;
 									$title = $menuItem->title ? $menuItem->title : $page->title;
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . reset($bottomMenu), [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -135,15 +136,15 @@ use yii\bootstrap\Html;
 									$next = next($bottomMenu);
 									$folder = $next ? $next : reset($bottomMenu);
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -176,15 +177,15 @@ use yii\bootstrap\Html;
 									$next = next($bottomMenu);
 									$folder = $next ? $next : reset($bottomMenu);
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -222,15 +223,15 @@ use yii\bootstrap\Html;
 										$next = next($bottomMenu);
 										$folder = $next ? $next : reset($bottomMenu);
 										?>
-                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                            <figure class="images">
+                                        <figure class="images">
+                                            <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 												<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 													'alt'   => $title,
 													'title' => $title,
 													'class' => 'slip'
 												]) ?>
-                                            </figure>
-                                        </a>
+                                            </a>
+                                        </figure>
 									<?php } ?>
                                 </div>
                             </div>
@@ -250,15 +251,15 @@ use yii\bootstrap\Html;
 										$next = next($bottomMenu);
 										$folder = $next ? $next : reset($bottomMenu);
 										?>
-                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                            <figure class="images">
+                                        <figure class="images">
+                                            <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 												<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 													'alt'   => $title,
 													'title' => $title,
 													'class' => 'slip'
 												]) ?>
-                                            </figure>
-                                        </a>
+                                            </a>
+                                        </figure>
 									<?php } ?>
                                 </div>
                             </div>
@@ -297,15 +298,15 @@ use yii\bootstrap\Html;
 									$next = next($bottomMenu);
 									$folder = $next ? $next : reset($bottomMenu);
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -318,15 +319,15 @@ use yii\bootstrap\Html;
 									$title = $menuItem->title ? $menuItem->title : $page->title;
 									$folder = next($bottomMenu) ? next($bottomMenu) : reset($bottomMenu);
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -344,7 +345,9 @@ use yii\bootstrap\Html;
                                     <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
                                 </a>
 							<?php } ?>
-                            <a href="http://gymkhana-cup.ru/" target="_blank"><li>GYMKHANA CUP</li></a>
+                            <a href="http://gymkhana-cup.ru/" target="_blank">
+                                <li>GYMKHANA CUP</li>
+                            </a>
                         </ul>
                     </div>
                 </div>
@@ -362,15 +365,15 @@ use yii\bootstrap\Html;
 									$next = next($bottomMenu);
 									$folder = $next ? $next : reset($bottomMenu);
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -385,15 +388,15 @@ use yii\bootstrap\Html;
 									$next = next($bottomMenu);
 									$folder = $next ? $next : reset($bottomMenu);
 									?>
-                                    <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
-                                        <figure class="images">
+                                    <figure class="images">
+                                        <a href="<?= $menuItem->link ? $menuItem->link : '/' . $page->url ?>">
 											<?= Html::img(\Yii::getAlias('@filesView') . $folder, [
 												'alt'   => $title,
 												'title' => $title,
 												'class' => 'slip'
 											]) ?>
-                                        </figure>
-                                    </a>
+                                        </a>
+                                    </figure>
 								<?php } ?>
                             </div>
                         </div>
@@ -418,7 +421,9 @@ use yii\bootstrap\Html;
                                 <li><?= $menuItem->title ? $menuItem->title : $page->title ?></li>
                             </a>
 						<?php } ?>
-                        <a href="http://gymkhana-cup.ru/" target="_blank"><li>GYMKHANA CUP</li></a>
+                        <a href="http://gymkhana-cup.ru/" target="_blank">
+                            <li>GYMKHANA CUP</li>
+                        </a>
                         <a href="/photogallery">
                             <li>Фотогалерея</li>
                         </a>
@@ -440,7 +445,7 @@ use yii\bootstrap\Html;
                         Главная новость
                     </div>
                     <div class="news-mobile-bottom">
-	                    <?= $news->previewText ?>
+						<?= $news->previewText ?>
                     </div>
                 </a>
             </div>
@@ -470,10 +475,10 @@ use yii\bootstrap\Html;
                     </div>
 
                     <div class="right-item-icons">
-                        <?php foreach ($years as $year) { ?>
+						<?php foreach ($years as $year) { ?>
                             <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
                                data-lightbox="feature" href="/photogallery/<?= $year->year ?>"><?= $year->year ?></a>
-                        <?php } ?>
+						<?php } ?>
                     </div>
                 </div>
             </div>
@@ -493,14 +498,20 @@ use yii\bootstrap\Html;
                     </div>
                     <div class="right-item-icons">
                         <a class="animated wow fadeInDown" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
+                           data-lightbox="feature"
+                           href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
                                     src="img/icon/pol.png"></a>
                         <a class="animated wow fadeInDown inv" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img src="img/icon/lec.png"></a>
+                           data-lightbox="feature"
+                           href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
+                                    src="img/icon/lec.png"></a>
                         <a class="animated wow fadeInDown inv" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="https://www.youtube.com/playlist?list=PLPRuX9QmtJacPekTI3n_AIiU9BS39mmyQ"><img src="img/icon/blog.png"></a>
+                           data-lightbox="feature"
+                           href="https://www.youtube.com/playlist?list=PLPRuX9QmtJacPekTI3n_AIiU9BS39mmyQ"><img
+                                    src="img/icon/blog.png"></a>
                         <a class="animated wow fadeInDown inv" data-wow-duration=".3s" data-wow-delay=".0s"
-                           data-lightbox="feature" href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
+                           data-lightbox="feature"
+                           href="https://www.youtube.com/channel/UCylSYGIPB3OidOeQXQ38Rgw/playlists"><img
                                     src="img/icon/gm.png"></a>
                     </div>
                 </div>

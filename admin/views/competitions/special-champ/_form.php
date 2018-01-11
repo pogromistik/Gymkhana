@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 	
 	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
-		'preset' => 'full', 'clientOptions' => ['height' => 150]
+		'preset' => 'full', 'clientOptions' => ['height' => 150, 'filebrowserImageUploadUrl' => '/help/upload',]
 	]) ?>
 	
 	<?= $form->field($model, 'yearId')->dropDownList(
