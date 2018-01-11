@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
 use admin\models\MergeAthletesForm;
+use admin\models\MergeMotorcyclesForm;
 use common\models\Athlete;
 use common\models\ClassHistory;
 use common\models\FigureTime;
@@ -60,6 +61,53 @@ class DeveloperController extends BaseController
 		}
 		
 		return $this->render('//competitions/common/_logs', ['model' => $model]);
+	}
+	
+	public function actionMergeMotorcycles()
+	{
+		return $this->render('merge-motorcycles');
+	}
+	
+	public function actionMergeMotorcyclesSecond($athleteId)
+	{
+		$athlete = Athlete::findOne($athleteId);
+		if (!$athlete) {
+			throw new NotFoundHttpException('Спортсмен не найден');
+		}
+		$formModel = new MergeMotorcyclesForm();
+		$formModel->athleteId = $athleteId;
+		$errors = null;
+		if ($formModel->load(\Yii::$app->request->post())) {
+			$firstMotorcycle = Motorcycle::findOne($formModel->firstMotorcycles);
+			$secondMotorcycle = Motorcycle::findOne($formModel->secondMotorcycles);
+			if ($firstMotorcycle->athleteId != $athlete->id || $secondMotorcycle->athleteId != $athlete->id) {
+				$errors = 'Мотоциклы принадлежат другому спортсмену';
+			} else {
+				if ($firstMotorcycle->id == $secondMotorcycle->id) {
+					$errors = 'Мотоциклы совпадают';
+				} else {
+					$transaction = \Yii::$app->db->beginTransaction();
+					FigureTime::updateAll(['motorcycleId' => $firstMotorcycle->id], ['motorcycleId' => $secondMotorcycle->id]);
+					Participant::updateAll(['motorcycleId' => $firstMotorcycle->id], ['motorcycleId' => $secondMotorcycle->id]);
+					TmpFigureResult::updateAll(['motorcycleId' => $firstMotorcycle->id], ['motorcycleId' => $secondMotorcycle->id]);
+					ClassHistory::updateAll(['motorcycleId' => $firstMotorcycle->id], ['motorcycleId' => $secondMotorcycle->id]);
+					RequestForSpecialStage::updateAll(['motorcycleId' => $firstMotorcycle->id], ['motorcycleId' => $secondMotorcycle->id]);
+					
+					if ($secondMotorcycle->delete()) {
+						echo 'success' . PHP_EOL;
+					}
+					$transaction->commit();
+					
+					return $this->redirect(['merge-motorcycles']);
+				}
+			}
+		}
+		
+		return $this->render('merge-motorcycles-second', [
+			'formModel' => $formModel,
+			'athlete'   => $athlete,
+			'errors'    => $errors
+		]);
 	}
 	
 	public function actionMergeAthletes()
