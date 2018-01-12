@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\Resize;
 use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
@@ -234,6 +235,7 @@ class Stage extends BaseActiveRecord
 			$title = uniqid() . '.' . $file->extension;
 			$folder = $dir . '/' . $title;
 			if ($file->saveAs($folder)) {
+				Resize::resizeImage($folder);
 				$this->trackPhoto = 'stages-tracks/' . $title;
 				if (!$this->trackPhotoStatus) {
 					$this->trackPhotoStatus = self::PHOTO_NOT_PUBLISH;

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\Resize;
 use Yii;
 use yii\web\UploadedFile;
 
@@ -171,6 +172,7 @@ class SpecialStage extends BaseActiveRecord
 			$title = uniqid() . '.' . $file->extension;
 			$folder = $dir . '/' . $title;
 			if ($file->saveAs($folder)) {
+				Resize::resizeImage($folder);
 				$this->photoPath = 'stages-tracks/' . $title;
 			}
 		}

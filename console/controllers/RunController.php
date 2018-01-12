@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\components\Resize;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -1318,6 +1319,19 @@ class RunController extends Controller
 			->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup: тест рассылки')
 			->send();
+		
+		return true;
+	}
+	
+	public function actionResizeTracks()
+	{
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->where(['not', ['trackPhoto' => null]])->all();
+		foreach ($stages as $stage) {
+			$dir = \Yii::getAlias('@files') . '/' . $stage->trackPhoto;
+			echo $dir . PHP_EOL;
+			Resize::resizeImage($dir);
+		}
 		
 		return true;
 	}
