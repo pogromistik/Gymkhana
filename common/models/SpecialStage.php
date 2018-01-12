@@ -100,6 +100,7 @@ class SpecialStage extends BaseActiveRecord
 			[['dateResultHuman', 'dateStartHuman', 'dateEndHuman', 'referenceTimeHuman'], 'string', 'max' => 255],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['photoFile', 'image', 'maxWidth' => 3000, 'maxHeight' => 3000],
 			['outOfCompetitions', 'default', 'value' => 0]
 		];
 	}
