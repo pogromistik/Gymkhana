@@ -1532,3 +1532,11 @@ figure.effect-julia:hover p {
         width: 100%;
     }
 }
+
+small.spb {
+    font-size: 14px;
+}
+
+small.spb a {
+    white-space: nowrap;
+}

@@ -9,8 +9,14 @@ use yii\bootstrap\Html;
  * @var array         $events
  */
 ?>
-    <h2>Расписание соревнований</h2>
-
+    <h2>Расписание соревнований
+        <br>
+        <small class="spb">
+            Актуальная о соревнованиях в Санкт-Петербурге здесь:
+            <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
+        </small>
+    </h2>
+        
     <div class="result-scheme active">
         <div class="change-type">
             <a class="change-result-scheme">Посмотреть список</a>
