@@ -9,7 +9,7 @@ use yii\bootstrap\Html;
     <h2>Результаты соревнований
         <br>
         <small class="spb">
-            Актуальная о соревнованиях в Санкт-Петербурге здесь:
+            Информация о соревнованиях в Санкт-Петербурге здесь:
             <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
         </small>
     </h2>
