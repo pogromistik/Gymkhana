@@ -415,7 +415,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	public function createCabinet()
 	{
 		$password = $this->generatePassword();
-		if (YII_ENV == 'dev') {
+		if (YII_ENV == 'dev' || YII_ENV == 'betta') {
 			$password = '111111';
 		}
 		$this->login = $this->id + 6000;
