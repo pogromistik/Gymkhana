@@ -14,6 +14,7 @@ use common\models\FigureTime;
 use common\models\Motorcycle;
 use common\models\NewsSubscription;
 use common\models\Participant;
+use common\models\RequestForSpecialStage;
 use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
 use common\models\Year;
@@ -113,6 +114,11 @@ class ProfileController extends AccessController
 			return \Yii::t('app', 'Мотоцикл не найден');
 		}
 		if ($motorcycle->status) {
+			if (!FigureTime::findOne(['motorcycleId' => $motorcycle->id]) && !Participant::findOne(['motorcycleId' => $motorcycle->id])
+			&& !RequestForSpecialStage::findOne(['motorcycleId' => $motorcycle->id])) {
+				$motorcycle->delete();
+				return true;
+			}
 			$motorcycle->status = Motorcycle::STATUS_INACTIVE;
 		} else {
 			$motorcycle->status = Motorcycle::STATUS_ACTIVE;

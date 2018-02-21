@@ -1517,3 +1517,78 @@ $('#enInfo').click(function (e) {
     e.preventDefault();
     $('.en_info').slideToggle();
 });
+
+$(document).on("submit", '#firstStepMerge', function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var form = $(this);
+    $.ajax({
+        url: "/competitions/developer/second-step-merge",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            $('#secondStep').html(result);
+            hideBackDrop();
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
+
+$(document).on('click', '#appendMotorcycle', function(e){
+    e.preventDefault();
+    var elem = $(this);
+    var i = elem.data('i');
+    showBackDrop();
+    $.get('/competitions/developer/append-motorcycle', {
+        i: i,
+        firstAthleteId: elem.data('first-athlete-id'),
+        secondAthleteId: elem.data('second-athlete-id')
+    }).done(function (data) {
+        elem.data('i', i + 1);
+        $('.motorcycles').append(data);
+        hideBackDrop();
+    }).fail(function (error) {
+        hideBackDrop();
+        alert(error.responseText);
+    });
+}).on('click', '.deleteMergeMotorcycle', function(e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+}).on("submit", "#secondStepMerge", function(e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+    $.ajax({
+        url: "/competitions/developer/check-before-merge",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            $('#checkStep').html(result);
+            hideBackDrop();
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+}).on("submit", "#confirmMerge", function(e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+    $.ajax({
+        url: "/competitions/developer/confirm-merge",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            $('.merge-athletes').html(result);
+            hideBackDrop();
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});

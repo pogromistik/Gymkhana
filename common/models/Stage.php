@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\Resize;
 use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
@@ -143,9 +144,16 @@ class Stage extends BaseActiveRecord
 			[['participantsLimit'], 'integer', 'min' => 3],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['photoFile', 'image', 'maxWidth' => 3000, 'maxHeight' => 3000],
+			['photoFile', 'validateFile'],
 			['outOfCompetitions', 'default', 'value' => 0],
 			['registrationFromSite', 'default', 'value' => 1]
 		];
+	}
+	
+	public function validateFile($attribute, $params)
+	{
+		$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
 	}
 	
 	/**
@@ -239,6 +247,7 @@ class Stage extends BaseActiveRecord
 			$title = uniqid() . '.' . $file->extension;
 			$folder = $dir . '/' . $title;
 			if ($file->saveAs($folder)) {
+				Resize::resizeImage($folder);
 				$this->trackPhoto = 'stages-tracks/' . $title;
 				if (!$this->trackPhotoStatus) {
 					$this->trackPhotoStatus = self::PHOTO_NOT_PUBLISH;

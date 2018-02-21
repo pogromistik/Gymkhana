@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\Resize;
 use Yii;
 use yii\web\UploadedFile;
 
@@ -102,6 +103,7 @@ class SpecialStage extends BaseActiveRecord
 			[['dateResultHuman', 'dateStartHuman', 'dateEndHuman', 'referenceTimeHuman'], 'string', 'max' => 255],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['photoFile', 'image', 'maxWidth' => 3000, 'maxHeight' => 3000],
 			['outOfCompetitions', 'default', 'value' => 0]
 		];
 	}
@@ -176,6 +178,7 @@ class SpecialStage extends BaseActiveRecord
 			$title = uniqid() . '.' . $file->extension;
 			$folder = $dir . '/' . $title;
 			if ($file->saveAs($folder)) {
+				Resize::resizeImage($folder);
 				$this->photoPath = 'stages-tracks/' . $title;
 			}
 		}

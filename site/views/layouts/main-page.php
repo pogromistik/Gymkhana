@@ -21,7 +21,7 @@ MainPageAsset::register($this);
     <title><?= Html::encode($this->context->pageTitle) ?></title>
 	<?php $this->head() ?>
 </head>
-<body class="aligned sliphover-active">
+<body class="aligned">
 <?php $this->beginBody() ?>
 
 <!-- =========================

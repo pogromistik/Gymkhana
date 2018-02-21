@@ -223,6 +223,14 @@ use yii\helpers\Html;
                                 <a href="<?= Url::to(['/competitions/developer/repeat-figures-time']) ?>"> Повторы
                                     времени фигур</a>
                             </li>
+                            <li>
+                                <a href="<?= Url::to(['/competitions/developer/merge-athletes']) ?>"> Объединение
+                                    спортсменов</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/competitions/developer/merge-motorcycles']) ?>"> Объединение
+                                    мотоциклов</a>
+                            </li>
                         </ul>
                     </li>
 				<?php } ?>

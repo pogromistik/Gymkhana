@@ -9,8 +9,14 @@ use yii\bootstrap\Html;
  * @var array         $events
  */
 ?>
-    <h2><?= \Yii::t('app', 'Расписание соревнований') ?></h2>
-
+    <h2><?= \Yii::t('app', 'Расписание соревнований') ?>
+        <br>
+        <small class="spb">
+            Информация о соревнованиях в Санкт-Петербурге здесь:
+            <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
+        </small>
+    </h2>
+    
     <div class="result-scheme active">
         <div class="change-type">
             <a class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть список') ?></a>

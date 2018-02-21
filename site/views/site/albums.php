@@ -4,6 +4,7 @@
  * @var \common\models\Album[] $albums
  * @var \common\models\Year[]  $otherYears
  */
+
 use yii\bootstrap\Html;
 
 ?>
@@ -21,15 +22,15 @@ use yii\bootstrap\Html;
             <div class="row sliphover-active">
 				<?php foreach ($albums as $album) { ?>
                     <div class="col-sm-4 col-xs-6">
-                        <a href="/photogallery/<?= $year->year ?>/<?= $album->id ?>">
-                            <figure class="images">
+                        <figure class="images">
+                            <a href="/photogallery/<?= $year->year ?>/<?= $album->id ?>">
 								<?= Html::img(Yii::getAlias('@filesView') . $album->cover, [
 									'alt'   => $album->title,
 									'title' => $album->title,
 									'class' => "slip"
 								]) ?>
-                            </figure>
-                        </a>
+                            </a>
+                        </figure>
                     </div>
 				<?php } ?>
             </div>

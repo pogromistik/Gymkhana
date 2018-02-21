@@ -263,19 +263,22 @@ class CronController extends Controller
 	
 	public function actionSendSubscriptions()
 	{
-		$items = SubscriptionQueue::findAll(['isActual' => 1]);
-		$countLetters = 0;
-		foreach ($items as $item) {
-			$count = NewsSubscription::sendMsg($item->messageType, $item->modelId);
-			$item->countEmails = $count;
-			$item->dateSend = time();
-			$item->isActual = 0;
-			$item->save();
-			$countLetters += $count;
+		if (\Yii::$app->mutex->acquire('SendSubscriptions', 10)) {
+			$items = SubscriptionQueue::findAll(['isActual' => 1]);
+			$countLetters = 0;
+			foreach ($items as $item) {
+				$count = NewsSubscription::sendMsg($item->messageType, $item->modelId);
+				$item->countEmails = $count;
+				$item->dateSend = time();
+				$item->isActual = 0;
+				$item->save();
+				$countLetters += $count;
+			}
+			
+			echo 'send ' . $countLetters . ' letters' . PHP_EOL;
+			
+			return true;
 		}
-		
-		echo 'send ' . $countLetters . ' letters' . PHP_EOL;
-		
 		return true;
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\components\Resize;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -1056,10 +1057,14 @@ class RunController extends Controller
 		echo 'Update ClassHistory: ' . $count . PHP_EOL;
 		$count = RequestForSpecialStage::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update SpecialStages: ' . $count . PHP_EOL;
+		$count = NewsSubscription::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update NewsSubscription: ' . $count . PHP_EOL;
+		
 		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
 			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
 			$mainAthlete->save(false);
 		}
+		
 		if ($athlete2->delete()) {
 			echo 'success' . PHP_EOL;
 		}
@@ -1086,6 +1091,8 @@ class RunController extends Controller
 		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
 		$count = ClassHistory::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
 		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		$count = RequestForSpecialStage::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update RequestForSpecialStage: ' . $count . PHP_EOL;
 		
 		if ($motorcycle2->delete()) {
 			echo 'success' . PHP_EOL;
@@ -1126,9 +1133,11 @@ class RunController extends Controller
 		foreach ($items as $item) {
 			$message = TranslateMessage::findOne(['id' => $item->id]);
 			if ($message && $message->translation) {
-			} else {	$res = $item->message. ';';
-			$res .= PHP_EOL;
-			file_put_contents('/var/www/gymkhana/admin/web/messages.csv', $res, FILE_APPEND);}
+			} else {
+				$res = $item->message . ';';
+				$res .= PHP_EOL;
+				file_put_contents('/var/www/gymkhana/admin/web/messages.csv', $res, FILE_APPEND);
+			}
 		}
 		
 		return true;
@@ -1310,6 +1319,19 @@ class RunController extends Controller
 			->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup: тест рассылки')
 			->send();
+		
+		return true;
+	}
+	
+	public function actionResizeTracks()
+	{
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->where(['not', ['trackPhoto' => null]])->all();
+		foreach ($stages as $stage) {
+			$dir = \Yii::getAlias('@files') . '/' . $stage->trackPhoto;
+			echo $dir . PHP_EOL;
+			Resize::resizeImage($dir);
+		}
 		
 		return true;
 	}

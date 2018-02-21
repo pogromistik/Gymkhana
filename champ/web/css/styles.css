@@ -1349,7 +1349,7 @@ ul.news-carousel {
 }
 
 .mobile-menu-items {
-    display: none;
+    display: none !important;
 }
 
 .grid {
@@ -1536,4 +1536,12 @@ figure.effect-julia:hover p {
         margin: 10px auto;
         width: 100%;
     }
+}
+
+small.spb {
+    font-size: 14px;
+}
+
+small.spb a {
+    white-space: nowrap;
 }

@@ -3,6 +3,7 @@
  * @var \common\models\News   $news
  * @var \common\models\News[] $oldNews
  */
+
 use yii\bootstrap\Html;
 
 $news = $data['page']->news;
@@ -47,7 +48,7 @@ $this->registerJsFile('http://vk.com/js/api/openapi.js', ['position' => yii\web\
 	<?php } ?>
     <div class="container">
         <div class="text-right">
-            <?= date("d.m.Y", $news->datePublish) ?>
+			<?= date("d.m.Y", $news->datePublish) ?>
         </div>
     </div>
 </div>
@@ -57,15 +58,15 @@ $this->registerJsFile('http://vk.com/js/api/openapi.js', ['position' => yii\web\
     <div class="row news_list sliphover-active">
 		<?php foreach ($oldNews as $oneNews) { ?>
             <div class="col-xs-2 item">
-                <a href="/<?= $oneNews->page->url ?>">
-                    <figure class="images">
+                <figure class="images">
+                    <a href="/<?= $oneNews->page->url ?>">
 						<?= Html::img(Yii::getAlias('@filesView') . $oneNews->previewImage, [
 							'alt'   => $oneNews->title,
 							'title' => $oneNews->title,
 							'class' => "slip"
 						]) ?>
-                    </figure>
-                </a>
+                    </a>
+                </figure>
             </div>
 		<?php } ?>
     </div>

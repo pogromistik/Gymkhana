@@ -6,7 +6,12 @@ use yii\bootstrap\Html;
  * @var array         $results
  */
 ?>
-<h2><?= \Yii::t('app', 'Чемпионаты России и мира') ?></h2>
+<h2><?= \Yii::t('app', 'Чемпионаты России и мира') ?>
+    <br>
+    <small class="spb">
+        Информация о соревнованиях в Санкт-Петербурге здесь:
+        <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
+    </small></h2>
 <div class="list">
     <div class="item">
         <div class="toggle">
