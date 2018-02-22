@@ -20,7 +20,7 @@ return [
 			'class'              => \dektrium\user\Module::class,
 			'enableRegistration' => false,
 			'enableConfirmation' => false,
-			'admins'             => ['nadia'],
+			'admins'             => ['nadia', 'developer'],
 			'controllerMap'      => [
 				'security' => \admin\controllers\SecurityController::class
 			],
