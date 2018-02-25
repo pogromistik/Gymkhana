@@ -9,8 +9,7 @@ $championship = $model->championship;
 <b>
 	<?= \Yii::t('app', 'Начался приём результатов для этапа {champTitle}: "{stageTitle}"!', [
 		'champTitle' => $championship->title,
-		'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id="' . $model->id
-			. 'target="_blank" style="color: #56a025">' . $model->title . '</a>'
+		'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/stage?id=' . $model->id . '" target="_blank" style="color: #56a025">' . $model->title . '</a>'
 	], $language) ?>
 </b>
 
