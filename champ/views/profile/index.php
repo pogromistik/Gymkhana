@@ -89,7 +89,7 @@ use yii\web\JsExpression;
 						]]) ?>
 				<?php } ?>
                 <div class="form-group">
-					<?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary']) ?>
+					<?= Html::submitButton(\Yii::t('app', 'Загрузить'), ['class' => 'btn btn-primary']) ?>
                 </div>
 				<?php ActiveForm::end(); ?>
             </div>
