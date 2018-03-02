@@ -9,9 +9,10 @@ use yii\bootstrap\Html;
 <h2><?= \Yii::t('app', 'Чемпионаты России и мира') ?>
     <br>
     <small class="spb">
-        Информация о соревнованиях в Санкт-Петербурге здесь:
-        <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
-    </small></h2>
+		<?= \Yii::t('app', 'Информация о соревнованиях в Санкт-Петербурге здесь: {link}',
+			['link' => '<a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>']) ?>
+    </small>
+</h2>
 <div class="list">
     <div class="item">
         <div class="toggle">

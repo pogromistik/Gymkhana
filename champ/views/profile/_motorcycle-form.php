@@ -21,7 +21,7 @@ $motorcycle->athleteId = $athlete->id;
 			<?= $form->field($motorcycle, 'model')->textInput(['placeholder' => \Yii::t('app', 'модель, напр. ER6-F')])->label(false) ?>
         </div>
         <div class="col-md-5 col-sm-4">
-			<?= $form->field($motorcycle, 'cbm')->textInput(['placeholder' => \Yii::t('app', 'объём, см3')])->label(false) ?>
+			<?= $form->field($motorcycle, 'cbm')->textInput(['placeholder' => \Yii::t('app', 'Объём, см3')])->label(false) ?>
         </div>
         <div class="col-md-5 col-sm-4">
 			<?= $form->field($motorcycle, 'power')->textInput(['placeholder' => \Yii::t('app', 'Мощность, л.с.')])->label(false) ?>

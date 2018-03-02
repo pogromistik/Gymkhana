@@ -32,14 +32,14 @@ $time = time();
                 <div class="records">
                     <b><?= \Yii::t('app', 'Мировой рекорд') ?>:</b>
 					<?php if ($figure->bestAthlete) { ?>
-						<?= $figure->bestAthlete ?>
+						<?= \common\helpers\TranslitHelper::translitFio($figure->bestAthlete) ?>
 					<?php } ?>
 					<?= $figure->bestTimeForHuman ?>
 					<?php if ($figure->bestAthleteInRussia || $figure->bestTimeInRussia) { ?>
                         <br>
                         <b><?= \Yii::t('app', 'Рекорд в России') ?>:</b>
 						<?php if ($figure->bestAthleteInRussia) { ?>
-							<?= $figure->bestAthleteInRussia ?>
+							<?= \common\helpers\TranslitHelper::translitFio($figure->bestAthleteInRussia) ?>
 						<?php } ?>
 						<?php if ($figure->bestTimeInRussia) { ?>
 							<?= $figure->bestTimeInRussiaForHuman ?>
