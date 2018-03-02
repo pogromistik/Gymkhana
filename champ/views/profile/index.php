@@ -22,7 +22,7 @@ use yii\web\JsExpression;
 
 <div class="href-menu">
     <ul>
-        <li><a href="#password-link"><?= \Yii::t('app', 'Пароль') ?></a></li>
+        <li><a href="#password-link"><?= \Yii::t('app', 'пароль') ?></a></li>
         <li><a href="#about-me-link"><?= \Yii::t('app', 'о себе') ?></a></li>
         <li><a href="#motorcycles-link"><?= \Yii::t('app', 'мотоциклы') ?></a></li>
         <li><a href="#newsletters-link"><?= \Yii::t('app', 'подписка на новости') ?></a></li>
