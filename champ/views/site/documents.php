@@ -18,7 +18,7 @@ use yii\bootstrap\Html;
                 <div class="toggle">
                     <div class="background"></div>
                     <div class="title">
-						<?= $section->title ?>
+						<?= \Yii::t('app', $section->title) ?>
                     </div>
 					<?php if ($files) { ?>
                         <div class="info">
