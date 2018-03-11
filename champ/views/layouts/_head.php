@@ -110,7 +110,7 @@ use yii\helpers\Url;
                         <li>
                             <a href="http://gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
                         </li>
-						<?php if (\Yii::$app->user->isGuest) { ?>
+						<?php if (\Yii::$app->user->isGuest) { /*?>
                             <li class="dropdown pk-menu-items">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 									<?= \common\models\TranslateMessage::$smallLanguagesTitle[\Yii::$app->language] ?>
@@ -125,7 +125,7 @@ use yii\helpers\Url;
                                         </a></li>
                                 </ul>
                             </li>
-						<?php } ?>
+						<?php */ } ?>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login"><?= \Yii::t('app', 'Вход') ?></a>
 							<?php } else { ?>
