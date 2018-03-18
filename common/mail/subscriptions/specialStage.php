@@ -8,7 +8,7 @@ $championship = $model->championship;
 ?>
     <b>
 		<?= \Yii::t('app', 'Анонсирован новый этап чемпионата {champTitle}: "{stageTitle}"!', [
-			'champTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-champ?id=' . $model->id . '" target="_blank" style="color: #56a025">'.$championship->title.'</a>',
+			'champTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-champ?id=' . $championship->id . '" target="_blank" style="color: #56a025">'.$championship->title.'</a>',
 			'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id=' . $model->id . '" target="_blank" style="color: #56a025">'.$model->title.'</a>'
 		], $language) ?>
     </b>
