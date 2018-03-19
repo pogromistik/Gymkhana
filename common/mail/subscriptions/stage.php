@@ -26,7 +26,7 @@ $championship = $model->championship;
 <?php } ?>
 
 <?php if ($model->startRegistration) { ?>
-    <br><?= \Yii::t('app', '>Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
+    <br><?= \Yii::t('app', 'Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
 <?php } ?>
 
 <?php if ($model->participantsLimit) { ?>
