@@ -52,6 +52,7 @@ class RussiaController extends BaseController
 	 * Displays a single Russia model.
 	 *
 	 * @param integer $id
+	 *
 	 * @return mixed
 	 */
 	public function actionView($id)
@@ -89,6 +90,7 @@ class RussiaController extends BaseController
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 *
 	 * @param integer $id
+	 *
 	 * @return mixed
 	 */
 	public function actionUpdate($id)
@@ -111,6 +113,7 @@ class RussiaController extends BaseController
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 *
 	 * @param integer $id
+	 *
 	 * @return mixed
 	 */
 	public function actionDelete($id)
@@ -125,9 +128,9 @@ class RussiaController extends BaseController
 	/**
 	 * Finds the Russia model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 
 	 *
-*@param integer $id
+	 * @param integer $id
+	 *
 	 * @return City the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
@@ -138,5 +141,11 @@ class RussiaController extends BaseController
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
+	}
+	
+	public function actionCard()
+	{
+		$this->can('admin');
+		return $this->renderAjax('card');
 	}
 }

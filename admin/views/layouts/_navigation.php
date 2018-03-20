@@ -87,7 +87,7 @@ use yii\helpers\Html;
                     </li>
 				<?php } ?>
 			<?php } ?>
-   
+			
 			<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                 <li>
 					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>
@@ -174,8 +174,17 @@ use yii\helpers\Html;
                         </ul>
                     </li>
                     <li>
-                        <a href="<?= Url::to(['/russia/index']) ?>"><i
-                                    class="fa fa fa-globe fa-fw"></i> Россия</a>
+                        <a href="#"><i
+                                    class="fa fa fa-globe fa-fw"></i> Россия<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?= Url::to(['/russia/index']) ?>"> Группы</a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::to(['/russia/card']) ?>"> Карта</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-cog fa-fw"></i> Дополнительно<span
