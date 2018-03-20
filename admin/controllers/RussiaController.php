@@ -139,4 +139,10 @@ class RussiaController extends BaseController
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
 	}
+	
+	public function actionCard()
+	{
+		$this->can('admin');
+		return $this->renderAjax('card');
+	}
 }
