@@ -90,7 +90,7 @@ $mass[] = "24, 41.85, 85.1";
 
 <body>
 <div id="resizable">
-    <img src="card.png" alt="">
+    <?= \yii\helpers\Html::img('/img/card.png') ?>
 </div>
 
 <?php
