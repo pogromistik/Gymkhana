@@ -83,7 +83,7 @@ class CompetitionsController extends BaseController
 				];
 			} else {
 				$month = (new \DateTime(date('01.m.Y', $stage->dateOfThe),
-					new \DateTimeZone('Asia/Yekaterinburg')))
+					new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
 					->setTime(10, 00,
 						00)->getTimestamp();
 				if (!isset($dates[$month])) {
@@ -122,7 +122,7 @@ class CompetitionsController extends BaseController
 			} else {
 				$month = (new \DateTime(date('01.m.Y', $stage->dateStart),
 					new \DateTimeZone(HelpModel::DEFAULT_TIME_ZONE)))
-					->setTime(06, 00,
+					->setTime(10, 00,
 						00)->getTimestamp();
 				if (!isset($dates[$month])) {
 					$dates[$month] = [];
@@ -147,7 +147,7 @@ class CompetitionsController extends BaseController
 			$event->start = date('Y-m-d', $stage->dateStart);
 			$events[] = $event;
 		}
-		
+		ksort($dates);
 		$this->layout = 'main-with-img';
 		$this->background = 'background5.png';
 		

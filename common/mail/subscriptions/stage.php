@@ -9,8 +9,7 @@ $championship = $model->championship;
 <b>
 	<?= \Yii::t('app', 'Анонсирован новый этап чемпионата {champTitle}: "{stageTitle}"!', [
 		'champTitle' => $championship->getTitle($language),
-		'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/special-stage?id="' . $model->id
-			. 'target="_blank" style="color: #56a025">' . $model->getTitle($language) . '</a>'
+		'stageTitle' => '<a href="http://gymkhana-cup.ru/competitions/stage?id=' . $model->id . '" target="_blank" style="color: #56a025">' . $model->getTitle($language) . '</a>'
 	], $language) ?>
 </b>
 
@@ -27,7 +26,7 @@ $championship = $model->championship;
 <?php } ?>
 
 <?php if ($model->startRegistration) { ?>
-    <br><?= \Yii::t('app', '>Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
+    <br><?= \Yii::t('app', 'Регистрация начнётся {date}.', ['date' => $model->dateOfTheHuman], $language) ?>
 <?php } ?>
 
 <?php if ($model->participantsLimit) { ?>
