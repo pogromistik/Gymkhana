@@ -35,6 +35,8 @@ use yii\web\UploadedFile;
  * @property integer       $participantsLimit
  * @property integer       $fastenClassFor
  * @property integer       $outOfCompetitions
+ * @property string        $title_en
+ * @property string        $descr_en
  * @property integer       $registrationFromSite
  *
  * @property AthletesClass $classModel
@@ -133,8 +135,9 @@ class Stage extends BaseActiveRecord
 				'outOfCompetitions',
 				'registrationFromSite'
 			], 'integer'],
-			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
-			[['description'], 'string'],
+			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman',
+				'trackPhoto', 'title_en'], 'string', 'max' => 255],
+			[['description', 'descr_en'], 'string'],
 			[['documentIds'], 'safe'],
 			[['countRace'], 'integer', 'max' => 5],
 			[['countRace'], 'integer', 'min' => 1],
@@ -186,6 +189,8 @@ class Stage extends BaseActiveRecord
 			'participantsLimit'      => 'Допустимое количество участников',
 			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа',
 			'outOfCompetitions'      => 'Вне общего зачёта',
+			'title_en'               => 'Название',
+			'descr_en'               => 'Описание',
 			'registrationFromSite'   => 'Регистрация с сайта'
 		];
 	}
@@ -622,6 +627,42 @@ LIMIT 1) order by "bestTime" asc) n'])
 			return $class;
 		} else {
 			return null;
+		}
+	}
+	
+	public function getTitle($language = null)
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr($language = null)
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
 		}
 	}
 }

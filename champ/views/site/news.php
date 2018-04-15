@@ -40,6 +40,6 @@ $this->registerMetaTag([
             }})();</script>
     <div class="pluso" data-background="#ebebeb" data-options="small,square,line,horizontal,counter,theme=01" data-services="vkontakte,facebook,twitter,google"></div>
 	<div class="text-left pt-20">
-		<a href="/">К списку новостей</a>
+		<a href="/"><?= \Yii::t('app', 'К списку новостей') ?></a>
 	</div>
 </div>

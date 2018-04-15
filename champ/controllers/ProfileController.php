@@ -63,10 +63,10 @@ class ProfileController extends AccessController
 	
 	public function actionIndex($success = false)
 	{
-		$this->pageTitle = 'Редактирование профиля';
+		$this->pageTitle = \Yii::t('app', 'Редактирование профиля');
 		$athlete = Athlete::findOne(\Yii::$app->user->identity->id);
 		if (!$athlete) {
-			throw new NotFoundHttpException('Ошибка! Спортсмен не найден');
+			throw new NotFoundHttpException(\Yii::t('app', 'Ошибка! Спортсмен не найден'));
 		}
 		
 		if (\Yii::$app->request->isAjax && $athlete->load(\Yii::$app->request->post())) {
@@ -111,7 +111,7 @@ class ProfileController extends AccessController
 	{
 		$motorcycle = Motorcycle::findOne($id);
 		if (!$motorcycle || $motorcycle->athleteId != \Yii::$app->user->identity->id) {
-			return 'Мотоцикл не найден';
+			return \Yii::t('app', 'Мотоцикл не найден');
 		}
 		if ($motorcycle->status) {
 			if (!FigureTime::findOne(['motorcycleId' => $motorcycle->id]) && !Participant::findOne(['motorcycleId' => $motorcycle->id])
@@ -128,12 +128,12 @@ class ProfileController extends AccessController
 			return true;
 		}
 		
-		return 'Возникла ошибка при изменении данных';
+		return \Yii::t('app', 'Возникла ошибка при изменении данных');
 	}
 	
 	public function actionInfo()
 	{
-		$this->pageTitle = 'Информация о этапах и заявок на участие';
+		$this->pageTitle = \Yii::t('app', 'Информация об этапах и заявках на участие');
 		
 		$time = time();
 		$withoutRegistrationIds = Stage::find()->select('id')
@@ -178,19 +178,19 @@ class ProfileController extends AccessController
 			'data'  => null
 		];
 		if (!$athleteIds) {
-			$result['error'] = 'Выберите спортсмена';
+			$result['error'] = \Yii::t('app', 'Выберите спортсмена');
 			
 			return $result;
 		}
 		
 		if ($athleteIds == \Yii::$app->user->id) {
-			$result['error'] = 'Вы не можете сравнивать себя с самим собой';
+			$result['error'] = \Yii::t('app', 'Вы не можете сравнивать себя с самим собой');
 			
 			return $result;
 		}
 		
 		if (count($athleteIds) > 2) {
-			$result['error'] = 'Максимум можно выбрать 2 спортсменов';
+			$result['error'] = \Yii::t('app', 'Максимум можно выбрать 2 спортсменов');
 			
 			return $result;
 		}
@@ -200,7 +200,7 @@ class ProfileController extends AccessController
 		if ($year) {
 			$yearModel = Year::findOne(['year' => $year]);
 			if (!$yearModel) {
-				$result['error'] = 'Год не найден';
+				$result['error'] = \Yii::t('app', 'Год не найден');
 				
 				return $result;
 			}
@@ -209,13 +209,13 @@ class ProfileController extends AccessController
 		foreach ($athleteIds as $athleteId) {
 			$athlete = Athlete::findOne($athleteId);
 			if (!$athlete) {
-				$result['error'] = 'Спортсмен не найден';
+				$result['error'] = \Yii::t('app', 'Спортсмен не найден');
 				
 				return $result;
 			}
 			
 			if ($athleteId == \Yii::$app->user->id) {
-				$result['error'] = 'Вы не можете сравнивать себя с самим собой';
+				$result['error'] = \Yii::t('app', 'Вы не можете сравнивать себя с самим собой');
 				
 				return $result;
 			}
@@ -369,7 +369,7 @@ class ProfileController extends AccessController
 	
 	public function actionStats()
 	{
-		$this->pageTitle = 'Статистика';
+		$this->pageTitle = \Yii::t('app', 'Статистика');
 		
 		$athlete = Athlete::findOne(\Yii::$app->user->id);
 		/** @var Figure[] $figures */
@@ -435,7 +435,7 @@ class ProfileController extends AccessController
 			}
 			$athlete->photo = null;
 			if (!$athlete->save()) {
-				return 'Возникла ошибка при сохранении изменений';
+				return \Yii::t('app', 'Возникла ошибка при сохранении изменений');
 			}
 		}
 		
@@ -447,28 +447,28 @@ class ProfileController extends AccessController
 		
 		$participant = Participant::findOne($id);
 		if (!$id || $participant->athleteId != \Yii::$app->user->id) {
-			return 'Заявка не найдена';
+			return \Yii::t('app', 'Заявка не найдена');
 		}
 		
 		if ($participant->bestTime) {
-			return 'Вы участвуете в этапе. Изменение данных невозможно';
+			return \Yii::t('app', 'Вы участвуете в этапе. Изменение данных невозможно');
 		}
 		
 		$stage = $participant->stage;
 		if ($stage->dateOfThe < time()) {
-			return 'В день соревнований изменение данных невозможно';
+			return \Yii::t('app', 'В день соревнований изменение данных невозможно');
 		}
 		
 		if (in_array($stage->status, [Stage::STATUS_PRESENT, Stage::STATUS_CALCULATE_RESULTS, Stage::STATUS_PAST])) {
-			return 'Этап начался, изменение данных невозможно';
+			return \Yii::t('app', 'Этап начался, изменение данных невозможно');
 		}
 		
 		if ($participant->status == Participant::STATUS_DISQUALIFICATION) {
-			return 'Вы были дисквалифицированы. Изменение данных невозможно';
+			return \Yii::t('app', 'Вы были дисквалифицированы. Изменение данных невозможно');
 		}
 		
 		if ($participant->status == Participant::STATUS_CANCEL_ADMINISTRATION) {
-			return 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа';
+			return \Yii::t('app', 'Ваша заявка отклонена. Чтобы узнать подробности, свяжитесь с организатором этапа');
 		}
 		
 		if ($participant->status == Participant::STATUS_ACTIVE || $participant->status == Participant::STATUS_NEED_CLARIFICATION
@@ -482,7 +482,7 @@ class ProfileController extends AccessController
 		}
 		
 		if (!$participant->save()) {
-			return 'Возникла ошибка при сохранении данных';
+			return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 		}
 		
 		return true;
@@ -490,7 +490,7 @@ class ProfileController extends AccessController
 	
 	public function actionHelp()
 	{
-		$this->pageTitle = 'Справка';
+		$this->pageTitle = \Yii::t('app', 'Справка');
 		
 		return $this->render('help');
 	}
@@ -499,9 +499,11 @@ class ProfileController extends AccessController
 	{
 		$figure = Figure::findOne($figureId);
 		if (!$figure) {
-			throw new NotFoundHttpException('Фигура не найдена');
+			throw new NotFoundHttpException(\Yii::t('app', 'Фигура не найдена'));
 		}
-		$this->pageTitle = 'Результаты по фигуре ' . $figure->title;
+		$this->pageTitle = \Yii::t('app', 'Результаты по фигуре {figureTitle}', [
+			'figureTitle' => $figure->title
+		]);
 		$figuresResult = FigureTime::find()->where(['figureId' => $figure->id, 'athleteId' => \Yii::$app->user->id])
 			->orderBy(['date' => SORT_DESC])->all();
 		
@@ -532,17 +534,17 @@ class ProfileController extends AccessController
 		
 		if ($model->load(\Yii::$app->request->post())) {
 			if (!$model->newClassId) {
-				return 'Выберите класс';
+				return \Yii::t('app', 'Выберите класс');
 			}
 			if (!$model->comment) {
-				return 'Укажите причину смены класса';
+				return \Yii::t('app', 'Укажите причину смены класса');
 			}
 			if ($model->save()) {
 				return true;
 			}
 		}
 		
-		return 'Возникла ошибка при отправке данных';
+		return \Yii::t('app', 'Возникла ошибка при отправке данных');
 	}
 	
 	public function actionHistoryClassesRequest()
@@ -551,7 +553,7 @@ class ProfileController extends AccessController
 		$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
 		
-		$this->pageTitle = 'Заявки на изменение класса';
+		$this->pageTitle = \Yii::t('app', 'Заявки на изменение класса');
 		$this->layout = 'full-content';
 		
 		return $this->render('history-classes-request', [

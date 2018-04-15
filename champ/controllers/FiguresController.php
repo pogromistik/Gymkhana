@@ -19,8 +19,7 @@ class FiguresController extends AccessController
 	
 	public function actionSendResult($figureId = null)
 	{
-		$this->pageTitle = 'Отправить результат базовой фигуры';
-		$this->pageTitle = 'Форма для отправки своего результата по базовой фигуре';
+		$this->pageTitle = \Yii::t('app', 'Форма для отправки своего результата по базовой фигуре');
 		
 		$model = new TmpFigureResult();
 		$model->athleteId = \Yii::$app->user->id;
@@ -46,17 +45,17 @@ class FiguresController extends AccessController
 				return true;
 			}
 			if (!$model->date) {
-				return 'Укажите дату заезда';
+				return \Yii::t('app', 'Укажите дату заезда');
 			}
 			if (!$model->time) {
-				return 'Укажите время заезда';
+				return \Yii::t('app', 'Укажите время заезда');
 			}
 			if (!$model->videoLink) {
-				return 'Дабавте ссылку для подтверждения результата';
+				return \Yii::t('app', 'Добавьте ссылку для подтверждения результата');
 			}
 		}
 		
-		return 'Возникла ошибка при отправке данных';
+		return \Yii::t('app', 'Возникла ошибка при отправке данных');
 	}
 	
 	public function actionRequests($status = null)
@@ -64,25 +63,25 @@ class FiguresController extends AccessController
 		$searchModel = new TmpFigureResultSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->query->andWhere(['athleteId' => \Yii::$app->user->id]);
+		$this->pageTitle = \Yii::t('app', 'Заявки на добавление результатов базовых фигур');
 		if ($status) {
 			switch ($status) {
 				case TmpFigureResult::STATUS_NEW:
-					$this->pageTitle = 'Новые заявки на добавление результатов базовых фигур';
+					$this->pageTitle = \Yii::t('app', 'Новые заявки на добавление результатов базовых фигур');
 					$dataProvider->query->andWhere(['isNew' => 1]);
 					break;
 				case TmpFigureResult::STATUS_CANCEL:
-					$this->pageTitle = 'Отменённые заявки на добавление результатов базовых фигур';
+					$this->pageTitle = \Yii::t('app', 'Отменённые заявки на добавление результатов базовых фигур');
 					$dataProvider->query->andWhere(['isNew' => 0])->andWhere(['not', ['cancelReason' => null]]);
 					break;
 				case TmpFigureResult::STATUS_APPROVE:
-					$this->pageTitle = 'Подтверждённые заявки на добавление результатов базовых фигур';
+					$this->pageTitle = \Yii::t('app', 'Подтверждённые заявки на добавление результатов базовых фигур');
 					$dataProvider->query->andWhere(['isNew' => 0])->andWhere(['not', ['figureResultId' => null]]);
 					break;
 			}
 		}
 		$dataProvider->query->orderBy(['dateUpdated' => SORT_DESC]);
 		
-		$this->pageTitle = 'Заявки на добавление результатов базовых фигур';
 		$this->layout = 'full-content';
 		
 		return $this->render('requests', [

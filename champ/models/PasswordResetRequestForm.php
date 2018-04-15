@@ -17,7 +17,7 @@ class PasswordResetRequestForm extends Model
 	{
 		return [
 			['login', 'filter', 'filter' => 'trim'],
-			['login', 'required', 'message' => 'Поле не может быть пустым'],
+			['login', 'required', 'message' => \Yii::t('app', 'Поле не может быть пустым')],
 			['login', 'validateLogin'],
 		];
 	}
@@ -33,7 +33,7 @@ class PasswordResetRequestForm extends Model
 				}
 			}
 			if (!$athlete) {
-				$this->addError($attribute, 'Пользователь не найден.');
+				$this->addError($attribute, \Yii::t('app', 'Пользователь не найден'));
 			}
 		}
 	}

@@ -10,7 +10,7 @@ class AccessController extends BaseController
 	public function can($role)
 	{
 		if (!\Yii::$app->user->can($role)) {
-			throw new ForbiddenHttpException('Доступ запрещён');
+			throw new ForbiddenHttpException(\Yii::t('app', 'Доступ запрещён'));
 		}
 		return true;
 	}

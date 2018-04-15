@@ -154,7 +154,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 	{
 		$query = new Query();
 		$query->from(['a' => self::tableName(), 'b' => Athlete::tableName()])
-			->select(['"b"."email"', '"a"."token"'])->where(['isActive' => self::IS_ACTIVE_YES]);
+			->select(['"b"."email"', '"a"."token"', '"b"."language"'])->where(['isActive' => self::IS_ACTIVE_YES]);
 		if ($type) {
 			$query->andWhere(['or',
 				['a.types' => null],
@@ -226,11 +226,11 @@ class NewsSubscription extends \yii\db\ActiveRecord
 					'msgType'  => $msgFor,
 					'model'    => $model,
 					'token'    => $item['token'],
-					'language' => TranslateMessage::LANGUAGE_RU
+					'language' => $item['language']
 				])
 					->setTo($item['email'])
 					->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
-					->setSubject('gymkhana-cup: ' . $theme)
+					->setSubject('gymkhana-cup: ' . \Yii::t('app', $theme, [], $item['language']))
 					->send();
 			}
 			$count++;

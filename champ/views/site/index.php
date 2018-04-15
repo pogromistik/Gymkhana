@@ -10,8 +10,8 @@ use yii\helpers\Url;
 use yii\bootstrap\Html;
 
 ?>
-<h2>Новости</h2>
-<?= Html::a('Предложить новость', ['/site/offer-news'], ['class' => 'btn btn-green']) ?>
+<h2><?= \Yii::t('app', 'Новости') ?></h2>
+<?= Html::a(\Yii::t('app', 'Предложить новость'), ['/site/offer-news'], ['class' => 'btn btn-green']) ?>
 <div class="z-100">
     <div class="news">
 		<?php foreach ($news as $item) {
@@ -44,7 +44,7 @@ use yii\bootstrap\Html;
 					}
 					?>
                     <div class="text-left">
-						<?= Html::a('Читать далее ...', $link, ['target' => $target]) ?>
+						<?= Html::a(\Yii::t('app', 'Читать далее') . '...', $link, ['target' => $target]) ?>
                     </div>
 				<?php } ?>
             </div>

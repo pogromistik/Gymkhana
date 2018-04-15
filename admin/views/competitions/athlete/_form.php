@@ -120,6 +120,8 @@ if (!$model->countryId) {
 	
 	<?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 	
+	<?= $form->field($model, 'language')->dropDownList(\common\models\TranslateMessage::$languagesTitle) ?>
+	
 	<?php if (Yii::$app->user->can('projectAdmin')) { ?>
 		<?php
 		$startClass = \common\models\AthletesClass::getStartClass();

@@ -26,7 +26,7 @@ use yii\helpers\Url;
                                 <div class="text">
                                 </div>
                                 <div class="show-all text-center pt-10">
-									<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Показать все уведомления'), ['/notices/all']) ?>
+									<?= \yii\bootstrap\Html::a(\Yii::t('app', \Yii::t('app', 'Показать все уведомления')), ['/notices/all']) ?>
                                 </div>
                             </div>
                         </div>
@@ -49,6 +49,20 @@ use yii\helpers\Url;
                         <div class="navbar-mobile-items">
                             <a href="/site/login" class="notices"><span class="fa fa-user"></span>
                                 <span id="newNotices"></span></a>
+                            <div class="mobile-language">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+		                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\Yii::$app->language] ?>
+                                    <b
+                                            class="caret"></b></a>
+                                <ul role="menu" class="dropdown-menu">
+                                    <li><a href="http:\\gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
+				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
+                                        </a></li>
+                                    <li><a href="http:\\gymkhana-cup.com<?= \Yii::$app->request->url ?>">
+				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
+                                        </a></li>
+                                </ul>
+                            </div>
                         </div>
 					<?php } ?>
                 </div>
@@ -96,6 +110,22 @@ use yii\helpers\Url;
                         <li>
                             <a href="http://gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
                         </li>
+						<?php if (\Yii::$app->user->isGuest) { ?>
+                            <li class="dropdown pk-menu-items">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<?= \common\models\TranslateMessage::$smallLanguagesTitle[\Yii::$app->language] ?>
+                                    <b
+                                            class="caret"></b></a>
+                                <ul role="menu" class="dropdown-menu">
+                                    <li><a href="http:\\gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
+                                        </a></li>
+                                    <li><a href="http:\\gymkhana-cup.com<?= \Yii::$app->request->url ?>">
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
+                                        </a></li>
+                                </ul>
+                            </li>
+						<?php  } ?>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login"><?= \Yii::t('app', 'Вход') ?></a>
 							<?php } else { ?>
@@ -124,7 +154,7 @@ use yii\helpers\Url;
                                 </div>
                             </div>
                         </li>
-						<?php } ?>
+					<?php } ?>
                         </li>
                     </ul>
                 </div>

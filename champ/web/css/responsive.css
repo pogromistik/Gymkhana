@@ -182,6 +182,7 @@
     .header {
         position: relative;
         background: #f4f4f4;
+        height: 60px;
     }
 
     .content {
@@ -216,6 +217,9 @@
 
     .pk-menu-items {
         display: none !important;
+    }
+    .header {
+        height: auto;
     }
 
     .header .white-menu {

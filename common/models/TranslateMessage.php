@@ -16,10 +16,20 @@ use Yii;
 class TranslateMessage extends \yii\db\ActiveRecord
 {
 	const LANGUAGE_EN = 'en-US';
-	const LANGUAGE_RU = 'ru-RU';
+	const LANGUAGE_RU = 'ru_RU';
+	
+	public static $languagesTitleForTranslate = [
+		self::LANGUAGE_EN => 'Английский'
+	];
 	
 	public static $languagesTitle = [
+		self::LANGUAGE_RU => 'Русский',
 		self::LANGUAGE_EN => 'Английский'
+	];
+	
+	public static $smallLanguagesTitle = [
+		self::LANGUAGE_RU => 'RU',
+		self::LANGUAGE_EN => 'EN'
 	];
 	
 	/**
@@ -59,6 +69,7 @@ class TranslateMessage extends \yii\db\ActiveRecord
 	public function beforeValidate()
 	{
 		$this->translation = trim($this->translation);
+		
 		return parent::beforeValidate();
 	}
 	

@@ -58,22 +58,22 @@ class SpecialStageForm extends Model
 	public function attributeLabels()
 	{
 		return [
-			'lastName'        => 'Фамилия',
-			'firstName'       => 'Имя',
-			'motorcycleMark'  => 'Марка мотоцикла',
-			'motorcycleModel' => 'Модель мотоцикла',
-			'motorcycleId'    => 'Мотоцикл',
-			'timeHuman'       => 'Время без учёта штрафа',
-			'fine'            => 'Штраф',
-			'videoLink'       => 'Ссылка на видео',
-			'dateHuman'       => 'Дата заезда',
-			'stageId'         => 'Этап',
-			'cityId'          => 'Город',
-			'cityTitle'       => 'Город',
-			'countryId'       => 'Страна',
+			'lastName'        => \Yii::t('app', 'Фамилия'),
+			'firstName'       => \Yii::t('app', 'Имя'),
+			'motorcycleMark'  => \Yii::t('app', 'Марка мотоцикла'),
+			'motorcycleModel' => \Yii::t('app', 'Модель мотоцикла'),
+			'motorcycleId'    => \Yii::t('app', 'Мотоцикл'),
+			'timeHuman'       => \Yii::t('app', 'Время без учёта штрафа'),
+			'fine'            => \Yii::t('app', 'Штраф'),
+			'videoLink'       => \Yii::t('app', 'Ссылка на видео'),
+			'dateHuman'       => \Yii::t('app', 'Дата заезда'),
+			'stageId'         => \Yii::t('app', 'Этап'),
+			'cityId'          => \Yii::t('app', 'Город'),
+			'cityTitle'       => \Yii::t('app', 'Город'),
+			'countryId'       => \Yii::t('app', 'Страна'),
 			'email'           => 'Email',
-			'power'           => 'Мощность',
-			'cbm'             => 'Объём'
+			'power'           => \Yii::t('app', 'Мощность'),
+			'cbm'             => \Yii::t('app', 'Объём')
 		];
 	}
 	

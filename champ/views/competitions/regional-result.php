@@ -6,15 +6,15 @@ use yii\bootstrap\Html;
  * @var array         $results
  */
 ?>
-    <h2>Результаты соревнований
+    <h2><?= \Yii::t('app', 'Результаты соревнований') ?>
         <br>
         <small class="spb">
-            Информация о соревнованиях в Санкт-Петербурге здесь:
-            <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
+		    <?= \Yii::t('app', 'Информация о соревнованиях в Санкт-Петербурге здесь: {link}',
+			    ['link' => '<a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>']) ?>
         </small>
     </h2>
 <?php if (!isset($results)) { ?>
-    В данном разделе пока нет соревнований.
+    <?= \Yii::t('app', 'В данном разделе пока нет соревнований.') ?>
 <?php } else {
 	foreach ($results as $regionGroupInfo) { ?>
         <div class="list">
@@ -32,23 +32,23 @@ use yii\bootstrap\Html;
 								$stages = $yearInfo['stages'];
 								if (!$stages) { ?>
                                     <div class="pl-10">
-                                        Для чемпионата пока не создано ни одного этапа.
+                                        <?= \Yii::t('app', 'Для чемпионата пока не создано ни одного этапа.') ?>
                                     </div>
 								<?php } else { ?>
                                     <div class="pl-10">
 										<?php if ($yearInfo['showResults']) { ?>
 											<?php if ($yearInfo['status'] == \common\models\Championship::STATUS_PAST) { ?>
-												<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
+												<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $yearInfo['id']]) ?>
                                                 <br>
 											<?php } else { ?>
-												<?= Html::a('Предварительные итоги чемпионата',
+												<?= Html::a(\Yii::t('app', 'Предварительные итоги чемпионата'),
 													['/competitions/championship-result', 'championshipId' => $yearInfo['id'], 'showAll' => 1]) ?>
                                                 <br>
 											<?php } ?>
 										<?php } ?>
 										<?php foreach ($stages as $stage) { ?>
 											<?php
-											$title = $stage->title . ', ' . $stage->city->title;
+											$title = $stage->getTitle() . ', ' . \common\helpers\TranslitHelper::translitCity($stage->city->title);
 											if ($stage->dateOfThe) {
 												$title .= ' ' . $stage->dateOfTheHuman;
 											}

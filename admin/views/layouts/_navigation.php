@@ -87,7 +87,7 @@ use yii\helpers\Html;
                     </li>
 				<?php } ?>
 			<?php } ?>
-   
+			
 			<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                 <li>
 					<?php $count = \common\models\Feedback::find()->where(['isNew' => 1])->count() ?>

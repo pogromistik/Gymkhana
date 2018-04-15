@@ -220,8 +220,8 @@ class FiguresController extends BaseController
 				$figure->bestTimeInRussia = $item->resultTime;
 				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				
-				$text = 'Поздравляем! Вы установили новый Российский рекорд для фигуры ' .
-					$figure->title . '! Это восхитительно :)';
+				$text = \Yii::t('app', 'Поздравляем! Вы установили новый Российский рекорд для фигуры {title}! Это восхитительно :)',
+					['title' => $figure->title], $item->athlete->language);
 				$link = \Yii::$app->urlManager->createUrl(['/competitions/figure', 'id' => $figure->id]);
 				Notice::add($item->athleteId, $text, $link);
 				break;
@@ -239,8 +239,9 @@ class FiguresController extends BaseController
 					$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
 				}
 				
-				$text = 'Поздравляем! Вы установили новый мировой рекорд для фигуры ' .
-					$figure->title . '!! Это восхитительно! Вы - восхитительны!!';
+				$text = \Yii::t('app',
+					'Поздравляем! Вы установили новый Российский рекорд для фигуры {title}!! Это восхитительно! Вы - восхитительны!!',
+					['title' => $figure->title], $item->athlete->language);
 				$link = \Yii::$app->urlManager->createUrl(['/competitions/figure', 'id' => $figure->id]);
 				Notice::add($item->athleteId, $text, $link);
 				break;

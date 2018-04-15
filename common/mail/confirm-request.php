@@ -6,29 +6,29 @@
  * @var \common\models\TmpParticipant|null $tmpParticipant
  */
 ?>
-Предварительная регистрация на этап принята.<br>
+<?= \Yii::t('app', 'Предварительная регистрация на этап принята.') ?><br>
 <?php if ($participant) {
 	$athlete = $participant->athlete;
 	?>
-    В случае отклонения вашей заявки, вам будет отправлено соответствующее письмо на этот email и уведомление в личный кабинет.<br>
-    При успешном подтверждении заявки - только уведомление.
+	<?= \Yii::t('app', 'В случае отклонения вашей заявки, вам будет отправлено соответствующее письмо на этот email и уведомление в личный кабинет. При успешном подтверждении заявки - только уведомление.') ?>
 <?php } else { ?>
-    В случае отклонения вашей заявки, будет отправлено соответствующее письмо на этот email.<br>
-    На сайте <a href="http://gymkhana-cup.ru" target="_blank">gymkhana-cup.ru</a> неподтверждённые заявки выделены серым цветом.
-    Если ваша заявка другого цвета - значит, ваше участие подтверждено.
+	<?= \Yii::t('app', 'В случае отклонения вашей заявки, будет отправлено соответствующее письмо на этот email.') ?>
+    <br>
+	<?= \Yii::t('app', 'На сайте {site} неподтверждённые заявки выделены серым цветом. Если ваша заявка другого цвета - значит, ваше участие подтверждено.',
+		['site' => '<a href="http://gymkhana-cup.ru" target="_blank">gymkhana-cup.ru</a>']) ?>
 <?php } ?>
 <br><br>
-<b>Чемпионат:</b> <?= $championship->title ?><br>
-<b>Этап:</b> <?= $stage->title ?><br>
-<b>Участник:</b>
+<b><?= \Yii::t('app', 'Чемпионат') ?>:</b> <?= $championship->title ?><br>
+<b><?= \Yii::t('app', 'Этап') ?>:</b> <?= $stage->title ?><br>
+<b><?= \Yii::t('app', 'Участник') ?>:</b>
 <?php if ($participant) { ?>
-    <?= $athlete->getFullName() ?>
+	<?= $athlete->getFullName() ?>
 <?php } else { ?>
-    <?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?>
+	<?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?>
 <?php } ?><br>
-<b>Мотоцикл:</b>
+<b><?= \Yii::t('app', 'Мотоцикл') ?>:</b>
 <?php if ($participant) { ?>
-    <?= $participant->motorcycle->getFullTitle() ?>
+	<?= $participant->motorcycle->getFullTitle() ?>
 <?php } else { ?>
-    <?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?>
+	<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?>
 <?php } ?>

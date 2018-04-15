@@ -5,23 +5,27 @@
  * @var \common\models\TmpParticipant[] $tmpParticipants
  * @var \common\models\Participant[]    $outCompetitionParticipants
  */
+$path = '/img/table/';
+if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
+	$path = '/img/table/en/';
+}
 ?>
 
 <div class="show-pk">
     <table class="table results results-with-img">
         <thead>
         <tr>
-            <th><img src="/img/table/class.png"></th>
-            <th><img src="/img/table/placeInClass.png"></th>
-            <th><img src="/img/table/number.png"></th>
-            <th><img src="/img/table/participant.png"></th>
-            <th><img src="/img/table/motorcycle.png"></th>
-            <th><img src="/img/table/attempt.png"></th>
-            <th><img src="/img/table/time.png"></th>
-            <th><img src="/img/table/fine.png"></th>
-            <th><img src="/img/table/bestTime.png"></th>
-            <th><img src="/img/table/place.png"></th>
-            <th><img src="/img/table/percent.png"></th>
+            <th><img src="<?= $path ?>class.png"></th>
+            <th><img src="<?= $path ?>placeInClass.png"></th>
+            <th><img src="<?= $path ?>number.png"></th>
+            <th><img src="<?= $path ?>participant.png"></th>
+            <th><img src="<?= $path ?>motorcycle.png"></th>
+            <th><img src="<?= $path ?>attempt.png"></th>
+            <th><img src="<?= $path ?>time.png"></th>
+            <th><img src="<?= $path ?>fine.png"></th>
+            <th><img src="<?= $path ?>bestTime.png"></th>
+            <th><img src="<?= $path ?>place.png"></th>
+            <th><img src="<?= $path ?>percent.png"></th>
         </tr>
         </thead>
         <tbody>
@@ -56,7 +60,7 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
 						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
-                        <br><?= $athlete->city->title ?></td>
+                        <br><?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
                         <td>1.</td>
@@ -153,7 +157,7 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?>
                         <br>
-						<?= $tmpParticipant->city ?></td>
+						<?= \common\helpers\TranslitHelper::translitCity($tmpParticipant->city) ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></td>
                     <td>1.</td>
                     <td></td>
@@ -179,9 +183,9 @@
 		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
-                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <b class="text-uppercase"><?= \Yii::t('app', 'Следующие участники едут вне зачёта') ?></b>
                     <div class="small text-right">
-						<?= \yii\helpers\Html::a('добавить в общий список', [
+						<?= \yii\helpers\Html::a(\Yii::t('app', 'добавить в общий список'), [
 							'stage',
 							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
                     </div>
@@ -202,7 +206,7 @@
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->number ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
 						<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
-                        <br><?= $athlete->city->title ?></td>
+                        <br><?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->motorcycle->getFullTitle() ?></td>
 					<?php if ($first) { ?>
                         <td>1.</td>
@@ -270,7 +274,7 @@
     </table>
 	<?php if ($addOut) { ?>
         <div class="small text-right">
-			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'убрать из списка тех, кто вне зачёта'), [
 				'stage',
 				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
         </div>
@@ -281,10 +285,10 @@
     <table class="table results">
         <thead>
         <tr>
-            <th>Место вне класса /<br>Место в классе</th>
-            <th>Участник</th>
-            <th>Время</th>
-            <th>Рейтинг</th>
+            <th><?= \Yii::t('app', 'Место вне класса') ?> /<br><?= \Yii::t('app', 'Место в классе') ?></th>
+            <th><?= \Yii::t('app', 'Участник') ?></th>
+            <th><?= \Yii::t('app', 'Время') ?></th>
+            <th><?= \Yii::t('app', 'Рейтинг') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -320,7 +324,7 @@
 						<?php } ?>
                         <br>
                         <small>
-							<?= $athlete->city->title ?>
+							<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                             <br>
 							<?= $participant->motorcycle->getFullTitle() ?>
 							<?php if ($participant->athleteClassId) { ?>
@@ -374,7 +378,7 @@
                 <tr class="result-needClarificationParticipant">
                     <td></td>
                     <td><?= $tmpParticipant->lastName ?> <?= $tmpParticipant->firstName ?><br>
-                        <small><?= $tmpParticipant->city ?><br>
+                        <small><?= \common\helpers\TranslitHelper::translitCity($tmpParticipant->city) ?><br>
 							<?= $tmpParticipant->motorcycleMark ?> <?= $tmpParticipant->motorcycleModel ?></small>
                     </td>
                     <td></td>
@@ -387,9 +391,9 @@
 		<?php if ($outCompetitionParticipants && !$addOut) { ?>
             <tr>
                 <td colspan="<?= $countColumns ?>" class="text-center">
-                    <b>СЛЕДУЮЩИЕ УЧАСТНИКИ ЕДУТ ВНЕ ЗАЧЁТА</b>
+                    <b class="text-uppercase"><?= \Yii::t('app', 'Следующие участники едут вне зачёта') ?></b>
                     <div class="small text-right">
-						<?= \yii\helpers\Html::a('добавить в общий список', [
+						<?= \yii\helpers\Html::a(\Yii::t('app', 'добавить в общий список'), [
 							'stage',
 							'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses, 'addOut' => true]) ?>
                     </div>
@@ -414,7 +418,7 @@
 						<?php } ?>
                         <br>
                         <small>
-							<?= $athlete->city->title ?>
+							<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                             <br>
 							<?= $outParticipant->motorcycle->getFullTitle() ?>
 							<?php if ($outParticipant->athleteClassId) { ?>
@@ -466,7 +470,7 @@
     </table>
 	<?php if ($addOut) { ?>
         <div class="small text-right">
-			<?= \yii\helpers\Html::a('убрать из списка тех, кто вне зачёта', [
+			<?= \yii\helpers\Html::a(\Yii::t('app', 'убрать из списка тех, кто вне зачёта'), [
 				'stage',
 				'id' => $stage->id, 'sortBy' => $sortBy, 'showByClasses' => $showByClasses]) ?>
         </div>

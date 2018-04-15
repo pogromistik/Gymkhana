@@ -8,7 +8,7 @@
 use yii\bootstrap\Html;
 
 ?>
-<h2>Документы</h2>
+<h2><?= \Yii::t('app', 'Документы') ?></h2>
 <div class="documents">
     <div class="list">
 		<?php foreach ($sections as $section) {
@@ -18,7 +18,7 @@ use yii\bootstrap\Html;
                 <div class="toggle">
                     <div class="background"></div>
                     <div class="title">
-						<?= $section->title ?>
+						<?= \Yii::t('app', $section->title) ?>
                     </div>
 					<?php if ($files) { ?>
                         <div class="info">

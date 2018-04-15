@@ -6,7 +6,7 @@
  */
 ?>
 
-<h3><?= '"' . $stage->title . '": ' . $athlete->getFullName() ?></h3>
+<h3><?= '"' . $stage->getTitle() . '": ' . $athlete->getFullName() ?></h3>
 
 <div class="table-responsive">
     <table class="table">
@@ -23,4 +23,4 @@
     </table>
 </div>
 
-<?= \yii\helpers\Html::a('Вернуться к этапу', ['/competitions/special-stage', 'id' => $stage->id], ['class' => 'btn btn-dark']) ?>
+<?= \yii\helpers\Html::a(\Yii::t('app', 'Вернуться к этапу'), ['/competitions/special-stage', 'id' => $stage->id], ['class' => 'btn btn-dark']) ?>

@@ -6,18 +6,19 @@ use yii\bootstrap\Html;
  * @var array         $results
  */
 ?>
-<h2>Чемпионаты России и мира
+<h2><?= \Yii::t('app', 'Чемпионаты России и мира') ?>
     <br>
     <small class="spb">
-        Информация о соревнованиях в Санкт-Петербурге здесь:
-        <a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>
-    </small></h2>
+		<?= \Yii::t('app', 'Информация о соревнованиях в Санкт-Петербурге здесь: {link}',
+			['link' => '<a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>']) ?>
+    </small>
+</h2>
 <div class="list">
     <div class="item">
         <div class="toggle">
             <div class="background"></div>
 			<?php if (!isset($results)) { ?>
-                В данном разделе пока нет соревнований.
+                <?= \Yii::t('app', 'В данном разделе пока нет соревнований.') ?>
 			<?php } else { ?>
 				<?php foreach ($results as $yearId => $yearInfo) { ?>
                     <div class="title-with-bg">
@@ -25,7 +26,7 @@ use yii\bootstrap\Html;
                     </div>
 					<?php if (empty($yearInfo['champs']) && empty($yearInfo['specialChamps'])) { ?>
                         <div class="pl-10">
-                            Не создано ни одного чемпионата.
+                            <?= \Yii::t('app', 'Не создано ни одного чемпионата.') ?>
                         </div>
 					<?php } else { ?>
                         <!-- Обычные чемпионаты -->
@@ -34,13 +35,13 @@ use yii\bootstrap\Html;
 							/** @var \common\models\Championship $champ */
 							$champ = $data['championship']; ?>
                             <div class="pl-10">
-								<?= Html::a($champ->title, ['/competitions/championship', 'id' => $champ->id]) ?>
+								<?= Html::a($champ->getTitle(), ['/competitions/championship', 'id' => $champ->id]) ?>
 								<?php
 								/** @var \common\models\Stage[] $stages */
 								$stages = $data['stages'];
 								if (!$stages) { ?>
                                     <div class="pl-10">
-                                        Для чемпионата пока не создано ни одного этапа.
+                                        <?= \Yii::t('app', 'Для чемпионата пока не создано ни одного этапа.') ?>
                                     </div>
 								<?php } else { ?>
                                     <div class="pl-10">
@@ -48,16 +49,16 @@ use yii\bootstrap\Html;
 											<?php if ($champ->showResults) { ?>
 												<?php if ($champ->status == \common\models\Championship::STATUS_PAST) { ?>
                                                     <li>
-														<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $champ->id]) ?>
+														<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $champ->id]) ?>
                                                     </li>
 												<?php } else { ?>
-                                                    <li><?= Html::a('Предварительные итоги чемпионата',
+                                                    <li><?= Html::a(\Yii::t('app', 'Предварительные итоги чемпионата'),
 															['/competitions/championship-result', 'championshipId' => $champ->id, 'showAll' => 1]) ?></li>
 												<?php } ?>
 											<?php } ?>
 											<?php foreach ($stages as $stage) { ?>
 												<?php
-												$title = $stage->title . ', ' . $stage->city->title;
+												$title = $stage->getTitle() . ', ' . \common\helpers\TranslitHelper::translitCity($stage->city->title);
 												if ($stage->dateOfThe) {
 													$title .= ' ' . $stage->dateOfTheHuman;
 												}
@@ -77,24 +78,24 @@ use yii\bootstrap\Html;
 							$champ = $data['championship']; ?>
                             <div class="pl-10">
 								<div class="green-title">
-									<?= Html::a($champ->title, ['/competitions/special-champ', 'id' => $champ->id]) ?>
+									<?= Html::a($champ->getTitle(), ['/competitions/special-champ', 'id' => $champ->id]) ?>
                                 </div>
 								<?php
 								/** @var \common\models\SpecialStage[] $stages */
 								$stages = $data['stages'];
 								if (!$stages) { ?>
                                     <div class="pl-10">
-                                        Для чемпионата пока не создано ни одного этапа.
+                                        <?= \Yii::t('app', 'Для чемпионата пока не создано ни одного этапа.') ?>
                                     </div>
 								<?php } else { ?>
                                     <div class="pl-10">
                                         <ul>
                                             <li>
-		                                        <?= Html::a('Итоги чемпионата', ['/competitions/special-champ-result', 'championshipId' => $champ->id]) ?>
+		                                        <?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/special-champ-result', 'championshipId' => $champ->id]) ?>
                                             </li>
 											<?php foreach ($stages as $stage) { ?>
 												<?php
-												$title = $stage->title;
+												$title = $stage->getTitle();
 												if ($stage->dateStart) {
 													$title .= ' ' . $stage->dateStartHuman;
 												}

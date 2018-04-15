@@ -16,9 +16,9 @@ use yii\bootstrap\Html;
 $time = time();
 $city = $stage->city;
 if ($city->timezone) {
-	$timezone = '(' . $city->title . ', UTC ' . $city->utc . ')';
+	$timezone = '(' . \common\helpers\TranslitHelper::translitCity($city->title) . ', UTC ' . $city->utc . ')';
 } else {
-	$timezone = '(Москва, UTC +3)';
+	$timezone = '(' . \Yii::t('app', 'Москва') . ', UTC +3)';
 }
 
 $championship = $stage->championship;
@@ -28,37 +28,40 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
     <div class="row stage">
         <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
             <div class="title-with-bg">
-				<?= $championship->title ?>
+				<?= $championship->getTitle() ?>
             </div>
 
             <div class="pl-10">
-                <h4><?= $stage->title ?>
-                    , <?= $stage->city->title ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
+                <h4><?= $stage->getTitle() ?>
+                    , <?= \common\helpers\TranslitHelper::translitCity($stage->city->title) ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
                     <span class="label <?= ($stage->status == Stage::STATUS_CANCEL) ?
-						'label-danger' : 'label-success' ?>"><?= Stage::$statusesTitle[$stage->status] ?></span></h4>
+						'label-danger' : 'label-success' ?>"><?= \Yii::t('app', Stage::$statusesTitle[$stage->status]) ?></span>
+                </h4>
 				<?php if ($stage->location) { ?>
-                    <p>Место проведения этапа: <?= $stage->location ?></p>
+                    <p><?= \Yii::t('app', 'Место проведения этапа: {location}', [
+							'location' => $stage->location
+						]) ?></p>
 				<?php } ?>
 				
-				<?php if ($stage->description) { ?>
-                    <p><?= $stage->description ?></p>
+				<?php if ($stage->getDescr()) { ?>
+                    <p><?= $stage->getDescr() ?></p>
 				<?php } ?>
 				<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
 					<?php if ($stage->startRegistration || $stage->endRegistration) { ?>
                         <p>
 							<?php if ($stage->startRegistration) { ?>
-                                Начало регистрации: <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+								<?= \Yii::t('app', 'Начало регистрации:') ?> <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
 							<?php } ?>
 							<?php if ($stage->endRegistration) { ?>
                                 <br>
-                                Завершение регистрации: <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
+								<?= \Yii::t('app', 'Завершение регистрации:') ?> <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
 							<?php } ?>
                         </p>
 					<?php } ?>
 				<?php } ?>
 				<?php if ($stage->documentIds) { ?>
                     <div class="regulations">
-                        Документы:
+						<?= \Yii::t('app', 'Документы') ?>:
                         <ul>
 							<?php foreach ($stage->getDocuments() as $document) { ?>
                                 <li><?= Html::a($document->title, ['/base/download', 'id' => $document->id]) ?></li>
@@ -69,45 +72,47 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				
 				<?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
                     <div>
-                        Классы награждения: <?= $internalClassesTitle ?>
+						<?= \Yii::t('app', 'Классы награждения: {classes}', [
+							'classes' => $internalClassesTitle
+						]) ?>
                     </div>
 				<?php } ?>
 				
 				<?php if ($stage->participantsLimit) { ?>
                     <div>
-                        Допустимое количество участников в зачёте: <?= $stage->participantsLimit ?>. Цифра может быть
-                        изменена организатором.
+						<?= \Yii::t('app', 'Допустимое количество участников в зачёте: {count}. Цифра может быть изменена организатором.',
+							['count' => $stage->participantsLimit]) ?>
                     </div>
 				<?php } ?>
 
                 <div class="pb-10">
-					<?= Html::a('Подробнее о чемпионате', ['/competitions/championship', 'id' => $championship->id]) ?>
+					<?= Html::a(\Yii::t('app', 'Подробнее о чемпионате'), ['/competitions/championship', 'id' => $championship->id]) ?>
                 </div>
 				
 				<?php if ($stage->referenceTime && $stage->class && $stage->classModel->title != Stage::CLASS_UNPERCENT) { ?>
                     <div>
-                        Эталонное время трассы: <?= $stage->referenceTimeHuman ?>
+						<?= \Yii::t('app', 'Эталонное время трассы: {time}', ['time' => $stage->referenceTimeHuman]) ?>
                         <br>
-                        Время, необходимое для повышения класса:
+						<?= \Yii::t('app', 'Время, необходимое для повышения класса') ?>:
                         <table class="table">
                             <tr>
                                 <td>
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
-                                            Класс
+											<?= \Yii::t('app', 'Класс') ?>
                                         </div>
                                         <div class="col-sm-6 col-xs-12">
-                                            Процент
+											<?= \Yii::t('app', 'Процент') ?>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
-                                            Минимальное время
+											<?= \Yii::t('app', 'Минимальное время') ?>
                                         </div>
                                         <div class="col-sm-6 col-xs-12">
-                                            Максимальное время
+											<?= \Yii::t('app', 'Максимальное время') ?>
                                         </div>
                                     </div>
                                 </td>
@@ -147,11 +152,11 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php if ($stage->class) { ?>
                     <div>
 						<?php $stageClassTitle = $stage->classModel->title; ?>
-                        Класс соревнования: <?= $stageClassTitle ?>
+                        <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
 						<?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
-                            <div><b>Т.к. класс соревнования <?= $stageClassTitle ?>, рейтинг спортсменов
-                                    и эталонное время трассы не
-                                    рассчитывается</b></div>
+                            <div><b><?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
+										'classTitle' => $stageClassTitle
+									]) ?></b></div>
 						<?php } ?>
                     </div>
 				<?php } ?>
@@ -159,7 +164,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
                     <div class="track-photo">
                         <div class="toggle">
-                            <div class="title">Посмотреть схему трассы</div>
+                            <div class="title"><?= \Yii::t('app', 'Посмотреть схему трассы') ?></div>
                             <div class="toggle-content">
 								<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
                             </div>
@@ -169,7 +174,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				
 				<?php if ($qualification && isset($qualification['figureTitles'])) { ?>
                     <div>
-                        <h5><?= Html::a('Нажмите, чтобы посмотреть результаты квалификации
+                        <h5><?= Html::a(\Yii::t('app', 'Нажмите, чтобы посмотреть результаты квалификации') . '
                         (' . implode($qualification['figureTitles'], ', ') . ')',
 								['/competitions/qualification', 'stageId' => $stage->id],
 								['class' => 'qualification-link']) ?>
@@ -180,46 +185,39 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php if ($stage->status == Stage::STATUS_CANCEL) { ?>
                     <div class="warning">
                         <div class="text-center">
-                            ЭТАП ОТМЕНЁН<br>
-                            Для уточнения подробностей обратитесь к организаторам соревнования.
+							<?= \Yii::t('app', 'ЭТАП ОТМЕНЁН') ?><br>
+							<?= \Yii::t('app', 'Для уточнения подробностей обратитесь к организаторам соревнования.') ?>
                         </div>
                     </div>
 				<?php } else {
 					if ($stage->registrationFromSite == 1) {
-						?>
-						<?php if ($stage->startRegistration && $time >= $stage->startRegistration
-							&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
-						) { ?>
-                            <div class="pt-30 enroll">
-								<?php if ($stage->participantsLimit > 0) { ?>
-                                    <div class="warning">ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению
-                                        организатора соревнований. В
-                                        этом случае вам придёт сообщение на почту и уведомление в личный кабинет.
-                                        Заявки,
-                                        требующие
-                                        подтверждения организатора, выделены на сайте серым цветом.
-                                    </div>
-								<?php } ?>
-								<?php if (\Yii::$app->user->isGuest) { ?>
-                                    <a href="#" class="btn btn-dark" id="enrollFormHref">Зарегистрироваться</a>
-                                    <div class="enrollForm">
-										<?= $this->render('_enroll', ['stage' => $stage]) ?>
-                                    </div>
-                                    <div class="enrollForm-success pt-10"></div>
+						?><?php if ($stage->startRegistration && $time >= $stage->startRegistration
+						&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
+					) { ?>
+                        <div class="pt-30 enroll">
+							<?php if ($stage->participantsLimit > 0) { ?>
+                                <div class="warning">
+									<?= \Yii::t('app', 'ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению организатора соревнований. В этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки, требующие подтверждения организатора, выделены на сайте серым цветом.') ?>
+                                </div>
+							<?php } ?>
+							<?php if (\Yii::$app->user->isGuest) { ?>
+                                <a href="#" class="btn btn-dark" id="enrollFormHref"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
+                                <div class="enrollForm">
+									<?= $this->render('_enroll', ['stage' => $stage]) ?>
+                                </div>
+                                <div class="enrollForm-success pt-10"></div>
+							<?php } else { ?>
+								<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
+                                    <a href="#" class="btn btn-dark" data-toggle="modal"
+                                       data-target="#enrollAuthorizedForm"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
 								<?php } else { ?>
-									<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
-                                        <a href="#" class="btn btn-dark" data-toggle="modal"
-                                           data-target="#enrollAuthorizedForm">Зарегистрироваться</a>
-									<?php } else { ?>
-                                        Чемпионат закрыт для вашего города, регистрация невозможна.
-									<?php } ?>
+                                    <?= \Yii::t('app', 'Чемпионат закрыт для вашего города, регистрация невозможна.') ?>
 								<?php } ?>
-                            </div>
-						<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
-                            <div class="warning text-center">ПРЕДВАРИТЕЛЬНАЯ РЕГИСТРАЦИЯ НА ЭТАП ЗАВЕРШЕНА</div>
-						<?php }
-					}
-					?>
+							<?php } ?>
+                        </div>
+					<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
+                        <div class="warning text-centertext-uppercase"><?= \Yii::t('app', 'Предварительная регистрация на этап завершена') ?></div>
+					<?php } }?>
 					
 					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
 						|| $time >= $stage->dateOfThe
@@ -227,7 +225,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 
                         <div class="results pt-20">
                             <div class="pb-10">
-								<?= \yii\bootstrap\Html::a('Скачать в xls', \yii\helpers\Url::to([
+								<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Скачать в xls'), \yii\helpers\Url::to([
 									'/export/export',
 									'modelId' => $stage->id,
 									'type'    => \champ\controllers\ExportController::TYPE_STAGE
@@ -237,30 +235,28 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 							<?php if ($participantsByInternalClasses) { ?>
                                 <div class="result-scheme active">
                                     <div class="change-type">
-                                        <a href="#" class="change-result-scheme">Посмотреть результаты по классам
-                                            награждений</a>
+                                        <a href="#"
+                                           class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть результаты по классам награждений') ?></a>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="show-pk">
-                                                Количество
-                                                участников: <?= $countParticipants ?>
+												<?= \Yii::t('app', 'Количество участников: {count}', ['count' => $countParticipants]) ?>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="text-right">
 												<?php if ($sortBy) { ?>
-													<?= Html::a('отсортировать по местам в классе',
+													<?= Html::a(\Yii::t('app', 'отсортировать по местам в классе'),
 														['stage', 'id' => $stage->id, 'addOut' => $addOut]) ?>
 												<?php } else { ?>
-													<?= Html::a('отсортировать по местам вне класса',
+													<?= Html::a(\Yii::t('app', 'отсортировать по местам вне класса'),
 														['stage', 'id' => $stage->id, 'sortBy' => 'place', 'addOut' => $addOut]) ?>
 												<?php } ?>
                                             </div>
                                         </div>
                                         <div class="col-sm-12 show-mobile text-right">
-                                            Количество
-                                            участников: <?= $countParticipants ?>
+											<?= \Yii::t('app', 'Количество участников: {count}', ['count' => $countParticipants]) ?>
                                         </div>
                                     </div>
 									<?= $this->render('_byJapan', [
@@ -275,32 +271,30 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                                 </div>
                                 <div class="result-scheme">
                                     <div class="change-type">
-                                        <a href="#" class="change-result-scheme">Посмотреть результаты по японской
-                                            схеме</a>
+                                        <a href="#"
+                                           class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть результаты по японской схеме') ?></a>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="show-pk">
-                                                Количество
-                                                участников: <?= $countParticipants ?>
+												<?= \Yii::t('app', 'Количество участников: {count}', ['count' => $countParticipants]) ?>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="text-right">
 												<?php if ($sortBy) { ?>
-													<?= Html::a('отсортировать по местам в классе',
+													<?= Html::a(\Yii::t('app', 'отсортировать по местам в классе'),
 														['stage', 'id'     => $stage->id, 'showByClasses' => true,
 														          'addOut' => $addOut]) ?>
 												<?php } else { ?>
-													<?= Html::a('отсортировать по местам вне класса', ['stage',
+													<?= Html::a(\Yii::t('app', 'отсортировать по местам вне класса'), ['stage',
 														'id'     => $stage->id, 'sortBy' => 'place', 'showByClasses' => true,
 														'addOut' => $addOut]) ?>
 												<?php } ?>
                                             </div>
                                         </div>
                                         <div class="col-sm-12 show-mobile text-right">
-                                            Количество
-                                            участников: <?= $countParticipants ?>
+											<?= \Yii::t('app', 'Количество участников: {count}', ['count' => $countParticipants]) ?>
                                         </div>
                                     </div>
 									<?= $this->render('_byInternalClasses', [
@@ -317,23 +311,22 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="show-pk">
-                                            Количество
-                                            участников: <?= $countParticipants ?>
+											<?= \Yii::t('app', 'Количество участников: {count}', ['count' => $countParticipants]) ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="text-right">
 											<?php if ($sortBy) { ?>
-												<?= Html::a('отсортировать по местам в классе',
+												<?= Html::a(\Yii::t('app', 'отсортировать по местам в классе'),
 													['stage', 'id' => $stage->id, 'addOut' => $addOut]) ?>
 											<?php } else { ?>
-												<?= Html::a('отсортировать по местам вне класса',
+												<?= Html::a(\Yii::t('app', 'отсортировать по местам вне класса'),
 													['stage', 'id' => $stage->id, 'sortBy' => 'place', 'addOut' => $addOut]) ?>
 											<?php } ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 show-mobile text-right">
-                                        Количество участников: <?= $countParticipants ?>
+										<?= \Yii::t('app', 'Количество участников: {count}', ['count' => $countParticipants]) ?>
                                     </div>
                                 </div>
 								<?= $this->render('_byJapan', [
@@ -361,12 +354,12 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                 <ul>
 					<?php foreach ($stages as $item) { ?>
                         <li>
-							<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
+							<?= Html::a($item->getTitle(), ['/competitions/stage', 'id' => $item->id]) ?>
                         </li>
 					<?php } ?>
 					<?php if ($championship->showResults) { ?>
                         <li>
-							<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $stage->championshipId]) ?>
+							<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $stage->championshipId]) ?>
                         </li>
 					<?php } ?>
                 </ul>

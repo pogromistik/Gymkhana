@@ -15,6 +15,8 @@ use Yii;
  * @property integer        $status
  * @property integer        $dateAdded
  * @property integer        $dateUpdated
+ * @property string         $title_en
+ * @property string         $descr_en
  *
  * @property Year           $year
  * @property SpecialStage[] $stages
@@ -48,9 +50,9 @@ class SpecialChamp extends BaseActiveRecord
 	{
 		return [
 			[['title', 'yearId', 'dateAdded', 'dateUpdated'], 'required'],
-			[['description'], 'string'],
+			[['description', 'descr_en'], 'string'],
 			[['yearId', 'status', 'dateAdded', 'dateUpdated'], 'integer'],
-			[['title'], 'string', 'max' => 255],
+			[['title', 'title_en'], 'string', 'max' => 255],
 		];
 	}
 	
@@ -67,6 +69,8 @@ class SpecialChamp extends BaseActiveRecord
 			'status'      => 'Статус',
 			'dateAdded'   => 'Дата добавления',
 			'dateUpdated' => 'Дата редактирования',
+			'title_en'    => 'Название',
+			'descr_en'    => 'Описание'
 		];
 	}
 	
@@ -124,5 +128,41 @@ class SpecialChamp extends BaseActiveRecord
 	private function cmpByRackPlaces($a, $b)
 	{
 		return ($a['points'] > $b['points']) ? -1 : 1;
+	}
+	
+	public function getTitle($language = null)
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr($language = null)
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
+		}
 	}
 }

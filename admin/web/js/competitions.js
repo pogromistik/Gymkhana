@@ -1513,6 +1513,11 @@ $(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
     });
 });
 
+$('#enInfo').click(function (e) {
+    e.preventDefault();
+    $('.en_info').slideToggle();
+});
+
 $(document).on("submit", '#firstStepMerge', function (e) {
     e.preventDefault();
     showBackDrop();

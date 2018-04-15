@@ -10,32 +10,31 @@ use kartik\widgets\DatePicker;
 /* @var $news common\models\AssocNews */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<h1>Создание новости</h1>
+<h1><?= \Yii::t('app', 'Создание новости') ?></h1>
 <div class="assoc-news-form">
     <div class="alert help-alert alert-info">
-        <b>Если вы хотите вставить слайдер из изображений:</b><br>
-        Слайдер запустится, если на странице будет код вида:<br>
+        <b><?= \Yii::t('app', 'Если вы хотите вставить слайдер из изображений:') ?></b><br>
+		<?= \Yii::t('app', 'Слайдер запустится, если на странице будет код вида:') ?><br>
         &lt;ul class="news-carousel"&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;img src="ссылка на изображение"&gt;&lt;/li&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;img src="ссылка на изображение"&gt;&lt;/li&gt;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;img src="<?= \Yii::t('app', 'ссылка на изображение') ?>"&gt;&lt;/li&gt;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;img src="<?= \Yii::t('app', 'ссылка на изображение') ?>"&gt;&lt;/li&gt;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;...<br>
         &lt;/ul&gt;<br>
-        Для этого сперва необходимо добавить ваши изображения.<br>
-        Нажмите на кнопку вставки изображения в панели (<span class="fa fa-image"></span>), вставьте ссылку на
-        изображение, нажмите "ок".<br>
-        Добавите таким образом все ваши изображения, после чего нажмите "Вид"&rarr;"Исходный код" в панели редактирования
-        текста. Найдите то место, где расположены изображения. Они выглядят так:
-        &lt;img src="ссылка на изображение"&gt;&lt;/li&gt;<br>
-        Вставьте &lt;ul class="news-carousel"&gt; перед первым изображением, &lt;/ul&gt; - после последнего, а
-        каждое изображение заключите в &lt;li&gt;&lt;/li&gt;.<br>
+		<?= \Yii::t('app', 'Для этого сперва необходимо добавить ваши изображения.') ?><br>
+		<?= \Yii::t('app', 'Нажмите на кнопку вставки изображения в панели (<span class="fa fa-image"></span>), вставьте ссылку на изображение, нажмите "ок".') ?>
+        <br>
+		<?= \Yii::t('app', 'Добавите таким образом все ваши изображения, после чего нажмите "Вид"&rarr;"Исходный код" в панели редактирования текста. Найдите то место, где расположены изображения. Они выглядят так:') ?>
+        &lt;img src="<?= \Yii::t('app', 'ссылка на изображение') ?>"&gt;&lt;/li&gt;<br>
+		<?= \Yii::t('app', 'Вставьте &lt;ul class="news-carousel"&gt; перед первым изображением, &lt;/ul&gt; - после последнего, а каждое изображение заключите в &lt;li&gt;&lt;/li&gt;.') ?>
+        <br>
     </div>
 	
 	<?php $form = ActiveForm::begin(); ?>
 	
-	<?= $form->field($news, 'title')->textInput(['placeholder' => 'заголовок новости, не обязателен']) ?>
+	<?= $form->field($news, 'title')->textInput(['placeholder' => \Yii::t('app', 'заголовок новости, не обязателен')]) ?>
 	
 	<?= $form->field($news, 'previewText')->textarea(['rows'        => 3,
-	                                                  'placeholder' => 'краткий текст, обязательное поле',
+	                                                  'placeholder' => \Yii::t('app', 'краткий текст, обязательное поле'),
 	                                                  'id'          => 'smallText']) ?>
 	<?= $form->field($news, 'fullText')->widget(TinyMce::className(), [
 		'options'       => ['rows' => 6],
@@ -52,11 +51,10 @@ use kartik\widgets\DatePicker;
 		]
 	]); ?>
 	
-	<?= $form->field($news, 'link')->textInput(['placeholder' => 'сторонняя ссылка, не обязательна']) ?>
+	<?= $form->field($news, 'link')->textInput(['placeholder' => \Yii::t('app', 'сторонняя ссылка, не обязательна')]) ?>
 
     <div class="form-group">
-		<?= Html::submitButton($news->isNewRecord ? 'Добавить' : 'Сохранить',
-			['class' => $news->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
+		<?= Html::submitButton(\Yii::t('app', 'Добавить'), ['class' => 'btn btn-my-style btn-green']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

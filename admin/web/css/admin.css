@@ -371,7 +371,7 @@ small.very {
 }
 
 .is-active-0 {
-    background: #e2e2e2  !important;
+    background: #e2e2e2 !important;
     color: #828282;
 }
 
@@ -602,6 +602,7 @@ a.red-button {
     .champ-description {
         height: auto;
     }
+
     .with-border-bottom-sm {
         border-bottom: 3px solid #00aa00;
     }
@@ -843,7 +844,7 @@ a.red-button {
 
 .closeHintBtn {
     cursor: pointer;
-    font-size: 18px!important;
+    font-size: 18px !important;
 }
 
 .closeHintBtn:hover {
@@ -877,8 +878,8 @@ a.red-button {
 }
 
 .time-blocks .points {
-    float:left;
-    font-size:55px;
+    float: left;
+    font-size: 55px;
 }
 
 .down-time .item {
@@ -894,7 +895,7 @@ a.red-button {
     background-size: cover;
 }
 
-.work-page .time-blocks{
+.work-page .time-blocks {
     position: relative;
     left: calc(50% - 124px);
 }
@@ -922,7 +923,7 @@ a.red-button {
 }
 
 th.gray-column {
-    border-bottom: 2px solid #cacaca!important;
+    border-bottom: 2px solid #cacaca !important;
 }
 
 .bold {
@@ -931,4 +932,10 @@ th.gray-column {
 
 .dark-green-text {
     color: #177500;
+}
+
+.en_info {
+    border: 1px solid #dedede;
+    padding: 10px;
+    display: none;
 }

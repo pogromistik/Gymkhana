@@ -15,9 +15,9 @@ use yii\widgets\MaskedInput;
 ?>
 <div class="tmp-figure-result-index">
 
-    <h2>Отправка своего результата по базовой фигуре</h2>
+    <h2><?= \Yii::t('app', 'Отправка своего результата по базовой фигуре') ?></h2>
 
-    <h4><?= Html::a('посмотреть историю', ['/figures/requests']) ?></h4>
+    <h4><?= Html::a(\Yii::t('app', 'посмотреть историю'), ['/figures/requests']) ?></h4>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'sendFigureResult']]); ?>
 	
@@ -33,7 +33,7 @@ use yii\widgets\MaskedInput;
 		'type'          => DatePicker::TYPE_INPUT,
 		'value'         => date('d.m.Y', time()),
 		'language'      => 'ru',
-		'options'       => ['placeholder' => 'Укажите дату'],
+		'options'       => ['placeholder' => \Yii::t('app', 'Укажите дату')],
 		'removeButton'  => false,
 		'pluginOptions' => [
 			'autoclose'      => true,
@@ -43,7 +43,7 @@ use yii\widgets\MaskedInput;
 	]) ?>
 	
 	<?= $form->field($model, 'timeForHuman', ['inputTemplate' => '<div class="input-with-description"><div class="text">
- мин:сек.мсек
+ ' . \Yii::t('app', 'мин:сек.мсек') . '
 </div>{input}</div>'])->widget(MaskedInput::classname(), [
 		'mask'    => '99:99.99',
 		'options' => [
@@ -56,14 +56,14 @@ use yii\widgets\MaskedInput;
 	<?= $form->field($model, 'fine')->textInput() ?>
 	
 	<?= $form->field($model, 'videoLink', ['inputTemplate' => '<div class="input-with-description"><div class="text">
- принимаются результаты, для которых есть видео заезда.
-</div>{input}</div>'])->textInput(['maxlength' => true]) ?>
+ ' . \Yii::t('app', 'принимаются результаты, для которых есть видео заезда')
+		. '</div>{input}</div>'])->textInput(['maxlength' => true]) ?>
 
     <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
 
     <div class="form-group">
-		<?= Html::submitButton('Отправить', ['class' => 'btn btn-dark']) ?>
+		<?= Html::submitButton(\Yii::t('app', 'Отправить'), ['class' => 'btn btn-dark']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

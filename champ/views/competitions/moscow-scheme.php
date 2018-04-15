@@ -3,7 +3,7 @@
  * @var \yii\web\View $this
  * @var array         $items
  */
-$this->title = 'Московская схема для подсчёта баллов';
+$this->title = \Yii::t('app', 'Московская схема для подсчёта баллов');
 $cssClass = 'default';
 ?>
 
@@ -13,8 +13,8 @@ $cssClass = 'default';
         <table class="table table-bordered">
             <tr class="dark-border">
                 <th></th>
-                <th>Место</th>
-                <th>Баллы</th>
+                <th><?= \Yii::t('app', 'Место') ?></th>
+                <th><?= \Yii::t('app', 'Баллы') ?></th>
             </tr>
 			<?php
 			foreach ($items as $class => $places) {
@@ -46,4 +46,4 @@ $cssClass = 'default';
         </table>
     </div>
 </div>
-* - каждый последующий участник, вошедший в данный класс получает такое же количество очков.
+<?= \Yii::t('app', '* - каждый последующий участник, вошедший в данный класс получает такое же количество очков.') ?>

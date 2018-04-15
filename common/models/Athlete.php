@@ -3,18 +3,17 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\helpers\TranslitHelper;
 use common\components\Cropper;
 use common\helpers\UserHelper;
 use Imagine\Filter\Basic\Crop;
 use sadovojav\cutter\behaviors\CutterBehavior;
 use Yii;
 use yii\base\NotSupportedException;
-use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\Url;
 use yii\web\IdentityInterface;
-use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "athletes".
@@ -40,6 +39,7 @@ use yii\web\UploadedFile;
  * @property integer       $photo
  * @property integer       $countryId
  * @property integer       $creatorUserId
+ * @property string        $language
  *
  * @property Motorcycle[]  $motorcycles
  * @property Motorcycle[]  $motorcyclesForEdit
@@ -170,7 +170,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			[['login', 'cityId', 'athleteClassId', 'regionId', 'number', 'status',
 				'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate', 'countryId',
 				'creatorUserId'], 'integer'],
-			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken'], 'string', 'max' => 255],
+			[['firstName', 'lastName', 'phone', 'email', 'passwordHash', 'passwordResetToken', 'photo', 'language'], 'string', 'max' => 255],
 			[['authKey'], 'string', 'max' => 32],
 			[['login'], 'unique'],
 			[['email'], 'unique'],
@@ -181,6 +181,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['photo', 'file', 'extensions' => 'jpg, jpeg, png', 'mimeTypes' => 'image/jpeg, image/png',
 			                  'maxFiles'   => 1, 'maxSize' => 512000,
 			                  'tooBig'     => 'Размер файла не должен превышать 500KB'],
+			['language', 'default', 'value' => TranslateMessage::LANGUAGE_RU]
 		];
 	}
 	
@@ -252,26 +253,27 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	{
 		return [
 			'id'                 => 'ID',
-			'login'              => 'Логин',
-			'firstName'          => 'Имя',
-			'lastName'           => 'Фамилия',
-			'phone'              => 'Телефон',
-			'email'              => 'Почта',
-			'cityId'             => 'Город',
-			'athleteClassId'     => 'Класс',
-			'number'             => 'Номер',
+			'login'              => \Yii::t('app', 'Логин'),
+			'firstName'          => \Yii::t('app', 'Имя'),
+			'lastName'           => \Yii::t('app', 'Фамилия'),
+			'phone'              => \Yii::t('app', 'Телефон'),
+			'email'              => \Yii::t('app', 'Email'),
+			'cityId'             => \Yii::t('app', 'Город'),
+			'athleteClassId'     => \Yii::t('app', 'Класс'),
+			'number'             => \Yii::t('app', 'Номер'),
 			'authKey'            => 'Auth Key',
 			'passwordHash'       => 'Password Hash',
 			'passwordResetToken' => 'Password Reset Token',
-			'status'             => 'Статус',
+			'status'             => \Yii::t('app', 'Статус'),
 			'createdAt'          => 'Создан',
 			'updatedAt'          => 'Обновлен',
 			'hasAccount'         => 'Аккаунт создан?',
 			'lastActivityDate'   => 'Дата последней активности',
-			'regionId'           => 'Регион',
-			'photo'              => 'Фотография',
-			'photoFile'          => 'Фотография',
-			'countryId'          => 'Страна'
+			'regionId'           => \Yii::t('app', 'Регион'),
+			'photo'              => \Yii::t('app', 'Фотография'),
+			'photoFile'          => \Yii::t('app', 'Фотография'),
+			'countryId'          => \Yii::t('app', 'Страна'),
+			'language'           => \Yii::t('app', 'Язык')
 		];
 	}
 	
@@ -286,6 +288,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				}
 			}
 			$this->creatorUserId = UserHelper::getUserId();
+			if (!$this->language) {
+				$this->language = \Yii::$app->language;
+			}
 		}
 		$this->email = trim(mb_strtolower($this->email));
 		$this->updatedAt = time();
@@ -316,7 +321,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			if ($this->hasAccount) {
 				$oldClass = AthletesClass::findOne($old);
 				$newClass = AthletesClass::findOne($new);
-				$text = 'Ваш класс изменен с ' . $oldClass->title . ' на ' . $newClass->title . '. ';
+				$text = \Yii::t('app', 'Ваш класс изменен с {oldClass} на {newClass}',
+					['oldClass' => $oldClass->title, 'newClass' => $newClass->title], $this->language);
 				if ($history && (mb_strlen($history->event, 'UTF-8') <= (252 - mb_strlen($text, 'UTF-8')))) {
 					$text .= ' (' . $history->event . ')';
 				}
@@ -337,7 +343,9 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		}
 		if (array_key_exists('hasAccount', $changedAttributes) && $this->hasAccount == 1 && $changedAttributes['hasAccount'] != 1) {
 			$link = Url::to(['/profile/help']);
-			Notice::add($this->id, 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.', $link);
+			Notice::add($this->id,
+				\Yii::t('app', 'Добро пожаловать! ЛК предоставляет много крутых вещей. Если вам требуется помощь - нажмите на ссылку ниже.',
+					[], $this->language), $link);
 		}
 		parent::afterSave($insert, $changedAttributes);
 	}
@@ -409,7 +417,11 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function getFullName()
 	{
-		return $this->lastName . ' ' . $this->firstName;
+		$fullName = $this->lastName . ' ' . $this->firstName;
+		if (\Yii::$app->language != TranslateMessage::LANGUAGE_RU) {
+			return TranslitHelper::translitFio($fullName);
+		}
+		return $fullName;
 	}
 	
 	public function createCabinet()
@@ -435,7 +447,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
 				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-				->setSubject('gymkhana-cup: регистрация на сайте')
+				->setSubject('gymkhana-cup: ' . \Yii::t('app', 'регистрация на сайте', [], $this->language))
 				->send();
 		}
 		
@@ -523,7 +535,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
 					->setTo($this->email)
 					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-					->setSubject('gymkhana-cup: восстановление пароля')
+					->setSubject('gymkhana-cup: ' . \Yii::t('app', 'восстановление пароля', [], $this->language))
 					->send();
 			}
 			

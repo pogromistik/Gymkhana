@@ -5,44 +5,54 @@
  */
 use yii\bootstrap\Html;
 
-$this->title = $championship->title;
+$this->title = $championship->getTitle();
 ?>
 
-<h3><?= $championship->title ?></h3>
+<h3><?= $championship->getTitle() ?></h3>
 
 <div class="row">
     <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
-        <b><?= $championship->year->year ?> год</b>
-        <span class="label label-info"><?= \common\models\Championship::$statusesTitle[$championship->status] ?></span>
+        <b><?= \Yii::t('app', '{year} год', ['year' => $championship->year->year]) ?></b>
+        <span class="label label-info"><?= \Yii::t('app',
+		        \common\models\Championship::$statusesTitle[$championship->status]) ?></span>
 		<?php if ($championship->regionId) { ?>
             <div class="pb-10">
-                Регион проведения: <?= $championship->region->title ?>
+				<?= \Yii::t('app', 'Регион проведения: {regionTitle}', [
+				        'regionTitle' => \common\helpers\TranslitHelper::translitRegion($championship->region->title)]) ?>
             </div>
 		<?php } ?>
 		<?php if ($championship->onlyRegions && $championship->isClosed) { ?>
             <div class="pb-10">
-                Регионы, допускающиеся к участию: <?= $championship->getRegionsFor(true) ?>
+				<?= \Yii::t('app', 'Регионы, допускающиеся к участию: {regionTitles}',
+					['regionTitles' => $championship->getRegionsFor(true)]) ?>
             </div>
 		<?php } ?>
-		<?php if ($championship->description) { ?>
+		<?php if ($championship->getDescr()) { ?>
             <div class="pt-20">
-				<?= $championship->description ?>
+				<?= $championship->getDescr() ?>
             </div>
 		<?php } ?>
         <div>
-            Количество этапов, необходимое для участия в чемпионате: <?= $championship->amountForAthlete ?>
+			<?= \Yii::t('app', 'Количество этапов, необходимое для участия в чемпионате: {count}', [
+				'count' => $championship->amountForAthlete
+			]) ?>
             <br>
-            Необходимое количество этапов в других регионах:
-			<?= $championship->requiredOtherRegions ?>
+			<?= \Yii::t('app', 'Необходимое количество этапов в других регионах: {count}', [
+				'count' => $championship->requiredOtherRegions
+			]) ?>
             <br>
-            Количество этапов, по которым ведётся подсчёт результатов:
-			<?= $championship->estimatedAmount ?>
+			<?= \Yii::t('app', 'Количество этапов, по которым ведётся подсчёт результатов: {count}', [
+				'count' => $championship->estimatedAmount
+			]) ?>
 			<?php if ($championship->requiredOtherRegions) { ?>
                 <br>
-                Для полноценного участия в чемпионате необходимо хоть раз выступить на этапе в другом городе.
+				<?= \Yii::t('app', 'Для полноценного участия в чемпионате необходимо хоть раз выступить на этапе в другом городе.') ?>
 			<?php } ?>
             <br>
-            Диапазон стартовых номеров участников: <?= $championship->minNumber ?>-<?= $championship->maxNumber ?>.
+			<?= \Yii::t('app', 'Диапазон стартовых номеров участников: {minNumber}-{maxNumber}', [
+				'minNumber' => $championship->minNumber,
+				'maxNumber' => $championship->maxNumber
+			]) ?>.
         </div>
 		<?php if ($championship->activeInternalClasses) { ?>
             <div class="pt-10 pb-10">
@@ -52,7 +62,9 @@ $this->title = $championship->title;
 					$internalClasses[] = $class->title;
 				}
 				?>
-                <b>Классы награждения:</b> <?= implode(', ', $internalClasses) ?>
+                <b><?= \Yii::t('app', 'Классы награждения: {classes}', [
+                        'classes' => implode(', ', $internalClasses)
+                    ]) ?></b>
             </div>
 		<?php } ?>
     </div>
@@ -65,12 +77,12 @@ $this->title = $championship->title;
             <ul>
 				<?php foreach ($stages as $item) { ?>
                     <li>
-						<?= Html::a($item->title, ['/competitions/stage', 'id' => $item->id]) ?>
+						<?= Html::a($item->getTitle(), ['/competitions/stage', 'id' => $item->id]) ?>
                     </li>
 				<?php } ?>
 				<?php if ($championship->showResults) { ?>
                     <li>
-						<?= Html::a('Итоги чемпионата', ['/competitions/championship-result', 'championshipId' => $championship->id]) ?>
+						<?= Html::a(\Yii::t('app', 'Итоги чемпионата'), ['/competitions/championship-result', 'championshipId' => $championship->id]) ?>
                     </li>
 				<?php } ?>
             </ul>

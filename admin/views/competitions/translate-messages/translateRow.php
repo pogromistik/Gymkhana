@@ -5,13 +5,13 @@
 
 use common\models\TranslateMessageSource;
 
-$rowspan = count(\common\models\TranslateMessage::$languagesTitle);
+$rowspan = count(\common\models\TranslateMessage::$languagesTitleForTranslate);
 ?>
 
 <tr>
-	<td rowspan="<?= count(\common\models\TranslateMessage::$languagesTitle) ?>"><?= $model->message ?></td>
+	<td rowspan="<?= count(\common\models\TranslateMessage::$languagesTitleForTranslate) ?>"><?= $model->message ?></td>
 	<?php $i = 0;
-	foreach (\common\models\TranslateMessage::$languagesTitle as $language => $title) { ?>
+	foreach (\common\models\TranslateMessage::$languagesTitleForTranslate as $language => $title) { ?>
 <?php if ($i++ > 1) { ?><tr><?php } ?>
 <?php
 $translateForm = $model->getMessageForm($language);
