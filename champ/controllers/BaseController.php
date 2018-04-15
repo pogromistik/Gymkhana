@@ -53,6 +53,5 @@ class BaseController extends Controller
 			$user->save();
 			\Yii::$app->language = $user->language;
 		}
-		\Yii::$app->language = 'en-US';
 	}
 }
