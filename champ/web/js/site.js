@@ -1,13 +1,27 @@
 function showBackDrop() {
     $('<div class="modal-backdrop fade in"></div>').appendTo(document.body);
 }
+$("[data-fancybox]").fancybox({
+    buttons : [
+        'close',
+    ]
+});
 function hideBackDrop() {
     $(".modal-backdrop").remove();
 }
 
+$(".news-carousel").owlCarousel({
+    navigation: false,
+    slideSpeed: 300,
+    paginationSpeed: 400,
+    singleItem: true,
+    autoPlay: 7000,
+    pagination: true
+});
+
 //выпадающее меню при наведении
 jQuery('ul.nav > li').hover(function () {
-    var width=screen.width;
+    var width = screen.width;
     if (width >= 625) {
         jQuery(this).find('.dropdown-menu').fadeIn(500);
     }
@@ -19,13 +33,13 @@ jQuery('ul.nav > li').hover(function () {
 $('.list .item .toggle .title').click(function () {
     var elem = $(this);
     if (elem.hasClass('active')) {
-        elem.parent().find('.background').first().hide("slide", { direction: "left" }, 500);
+        elem.parent().find('.background').first().hide("slide", {direction: "left"}, 500);
         elem.removeClass('active');
         setTimeout(function () {
             elem.css({'color': '#4b4e53'})
         }, 500);
     } else {
-        elem.parent().find('.background').first().height(elem.outerHeight()).show("slide", { direction: "left" }, 300);
+        elem.parent().find('.background').first().height(elem.outerHeight()).show("slide", {direction: "left"}, 300);
         elem.addClass('active');
         elem.css({'color': '#fff'});
     }
@@ -50,9 +64,9 @@ $(function () {
 */
 
 //активный пункт меню
-(function() {
+(function () {
     var current = '/' + window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2];
-    $( ".nav a" ).each(function() {
+    $(".nav a").each(function () {
         var elem = $(this);
         if (elem.attr('href') == current) {
             var ul = elem.closest('ul');
@@ -87,7 +101,7 @@ function initAffixCheck() {
 
 $(document).ready(function () {
     equalizer($('.athletes .item .card'));
-    $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
         $(this).parent().siblings().removeClass('open');
@@ -99,7 +113,7 @@ $(document).ready(function () {
 $('.toggle .title').click(function () {
     var elem = $(this);
     if (elem.parent().find('.toggle-content').find('img').length > 0) {
-        elem.parent().find('.toggle-content').find('img').css({'max-height': $(window).height()-65});
+        elem.parent().find('.toggle-content').find('img').css({'max-height': $(window).height() - 65});
     }
     elem.parent().find('.toggle-content').slideToggle();
 });
@@ -132,7 +146,7 @@ $(document).on("submit", '.registrationAthlete', function (e) {
         type: "POST",
         data: form.serialize(),
         success: function (result) {
-            $('html, body').animate({ scrollTop: $('.modal-footer').offset().top }, 500);
+            $('html, body').animate({scrollTop: $('.modal-footer').offset().top}, 500);
             if (result == true) {
                 form.find('.alert-success').text('Ваша заявка успешно отправлена. Пароль для доступа в личный кабинет будет ' +
                     'отправлен на указанную почту в течение 24 часов (если письма нет - проверьте папку спам). Если этого не произойдёт - пожалуйста, сообщите нам.').show();
@@ -160,7 +174,7 @@ $('.appendMotorcycle').click(function (e) {
     $.get('/site/append-motorcycle', {
         i: i
     }).done(function (data) {
-        elem.data('i', i+1);
+        elem.data('i', i + 1);
         $('.motorcycles').append(data);
     }).fail(function (error) {
         alert(error.responseText);
@@ -198,16 +212,23 @@ $(document).on("submit", '#resetPasswordForm', function (e) {
     });
 });
 
-function countDown(second,endMinute,endHour,endDay,endMonth) {
+$(".href-menu").on("click", "a", function (event) {
+    event.preventDefault();
+    var id = $(this).attr('href'),
+        top = $(id).offset().top;
+    $('body,html').animate({scrollTop: top}, 500);
+});
+
+function countDown(second, endMinute, endHour, endDay, endMonth) {
     var now = new Date();
     second = (arguments.length == 1) ? second + now.getSeconds() : second;
-    endHour = typeof(endHour) != 'undefined' ?  endHour : now.getHours();
+    endHour = typeof(endHour) != 'undefined' ? endHour : now.getHours();
     endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();
-    endDay = typeof(endDay) != 'undefined' ?  endDay : now.getDate();
+    endDay = typeof(endDay) != 'undefined' ? endDay : now.getDate();
     endMonth = typeof(endMonth) != 'undefined' ? endMonth : now.getMonth();
 //добавляем секунду к конечной дате (таймер показывает время уже спустя 1с.)
-    var endDate = new Date(now.getFullYear(),endMonth,endDay,endHour,endMinute,second+1);
-    var interval = setInterval(function() { //запускаем таймер с интервалом 1 секунду
+    var endDate = new Date(now.getFullYear(), endMonth, endDay, endHour, endMinute, second + 1);
+    var interval = setInterval(function () { //запускаем таймер с интервалом 1 секунду
         var time = endDate.getTime() - now.getTime();
         if (time < 0) {                      //если конечная дата меньше текущей
             var seconds = 0;

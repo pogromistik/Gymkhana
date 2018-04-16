@@ -20,14 +20,24 @@ use yii\bootstrap\Html;
  * @property integer $secure
  * @property integer $canEditRegionId
  * @property integer $creatorUserId
+ * @property integer $offerUserId
+ * @property integer $status
+ *
+ * @property Athlete $offerUser
  */
 class AssocNews extends \yii\db\ActiveRecord
 {
 	const TEMPLATE_CHAMPIONSHIP = 1;
 	const TEMPLATE_STAGE = 2;
+	const TEMPLATE_SPECIAL_STAGE = 3;
+	
+	const STATUS_ACTIVE = 1;
+	const STATUS_MODERATION = 2;
 	
 	public $datePublishHuman;
 	public $autoCreate = false;
+	
+	public $isOffer = false;
 	
 	/**
 	 * @inheritdoc
@@ -45,9 +55,10 @@ class AssocNews extends \yii\db\ActiveRecord
 		return [
 			[['fullText', 'previewText'], 'string'],
 			[['dateAdded', 'dateUpdated', 'previewText'], 'required'],
-			[['dateAdded', 'dateUpdated', 'datePublish', 'secure', 'canEditRegionId', 'creatorUserId'], 'integer'],
+			[['dateAdded', 'dateUpdated', 'datePublish', 'secure', 'canEditRegionId', 'creatorUserId', 'offerUserId', 'status'], 'integer'],
 			[['previewText', 'link', 'title', 'datePublishHuman'], 'string', 'max' => 255],
-			[['secure'], 'default', 'value' => 0]
+			[['secure'], 'default', 'value' => 0],
+			[['status'], 'default', 'value' => 1]
 		];
 	}
 	
@@ -77,10 +88,16 @@ class AssocNews extends \yii\db\ActiveRecord
 			if (!$this->datePublish) {
 				$this->datePublish = time();
 			}
-			$this->creatorUserId = UserHelper::getUserId();
-			if (!$this->autoCreate && $this->creatorUserId != UserHelper::CONSOLE_LOG_USER_ID) {
-				$user = User::findOne($this->creatorUserId);
-				$this->canEditRegionId = $user->regionId;
+			if ($this->isOffer) {
+				if (!\Yii::$app->user->isGuest) {
+					$this->offerUserId = \Yii::$app->user->id;
+				}
+			} else {
+				$this->creatorUserId = UserHelper::getUserId();
+				if (!$this->autoCreate && $this->creatorUserId != UserHelper::CONSOLE_LOG_USER_ID) {
+					$user = User::findOne($this->creatorUserId);
+					$this->canEditRegionId = $user->regionId;
+				}
 			}
 		}
 		$this->dateUpdated = time();
@@ -168,9 +185,29 @@ class AssocNews extends \yii\db\ActiveRecord
 				$news->previewText .= '.';
 				$news->link = \Yii::$app->urlManager->createUrl(['/competitions/stage', 'id' => $stage->id]);
 				break;
+			case self::TEMPLATE_SPECIAL_STAGE:
+				/** @var SpecialStage $stage */
+				$stage = $model;
+				$news->previewText = 'Анонсирован этап "' . $stage->title . '" соревнования "'
+					. $stage->championship->title . '".';
+				if ($stage->dateStart) {
+					$news->previewText .= '<br>Начало приёма результатов: ' . $stage->dateStartHuman;
+				}
+				if ($stage->dateEnd) {
+					$news->previewText .= '<br>Завершение приёма результатов: ' . $stage->dateEndHuman;
+				}
+				if ($stage->dateResult) {
+					$news->previewText .= '<br>Подведение итогов: ' . $stage->dateResultHuman;
+				}
+				break;
 		}
 		$news->save();
 		
 		return true;
+	}
+	
+	public function getOfferUser()
+	{
+		return $this->hasOne(Athlete::className(), ['id' => 'offerUserId']);
 	}
 }

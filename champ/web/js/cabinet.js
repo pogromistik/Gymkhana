@@ -171,3 +171,70 @@ $('.deletePhoto').click(function (e) {
         alert(error.responseText);
     });
 });
+
+$('#subscriptionNews').click(function () {
+    $('.subscription-info').slideToggle();
+});
+
+$(document).on("submit", '#newslettersForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    showBackDrop();
+
+    $.ajax({
+        url: "/profile/subscriptions",
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                alert(result);
+            }
+        },
+        error: function (error) {
+            alert(error.responseText);
+            hideBackDrop();
+        }
+    });
+});
+$('.sendResultForStage').click(function (e) {
+    e.preventDefault();
+    $('.special-stage-form').slideToggle();
+    $('body').animate({scrollTop: $('.special-stage-form').offset().top}, 500);
+    $(this).hide();
+});
+
+$(document).on("submit", '#specialStageForAuth', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    RegistrationForSpecialStage(form, '/competitions/auth-special-stage-request')
+});
+
+$(document).on("submit", '#specialStageForGuest', function (e) {
+    e.preventDefault();
+    var form = $(this);
+
+    RegistrationForSpecialStage(form, '/competitions/guest-special-stage-request')
+});
+
+function RegistrationForSpecialStage(form, action) {
+    $('.alert').hide();
+    showBackDrop();
+
+    $.ajax({
+        url: action,
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result['error']) {
+                $('.alert-danger').text(result['error']).show();
+                hideBackDrop();
+            } else {
+                $('.alert-success').html(result['data']).show();
+                hideBackDrop();
+                form.trigger('reset');
+            }
+        }
+    });
+}

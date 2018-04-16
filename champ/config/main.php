@@ -49,6 +49,9 @@ return [
 				'user/login'=>'site/login',
 			]
 		],
+		'assetManager' => [
+			'appendTimestamp' => true,
+		],
 		'authManager'  => [
 			'class' => 'yii\rbac\DbManager',
 		],

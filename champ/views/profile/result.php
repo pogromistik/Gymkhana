@@ -17,10 +17,10 @@ $colspan = count($athletes) + 1;
 ?>
 
 <?php if ($athletes) { ?>
-	<?php if ($year) { ?><h3><?= $year ?> год</h3><?php } ?>
+	<?php if ($year) { ?><h3><?= \Yii::t('app', '{year} год', ['year' => $year]) ?></h3><?php } ?>
 
     <div class="compare-results">
-        <h3>Общая информация</h3>
+        <h3><?= \Yii::t('app', 'Общая информация') ?></h3>
         <table class="table w-<?= $colspan ?>">
             <tr>
                 <td><?= \yii\bootstrap\Html::a($me->getFullName(), ['/athletes/view', 'id' => $me->id], ['target' => '_blank']) ?>
@@ -58,9 +58,9 @@ $colspan = count($athletes) + 1;
             </tr>
         </table>
 
-        <h3>Фигуры</h3>
+        <h3><?= \Yii::t('app', 'Фигуры') ?></h3>
 		<?php if (!$figuresStats) { ?>
-            <div class="text">Нет фигур, которые пробовали проехать все спортсмены</div>
+            <div class="text"><?= \Yii::t('app', 'Нет фигур, которые пробовали проехать все спортсмены') ?></div>
 		<?php } else { ?>
             <table class="table w-<?= $colspan ?>">
                 <tr>
@@ -117,9 +117,9 @@ $colspan = count($athletes) + 1;
             </table>
 		<?php } ?>
 
-        <h3>Этапы</h3>
+        <h3><?= \Yii::t('app', 'Этапы') ?></h3>
 		<?php if (!$stagesStats) { ?>
-            <div class="text">Нет этапов, в которых приняли участие оба спортсмена</div>
+            <div class="text"><?= \Yii::t('app', 'Нет этапов, в которых приняли участие оба спортсмена') ?></div>
 		<?php } else { ?>
             <table class="table w-<?= $colspan ?>">
                 <tr>
@@ -136,7 +136,7 @@ $colspan = count($athletes) + 1;
 					?>
                     <tr class="figure-title">
                         <td colspan="<?= $colspan ?>"><?= $data['stage']->championship->title ?>,
-                            этап: <?= $data['stage']->title ?></td>
+                            <?= \Yii::t('app', 'этап') ?>: <?= $data['stage']->title ?></td>
                     </tr>
                     <tr>
                         <td>

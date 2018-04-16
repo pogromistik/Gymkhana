@@ -22,6 +22,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $status
  * @property integer $dateAdded
  * @property integer $dateUpdated
+ * @property string  $language
  *
  * @property Country $country
  * @property City    $cityModel
@@ -68,7 +69,7 @@ class TmpAthlete extends BaseActiveRecord
 		return [
 			[['athleteId', 'countryId', 'cityId', 'status', 'dateAdded', 'dateUpdated'], 'integer'],
 			[['firstName', 'lastName', 'email', 'countryId', 'motorcycles', 'dateAdded', 'dateUpdated'], 'required'],
-			[['motorcycles'], 'string'],
+			[['motorcycles', 'language'], 'string'],
 			[['firstName', 'lastName', 'phone', 'email', 'city'], 'string', 'max' => 255],
 			['email', 'email'],
 		];
@@ -81,18 +82,19 @@ class TmpAthlete extends BaseActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'athleteId'   => 'Спортсмен',
-			'firstName'   => 'Имя',
-			'lastName'    => 'Фамилия',
-			'phone'       => 'Телефон',
-			'email'       => 'Email',
-			'countryId'   => 'Страна',
-			'cityId'      => 'Город',
-			'city'        => 'Город',
-			'motorcycles' => 'Мотоциклы',
-			'status'      => 'Статус',
+			'athleteId'   => \Yii::t('app', 'Спортсмен'),
+			'firstName'   => \Yii::t('app', 'Имя'),
+			'lastName'    => \Yii::t('app', 'Фамилия'),
+			'phone'       => \Yii::t('app', 'Телефон'),
+			'email'       => \Yii::t('app', 'Email'),
+			'countryId'   => \Yii::t('app', 'Страна'),
+			'cityId'      => \Yii::t('app', 'Город'),
+			'city'        => \Yii::t('app', 'Город'),
+			'motorcycles' => \Yii::t('app', 'Мотоциклы'),
+			'status'      => \Yii::t('app', 'Статус'),
 			'dateAdded'   => 'Дата добавления',
 			'dateUpdated' => 'Дата редактирования',
+			'language'    => 'Язык'
 		];
 	}
 	
@@ -104,6 +106,14 @@ class TmpAthlete extends BaseActiveRecord
 				$this->city = $this->cityModel->title;
 			} elseif ($this->city && $this->cityId) {
 				$this->cityId = null;
+			}
+			$hostName = \Yii::$app->request->getHostName();
+			switch ($hostName) {
+				case 'gymkhana-cup.com':
+					$this->language = TranslateMessage::LANGUAGE_EN;
+					break;
+				default:
+					$this->language = TranslateMessage::LANGUAGE_RU;
 			}
 		}
 		$this->firstName = HelpModel::mb_ucfirst(trim($this->firstName));

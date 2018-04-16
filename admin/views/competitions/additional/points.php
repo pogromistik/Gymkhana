@@ -12,7 +12,7 @@ $this->title = 'Баллы для подсчёта итогов чемпиона
 <div class="point-index">
 
     <p>
-		<?= Html::a('Добавить балл', ['create-points'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить балл', ['create-points'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -24,7 +24,7 @@ $this->title = 'Баллы для подсчёта итогов чемпиона
 				'format' => 'raw',
 				'value'  => function (\common\models\Point $item) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update-points', 'id' => $item->id], [
-						'class' => 'btn btn-primary',
+						'class' => 'btn btn-my-style btn-blue',
 						'title' => 'Редактировать'
 					]);
 				}
@@ -34,7 +34,7 @@ $this->title = 'Баллы для подсчёта итогов чемпиона
 				'format' => 'raw',
 				'value'  => function (\common\models\Point $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['delete-points', 'id' => $item->id], [
-						'class' => 'btn btn-danger',
+						'class' => 'btn btn-my-style btn-red',
 						'title' => 'Удалить',
 						'data'  => [
 							'confirm' => 'Уверены, что хотите полностью удалить эту запись?'

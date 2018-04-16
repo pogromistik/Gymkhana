@@ -25,7 +25,7 @@ $championship = $stage->championship;
 				<?= $form->field($participant, 'stageId')->hiddenInput()->label(false)->error(false) ?>
 				<?= $form->field($participant, 'athleteId')->hiddenInput()->label(false)->error(false) ?>
 				<?= $form->field($participant, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
-                <h4 class="text-center">Выберите мотоцикл</h4>
+                <h4 class="text-center"><?= \Yii::t('app', 'Выберите мотоцикл') ?></h4>
 				<?= $form->field($participant, 'motorcycleId')->dropDownList(
 					ArrayHelper::map($motorcycles, 'id', function (\common\models\Motorcycle $motorcycle) {
 						return $motorcycle->mark . ' ' . $motorcycle->model;
@@ -35,23 +35,25 @@ $championship = $stage->championship;
 				) { ?>
                     <div class="help-for-athlete">
                         <small>
-                            Выберите значение от <?= $championship->minNumber ?> до <?= $championship->maxNumber ?>
-                            или оставьте поле пустым
+	                        <?= \Yii::t('app', 'Выберите значение от {minNumber} до {maxNumber} или оставьте поле пустым', [
+		                        'minNumber' => $championship->minNumber,
+		                        'maxNumber' => $championship->maxNumber
+	                        ]) ?>
                         </small>
                     </div>
-					<?= $form->field($participant, 'number')->textInput(['placeholder' => 'номер участника'])->label(false) ?>
-                    <a href="#" class="freeNumbersList" data-id = "<?= $stage->id ?>">Посмотреть список свободных номеров</a>
+					<?= $form->field($participant, 'number')->textInput(['placeholder' => \Yii::t('app', 'номер участника')])->label(false) ?>
+                    <a href="#" class="freeNumbersList" data-id = "<?= $stage->id ?>"><?= \Yii::t('app', 'Посмотреть список свободных номеров') ?></a>
 				<?php } ?>
             </div>
             <div class="modal-footer">
                 <div class="form-text"></div>
                 <div class="button">
-					<?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-lg btn-block btn-dark']) ?>
+					<?= Html::submitButton(\Yii::t('app', 'Зарегистрироваться'), ['class' => 'btn btn-lg btn-block btn-dark']) ?>
                 </div>
                 
                 <div class="free-numbers text-left">
                     <hr>
-                    <h4 class="text-center">Свободные номера</h4>
+                    <h4 class="text-center"><?= \Yii::t('app', 'Свободные номера') ?></h4>
                     <div class="list"></div>
                 </div>
             </div>

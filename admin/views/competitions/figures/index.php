@@ -12,7 +12,7 @@ $this->title = 'Фигуры';
 <div class="figure-index">
 
     <p>
-		<?= Html::a('Добавить фигуру', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить фигуру', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -36,7 +36,7 @@ $this->title = 'Фигуры';
 					return Html::a('логи', ['/competitions/developer/logs',
 						'modelClass' => \common\models\Figure::class,
 						'modelId'    => $figure->id
-					], ['class' => 'btn btn-default']);
+					], ['class' => 'dev-logs dev-logs-btn']);
 				}
 			]
 		],

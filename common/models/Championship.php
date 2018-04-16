@@ -31,6 +31,8 @@ use yii\db\Query;
  * @property integer         $useCheScheme
  * @property integer         $showResults
  * @property integer         $useMoscowPoints
+ * @property string          $title_en
+ * @property string          $descr_en
  *
  * @property Year            $year
  * @property RegionalGroup   $regionalGroup
@@ -102,7 +104,7 @@ class Championship extends BaseActiveRecord
 	public function rules()
 	{
 		return [
-			[['description'], 'string'],
+			[['description', 'descr_en'], 'string'],
 			[['yearId', 'groupId', 'dateAdded', 'dateUpdated', 'minNumber', 'maxNumber',
 				'amountForAthlete', 'requiredOtherRegions', 'estimatedAmount', 'showResults'], 'required'],
 			[[
@@ -114,7 +116,7 @@ class Championship extends BaseActiveRecord
 			['regionGroupId', 'required', 'when' => function ($model) {
 				return $model->groupId == self::GROUPS_REGIONAL;
 			}],
-			[['title'], 'string', 'max' => 255],
+			[['title', 'title_en'], 'string', 'max' => 255],
 			[['minNumber', 'maxNumber'], 'integer', 'min' => 0],
 			[['amountForAthlete', 'estimatedAmount'], 'integer', 'min' => 1],
 			[['minNumber', 'amountForAthlete', 'estimatedAmount'], 'default', 'value' => 1],
@@ -162,7 +164,9 @@ class Championship extends BaseActiveRecord
 			'onlyRegions'          => 'Регионы, которые могут принимать участие',
 			'useCheScheme'         => 'Использовать Челябинскую схему для награждения',
 			'showResults'          => 'Показывать итоги чемпионата',
-			'useMoscowPoints'      => 'Считать баллы по Московской схеме'
+			'useMoscowPoints'      => 'Считать баллы по Московской схеме',
+			'title_en'             => 'Название',
+			'descr_en'             => 'Описание'
 		];
 	}
 	
@@ -321,7 +325,8 @@ class Championship extends BaseActiveRecord
 				//если участник уже принимал участие в этапе - он может зарегистрироваться под этим же номером
 				$prevStages = Participant::find()->where(['championshipId' => $championship->id])
 					->andWhere(['athleteId' => $athleteId])
-					->andWhere(['status' => Participant::STATUS_ACTIVE])
+					->andWhere(['not', ['status' => [Participant::STATUS_DISQUALIFICATION, Participant::STATUS_CANCEL_ATHLETE,
+						Participant::STATUS_CANCEL_ADMINISTRATION]]])
 					->one();
 				if ($prevStages) {
 					$addOldNumber = $prevStages->number;
@@ -333,7 +338,9 @@ class Championship extends BaseActiveRecord
 		$busyNumbers = array_merge($busyNumbers, $tmpBusyNumbers);
 		$oldParticipantsNumbers = Participant::find()->select('number')
 			->where(['not', ['stageId' => $stage->id]])
-			->andWhere(['championshipId' => $stage->championshipId]);
+			->andWhere(['championshipId' => $stage->championshipId])
+			->andWhere(['not', ['status' => [Participant::STATUS_DISQUALIFICATION, Participant::STATUS_CANCEL_ATHLETE,
+				Participant::STATUS_CANCEL_ADMINISTRATION]]]);
 		if ($athleteId) {
 			$oldParticipantsNumbers = $oldParticipantsNumbers->andWhere(['!=', 'athleteId', $athleteId]);
 		}
@@ -374,13 +381,15 @@ class Championship extends BaseActiveRecord
 				}
 				if (!isset($results[$participant->athleteId]['stages'][$stage->id])) {
 					$results[$participant->athleteId]['stages'][$stage->id] = $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
-					$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
-					$results[$participant->athleteId]['countStages'] += 1;
-					if (!$results[$participant->athleteId]['cityId']) {
-						$results[$participant->athleteId]['cityId'] = $stage->cityId;
-					} else {
-						if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
-							$results[$participant->athleteId]['severalRegions'] = true;
+					if (!$stage->outOfCompetitions) {
+						$results[$participant->athleteId]['points'] += $this->useMoscowPoints ? $participant->pointsByMoscow : $participant->points;
+						$results[$participant->athleteId]['countStages'] += 1;
+						if (!$results[$participant->athleteId]['cityId']) {
+							$results[$participant->athleteId]['cityId'] = $stage->cityId;
+						} else {
+							if ($stage->cityId != $results[$participant->athleteId]['cityId']) {
+								$results[$participant->athleteId]['severalRegions'] = true;
+							}
 						}
 					}
 				}
@@ -487,5 +496,41 @@ class Championship extends BaseActiveRecord
 		}
 		
 		return in_array($regionId, $regions);
+	}
+	
+	public function getTitle($language = null)
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr($language = null)
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
+		}
 	}
 }

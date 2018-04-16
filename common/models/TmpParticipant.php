@@ -25,6 +25,9 @@ use Yii;
  * @property integer      $athleteId
  * @property integer      $countryId
  * @property string       $email
+ * @property integer      $cbm
+ * @property double       $power
+ * @property integer      $isCruiser
  *
  * @property City         $cityModel
  * @property Athlete      $athlete
@@ -54,9 +57,12 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		return [
 			[['championshipId', 'stageId', 'firstName', 'lastName', 'motorcycleMark', 'motorcycleModel', 'countryId',
-				'dateAdded', 'dateUpdated', 'email'], 'required'],
-			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded', 'dateUpdated', 'status', 'athleteId', 'countryId'], 'integer'],
+				'dateAdded', 'dateUpdated', 'email', 'cbm', 'power'], 'required'],
+			[['championshipId', 'stageId', 'cityId', 'number', 'dateAdded',
+				'dateUpdated', 'status', 'athleteId', 'countryId', 'isCruiser', 'cbm'], 'integer'],
 			[['firstName', 'lastName', 'city', 'motorcycleMark', 'motorcycleModel', 'phone', 'email'], 'string', 'max' => 255],
+			[['power'], 'number'],
+			[['isCruiser'], 'default', 'value' => 0]
 		];
 	}
 	
@@ -67,22 +73,25 @@ class TmpParticipant extends BaseActiveRecord
 	{
 		return [
 			'id'              => 'ID',
-			'championshipId'  => 'Чемпионат',
-			'stageId'         => 'Этап',
-			'firstName'       => 'Имя',
-			'lastName'        => 'Фамилия',
-			'city'            => 'Город',
-			'cityId'          => 'Город',
-			'motorcycleMark'  => 'Марка мотоцикла',
-			'motorcycleModel' => 'Модель мотоцикла',
-			'phone'           => 'Телефон',
-			'number'          => 'Номер участника',
+			'championshipId'  => \Yii::t('app', 'Чемпионат'),
+			'stageId'         => \Yii::t('app', 'Этап'),
+			'firstName'       => \Yii::t('app', 'Имя'),
+			'lastName'        => \Yii::t('app', 'Фамилия'),
+			'city'            => \Yii::t('app', 'Город'),
+			'cityId'          => \Yii::t('app', 'Город'),
+			'motorcycleMark'  => \Yii::t('app', 'Марка мотоцикла'),
+			'motorcycleModel' => \Yii::t('app', 'Модель мотоцикла'),
+			'phone'           => \Yii::t('app', 'Телефон'),
+			'number'          => \Yii::t('app', 'Номер участника'),
 			'dateAdded'       => 'Дата создания',
 			'dateUpdated'     => 'Дата редактирования',
-			'status'          => 'Статус',
-			'athleteId'       => 'Спортсмен',
-			'countryId'       => 'Страна',
-			'email'           => 'Email'
+			'status'          => \Yii::t('app', 'Статус'),
+			'athleteId'       => \Yii::t('app', 'Спортсмен'),
+			'countryId'       => \Yii::t('app', 'Страна'),
+			'email'           => 'Email',
+			'cbm'             => \Yii::t('app', 'Кубатура'),
+			'power'           => \Yii::t('app', 'Мощность'),
+			'isCruiser'       => 'Круизёр?'
 		];
 	}
 	
@@ -104,6 +113,12 @@ class TmpParticipant extends BaseActiveRecord
 		$this->lastName = HelpModel::mb_ucfirst(trim($this->lastName));
 		if ($this->cityId) {
 			$this->city = $this->cityModel->title;
+		}
+		if (!$this->isNewRecord) {
+			$this->isCruiser = (int)$this->isCruiser;
+			if ($this->isCruiser !== 1) {
+				$this->isCruiser = 0;
+			}
 		}
 		
 		return parent::beforeValidate();

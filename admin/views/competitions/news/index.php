@@ -11,7 +11,7 @@ $this->title = 'Новости';
 ?>
 <div class="assoc-news-index">
     <p>
-		<?= Html::a('Добавить новость', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить новость', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -39,7 +39,7 @@ $this->title = 'Новости';
 				'format' => 'raw',
 				'value'  => function (\common\models\AssocNews $item) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $item->id], [
-						'class' => 'btn btn-primary'
+						'class' => 'btn btn-my-style btn-blue'
 					]);
 				}
 			],
@@ -47,7 +47,7 @@ $this->title = 'Новости';
 				'format' => 'raw',
 				'value'  => function (\common\models\AssocNews $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['delete', 'id' => $item->id], [
-						'class' => 'btn btn-danger',
+						'class' => 'btn btn-my-style btn-red',
 						'data'  => [
 							'confirm' => 'Уверены, что хотите удалить эту новость?',
 							'method'  => 'post',

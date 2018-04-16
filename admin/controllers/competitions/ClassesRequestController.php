@@ -87,7 +87,8 @@ class ClassesRequestController extends BaseController
 				    $request->status = ClassesRequest::STATUS_APPROVE;
 				    $request->save();
 				    
-				    $text = 'Ваш запрос на изменение класса подтверждён.';
+				    $text = \Yii::t('app', 'Ваш запрос на изменение класса подтверждён.',
+					    [], $request->athlete->language);
 				
 				    Notice::add($request->athleteId, $text);
 				    $transaction->commit();
@@ -97,8 +98,9 @@ class ClassesRequestController extends BaseController
 			    	$request->status = ClassesRequest::STATUS_CANCEL;
 			    	$request->save();
 				    $link = Url::to(['/profile/history-classes-request']);
-				    $text = 'Ваш запрос на изменение класса отклонён. Чтобы узнать подробности, перейдите по ссылке.';
-				
+				    $text = \Yii::t('app', 'Ваш запрос на изменение класса отклонён. Чтобы узнать подробности, перейдите по ссылке.',
+					    [], $request->athlete->language);
+				    	
 				    Notice::add($request->athleteId, $text, $link);
 			    	break;
 		    }

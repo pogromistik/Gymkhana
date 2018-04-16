@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-	<?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-default']) ?>
-	<?= Html::a('Добавить регион', ['create-region'], ['class' => 'btn btn-default']) ?>
+	<?= Html::a('Добавить страну', ['create-country'], ['class' => 'btn btn-my-style btn-default']) ?>
+	<?= Html::a('Добавить регион', ['create-region'], ['class' => 'btn btn-my-style btn-default']) ?>
 </p>
 
 <h3><?= $city->isNewRecord ? 'Добавить город' : 'Редактировать: ' . $city->title ?></h3>
@@ -71,7 +71,8 @@ if ($city->countryId) {
     <div class="alert alert-danger"><?= $error ?></div>
 <?php } ?>
 
-<?= Html::submitButton($city->isNewRecord ? 'Добавить город' : 'Сохранить', ['class' => 'btn btn-primary']) ?>
+<?= Html::submitButton($city->isNewRecord ? 'Добавить город' : 'Сохранить',
+    ['class' => $city->isNewRecord ? 'btn btn-my-style btn-green' : 'btn btn-my-style btn-blue']) ?>
 <?php ActiveForm::end() ?>
 
 

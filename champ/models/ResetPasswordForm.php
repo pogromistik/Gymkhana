@@ -40,9 +40,9 @@ class ResetPasswordForm extends Model
 	public function rules()
 	{
 		return [
-			['password', 'required', 'message' => 'Поле не может быть пустым'],
-			['password', 'string', 'min' => 6, 'message' => 'Пароль должен состоять минимум из 6 символов'],
-			['passwordRepeat', 'compare', 'compareAttribute'=>'password', 'message' => 'Пароли не совпадают'],
+			['password', 'required', 'message' => \Yii::t('app', 'Поле не может быть пустым')],
+			['password', 'string', 'min' => 6, 'message' => \Yii::t('app', 'Пароль должен состоять минимум из 6 символов')],
+			['passwordRepeat', 'compare', 'compareAttribute'=>'password', 'message' => \Yii::t('app', 'Пароли не совпадают')],
 		];
 	}
 	/**

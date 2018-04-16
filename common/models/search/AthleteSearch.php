@@ -13,6 +13,8 @@ use yii\db\ActiveRecord;
  */
 class AthleteSearch extends Athlete
 {
+	public $firstOrLastName;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -20,7 +22,8 @@ class AthleteSearch extends Athlete
 	{
 		return [
 			[['id', 'login', 'number', 'status', 'createdAt', 'updatedAt', 'hasAccount', 'lastActivityDate'], 'integer'],
-			[['firstName', 'cityId', 'lastName', 'phone', 'email', 'authKey', 'passwordHash', 'passwordResetToken', 'regionId', 'athleteClassId', 'countryId'], 'safe'],
+			[['firstName', 'cityId', 'lastName', 'phone', 'email', 'authKey', 'passwordHash',
+				'passwordResetToken', 'regionId', 'athleteClassId', 'countryId', 'firstOrLastName'], 'safe'],
 		];
 	}
 	
@@ -77,6 +80,20 @@ class AthleteSearch extends Athlete
 			'regionId'         => $this->regionId,
 			'countryId'        => $this->countryId
 		]);
+		
+		if ($this->firstOrLastName) {
+			$array = explode(' ', $this->firstOrLastName);
+			$this->lastName = $array[0];
+			if (isset($array[1])) {
+				$this->firstName = $array[1];
+			} else {
+				$query->andFilterWhere(['or',
+					['like', 'firstName', $this->firstOrLastName],
+					['like', 'lastName', $this->firstOrLastName]
+				]);
+			}
+		}
+		
 		$query->andFilterWhere(['like', 'firstName', $this->firstName])
 			->andFilterWhere(['like', 'lastName', $this->lastName])
 			->andFilterWhere(['like', 'phone', $this->phone])

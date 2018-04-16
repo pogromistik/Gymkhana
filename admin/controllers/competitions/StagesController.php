@@ -2,25 +2,20 @@
 
 namespace admin\controllers\competitions;
 
-use admin\controllers\BaseController;
+use admin\components\BaseStageController;
 use admin\models\FigureTimeForStage;
-use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
 use common\models\ClassHistory;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\HelpModel;
-use common\models\MoscowPoint;
 use common\models\Participant;
 use common\models\Time;
-use common\models\Year;
 use dosamigos\editable\EditableAction;
 use Yii;
 use common\models\Stage;
-use common\models\search\StageSearch;
 use yii\base\UserException;
-use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -28,11 +23,11 @@ use yii\web\Response;
 /**
  * StagesController implements the CRUD actions for Stage model.
  */
-class StagesController extends BaseController
+class StagesController extends BaseStageController
 {
 	public function actionAddVideoLink($stageId)
 	{
-		$this->findModel($stageId);
+		$this->findStage($stageId);
 		$model = new EditableAction('add-video-link', 'StagesController', ['modelClass' => Time::className()]);
 		$model->modelClass = Time::className();
 		$model->run();
@@ -41,13 +36,15 @@ class StagesController extends BaseController
 	public function actionView($id)
 	{
 		$this->can('refereeOfCompetitions');
-		$model = $this->findModel($id);
+		$model = $this->findStage($id);
 		
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			if ($model->regionId != \Yii::$app->user->identity->regionId) {
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
+		
+		$this->layout = 'stages';
 		
 		return $this->render('view', [
 			'model' => $model,
@@ -98,12 +95,14 @@ class StagesController extends BaseController
 	{
 		$this->can('projectAdmin');
 		
-		$model = $this->findModel($id);
+		$model = $this->findStage($id);
 		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			if ($model->regionId != \Yii::$app->user->identity->regionId) {
 				throw new ForbiddenHttpException('Доступ запрещен');
 			}
 		}
+		
+		$this->layout = 'stages';
 		
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -114,38 +113,11 @@ class StagesController extends BaseController
 		}
 	}
 	
-	/**
-	 * Finds the Stage model based on its primary key value.
-	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 *
-	 * @param integer $id
-	 *
-	 * @return Stage the loaded model
-	 * @throws NotFoundHttpException if the model cannot be found
-	 * @throws ForbiddenHttpException
-	 */
-	protected function findModel($id)
-	{
-		$this->can('competitions');
-		
-		if (($model = Stage::findOne($id)) !== null) {
-			if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-				if ($model->regionId != \Yii::$app->user->identity->regionId) {
-					throw new ForbiddenHttpException('Доступ запрещен');
-				}
-			}
-			
-			return $model;
-		} else {
-			throw new NotFoundHttpException('The requested page does not exist.');
-		}
-	}
-	
 	public function actionResult($stageId, $orderBy = null)
 	{
 		$this->can('competitions');
 		
-		$stage = $this->findModel($stageId);
+		$stage = $this->findStage($stageId);
 		$participants = $stage->getParticipants()
 			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION,
 				Participant::STATUS_OUT_COMPETITION]]);
@@ -164,6 +136,8 @@ class StagesController extends BaseController
 		};
 		$participants = $participants->all();
 		
+		$this->layout = 'stages';
+		
 		return $this->render('result', [
 			'stage'        => $stage,
 			'participants' => $participants,
@@ -175,10 +149,12 @@ class StagesController extends BaseController
 	{
 		$this->can('competitions');
 		
-		$stage = $this->findModel($stageId);
+		$stage = $this->findStage($stageId);
 		$participants = $stage->getParticipants()
 			->andWhere(['status' => [Participant::STATUS_ACTIVE, Participant::STATUS_DISQUALIFICATION,
 				Participant::STATUS_OUT_COMPETITION]])->orderBy(['status' => SORT_ASC, 'bestTime' => SORT_ASC])->all();
+		
+		$this->layout = 'stages';
 		
 		return $this->render('add-video', [
 			'stage'        => $stage,
@@ -208,15 +184,7 @@ class StagesController extends BaseController
 	
 	public function actionAddFiguresResults($stageId)
 	{
-		$stage = Stage::findOne($stageId);
-		if (!$stage) {
-			throw new NotFoundHttpException('Этап не найден');
-		}
-		if (!\Yii::$app->user->can('globalWorkWithCompetitions')) {
-			if ($stage->regionId != \Yii::$app->user->identity->regionId) {
-				throw new NotFoundHttpException('Доступ запрещен');
-			}
-		}
+		$stage = $this->findStage($stageId);
 		if ($stage->status == Stage::STATUS_CALCULATE_RESULTS || $stage->status == Stage::STATUS_PAST) {
 			throw new UserException('Этап близится к завершению или завершен, 
 			добавление результатов по фигурам невозможно');
@@ -228,6 +196,8 @@ class StagesController extends BaseController
 		$figureTime = new FigureTimeForStage();
 		$figureTime->stageId = $stage->id;
 		$figureTime->date = time();
+		
+		$this->layout = 'stages';
 		
 		return $this->render('add-figures-result', [
 			'participants' => $participants,
@@ -483,6 +453,7 @@ class StagesController extends BaseController
 				throw new NotFoundHttpException('Доступ запрещен');
 			}
 		}
+		
 		if (!$stage->championship->useMoscowPoints) {
 			throw new UserException('Функция доступна только для чемпионатов, использующих Московскую схему начисления баллов');
 		}
@@ -527,5 +498,23 @@ class StagesController extends BaseController
 		}
 		
 		return $result;
+	}
+	
+	public function actionDelete($id)
+	{
+		$this->can('projectAdmin');
+		$stage = $this->findStage($id);
+		$participants = $stage->participants;
+		if ($participants) {
+			return 'На данный этап зарегистрированы участники. Удаление невозможно';
+		}
+		if ($stage->trackPhoto) {
+			HelpModel::deleteFile($stage->trackPhoto);
+		}
+		if ($stage->delete()) {
+			return true;
+		}
+		
+		return 'Возникла ошибка при удалении. Свяжитесь с разработчиком.';
 	}
 }

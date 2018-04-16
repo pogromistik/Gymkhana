@@ -34,18 +34,40 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 			[
 				'label'   => 'Редактировать фигуру',
 				'content' => $this->render('_form', ['model' => $model]),
-				'options' => ['class' => 'panel panel-green']
+				'options' => ['class' => 'panel panel-my-style panel-blue']
 			],
 		]
 	]);
 	?>
 
     <h3>Результаты</h3>
+
+    <div class="alert help-alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
+        <ul>
+            <li>
+                Обратите внимание, что новые классы спортсменов требуют подтверждения. Если спортсмены повысят класс -
+                появятся
+                кнопки для его подтверждения и отклонения. Можно подтвердить\отклонить как все результаты сразу, так и один
+                конкретный. Если какие-то результаты вызывают у вас подозрение - рекомендуем проверить их на предмет
+                опечаток и при
+                необходимости исправить.
+            </li>
+            <li>
+                Если вы подтвердили новый класс, а потом выяснилось, что в результате допущена опечатка и фактический класс
+                спортсмена ниже - измените класс в профиле спортсмена или на
+                странице "<?= Html::a('изменить класс спортсмена', ['/competitions/athlete/change-class']) ?>".
+            </li>
+        </ul>
+    </div>
+	
 	<?php Modal::begin([
 		'header'       => '<h2>Выберите дату заездов</h2>',
 		'toggleButton' => [
 			'label' => 'Добавить результаты',
-			'class' => 'btn btn-primary'
+			'class' => 'btn btn-my-style btn-green'
 		]
 	]) ?>
 	<?= \yii\bootstrap\Html::beginForm(['add-results'], 'get') ?>
@@ -69,7 +91,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 			?>
         </div>
         <div class="col-md-2">
-			<?= Html::submitButton(\Yii::t('app', 'ОК'), ['class' => 'btn btn-primary']) ?>
+			<?= Html::submitButton(\Yii::t('app', 'ОК'), ['class' => 'btn btn-my-style btn-gray']) ?>
         </div>
     </div>
 	<?= Html::endForm() ?>
@@ -79,12 +101,12 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 	<?php if ($newClasses) { ?>
         <div class="text-right newClass">
             <div class="pb-10">
-                <a class="btn btn-danger getRequest" href="#"
+                <a class="btn btn-my-style btn-small btn-red getRequest" href="#"
                    data-action="/competitions/figures/cancel-all-classes"
                    data-id="<?= $model->id ?>" title="Отменить">
                     Отменить все новые неподтверждённые классы
                 </a>
-                <a class="btn btn-success getRequest" href="#"
+                <a class="btn btn-my-style btn-light-green getRequest" href="#"
                    data-action="/competitions/figures/approve-all-classes"
                    data-id="<?= $model->id ?>" title="Подтвердить">
                     Подтвердить все новые классы
@@ -96,7 +118,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 	<?php if ($newRecords) { ?>
         <div class="text-right newClass">
             <div class="pb-10">
-                <a class="btn btn-danger getRequestWithConfirm" href="#"
+                <a class="btn btn-my-style btn-small btn-red getRequestWithConfirm" href="#"
                    data-action="/competitions/figures/cancel-all-records"
                    data-text="Уверены, что хотите отменить все новые неподтверждённые рекорды?"
                    data-id="<?= $model->id ?>" title="Отменить">
@@ -136,7 +158,8 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
                 'value' => function (\common\models\FigureTime $item) {
 	                if (\Yii::$app->user->can('developer')) {
 	                    return Html::a($item->dateForHuman, ['/competitions/developer/logs',
-                            'modelClass' => \common\models\FigureTime::class, 'modelId' => $item->id]);
+                            'modelClass' => \common\models\FigureTime::class, 'modelId' => $item->id],
+		                    ['class' => 'dev-logs']);
                     }
                     return $item->dateForHuman;
                 }
@@ -215,12 +238,12 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 						$html .= '</div>';
 						if ($item->newAthleteClassStatus == \common\models\FigureTime::NEW_CLASS_STATUS_NEED_CHECK) {
 							$html .= '<div class="newClass text-center">';
-							$html .= '<a class="btn btn-danger getRequest" href="#"
+							$html .= '<a class="btn btn-my-style btn-red getRequest" href="#"
                            data-action="/competitions/figures/cancel-class"
                            data-id="' . $item->id . '" title="Отменить">
                             <span class="fa fa-remove"></span>
                         </a>';
-							$html .= '<a class="btn btn-success getRequest" href="#"
+							$html .= '<a class="btn btn-my-style btn-light-green getRequest" href="#"
                            data-action = "/competitions/figures/approve-class"
                            data-id = "' . $item->id . '" title = "Подтвердить" >
                             <span class="fa fa-check" ></span >
@@ -242,13 +265,13 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 					 if ($item->recordStatus == \common\models\FigureTime::NEW_RECORD_NEED_CHECK) {
 						 if ($item->recordStatus == \common\models\FigureTime::NEW_RECORD_NEED_CHECK) {
 							 $html .= '<div class="newClass text-center">';
-							 $html .= '<a class="btn btn-danger getRequestWithConfirm" href="#"
+							 $html .= '<a class="btn btn-my-style btn-red getRequestWithConfirm" href="#"
                            data-action="/competitions/figures/cancel-record"
                            data-text="Уверены, что хотите отменить этот рекорд?"
                            data-id="' . $item->id . '" title="Отменить">
                             <span class="fa fa-remove"></span>
                         </a>';
-							 $html .= '<a class="btn btn-success getRequestWithConfirm" href="#"
+							 $html .= '<a class="btn btn-my-style btn-light-green getRequestWithConfirm" href="#"
 							 data-text="Уверены, что хотите установить новый рекорд для фигуры?"
                            data-action = "/competitions/figures/approve-record"
                            data-id = "' . $item->id . '" title = "Подтвердить" >
@@ -267,7 +290,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 				'format' => 'raw',
 				'value'  => function (\common\models\FigureTime $item) {
 					return Html::a('<span class = "fa fa-edit"></span>', ['update-time', 'id' => $item->id],
-						['class' => 'btn btn-primary']);
+						['class' => 'btn btn-my-style btn-blue']);
 				}
 			],
 			[
@@ -279,7 +302,7 @@ $newRecords = $model->getResults()->andWhere(['not', ['recordType' => null]])
 					}
 					
 					return Html::a('<span class = "fa fa-remove"></span>', ['delete-time', 'id' => $item->id, 'figureId' => $item->figureId],
-						['class' => 'btn btn-danger',
+						['class' => 'btn btn-my-style btn-red',
 						 'data'  => [
 							 'confirm' => 'Уверены, что хотите удалить результат спортсмена' . $item->athlete->getFullName() . '?'
 						 ]]);

@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\components\Resize;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\Championship;
@@ -16,11 +17,16 @@ use common\models\HelpModel;
 use common\models\InternalClass;
 use common\models\MoscowPoint;
 use common\models\Motorcycle;
+use common\models\NewsSubscription;
 use common\models\Notice;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RegionalGroup;
+use common\models\RequestForSpecialStage;
+use common\models\SpecialChamp;
+use common\models\SpecialStage;
 use common\models\Stage;
+use common\models\SubscriptionQueue;
 use common\models\Time;
 use common\models\TmpAthlete;
 use common\models\TmpFigureResult;
@@ -768,174 +774,6 @@ class RunController extends Controller
 		return true;
 	}
 	
-	public function actionChangeChampionshipsStatus()
-	{
-		$time = time();
-		$count = 0;
-		
-		//чемпионат прошел
-		$championships = Championship::findAll(['status' => Championship::STATUS_PRESENT]);
-		foreach ($championships as $championship) {
-			$stages = $championship->stages;
-			/** @var Stage $stage */
-			foreach ($stages as $stage) {
-				if (!$stage->dateOfThe || $stage->dateOfThe > $time) {
-					continue 2;
-				}
-			}
-			$championship->status = Championship::STATUS_PAST;
-			$championship->save();
-			$count++;
-		}
-		
-		//чемпионат начался
-		$championships = Championship::findAll(['status' => Championship::STATUS_UPCOMING]);
-		foreach ($championships as $championship) {
-			if (Stage::find()->where(['championshipId' => $championship->id])
-				->andWhere(['<=', 'dateOfThe', $time])->one()
-			) {
-				$championship->status = Championship::STATUS_PRESENT;
-				$championship->save();
-				$count++;
-			}
-		}
-		
-		//чемпионат завершился и снова начался
-		$year = Year::findOne(['year' => date('Y')]);
-		if ($year) {
-			$championships = Championship::findAll(['status' => Championship::STATUS_PAST, 'yearId' => $year->id]);
-			foreach ($championships as $championship) {
-				if (Stage::find()->where(['championshipId' => $championship->id])
-					->andWhere(['>=', 'dateOfThe', $time])->one()
-				) {
-					$championship->status = Championship::STATUS_PRESENT;
-					$championship->save();
-					$count++;
-				}
-			}
-		}
-		
-		echo 'Change ' . $count . ' items';
-		
-		return true;
-	}
-	
-	public function actionChangeStagesStatus()
-	{
-		$time = time();
-		//открыта регистрация на этап
-		Stage::updateAll(['status' => Stage::STATUS_START_REGISTRATION], [
-			'and',
-			['status' => Stage::STATUS_UPCOMING],
-			['not', ['startRegistration' => null]],
-			['<=', 'startRegistration', $time]
-		]);
-		
-		//завершена регистрация на этап
-		Stage::updateAll(['status' => Stage::STATUS_END_REGISTRATION], [
-			'and',
-			['status' => Stage::STATUS_START_REGISTRATION],
-			['not', ['endRegistration' => null]],
-			['<=', 'endRegistration', $time]
-		]);
-		
-		//текущий этап
-		Stage::updateAll(['status' => Stage::STATUS_PRESENT], [
-			'and',
-			['<=', 'dateOfThe', $time],
-			['not', ['dateOfThe' => null]],
-			['status' => [Stage::STATUS_UPCOMING, Stage::STATUS_END_REGISTRATION, Stage::STATUS_END_REGISTRATION]]
-		]);
-		
-		//прошедший этап
-		/** @var Stage[] $stages */
-		$stages = Stage::find()->where(['not', ['status' => Stage::STATUS_PAST]])->all();
-		foreach ($stages as $stage) {
-			if ($stage->dateOfThe && ($stage->dateOfThe + 86400) <= $time) {
-				$stage->status = Stage::STATUS_PAST;
-				$stage->save();
-			}
-		}
-		
-		return true;
-	}
-	
-	public function actionChangePhotoStatus()
-	{
-		Stage::updateAll(['trackPhotoStatus' => Stage::PHOTO_PUBLISH], [
-			'and',
-			['not', ['trackPhoto' => null]],
-			['trackPhotoStatus' => Stage::PHOTO_NOT_PUBLISH],
-			['status' => Stage::STATUS_PAST]
-		]);
-		
-		return true;
-	}
-	
-	public function actionCheckSize()
-	{
-		exec('df -h', $output, $return_var);
-		if ($output) {
-			if (!isset($output[1])) {
-				$errors = new Error();
-				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
-				$errors->save();
-				
-				if (YII_ENV != 'dev') {
-					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
-					\Yii::$app->mailer->compose('text', ['text' => $text])
-						->setTo('nadia__@bk.ru')
-						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup.ru: ошибка на сайте')
-						->send();
-				}
-				
-				return false;
-			}
-			$string = $output[1];
-			$array = explode('G', $string);
-			if (!isset($array[2])) {
-				$errors = new Error();
-				$errors->text = 'Невозможно проверить остаток дискового пространства на хостинге';
-				$errors->save();
-				
-				if (YII_ENV != 'dev') {
-					$text = 'Невозможно проверить остаток дискового пространства на хостинге';
-					\Yii::$app->mailer->compose('text', ['text' => $text])
-						->setTo('nadia__@bk.ru')
-						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup.ru: ошибка на сайте')
-						->send();
-				}
-				
-				return false;
-			}
-			$size = trim($array[2]);
-			echo $size . PHP_EOL;
-			if ($size < 1) {
-				$errors = new Error();
-				$errors->type = Error::TYPE_CRITICAL_ERROR;
-				$errors->text = 'На хостинге осталось менее 1GB свободного места';
-				$errors->save();
-			} elseif ($size <= 2) {
-				$errors = new Error();
-				$errors->text = 'На хостинге осталось ' . $size . 'GB свободного места';
-				$errors->type = Error::TYPE_SIZE;
-				$errors->save();
-				
-				if (YII_ENV != 'dev') {
-					\Yii::$app->mailer->compose('text', ['text' => $errors->text])
-						->setTo('nadia__@bk.ru')
-						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup.ru: ошибка на сайте')
-						->send();
-				}
-			}
-		}
-		
-		return true;
-	}
-	
 	public function actionMailTest()
 	{
 		\Yii::$app->mailer->compose('text', ['text' => 'проверка почты'])
@@ -943,28 +781,6 @@ class RunController extends Controller
 			->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup.ru: проверка почты')
 			->send();
-	}
-	
-	public function actionSendNotice($athleteId)
-	{
-		$text = 'У вас необычный случай с результатом GP 8 – ваш рейтинг находится на границе классов. В связи с этим, вопрос о вашем переводе в новый класс вынесен на рассмотрение. Как только решение будет принято, вам придёт уведомление о присвоении нового класса.';
-		var_dump(Notice::add($athleteId, $text));
-		
-		return true;
-	}
-	
-	public function actionAddRecordTimes()
-	{
-		$results = FigureTime::find()->where(['>', 'percent', 100])->all();
-		/** @var FigureTime $result */
-		foreach ($results as $result) {
-			$figure = $result->figure;
-			$result->recordInMoment = $figure->bestTime;
-			$result->save(false);
-		}
-		echo 'Update ' . count($results) . ' records' . PHP_EOL;
-		
-		return true;
 	}
 	
 	public function actionIndices()
@@ -1067,45 +883,6 @@ class RunController extends Controller
 		} catch (\Throwable $ex) {
 			var_dump($ex->getMessage());
 		}
-	}
-	
-	public function actionAddVideoLinks()
-	{
-		/** @var TmpFigureResult[] $tmp */
-		$tmp = TmpFigureResult::find()->where(['isNew' => 0])->andWhere(['not', ['videoLink' => null]])->all();
-		$count = 0;
-		foreach ($tmp as $tmpItem) {
-			$needAdd = false;
-			if (mb_strstr($tmpItem->videoLink, 'http://', 'UTF-8') !== false
-				|| mb_strstr($tmpItem->videoLink, 'https://', 'UTF-8') !== false
-			) {
-				if (mb_strstr($tmpItem->videoLink, 'http://vk.', 'UTF-8') !== false
-					|| mb_strstr($tmpItem->videoLink, 'https://vk.', 'UTF-8') !== false
-				) {
-					if (mb_strstr($tmpItem->videoLink, 'video', 'UTF-8') !== false) {
-						$needAdd = true;
-					}
-				} else {
-					$needAdd = true;
-				}
-			}
-			if ($needAdd) {
-				$figureResult = FigureTime::findOne(['id' => $tmpItem->figureResultId]);
-				if ($figureResult) {
-					$figureResult->videoLink = $tmpItem->videoLink;
-					if (!$figureResult->save()) {
-						var_dump($figureResult->errors);
-						
-						return false;
-					}
-					$count++;
-				}
-			}
-		}
-		
-		echo 'update ' . $count . ' items';
-		
-		return true;
 	}
 	
 	public function actionInsertMoscowPoints()
@@ -1260,7 +1037,7 @@ class RunController extends Controller
 			$athlete2 = $athlete1;
 		}
 		
-		//объединяем время по фигурам
+		
 		$transaction = \Yii::$app->db->beginTransaction();
 		$count = FigureTime::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update FigureTime: ' . $count . PHP_EOL;
@@ -1278,10 +1055,16 @@ class RunController extends Controller
 		echo 'Update TmpParticipant: ' . $count . PHP_EOL;
 		$count = ClassHistory::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
 		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		$count = RequestForSpecialStage::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update SpecialStages: ' . $count . PHP_EOL;
+		$count = NewsSubscription::updateAll(['athleteId' => $mainAthlete->id], ['athleteId' => $athlete2->id]);
+		echo 'Update NewsSubscription: ' . $count . PHP_EOL;
+		
 		if ($athlete2->athleteClass->percent < $mainAthlete->athleteClass->percent) {
 			$mainAthlete->athleteClassId = $athlete2->athleteClassId;
 			$mainAthlete->save(false);
 		}
+		
 		if ($athlete2->delete()) {
 			echo 'success' . PHP_EOL;
 		}
@@ -1308,22 +1091,13 @@ class RunController extends Controller
 		echo 'Update TmpFigureResult: ' . $count . PHP_EOL;
 		$count = ClassHistory::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
 		echo 'Update ClassHistory: ' . $count . PHP_EOL;
+		$count = RequestForSpecialStage::updateAll(['motorcycleId' => $motorcycle1->id], ['motorcycleId' => $motorcycle2->id]);
+		echo 'Update RequestForSpecialStage: ' . $count . PHP_EOL;
 		
 		if ($motorcycle2->delete()) {
 			echo 'success' . PHP_EOL;
 		}
 		$transaction->commit();
-		
-		return true;
-	}
-	
-	public function actionTestTime()
-	{
-		$timeHuman = '00:00.191';
-		$time = HelpModel::convertTime($timeHuman);
-		echo 'Old: ' . $time . ', ' . HelpModel::convertTimeToHuman($time) . PHP_EOL;
-		$referenceTime = round($time / 10) * 10;
-		echo 'New: ' . $referenceTime . ', ' . HelpModel::convertTimeToHuman($referenceTime) . PHP_EOL;
 		
 		return true;
 	}
@@ -1352,64 +1126,18 @@ class RunController extends Controller
 		return true;
 	}
 	
-	public function actionUpdateEraser()
-	{
-		$figure = Figure::findOne(['title' => 'Eraser']);
-		$times = FigureTime::findAll(['figureId' => $figure->id]);
-		foreach ($times as $time) {
-			$percent = round($time->resultTime / $figure->bestTime * 100, 2);
-			$time->actualPercent = $percent;
-			$time->needClassCalculate = false;
-			if (!$time->recordInMoment) {
-				$time->recordInMoment = $time->time;
-			}
-			$time->save(false);
-		}
-		if (!$figure->severalRecords) {
-			$figure->severalRecords = 1;
-			$figure->save(false);
-		}
-	}
-	
-	public function actionAddQualifications()
-	{
-		FigureTime::updateAll(['stageId' => null]);
-		/** @var Stage[] $stages */
-		$stages = Stage::find()->all();
-		foreach ($stages as $stage) {
-			$count = 0;
-			$dateStart = $stage->dateOfThe;
-			$dateEnd = $stage->dateOfThe + 12 * 3600;
-			/** @var FigureTime[] $figureTimes */
-			$figureTimes = FigureTime::find()
-				->where(['>=', 'date', $dateStart])->andWhere(['<=', 'date', $dateEnd])->andWhere(['stageId' => null])->all();
-			foreach ($figureTimes as $item) {
-				if (Participant::find()->where(['athleteId' => $item->athleteId, 'motorcycleId' => $item->motorcycleId,
-				                                'stageId'   => $stage->id])->one()
-				) {
-					$item->stageId = $stage->id;
-					$item->save(false);
-					$count++;
-				}
-			}
-			echo $stage->id . '. ' . $stage->title . ' - ' . $count . PHP_EOL;
-		}
-		
-		return true;
-	}
-	
 	public function actionDownloadTranslate()
 	{
 		/** @var TranslateMessageSource[] $items */
 		$items = TranslateMessageSource::find()->all();
 		foreach ($items as $item) {
 			$message = TranslateMessage::findOne(['id' => $item->id]);
-			$res = $item->message . ';';
 			if ($message && $message->translation) {
-				$res .= $message->translation;
+			} else {
+				$res = $item->message . ';';
+				$res .= PHP_EOL;
+				file_put_contents('/var/www/gymkhana/admin/web/messages.csv', $res, FILE_APPEND);
 			}
-			$res .= PHP_EOL;
-			file_put_contents('/var/www/www-root/data/www/gymkhana74/admin/web/messages.csv', $res, FILE_APPEND);
 		}
 		
 		return true;
@@ -1431,7 +1159,6 @@ class RunController extends Controller
 	
 	public static function actionInsertTranslate()
 	{
-		Country::deleteAll();
 		$filePath = 'admin/web/files/Perevody.xlsx';
 		
 		$objPHPExcel = \PHPExcel_IOFactory::load($filePath);
@@ -1512,10 +1239,11 @@ class RunController extends Controller
 			if (!$athlete->save()) {
 				$transaction->rollBack();
 				var_dump($athlete->errors);
+				
 				return false;
 			}
-			$history = ClassHistory::find()->where(['athleteId' => $athlete->id, 'oldClassId' => $participant->athleteClassId,
-				'newClassId' => $participant->newAthleteClassId])->one();
+			$history = ClassHistory::find()->where(['athleteId'  => $athlete->id, 'oldClassId' => $participant->athleteClassId,
+			                                        'newClassId' => $participant->newAthleteClassId])->one();
 			$history->delete();
 			if ($athlete->hasAccount) {
 				$text = 'К сожалению, была допущена ошибка: по результатам 4 этапа G-Sport класс повысили только призёры. Ваш класс по-прежнему ' . $participant->athleteClass->title;
@@ -1526,12 +1254,85 @@ class RunController extends Controller
 			if (!$participant->save()) {
 				$transaction->rollBack();
 				var_dump($participant->errors);
+				
 				return false;
 			}
 			$transaction->commit();
 			$count++;
 		}
 		echo 'Update: ' . $count . ' items' . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionInsertForSubscriptions()
+	{
+		$stage = Stage::find()->where(['not', ['dateOfThe' => null]])->andWhere(['not', ['startRegistration' => null]])->one();
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+			
+			return false;
+		}
+		$figure = Figure::find()->one();
+		if (!$figure) {
+			echo 'Figure not found' . PHP_EOL;
+			
+			return false;
+		}
+		
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_STAGE, $stage->id);
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES, NewsSubscription::MSG_FOR_REGISTRATIONS, $stage->id);
+		
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_RUSSIA_RECORDS, NewsSubscription::MSG_FOR_RUSSIA_RECORDS, $figure->id);
+		SubscriptionQueue::addToQueue(NewsSubscription::TYPE_WORLD_RECORDS, NewsSubscription::MSG_FOR_WORLD_RECORDS, $figure->id);
+		
+		return true;
+	}
+	
+	public function actionCheckSubscriptions()
+	{
+		$items = SubscriptionQueue::findAll(['isActual' => 1]);
+		$countLetters = 0;
+		foreach ($items as $item) {
+			$count = NewsSubscription::sendMsg($item->messageType, $item->modelId);
+			$item->countEmails = $count;
+			$item->dateSend = time();
+			$item->isActual = 0;
+			$item->save();
+			$countLetters += $count;
+		}
+		
+		echo 'send ' . $countLetters . ' letters' . PHP_EOL;
+		
+		return true;
+	}
+	
+	public function actionTestForStageSubscr($email)
+	{
+		$stage = Stage::find()->where(['not', ['startRegistration' => null]])->one();
+		if (!$stage) {
+			echo 'Stage not found' . PHP_EOL;
+		}
+		\Yii::$app->mailer->compose('subscriptions/_content', ['msgType' => NewsSubscription::MSG_FOR_REGISTRATIONS,
+		                                                       'model'   => $stage, 'token' => 'test'])
+			->setTo($email)
+			->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
+			->setSubject('gymkhana-cup: тест рассылки')
+			->send();
+		
+		return true;
+	}
+	
+	public function actionResizeTracks()
+	{
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->where(['not', ['trackPhoto' => null]])->all();
+		foreach ($stages as $stage) {
+			$dir = \Yii::getAlias('@files') . '/' . $stage->trackPhoto;
+			echo $dir . PHP_EOL;
+			Resize::resizeImage($dir);
+		}
+		
 		return true;
 	}
 }

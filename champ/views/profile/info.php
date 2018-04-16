@@ -7,12 +7,11 @@ use yii\bootstrap\Html;
  */
 ?>
 
-    <h2>Ваши актуальные регистрации:</h2>
-    <b>Если вы регистрировались на этап не из личного кабинета - ваша заявка появится на этой странице после
-        подтверждения организатором.</b>
+    <h2><?= \Yii::t('app', 'Ваши актуальные регистрации:') ?></h2>
+    <b><?= \Yii::t('app', 'Если вы регистрировались на этап не из личного кабинета - ваша заявка появится на этой странице после подтверждения организатором.') ?></b>
     <br>
 <?php if (!$participants) { ?>
-    Вы не зарегистрированы ни на один из предстоящих этапов.
+    <?= \Yii::t('app', 'Вы не зарегистрированы ни на один из предстоящих этапов.') ?>
 <?php } else { ?>
     <table class="table">
         <thead>
@@ -21,9 +20,9 @@ use yii\bootstrap\Html;
                 <div class="row">
                     <div class="col-md-9 col-xs-6">
                         <div class="row">
-                            <div class="col-md-4 col-sm-12">Мотоцикл</div>
-                            <div class="col-md-4 col-sm-12">Чемпионат</div>
-                            <div class="col-md-4 col-sm-12">Этап</div>
+                            <div class="col-md-4 col-sm-12"><?= \Yii::t('app', 'Мотоцикл') ?></div>
+                            <div class="col-md-4 col-sm-12"><?= \Yii::t('app', 'Чемпионат') ?></div>
+                            <div class="col-md-4 col-sm-12"><?= \Yii::t('app', 'Этап') ?></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-xs-6"></div>
@@ -39,8 +38,8 @@ use yii\bootstrap\Html;
                         <div class="col-md-9 col-xs-6">
                             <div class="row">
                                 <div class="col-md-4 col-sm-12"><?= $participant->motorcycle->getFullTitle() ?></div>
-                                <div class="col-md-4 col-sm-12"><?= Html::a($participant->championship->title, ['/competitions/championship', 'id' => $participant->championship->id]) ?></div>
-                                <div class="col-md-4 col-sm-12"><?= Html::a($participant->stage->title, ['/competitions/stage', 'id' => $participant->stage->id]) ?></div>
+                                <div class="col-md-4 col-sm-12"><?= Html::a($participant->championship->getTitle(), ['/competitions/championship', 'id' => $participant->championship->id]) ?></div>
+                                <div class="col-md-4 col-sm-12"><?= Html::a($participant->stage->getTitle(), ['/competitions/stage', 'id' => $participant->stage->id]) ?></div>
                             </div>
                         </div>
                         <div class="col-md-3 col-xs-6">
@@ -48,7 +47,7 @@ use yii\bootstrap\Html;
 								|| $participant->status == \common\models\Participant::STATUS_NEED_CLARIFICATION
 								|| $participant->status == \common\models\Participant::STATUS_OUT_COMPETITION
 							) { ?>
-								<?= Html::a('Отменить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
+								<?= Html::a(\Yii::t('app', 'Отменить заявку'), ['/profile/change-participant-status', 'id' => $participant->id],
 									[
 										'class'       => 'btn btn-light getRequest',
 										'data-id'     => $participant->id,
@@ -56,10 +55,10 @@ use yii\bootstrap\Html;
 									]) ?>
 							<?php } elseif ($participant->status == \common\models\Participant::STATUS_CANCEL_ADMINISTRATION) {
 							    ?>
-                                <b>отменено организатором</b>
+                                <b><?= \Yii::t('app', 'отменено организатором') ?></b>
                                 <?php
                             } else { ?>
-								<?= Html::a('Возобновить заявку', ['/profile/change-participant-status', 'id' => $participant->id],
+								<?= Html::a(\Yii::t('app', 'Возобновить заявку'), ['/profile/change-participant-status', 'id' => $participant->id],
 									[
 										'class'       => 'btn btn-dark getRequest',
 										'data-id'     => $participant->id,
@@ -76,7 +75,7 @@ use yii\bootstrap\Html;
 <?php } ?>
 
 <?php if ($newStages) { ?>
-    <h3>Открыта регистрация на этапы: </h3>
+    <h3><?= \Yii::t('app', 'Открыта регистрация на этапы:') ?></h3>
 	<?php if ($newStages) { ?>
         <table class="table table-striped">
 			<?php foreach ($newStages as $newStage) { ?>
@@ -86,18 +85,18 @@ use yii\bootstrap\Html;
                             <div class="col-md-9 col-xs-6">
                                 <div class="row">
                                     <div class="col-md-4 col-sm-12">
-										<?= $newStage->championship->title ?>
+										<?= $newStage->championship->getTitle() ?>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-										<?= $newStage->title ?>
+										<?= $newStage->getTitle() ?>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-										<?= $newStage->city->title ?>
+										<?= \common\helpers\TranslitHelper::translitCity($newStage->city->title) ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3 col-xs-6">
-								<?= Html::a('Подробнее', ['/competitions/stage', 'id' => $newStage->id]) ?>
+								<?= Html::a(\Yii::t('app', 'Подробнее'), ['/competitions/stage', 'id' => $newStage->id]) ?>
                             </div>
                         </div>
                     </td>
@@ -105,6 +104,6 @@ use yii\bootstrap\Html;
 			<?php } ?>
         </table>
 	<?php } else { ?>
-        В данный момент нет открытых регистраций.
+        <?= \Yii::t('app', 'В данный момент нет открытых регистраций.') ?>
 	<?php } ?>
 <?php } ?>

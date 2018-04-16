@@ -1,0 +1,23 @@
+{
+  "name": "gymkhana74",
+  "version": "1.0.0",
+  "description": "Gymkhana Cup\r =============",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pogromistik/Gymkhana.git"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "metismenu": "^2.7.4",
+    "startbootstrap-sb-admin-2": "^3.3.7"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pogromistik/Gymkhana/issues"
+  },
+  "homepage": "https://github.com/pogromistik/Gymkhana#readme"
+}

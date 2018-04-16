@@ -1,4 +1,5 @@
 <?php
+
 namespace champ\controllers;
 
 use champ\models\LoginForm;
@@ -8,11 +9,17 @@ use common\models\AssocNews;
 use common\models\Athlete;
 use common\models\DocumentSection;
 use common\models\Feedback;
+use common\models\NewsSubscription;
+use common\models\Participant;
+use common\models\RequestForSpecialStage;
+use common\models\SpecialStage;
+use common\models\Stage;
 use common\models\TmpAthlete;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\base\UserException;
 use yii\data\Pagination;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -20,6 +27,8 @@ use yii\web\NotFoundHttpException;
  */
 class SiteController extends BaseController
 {
+	
+	
 	public function actions()
 	{
 		return [
@@ -32,11 +41,14 @@ class SiteController extends BaseController
 	public function actionIndex()
 	{
 		$this->layout = 'main-with-img';
-		$this->pageTitle = 'Мотоджимхана: события';
-		$this->description = 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.';
-		$this->keywords = 'мото джимхана, мотоджимхана, motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, новости мото джимханы, события мото джимханы, новости, события';
+		$this->pageTitle = \Yii::t('app', 'Мотоджимхана: события');
+		$this->description = \Yii::t('app', 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.');
+		$this->keywords = \Yii::t('app', 'мотоджимхана') .
+			', motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, '
+			. \Yii::t('app', 'новости мото джимханы') . ', '
+			. \Yii::t('app', 'события мото джимханы');
 		
-		$news = AssocNews::find()->where(['<=', 'datePublish', time()]);
+		$news = AssocNews::find()->where(['<=', 'datePublish', time()])->andWhere(['status' => AssocNews::STATUS_ACTIVE]);
 		$pagination = new Pagination([
 			'defaultPageSize' => 10,
 			'totalCount'      => $news->count(),
@@ -53,9 +65,12 @@ class SiteController extends BaseController
 	{
 		$news = AssocNews::findOne($id);
 		if (!$news || $news->datePublish > time()) {
-			throw new NotFoundHttpException('Новость не найдена');
+			throw new NotFoundHttpException(\Yii::t('app', 'Новость не найдена'));
 		}
-		$this->pageTitle = $news->title ? $news->title : 'Новость от ' . date("d.m.Y", $news->datePublish);
+		$this->pageTitle = $news->title ? $news->title :
+			\Yii::t('app', 'Новость от {date}', [
+				'date' => date("d.m.Y", $news->datePublish)
+				]);
 		$this->layout = 'main-with-img';
 		
 		return $this->render('news', [
@@ -63,12 +78,101 @@ class SiteController extends BaseController
 		]);
 	}
 	
+	public function actionTracks()
+	{
+		$this->pageTitle = \Yii::t('app', 'Трассы соревнований');
+		$this->description = \Yii::t('app', 'Трассы соревнований по мотоджимхане');
+		$this->keywords = 'джимхана трассы, трассы по мотоджимхане, трассы джимханы';
+		$this->layout = 'full-content';
+		
+		/** @var Stage[] $stages */
+		$stages = Stage::find()->where(['not', ['trackPhoto' => null]])->andWhere(['status' => Stage::STATUS_PAST])
+			->andWhere(['trackPhotoStatus' => Stage::PHOTO_PUBLISH])->all();
+		/** @var SpecialStage[] $specialStages */
+		$specialStages = SpecialStage::find()->where(['not', ['photoPath' => null]])->all();
+		
+		$items = [];
+		foreach ($stages as $stage) {
+			$items[] = ['type' => 'stage', 'stage' => $stage, 'date' => $stage->dateOfThe ? $stage->dateOfThe : 0];
+		}
+		foreach ($specialStages as $stage) {
+			$items[] = ['type' => 'specialStage', 'stage' => $stage, 'date' => $stage->dateStart ? $stage->dateStart : 0];
+		}
+		
+		usort($items, function($a, $b){
+			return ($a['date'] <= $b['date']);
+		});
+		
+		$pages = new Pagination(['totalCount' => count($items), 'pageSize' => 12]);
+		$items = array_slice($items, $pages->offset, $pages->limit);
+		
+		$data = [];
+		foreach ($items as $item) {
+			$stage = $item['stage'];
+			switch ($item['type']) {
+				case 'stage':
+					/** @var Participant $bestItem */
+					$bestItem = $stage->getActiveParticipants()->orderBy(['bestTime' => SORT_ASC, 'id' => SORT_ASC])->one();
+					if (!$bestItem) {
+						continue;
+					}
+					$date = $stage->dateOfThe ? $stage->dateOfThe : 0;
+					if (!isset($data[$date])) {
+						$data[$date] = [
+							'year'  => $stage->dateOfThe ? date('Y', $stage->dateOfThe) : null,
+							'items' => []
+						];
+					}
+					$data[$date]['items'][] = [
+						'photoPath'  => $stage->trackPhoto,
+						'bestTime'   => $bestItem->humanBestTime,
+						'athlete'    => $bestItem->athlete->getFullName(),
+						'motorcycle' => $bestItem->motorcycle->getFullTitle(),
+						'class'      => $bestItem->athleteClass->title,
+						'stage'      => $stage->title,
+						'url'        => Url::to(['/competitions/stage', 'id' => $stage->id])
+					];
+					break;
+				case 'specialStage':
+					/** @var RequestForSpecialStage $bestItem */
+					$bestItem = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_APPROVE, 'stageId' => $stage->id])
+						->orderBy(['time' => SORT_ASC, 'id' => SORT_ASC])->one();
+					if (!$bestItem) {
+						continue;
+					}
+					$date = $stage->dateStart ? $stage->dateStart : 0;
+					if (!isset($data[$date])) {
+						$data[$date] = [
+							'year'  => $stage->dateStart ? date('Y', $stage->dateStart) : null,
+							'items' => []
+						];
+					}
+					$data[$date]['items'][] = [
+						'photoPath'  => $stage->photoPath,
+						'bestTime'   => $bestItem->resultTimeHuman,
+						'athlete'    => $bestItem->athlete->getFullName(),
+						'motorcycle' => $bestItem->motorcycle->getFullTitle(),
+						'class'      => $bestItem->athleteClass->title,
+						'stage'      => $stage->title,
+						'url'        => Url::to(['/competitions/special-stage', 'id' => $stage->id])
+					];
+					break;
+			}
+		}
+		
+		krsort($data);
+		
+		return $this->render('tracks', ['data' => $data, 'pages' => $pages]);
+	}
+	
 	public function actionDocuments()
 	{
-		$this->pageTitle = 'Документы';
-		$this->description = 'Документы, относящиеся к мото джимхане';
-		$this->keywords = 'регламент соревнований, регламент мото джимхана, правила проведения соревнований, мото джимхана правила, 
-		мото джимхана классы, классы мото джимханы, мото джимхана регламент';
+		$this->pageTitle = \Yii::t('app', 'Документы');
+		$this->description = \Yii::t('app', 'Документы, относящиеся к мото джимхане');
+		$this->keywords = \Yii::t('app', 'регламент соревнований') . ', '
+		. \Yii::t('app', 'правила проведения соревнований') . ', '
+			. \Yii::t('app', 'классы мотоджимханы') . ', '
+			. \Yii::t('app', 'мотоджимхана правила');
 		
 		$this->layout = 'main-with-img';
 		$this->background = 'background4.png';
@@ -82,7 +186,7 @@ class SiteController extends BaseController
 	
 	public function actionLogin()
 	{
-		$this->pageTitle = 'Вход в личный кабинет';
+		$this->pageTitle = \Yii::t('app', 'Вход в личный кабинет');
 		$this->keywords = 'джимхана кап, gymkhana cup';
 		
 		if (!Yii::$app->user->isGuest) {
@@ -116,16 +220,16 @@ class SiteController extends BaseController
 		$form->load(\Yii::$app->request->post());
 		$form->validate();
 		if (!$form->email && !$form->phone && !$form->athleteId) {
-			return 'Укажите корректные контакты для связи!';
+			return \Yii::t('app', 'Укажите корректные контакты для связи!');
 		}
 		if ($form->phoneOrMail && !$form->phone && !$form->email) {
-			return 'Указаны некорректные контакты для связи';
+			return \Yii::t('app', 'Указаны некорректные контакты для связи');
 		}
 		if (!$form->text) {
-			return 'Укажите текст сообщения';
+			return \Yii::t('app', 'Введите текст сообщения');
 		}
 		if (!$form->username) {
-			return 'Укажите ваше имя';
+			return \Yii::t('app', 'Укажите ваше имя');
 		}
 		if ($form->save()) {
 			return true;
@@ -136,7 +240,7 @@ class SiteController extends BaseController
 	
 	public function actionRegistration()
 	{
-		$this->pageTitle = 'Регистрация в личном кабинете';
+		$this->pageTitle = \Yii::t('app', 'Регистрация в личном кабинете');
 		
 		if (!\Yii::$app->user->isGuest) {
 			return $this->goHome();
@@ -158,14 +262,28 @@ class SiteController extends BaseController
 		if ($form->load(\Yii::$app->request->post())) {
 			$marks = \Yii::$app->request->post('mark');
 			$models = \Yii::$app->request->post('model');
+			$cbm = \Yii::$app->request->post('cbm');
+			$power = \Yii::$app->request->post('power');
 			if (!$marks) {
-				return 'Необходимо указать марку мотоцикла';
+				return \Yii::t('app', 'Необходимо указать марку мотоцикла');
 			}
 			if (!$models) {
-				return 'Необходимо указать модель мотоцикла';
+				return \Yii::t('app', 'Необходимо указать модель мотоцикла');
+			}
+			if (!$cbm) {
+				return 'Необходимо указать объём';
+			}
+			if (!$power) {
+				return 'Необходимо указать мощность';
 			}
 			if (count($marks) != count($models)) {
-				return 'Для каждого мотоцикла необходимо указать марку и модель';
+				return \Yii::t('app', 'Для каждого мотоцикла необходимо указать марку и модель');
+			}
+			if (count($cbm) != count($marks)) {
+				return 'Для каждого мотоцикла необходимо указать объём двигателя';
+			}
+			if (count($power) != count($marks)) {
+				return 'Для каждого мотоцикла необходимо указать мощность мотоцикла';
 			}
 			$motorcycles = [];
 			foreach ($marks as $i => $mark) {
@@ -173,33 +291,39 @@ class SiteController extends BaseController
 					continue;
 				}
 				if (!$mark || !$models[$i]) {
-					return 'Для каждого мотоцикла необходимо указать марку и модель';
+					return \Yii::t('app', 'Для каждого мотоцикла необходимо указать марку и модель');
+				}
+				if (!isset($cbm[$i]) || !$cbm[$i] || !isset($power[$i]) || !$power[$i]) {
+					return 'Для каждого мотоцикла необходимо указать мощность и объём';
 				}
 				$motorcycles[] = [
 					'mark'  => (string)$mark,
-					'model' => (string)$models[$i]
+					'model' => (string)$models[$i],
+					'cbm'   => (int)$cbm[$i],
+					'power' => $power[$i]
 				];
 			}
 			if (!$motorcycles) {
-				return 'Необходимо указать минимум один мотоцикл';
+				return \Yii::t('app', 'Необходимо указать минимум один мотоцикл');
 			}
 			$form->motorcycles = json_encode($motorcycles);
 			if (!$form->cityId && !$form->city) {
-				return 'Необходимо указать город';
+				return \Yii::t('app', 'Необходимо указать город');
 			}
 			if (!$form->email) {
-				return 'Необходимо указать email';
+				return \Yii::t('app', 'Необходимо указать email');
 			}
 			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])
 				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
-			->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()) {
-				return 'Указанный email занят';
+					->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()
+			) {
+				return \Yii::t('app', 'Указанный email занят');
 			}
 			if (!$form->validate()) {
-				return 'Необходимо заполнить все поля, кроме номера телефона';
+				return \Yii::t('app', 'Необходимо заполнить все поля, кроме номера телефона');
 			}
 			if ($form->save(false)) {
-				if (YII_ENV != 'dev') {
+				if (YII_ENV == 'prod') {
 					$text = 'Новый запрос на регистрацию в личном кабинете';
 					$text .= '<br>';
 					$text .= '<b>Фио: </b>' . $form->lastName . ' ' . $form->firstName;
@@ -222,10 +346,10 @@ class SiteController extends BaseController
 				return true;
 			}
 			
-			return 'Возникла ошибка при сохранении данных';
+			return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 		}
 		
-		return 'Возникла ошибка при регистрации';
+		return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 	}
 	
 	public function actionAppendMotorcycle($i)
@@ -235,7 +359,7 @@ class SiteController extends BaseController
 	
 	public function actionResetPassword()
 	{
-		$this->pageTitle = 'Восстановление пароля';
+		$this->pageTitle = \Yii::t('app', 'Восстановление пароля');
 		$model = new PasswordResetRequestForm();
 		
 		$this->layout = 'main-with-img';
@@ -260,13 +384,13 @@ class SiteController extends BaseController
 					return true;
 				}
 				
-				return 'Возникла ошибка при отправке данных. Попробуйте позже.';
+				return \Yii::t('app', 'Возникла ошибка при отправке данных. Попробуйте позже.');
 			}
 			
-			return 'Пользователь не найден. Проверьте правильность введённых данных.';
+			return \Yii::t('app', 'Пользователь не найден. Проверьте правильность введённых данных.');
 		}
 		
-		return 'Возникла ошибка при отправке данных.';
+		return \Yii::t('app', 'Возникла ошибка при сохранении данных');
 	}
 	
 	public function actionNewPassword($token)
@@ -277,7 +401,7 @@ class SiteController extends BaseController
 			return $this->goHome();
 		}
 		
-		$this->pageTitle = 'Восстановление пароля';
+		$this->pageTitle = \Yii::t('app', 'Восстановление пароля');
 		
 		if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
 			return $this->redirect(['/profile/info']);
@@ -286,5 +410,39 @@ class SiteController extends BaseController
 		return $this->render('set-new-password', [
 			'model' => $model,
 		]);
+	}
+	
+	public function actionUnsubscription($token)
+	{
+		$this->pageTitle = 'Отмена рассылки';
+		$subscription = NewsSubscription::findOne(['token' => $token]);
+		$error = false;
+		if ($subscription && $subscription->isActive == 1) {
+			$subscription->isActive = 0;
+			$subscription->dateEnd = time();
+			if (!$subscription->save()) {
+				$error = \Yii::t('app', 'Возникла ошибка при сохранении данных.');
+			}
+		} else {
+			$error = \Yii::t('app', 'Подписка не найдена.');
+		}
+		
+		return $this->render('unsubscription', ['error' => $error]);
+	}
+	
+	public function actionOfferNews()
+	{
+		$news = new AssocNews();
+		$this->pageTitle = \Yii::t('app', 'Новая новость');
+		
+		if ($news->load(\Yii::$app->request->post())) {
+			$news->isOffer = true;
+			$news->status = AssocNews::STATUS_MODERATION;
+			if ($news->save()) {
+				return $this->render('confirm-news');
+			}
+		}
+		
+		return $this->render('offer-news', ['news' => $news]);
 	}
 }

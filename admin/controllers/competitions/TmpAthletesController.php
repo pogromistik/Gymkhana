@@ -98,6 +98,9 @@ class TmpAthletesController extends BaseController
 		
 		if (\Yii::$app->mutex->acquire('TmpAthletes-' . $tmpAthlete->id, 10)) {
 			$oldAthlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->language) {
+				$oldAthlete->language = $tmpAthlete->language;
+			}
 			if ($tmpAthlete->phone) {
 				$oldAthlete->phone = $tmpAthlete->phone;
 			}
@@ -259,6 +262,9 @@ class TmpAthletesController extends BaseController
 				if ($tmpAthlete->phone) {
 					$oldAthlete->phone = $tmpAthlete->phone;
 				}
+				if ($tmpAthlete->language) {
+					$oldAthlete->language = $tmpAthlete->language;
+				}
 				if (!$oldAthlete->save()) {
 					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
 					
@@ -306,6 +312,13 @@ class TmpAthletesController extends BaseController
 				$new->athleteId = $oldAthlete->id;
 				$new->mark = $data['mark'];
 				$new->model = $data['model'];
+				$new->cbm = $data['cbm'];
+				$new->power = $data['power'];
+				if (isset($data['isCruiser']) && $data['isCruiser'] == 1) {
+					$new->isCruiser = 1;
+				} else {
+					$new->isCruiser = 0;
+				}
 				if (!$new->save()) {
 					$transaction->rollBack();
 					\Yii::$app->mutex->release('TmpAthletes-' . $tmpAthlete->id);
@@ -382,6 +395,9 @@ class TmpAthletesController extends BaseController
 				$athlete->phone = $tmpAthlete->phone;
 			}
 			$athlete->email = $tmpAthlete->email;
+			if ($tmpAthlete->language) {
+				$athlete->language = $tmpAthlete->language;
+			}
 			$athlete->countryId = $tmpAthlete->countryId;
 			$transaction = \Yii::$app->db->beginTransaction();
 			if (!$athlete->save()) {
@@ -396,6 +412,13 @@ class TmpAthletesController extends BaseController
 				$new = new Motorcycle();
 				$new->mark = $motorcycle['mark'];
 				$new->model = $motorcycle['model'];
+				$new->cbm = $motorcycle['cbm'];
+				$new->power = $motorcycle['power'];
+				if (isset($motorcycle['isCruiser']) && $motorcycle['isCruiser'] == 1) {
+					$new->isCruiser = 1;
+				} else {
+					$new->isCruiser = 0;
+				}
 				$new->athleteId = $athlete->id;
 				if (!$new->save()) {
 					$transaction->rollBack();

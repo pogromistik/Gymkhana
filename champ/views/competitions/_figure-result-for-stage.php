@@ -11,14 +11,14 @@
 			<thead>
 			<tr>
 				<th><p>#</p></th>
-				<th><p>Класс</p></th>
-				<th><p>Участник</p></th>
-				<th><p>Мотоцикл</p></th>
-				<th><p>Время</p></th>
-				<th><p>Штраф</p></th>
-				<th><p>Итоговое время</p></th>
-				<th><p>Рейтинг</p></th>
-				<th><p>Переход в класс</p></th>
+				<th><p><?= \Yii::t('app', 'Класс') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Участник') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Мотоцикл') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Время') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Штраф') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Итоговое время') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Рейтинг') ?></p></th>
+                <th><p><?= \Yii::t('app', 'Переход в класс') ?></p></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -43,7 +43,7 @@
 					<td><?= $place++ ?></td>
 					<td><?= $item->athleteClassId ? $item->athleteClass->title : null ?></td>
 					<td><?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
-						<br><?= $athlete->city->title ?></td>
+						<br><?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?></td>
 					<td><?= $item->motorcycle->getFullTitle() ?></td>
 					<td><?= $item->timeForHuman ?></td>
 					<td><?= $item->fine ?></td>
@@ -66,9 +66,9 @@
 		<table class="table results">
 			<thead>
 			<tr>
-				<th>Участник</th>
-				<th>Время</th>
-				<th>Рейтинг</th>
+                <th><?= \Yii::t('app', 'Участник') ?></th>
+                <th><?= \Yii::t('app', 'Время') ?></th>
+                <th><?= \Yii::t('app', 'Рейтинг') ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -93,7 +93,7 @@
 							<?= \yii\bootstrap\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
 							<br>
 							<small>
-								<?= $athlete->city->title ?>
+								<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
 								<br>
 								<?= $item->motorcycle->getFullTitle() ?>
 								<?php if ($item->athleteClassId) { ?>

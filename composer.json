@@ -21,7 +21,7 @@
         "perminder-klair/yii2-dropzone": "dev-master",
         "kartik-v/yii2-widget-fileinput": "@dev",
         "2amigos/yii2-editable-widget": "^0.1.4",
-        "2amigos/yii2-ckeditor-widget": "~1.0",
+        "2amigos/yii2-ckeditor-widget" : "~2.1",
         "dektrium/yii2-user": "~0.9.6",
         "dektrium/yii2-rbac": "~0.3.0",
         "kartik-v/yii2-widgets": "*",
@@ -32,7 +32,8 @@
         "bower-asset/bootbox": "~4.3.0",
         "philippfrenzel/yii2fullcalendar":"~2",
         "sadovojav/yii2-image-cutter": "dev-master",
-        "yiisoft/yii2-imagine": "dev-upd-imagine"
+        "yiisoft/yii2-imagine": "dev-upd-imagine",
+        "2amigos/yii2-tinymce-widget" : "~1.1"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

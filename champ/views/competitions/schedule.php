@@ -2,23 +2,29 @@
 use yii\bootstrap\Html;
 
 /**
- * @var \yii\web\View        $this
- * @var array                $dates
- * @var array                $notDate
- * @var \common\models\Stage $stage
- * @var array                $events
+ * @var \yii\web\View $this
+ * @var array         $dates
+ * @var array         $notDate
+ * @var array         $stage
+ * @var array         $events
  */
 ?>
-    <h2>Расписание соревнований</h2>
-
+    <h2><?= \Yii::t('app', 'Расписание соревнований') ?>
+        <br>
+        <small class="spb">
+            <?= \Yii::t('app', 'Информация о соревнованиях в Санкт-Петербурге здесь: {link}',
+    ['link' => '<a href="http://www.moto-gymkhana.com" target="_blank">www.moto-gymkhana.com</a>']) ?>
+        </small>
+    </h2>
+    
     <div class="result-scheme active">
         <div class="change-type">
-            <a class="change-result-scheme">Посмотреть список</a>
+            <a class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть список') ?></a>
         </div>
 		<?= \yii2fullcalendar\yii2fullcalendar::widget([
 			'events'        => $events,
 			'options'       => [
-				'lang' => 'ru',
+				'lang' => (\Yii::$app->language == 'ru_RU') ? 'ru' : 'en',
 			],
 			'clientOptions' => [
 				'language' => 'ru'
@@ -33,7 +39,7 @@ use yii\bootstrap\Html;
     </div>
     <div class="result-scheme">
         <div class="change-type">
-            <a href="#" class="change-result-scheme">Посмотреть календарь</a>
+            <a href="#" class="change-result-scheme"><?= \Yii::t('app', 'Посмотреть календарь') ?></a>
         </div>
         <div class="schedule">
             <table class="table table-striped">
@@ -41,7 +47,7 @@ use yii\bootstrap\Html;
                     <tr>
                         <th>
                             <div class="month">
-                                Дата проведения не установлена
+                                <?= \Yii::t('app', 'Дата проведения этапа не установлена') ?>
                             </div>
                         </th>
                     </tr>
@@ -52,8 +58,7 @@ use yii\bootstrap\Html;
                                     <div class="col-md-2 col-sm-3 col-xs-4">
                                     </div>
                                     <div class="col-md-10 col-sm-9 col-xs-8">
-										<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
-											['/competitions/stage', 'id' => $stage->id]) ?>
+										<?= Html::a($stage['title'], $stage['url']) ?>
                                     </div>
                                 </div>
                             </td>
@@ -66,13 +71,13 @@ use yii\bootstrap\Html;
                         <tr>
                             <th>
                                 <div class="month">
-									<?= \common\models\HelpModel::$month[date("n", $date)] ?>&nbsp;
+									<?= \common\models\HelpModel::getMonth(date("n", $date)) ?>&nbsp;
 									<?= (date("Y", $date) != date("Y")) ? date("Y", $date) : '' ?>
                                 </div>
                             </th>
                         </tr>
 						<?php foreach ($stages as $stage) { ?>
-							<?php if ($stage->dateOfThe + 86400 < time()) { ?>
+							<?php if ($stage['date'] + 86400 < time()) { ?>
                                 <tr>
 							<?php } else { ?>
                                 <tr class="future">
@@ -80,11 +85,10 @@ use yii\bootstrap\Html;
                             <td>
                                 <div class="row item">
                                     <div class="col-md-2 col-sm-3 col-xs-4">
-										<?= date("d.m.Y", $stage->dateOfThe) ?>
+										<?= date("d.m.Y", $stage['date']) ?>
                                     </div>
                                     <div class="col-md-10 col-sm-9 col-xs-8">
-										<?= Html::a($stage->championship->title . ': ' . $stage->title . ', ' . $stage->city->title,
-											['/competitions/stage', 'id' => $stage->id]) ?>
+										<?= Html::a($stage['title'], $stage['url']) ?>
                                     </div>
                                 </div>
                             </td>

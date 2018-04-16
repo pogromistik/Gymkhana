@@ -134,7 +134,18 @@ class Figure extends BaseActiveRecord
 				$this->severalRecords = 1;
 				$this->save(false);
 			}
+			//очередь на рассылку о новом мировом рекорде
+			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_WORLD_RECORDS,
+				NewsSubscription::MSG_FOR_WORLD_RECORDS, $this->id);
 		}
+		
+		//очередь на рассылку о новом российском рекорде
+		if (array_key_exists('bestTimeInRussia', $changedAttributes) && $this->bestTimeInRussia
+			&& $changedAttributes['bestTimeInRussia'] && $this->bestTimeInRussia != $changedAttributes['bestTimeInRussia']) {
+			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_RUSSIA_RECORDS,
+				NewsSubscription::MSG_FOR_RUSSIA_RECORDS, $this->id);
+		}
+		
 		parent::afterSave($insert, $changedAttributes);
 	}
 	

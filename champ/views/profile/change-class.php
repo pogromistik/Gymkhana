@@ -14,15 +14,13 @@ use yii\widgets\MaskedInput;
 ?>
 <div class="tmp-figure-result-index">
 
-    <h2>Отправить запрос на изменение класса</h2>
+    <h2><?= \Yii::t('app', 'Отправить запрос на изменение класса') ?></h2>
     
     <div>
-        Если  у вас есть достаточные основания для смены класса - отправьте нам соответствующий запрос.
-        Например, если вы приняли участие в соревновании, которое не было проведено через наш сайт. В таком
-        случае нам будет достаточно ссылки на результаты, где будет видно ваш процент и класс соревнования.
+        <?= \Yii::t('app', 'Если  у вас есть достаточные основания для смены класса - отправьте нам соответствующий запрос. Например, если вы приняли участие в соревновании, которое не было проведено через наш сайт. В таком случае нам будет достаточно ссылки на результаты, где будет видно ваш процент и класс соревнования.') ?>
     </div>
 
-    <h4><?= Html::a('посмотреть историю', ['/profile/history-classes-request']) ?></h4>
+    <h4><?= Html::a(\Yii::t('app', 'посмотреть историю'), ['/profile/history-classes-request']) ?></h4>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'changeClassRequest']]); ?>
 	
@@ -31,13 +29,13 @@ use yii\widgets\MaskedInput;
 	<?= $form->field($model, 'newClassId')->dropDownList(ArrayHelper::map($classes, 'id', 'title')) ?>
 	
 	<?= $form->field($model, 'comment')->textarea(['rows' => 3, 'placeholder' =>
-        'Укажите всю необходимую информацию. Например, добавите ссылку на результаты чемпионата и описание класса соревнований']) ?>
+        \Yii::t('app', 'Укажите всю необходимую информацию. Например, добавьте ссылку на результаты чемпионата и описание класса соревнований')]) ?>
 
     <div class="alert alert-danger" style="display: none"></div>
     <div class="alert alert-success" style="display: none"></div>
 
     <div class="form-group">
-		<?= Html::submitButton('Отправить', ['class' => 'btn btn-dark']) ?>
+		<?= Html::submitButton(\Yii::t('app', 'Отправить'), ['class' => 'btn btn-dark']) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

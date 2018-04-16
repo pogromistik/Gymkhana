@@ -9,6 +9,7 @@ use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Participant;
 use common\models\Region;
+use common\models\RequestForSpecialStage;
 use common\models\search\AthleteSearch;
 use Yii;
 use yii\db\Expression;
@@ -19,9 +20,12 @@ class AthletesController extends BaseController
 {
 	public function actionList($pg = null)
 	{
-		$this->pageTitle = 'Спортсмены';
-		$this->description = 'Спортсмены, хоть раз поучаствовавшие в соревнованиях по мотоджимхане';
-		$this->keywords = 'Мотоджимхана, спортсмены, спорт, список спортсменов, мотоциклисты, рейтинг спортсменов';
+		$this->pageTitle = \Yii::t('app', 'Спортсмены');
+		$this->description = \Yii::t('app', 'Спортсмены, хоть раз поучаствовавшие в соревнованиях по мотоджимхане');
+		$this->keywords = \Yii::t('app', 'мотоджимхана') . ', ' . \Yii::t('app', 'спортсмены')
+			. ', ' . \Yii::t('app', 'список спортсменов') . ', '
+			. \Yii::t('app', 'мотоциклисты') . ', '
+			. \Yii::t('app', 'рейтинг спортсменов');
 		$this->layout = 'full-content';
 		
 		$searchModel = new AthleteSearch();
@@ -39,7 +43,7 @@ class AthletesController extends BaseController
 	{
 		$athlete = Athlete::findOne($id);
 		if (!$athlete) {
-			throw new NotFoundHttpException('Спортсмен не найеден');
+			throw new NotFoundHttpException(\Yii::t('app', 'Спортсмен не найден'));
 		}
 		
 		/** @var Figure[] $figures */
@@ -64,25 +68,29 @@ class AthletesController extends BaseController
 		}
 		$history = $history->all();
 		
+		$specialHistory = RequestForSpecialStage::find()->where(['status'    => RequestForSpecialStage::STATUS_APPROVE,
+		                                                         'athleteId' => $athlete->id])->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();;
+		                                                         
 		$participants = Participant::find()->where(['athleteId' => $athlete->id])
 			->andWhere(['status' => [Participant::STATUS_OUT_COMPETITION, Participant::STATUS_ACTIVE]])
 			->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();
 		
-		$this->pageTitle = 'Спортсмены: ' . $athlete->getFullName();
-		$this->description = $athlete->getFullName() . ', спортсмен мотоджимханы';
+		$this->pageTitle = \Yii::t('app', 'Спортсмены') .': ' . $athlete->getFullName();
+		$this->description = $athlete->getFullName();
 		
 		return $this->render('view', [
-			'athlete'       => $athlete,
-			'figuresResult' => $figuresResult,
-			'history'       => $history,
-			'participants'  => $participants
+			'athlete'        => $athlete,
+			'figuresResult'  => $figuresResult,
+			'history'        => $history,
+			'participants'   => $participants,
+			'specialHistory' => $specialHistory
 		]);
 	}
 	
 	public function actionStatsByRegions()
 	{
 		$this->pageTitle = \Yii::t('app', 'Статистика по регионам');
-		$this->description = 'Статистика спортсменов по регионам';
+		$this->description = \Yii::t('app', 'Статистика спортсменов по регионам');
 		$this->layout = 'main-with-img';
 		$this->background = 'background7.png';
 		

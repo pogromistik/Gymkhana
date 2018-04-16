@@ -11,7 +11,7 @@ use yii\bootstrap\Html;
  */
 ?>
 
-<h2>Статистика</h2>
+<h2><?= \Yii::t('app', 'Статистика') ?></h2>
 
 <div class="compareWithBlock">
 	<?= $this->render('compareWith') ?>
@@ -20,13 +20,13 @@ use yii\bootstrap\Html;
 
 <div class="figures pt-10">
     <h4>
-        Результаты базовых фигур<br>
-        <small>Представлены только лучшие результаты. Для просмотра истории по конкретной фигуре, нажмите на
-            её название
+        <?= \Yii::t('app', 'Результаты базовых фигур') ?><br>
+        <small>
+            <?= \Yii::t('app', 'Представлены только лучшие результаты. Для просмотра истории по конкретной фигуре, нажмите на её название') ?>
         </small>
     </h4>
 	<?php if (!$figuresResult) { ?>
-        Информация отсутствует
+        <?= \Yii::t('app', 'Информация отсутствует') ?>
 	<?php } else { ?>
         <table class="table table-bordered">
 			<?php foreach ($figuresResult as $data) { ?>
@@ -52,7 +52,9 @@ use yii\bootstrap\Html;
                     <td>
 						<?= $result->percent ?>%
 						<?php if ($data['percent'] >= 30) { ?>
-                            <span class="green small">лучше, чем <?= $data['percent'] ?>% участников</span>
+                            <span class="green small">
+                                <?= \Yii::t('app', 'лучше, чем {percent}% участников',
+                                ['percent' => $data['percent']]) ?></span>
 						<?php } ?>
                     </td>
                 </tr>
@@ -64,15 +66,15 @@ use yii\bootstrap\Html;
 <?php if ($history) { ?>
     <div class="history pt-10">
         <h4>
-            История переходов между классами<br>
-            <small>показано не более 30 последних записей</small>
+            <?= \Yii::t('app', 'История переходов между классами') ?><br>
+            <small><?= \Yii::t('app', 'показано не более 30 последних записей') ?></small>
         </h4>
         <table class="table">
             <tr>
-                <th>Дата</th>
-                <th>Старый класс</th>
-                <th>Новый класс</th>
-                <th>Событие</th>
+                <th><?= \Yii::t('app', 'Дата') ?></th>
+                <th><?= \Yii::t('app', 'Старый класс') ?></th>
+                <th><?= \Yii::t('app', 'Новый класс') ?></th>
+                <th><?= \Yii::t('app', 'Событие') ?></th>
             </tr>
 			<?php foreach ($history as $item) { ?>
                 <tr>

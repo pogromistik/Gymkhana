@@ -15,6 +15,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Участники', 'url' => ['/c
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<div class="alert help-alert alert-info">
+	<div class="text-right">
+		<span class="fa fa-remove closeHintBtn"></span>
+	</div>
+	Просто перетягивайте блок со спортсменом в нужное место
+</div>
+
 <?php $form = ActiveForm::begin() ?>
 <?= SortableInput::widget([
 	'name'            => 'sort_list',

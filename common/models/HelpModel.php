@@ -86,6 +86,11 @@ class HelpModel extends Model
 		12 => 'Декабрь'
 	];
 	
+	public static function getMonth($id)
+	{
+		return \Yii::t('app', self::$month[$id]);
+	}
+	
 	public static function savePreviewPhoto($model, $folder)
 	{
 		$dir = \Yii::getAlias('@files') . '/' . $folder . '/' . $model->id;
@@ -206,6 +211,7 @@ class HelpModel extends Model
 		$min = str_pad(floor($time / 60000), 2, '0', STR_PAD_LEFT);
 		$sec = str_pad(floor(($time - $min * 60000) / 1000), 2, '0', STR_PAD_LEFT);
 		$mls = str_pad(round(($time - $min * 60000 - $sec * 1000) / 10), 2, '0', STR_PAD_LEFT);
+		
 		return $min . ':' . $sec . '.' . $mls;
 	}
 	
@@ -213,9 +219,10 @@ class HelpModel extends Model
 	{
 		list($min, $secs) = explode(':', $time);
 		$result = ($min * 60000) + round($secs * 1000);
-		if ($result > Time::FAIL_TIME) {
+		if ($result > Time::FAIL_TIME || $result === (float)0) {
 			$result = Time::FAIL_TIME;
 		}
+		
 		return $result;
 	}
 }

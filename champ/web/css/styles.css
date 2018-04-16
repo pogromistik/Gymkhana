@@ -170,7 +170,7 @@ ul {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100000;
+    z-index: 99991;
 }
 
 /*==== Шапка сайта ====*/
@@ -321,6 +321,14 @@ nav .navbar-toggle .icon-bar {
     padding: 5px;
 }
 
+.title-with-bg.green-title-with-bg {
+    background: #56a025;
+}
+
+.title-with-bg.yellow-title-with-bg {
+    background: #ffcd00;
+}
+
 h2 {
     text-transform: uppercase;
     padding-bottom: 20px;
@@ -380,6 +388,10 @@ h2 {
 
 .detail-news {
     width: 80%;
+}
+
+.detail-news img {
+    width: 50%;
 }
 
 .white-menu {
@@ -1034,7 +1046,7 @@ table.results small.red {
 }
 
 .result-needClarificationParticipant a, .internal-class-needClarificationParticipant a {
-    color: #7c7d7d!important;
+    color: #7c7d7d !important;
 }
 
 .warning {
@@ -1051,14 +1063,19 @@ h2.title small {
     font-size: 14px;
 }
 
+.mobile-language {
+    display: inline-block;
+    padding-left: 10px;
+}
+
 .down-time {
     float: left;
     text-align: center;
 }
 
 .time-blocks .points {
-    float:left;
-    font-size:55px;
+    float: left;
+    font-size: 55px;
 }
 
 .down-time .item {
@@ -1074,7 +1091,7 @@ h2.title small {
     background-size: cover;
 }
 
-.work-page .time-blocks{
+.work-page .time-blocks {
     position: relative;
     left: calc(50% - 124px);
 }
@@ -1082,6 +1099,7 @@ h2.title small {
 .image-cutter .dropzone {
     min-height: 100px;
 }
+
 .image-cutter .dropzone .img-container .preview-image {
     height: 150px;
     width: auto;
@@ -1173,6 +1191,360 @@ h2.title small {
     color: #000000;
 }
 
+.errors {
+    position: relative;
+    width: 300px;
+}
+
+.errors img {
+    width: 100%;
+}
+
+.errors {
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.errors .img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.errors .text {
+    position: absolute;
+    z-index: 100;
+}
+
+.errors .text .code {
+    position: relative;
+    left: 135px;
+    font-size: 22px;
+    font-weight: bold;
+    top: 200px;
+}
+
+.errors .text .message {
+    position: relative;
+    left: 90px;
+    width: 150px;
+    top: 200px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.gray-column {
+    background: #dedede;
+    color: #7b7b7b;
+    border-bottom: 1px solid #cacaca;
+}
+
+.gray-column a {
+    color: #7b7b7b;
+}
+
+th.gray-column {
+    border-bottom: 2px solid #cacaca !important;
+}
+
+.green-title, .green-title a {
+    color: #56a025;
+}
+
+.green-title:hover, .green-title a:hover {
+    color: #4b4e53;
+}
+
+.big-icon {
+    font-size: 18px;
+}
+
+.btn-green {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    border-radius: 0;
+}
+
+a.btn-green {
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-green:hover {
+    background-color: #4cae4c;
+    color: #fff !important;
+}
+
+.toggle .btn {
+    text-decoration: none;
+}
+
+.special-stage-form {
+    display: none;
+}
+
+.my-row {
+    border: 2px solid #56a025;
+}
+
+.is-active-0 {
+    background: #e2e2e2 !important;
+    color: #828282;
+}
+
+.is-active-0 a {
+    color: #828282 !important;
+}
+
+.href-menu ul li {
+    display: inline-block;
+}
+
+.href-menu ul li:before {
+    content: "\2022";
+    padding-right: 5px;
+}
+
+.owl-theme .owl-controls .owl-page span {
+    background: #56a025 !important;
+}
+
+ul.news-carousel li {
+    list-style-type: none;
+}
+
+ul.news-carousel {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.tracks-gallery .item .info {
+    margin-bottom: 20px;
+    background: #686c73;
+    color: #fff;
+    height: 100px;
+    padding: 4px;
+}
+
+.tracks-gallery .item .img a {
+    display: flex;
+}
+
+.tracks-gallery .item .info a {
+    color: #56a025;
+}
+
+.tracks-gallery .item .img {
+    height: 250px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.tracks-gallery .item .img img {
+    object-fit: cover;
+    width: 100%;
+}
+
+.mobile-menu-items {
+    display: none !important;
+}
+
+.grid {
+    position: relative;
+    clear: both;
+    margin: 0 auto;
+    padding: 1em 0 4em;
+    max-width: 1000px;
+    list-style: none;
+    text-align: center;
+}
+
+/* Common style */
+.grid figure {
+    position: relative;
+    float: left;
+    overflow: hidden;
+    margin: 10px 1%;
+    min-width: 320px;
+    max-width: 480px;
+    max-height: 360px;
+    width: 48%;
+    height: auto;
+    background: #3085a3;
+    text-align: center;
+    cursor: pointer;
+}
+
+.grid figure img {
+    position: relative;
+    display: block;
+    min-height: 100%;
+    max-width: 100%;
+    opacity: 0.8;
+}
+
+.grid figure figcaption {
+    padding: 2em;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1.25em;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.grid figure figcaption::before,
+.grid figure figcaption::after {
+    pointer-events: none;
+}
+
+.grid figure figcaption,
+.grid figure figcaption > a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Anchor will cover the whole item by default */
+/* For some effects it will show as a button */
+.grid figure figcaption > a {
+    z-index: 1000;
+    text-indent: 200%;
+    white-space: nowrap;
+    font-size: 0;
+    opacity: 0;
+}
+
+.grid figure h2 {
+    word-spacing: -0.15em;
+    font-weight: 300;
+}
+
+.grid figure h2 span {
+    font-weight: 800;
+}
+
+.grid figure h2,
+.grid figure p {
+    margin: 0;
+}
+
+.grid figure p {
+    letter-spacing: 1px;
+    font-size: 68.5%;
+}
+
+/* Individual effects */
+
+/*---------------*/
+/***** Julia *****/
+/*---------------*/
+
+figure.effect-julia {
+    background: #2f3238;
+}
+
+figure.effect-julia img {
+    max-width: none;
+    height: 400px;
+    -webkit-transition: opacity 1s, -webkit-transform 1s;
+    transition: opacity 1s, transform 1s;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+figure.effect-julia figcaption {
+    text-align: left;
+}
+
+figure.effect-julia h2 {
+    position: relative;
+    padding: 0.5em 0;
+}
+
+figure.effect-julia p {
+    display: inline-block;
+    margin: 0 0 0.25em;
+    padding: 0.4em 1em;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2f3238;
+    text-transform: none;
+    font-weight: 500;
+    font-size: 75%;
+    -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+    transition: opacity 0.35s, transform 0.35s;
+    -webkit-transform: translate3d(-360px, 0, 0);
+    transform: translate3d(-360px, 0, 0);
+}
+
+figure.effect-julia p:first-child {
+    -webkit-transition-delay: 0.15s;
+    transition-delay: 0.15s;
+}
+
+figure.effect-julia p:nth-of-type(2) {
+    -webkit-transition-delay: 0.1s;
+    transition-delay: 0.1s;
+}
+
+figure.effect-julia p:nth-of-type(3) {
+    -webkit-transition-delay: 0.05s;
+    transition-delay: 0.05s;
+}
+
+figure.effect-julia:hover p:first-child {
+    -webkit-transition-delay: 0s;
+    transition-delay: 0s;
+}
+
+figure.effect-julia:hover p:nth-of-type(2) {
+    -webkit-transition-delay: 0.05s;
+    transition-delay: 0.05s;
+}
+
+figure.effect-julia:hover p:nth-of-type(3) {
+    -webkit-transition-delay: 0.1s;
+    transition-delay: 0.1s;
+}
+
+figure.effect-julia:hover img {
+    opacity: 0.4;
+    -webkit-transform: scale3d(1.1, 1.1, 1);
+    transform: scale3d(1.1, 1.1, 1);
+}
+
+figure.effect-julia:hover p {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+/* Media queries */
+@media screen and (max-width: 50em) {
+    .content {
+        padding: 0 10px;
+        text-align: center;
+    }
+
+    .grid figure {
+        display: inline-block;
+        float: none;
+        margin: 10px auto;
+        width: 100%;
+    }
+}
+
+small.spb {
+    font-size: 14px;
+}
+
+small.spb a {
+    white-space: nowrap;
+}
 
 .down-time {
     float: left;

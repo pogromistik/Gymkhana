@@ -2,12 +2,13 @@
 use yii\bootstrap\Html;
 
 /**
- * @var \common\models\Athlete        $athlete
- * @var array                         $figuresResult
- * @var \common\models\FigureTime     $result
- * @var \common\models\Figure         $figure
- * @var \common\models\ClassHistory[] $history
- * @var \common\models\Participant[]  $participants
+ * @var \common\models\Athlete                  $athlete
+ * @var array                                   $figuresResult
+ * @var \common\models\FigureTime               $result
+ * @var \common\models\Figure                   $figure
+ * @var \common\models\ClassHistory[]           $history
+ * @var \common\models\Participant[]            $participants
+ * @var \common\models\RequestForSpecialStage[] $specialHistory
  */
 ?>
 
@@ -24,7 +25,9 @@ use yii\bootstrap\Html;
         <h3><?= $athlete->getFullName() ?><?php if ($athlete->number) { ?>, №<?= $athlete->number ?><?php } ?></h3>
         <div class="info">
             <div class="item">
-                <b>Город: </b><?= $athlete->city->title ?>, <?= $athlete->region->title ?>
+                <b><?= \Yii::t('app', 'Город') ?>: </b>
+	            <?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>,
+                <?= \common\helpers\TranslitHelper::translitRegion($athlete->region->title) ?>
             </div>
 			<?php if ($athlete->athleteClassId) {
 				$athleteClass = $athlete->athleteClass;
@@ -34,13 +37,14 @@ use yii\bootstrap\Html;
 				}
 				?>
                 <div class="item">
-                    <b>Класс: </b><div
+                    <b><?= \Yii::t('app', 'Класс') ?>: </b>
+                    <div
                             class="circle-class circle-class-<?= $cssClass ?>"><?= $athleteClass->title ?></div>
                 </div>
 			<?php } ?>
         </div>
         <div class="motorcycles pt-10">
-            <h4>Мотоциклы:</h4>
+            <h4><?= \Yii::t('app', 'Мотоциклы') ?>:</h4>
 			<?php /** @var \common\models\Motorcycle[] $motorcycles */
 			$motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->all();
 			foreach ($motorcycles as $motorcycle) { ?>
@@ -51,15 +55,15 @@ use yii\bootstrap\Html;
 
     <div class="figures pt-10">
         <h4>
-            Результаты базовых фигур<br>
-            <small>представлены только лучшие результаты</small>
+			<?= \Yii::t('app', 'Результаты базовых фигур') ?><br>
+            <small><?= \Yii::t('app', 'представлены только лучшие результаты') ?></small>
             <br>
             <span class="small">
-                <small>для просмотра прогресса по фигуре нажмите на время</small>
+                <small><?= \Yii::t('app', 'для просмотра прогресса по фигуре нажмите на время') ?></small>
             </span>
         </h4>
 		<?php if (!$figuresResult) { ?>
-            Информация отсутствует
+			<?= \Yii::t('app', 'Информация отсутствует') ?>
 		<?php } else { ?>
             <table class="table table-bordered">
 				<?php foreach ($figuresResult as $data) { ?>
@@ -99,27 +103,29 @@ use yii\bootstrap\Html;
             </table>
 		<?php } ?>
     </div>
-	
-	<?php if ($participants) { ?>
+    
+    <?php if ($participants) { ?>
     <div class="history pt-10">
         <h4>
-            Участие в этапах<br>
-            <small>показано не более 30 последних записей</small>
+           <?= \Yii::t('app', 'Участие в этапах') ?><br>
+            <small><?= \Yii::t('app', 'показано не более 30 последних записей') ?></small>
         </h4>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <tr>
-                    <th>Этап</th>
-                    <th>Мотоцикл</th>
-                    <th>Рейтинг</th>
-                    <th>Место в абсолюте</th>
+                    <th><?= \Yii::t('app', 'Этап') ?></th>
+                    <th><?= \Yii::t('app', 'Мотоцикл') ?></th>
+                    <th><?= \Yii::t('app', 'Рейтинг') ?></th>
+                    <th><?= \Yii::t('app', 'Место') ?></th>
                 </tr>
 				<?php foreach ($participants as $participant) { ?>
                     <tr>
                         <td>
 							<?php $stage = $participant->stage; ?>
-							<?= Html::a($stage->title, ['/competitions/stage', 'id' => $stage->id]) ?><br>
-                            <small><?= $stage->dateOfThe ? $stage->dateOfTheHuman . ', ' . $stage->city->title : $stage->city->title ?></small>
+							<?= Html::a($stage->getTitle(), ['/competitions/stage', 'id' => $stage->id]) ?><br>
+                            <small><?= $stage->dateOfThe ?
+                                    $stage->dateOfTheHuman . ', ' . \common\helpers\TranslitHelper::translitCity($stage->city->title)
+                                    : \common\helpers\TranslitHelper::translitCity($stage->city->title) ?></small>
                         </td>
                         <td><?= $participant->motorcycle->getFullTitle() ?></td>
                         <td>
@@ -147,9 +153,15 @@ use yii\bootstrap\Html;
 								echo $participant->place;
 							} else {
 								if ($stage->referenceTime) {
-									?>
-                                    <span class="fa fa-remove remove"></span>
-									<?php
+									if ($participant->status !== \common\models\Participant::STATUS_OUT_COMPETITION) {
+										?>
+                                        <span class="fa fa-remove remove"></span>
+										<?php
+									} else {
+										?>
+                                        <span class="small"><?= \Yii::t('app', 'вне зачёта') ?></span>
+										<?php
+									}
 								} else {
 									?>
                                     <span class="green wait">...</span>
@@ -159,34 +171,60 @@ use yii\bootstrap\Html;
                         </td>
                     </tr>
 				<?php } ?>
+				<?php foreach ($specialHistory as $item) { ?>
+                    <tr>
+                        <td>
+							<?php $stage = $item->stage; ?>
+							<?= Html::a($stage->getTitle(), ['/competitions/special-stage', 'id' => $stage->id]) ?><br>
+							<?= \Yii::t('app', '{year}г.', [
+							        'year' => $stage->championship->year->year
+                            ]) ?>
+                        </td>
+                        <td><?= $item->motorcycle->getFullTitle() ?></td>
+                        <td>
+							<?php if ($item->percent) {
+								echo $item->percent . '%';
+								if ($item->videoLink) { ?>
+                                    <a href="<?= $item->videoLink ?>" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+								<?php }
+							} ?>
+                        <td>
+							<?php if ($item->place) {
+								echo $item->place;
+							} ?>
+                        </td>
+                    </tr>
+				<?php } ?>
             </table>
         </div>
-		<?php } ?>
-		
-		<?php if ($history) { ?>
-            <div class="history pt-10">
-                <h4>
-                    История переходов между классами<br>
-                    <small>показано не более 15 последних записей</small>
-                </h4>
-                <table class="table">
+    <?php } ?>
+	
+	<?php if ($history) { ?>
+        <div class="history pt-10">
+            <h4>
+				<?= \Yii::t('app', 'История переходов между классами') ?><br>
+                <small><?= \Yii::t('app', 'показано не более 15 последних записей') ?></small>
+            </h4>
+            <table class="table">
+                <tr>
+                    <th><?= \Yii::t('app', 'Дата') ?></th>
+                    <th><?= \Yii::t('app', 'Старый класс') ?></th>
+                    <th><?= \Yii::t('app', 'Новый класс') ?></th>
+                    <th><?= \Yii::t('app', 'Событие') ?></th>
+                </tr>
+				<?php foreach ($history as $item) { ?>
                     <tr>
-                        <th>Дата</th>
-                        <th>Старый класс</th>
-                        <th>Новый класс</th>
-                        <th>Событие</th>
+                        <td><?= $item->dateForHuman ?></td>
+                        <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
+                        <td><?= $item->newClass->title ?></td>
+                        <td><?= $item->event ?></td>
                     </tr>
-					<?php foreach ($history as $item) { ?>
-                        <tr>
-                            <td><?= $item->dateForHuman ?></td>
-                            <td><?= $item->oldClassId ? $item->oldClass->title : '' ?></td>
-                            <td><?= $item->newClass->title ?></td>
-                            <td><?= $item->event ?></td>
-                        </tr>
-					<?php } ?>
-                </table>
-            </div>
-		<?php } ?>
-    </div>
+				<?php } ?>
+            </table>
+        </div>
+	<?php } ?>
+</div>
 
-    <a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"> Вернуться к спортсменам </a>
+<a href="<?= \yii\helpers\Url::to(['/athletes/list']) ?>"><?= \Yii::t('app', 'Вернуться к списку спортсменов') ?></a>

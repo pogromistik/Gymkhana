@@ -12,18 +12,18 @@ use common\models\TmpFigureResult;
 
 $this->title = 'Результаты фигур, требующие одобрения';
 ?>
-
-<div class="alert alert-danger">
-    <b>После добавления результатов зайдите на страницу фигуры, чтобы подтвердить переходы спортсменов в новые классы и
-        при необходимости
-        установить новые рекорды.</b>
-</div>
-
-<div class="alert alert-info">
+<div class="alert required-alert-info">
     Мы принимаем только результаты, для которых есть видео заезда (при этом обязательно должна быть электронная
-    телеметрия! результаты, засеченные телефоном не могут считаться официальными и не принимаются на сайт) или
+    телеметрия! результаты, засеченные телефоном не могут считаться официальными и не принимаются на сайт. исключение -
+    результат не влияет на класс спортсмена + класс спортсмена ниже D1) или
     этот результат есть в группе <a href="https://vk.com/motogymkhana_ru" target="_blank">Мото Джимхана [Sport]</a>
     (или <a href="https://vk.com/topic-35972290_30425335?offset=0" target="_blank">МотоДжимхана</a> для GP8)
+</div>
+
+<div class="alert required-alert-info">
+    После добавления результатов зайдите на страницу фигуры, чтобы подтвердить переходы спортсменов в новые классы и
+    при необходимости
+    установить новые рекорды.
 </div>
 
 <div class="tmp-participant-index">
@@ -141,7 +141,7 @@ $this->title = 'Результаты фигур, требующие одобре
 				'value'  => function (TmpFigureResult $figureResult) {
 					$html = '<div class = "pb-10">' . Html::a('<span class="fa fa-check"></span>',
 							['/competitions/tmp-figures/approve', 'id' => $figureResult->id],
-							['class'       => 'btn btn-success getRequestWithConfirm',
+							['class'       => 'btn btn-my-style btn-green getRequestWithConfirm',
 							 'data-id'     => $figureResult->id,
 							 'data-action' => '/competitions/tmp-figures/approve',
 							 'data-text'   => 'Уверены, что хотите добавить этот результат на сайт?'
@@ -153,7 +153,7 @@ $this->title = 'Результаты фигур, требующие одобре
 			[
 				'format' => 'raw',
 				'value'  => function (TmpFigureResult $figureResult) {
-					$html = '<a href="#" class="btn btn-danger cancelFigureResult"
+					$html = '<a href="#" class="btn btn-my-style btn-red cancelFigureResult"
 data-id = ' . $figureResult->id . '
 >
 <span class="fa fa-remove"></span>
@@ -184,7 +184,7 @@ data-id = ' . $figureResult->id . '
             <div class="modal-footer">
                 <div class="form-text"></div>
                 <div class="button">
-					<?= Html::submitButton('Сохранить', ['class' => 'btn btn-lg btn-block btn-primary']) ?>
+					<?= Html::submitButton('Сохранить', ['class' => 'btn btn-lg btn-block btn-my-style btn-green']) ?>
                 </div>
             </div>
 			<?= Html::endForm() ?>

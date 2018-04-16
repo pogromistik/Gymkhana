@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 				'format' => 'raw',
 				'value'  => function (\common\models\OverallFile $item) {
 					return Html::a('Скачать', ['download', 'id' => $item->id], [
-						'class' => 'btn btn-primary'
+						'class' => 'btn btn-my-style btn-dirty-blue'
 					]);
 				}
 			],
@@ -124,7 +124,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 				'visible' => \Yii::$app->user->can('projectOrganizer'),
 				'value'   => function (\common\models\OverallFile $item) {
 					return Html::a('<span class="fa fa-remove"></span>', ['remove-file', 'id' => $item->id], [
-						'class'   => 'btn btn-danger removeOverallFile',
+						'class'   => 'btn btn-my-style btn-red removeOverallFile',
 						'data-id' => $item->id
 					]);
 				}

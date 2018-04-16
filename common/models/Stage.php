@@ -3,7 +3,9 @@
 namespace common\models;
 
 use common\components\BaseActiveRecord;
+use common\components\Resize;
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
@@ -32,6 +34,10 @@ use yii\web\UploadedFile;
  * @property string        $documentIds
  * @property integer       $participantsLimit
  * @property integer       $fastenClassFor
+ * @property integer       $outOfCompetitions
+ * @property string        $title_en
+ * @property string        $descr_en
+ * @property integer       $registrationFromSite
  *
  * @property AthletesClass $classModel
  * @property Championship  $championship
@@ -98,6 +104,7 @@ class Stage extends BaseActiveRecord
 		parent::init();
 		if ($this->isNewRecord) {
 			$this->countRace = 2;
+			$this->registrationFromSite = 1;
 		}
 	}
 	
@@ -124,17 +131,29 @@ class Stage extends BaseActiveRecord
 				'trackPhotoStatus',
 				'countryId',
 				'participantsLimit',
-				'fastenClassFor'
+				'fastenClassFor',
+				'outOfCompetitions',
+				'registrationFromSite'
 			], 'integer'],
-			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman', 'trackPhoto'], 'string', 'max' => 255],
-			[['description'], 'string'],
+			[['title', 'location', 'dateOfTheHuman', 'startRegistrationHuman', 'endRegistrationHuman',
+				'trackPhoto', 'title_en'], 'string', 'max' => 255],
+			[['description', 'descr_en'], 'string'],
 			[['documentIds'], 'safe'],
 			[['countRace'], 'integer', 'max' => 5],
 			[['countRace'], 'integer', 'min' => 1],
 			[['participantsLimit'], 'integer', 'min' => 3],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
-			                      'tooBig'     => 'Размер файла не должен превышать 2MB']
+			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
+			['photoFile', 'image', 'maxWidth' => 3000, 'maxHeight' => 3000],
+			['photoFile', 'validateFile'],
+			['outOfCompetitions', 'default', 'value' => 0],
+			['registrationFromSite', 'default', 'value' => 1]
 		];
+	}
+	
+	public function validateFile($attribute, $params)
+	{
+		$this->addError($attribute, 'В вашей области уже есть человек с таким номером.');
 	}
 	
 	/**
@@ -168,7 +187,11 @@ class Stage extends BaseActiveRecord
 			'countryId'              => 'Страна',
 			'documentIds'            => 'Документы',
 			'participantsLimit'      => 'Допустимое количество участников',
-			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа'
+			'fastenClassFor'         => 'Закрепить класс участников за ... дней до этапа',
+			'outOfCompetitions'      => 'Вне общего зачёта',
+			'title_en'               => 'Название',
+			'descr_en'               => 'Описание',
+			'registrationFromSite'   => 'Регистрация с сайта'
 		];
 	}
 	
@@ -224,6 +247,7 @@ class Stage extends BaseActiveRecord
 			$title = uniqid() . '.' . $file->extension;
 			$folder = $dir . '/' . $title;
 			if ($file->saveAs($folder)) {
+				Resize::resizeImage($folder);
 				$this->trackPhoto = 'stages-tracks/' . $title;
 				if (!$this->trackPhotoStatus) {
 					$this->trackPhotoStatus = self::PHOTO_NOT_PUBLISH;
@@ -273,6 +297,8 @@ class Stage extends BaseActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 		if ($insert) {
 			AssocNews::createStandardNews(AssocNews::TEMPLATE_STAGE, $this);
+			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_STAGES,
+				NewsSubscription::MSG_FOR_STAGE, $this->id);
 		}
 	}
 	
@@ -562,5 +588,81 @@ LIMIT 1) order by "bestTime" asc) n'])
 		$figureTitles = Figure::find()->select('title')->where(['id' => $figureIds])->asArray()->column();
 		
 		return ['results' => $results, 'figureIds' => $figureIds, 'figureTitles' => $figureTitles];
+	}
+	
+	/**
+	 * @return AthletesClass | null
+	 */
+	public function classCalculate()
+	{
+		$participants = Participant::findAll(['stageId' => $this->id, 'status' => [Participant::STATUS_ACTIVE], 'isArrived' => 1]);
+		if ($participants) {
+			$classIds = Participant::find()->select('athleteClassId')
+				->where(['stageId' => $this->id, 'status' => Participant::STATUS_ACTIVE, 'isArrived' => 1])->distinct()->asArray()->column();
+			$class = null;
+			while ($classIds) {
+				$percent = AthletesClass::find()->where(['id' => $classIds])->min('"percent"');
+				/** @var AthletesClass $presumablyClass */
+				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
+				if (Participant::find()
+						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
+			from "Participants" WHERE "stageId"=' . $this->id . ') b'))
+						->where(new Expression('n=1'))
+						->andWhere(['a.stageId' => $this->id, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
+						->andWhere(['a.athleteClassId' => $presumablyClass->id])
+						->andWhere(new Expression('"a"."id"="b"."id"'))
+						->count() >= 3
+				) {
+					$class = $presumablyClass;
+					break;
+				}
+				$key = array_search($presumablyClass->id, $classIds);
+				unset($classIds[$key]);
+			}
+			if (!$class) {
+				$class = AthletesClass::find()->where(['status' => AthletesClass::STATUS_ACTIVE])
+					->orderBy(['percent' => SORT_DESC])->one();
+			}
+			
+			return $class;
+		} else {
+			return null;
+		}
+	}
+	
+	public function getTitle($language = null)
+	{
+		if (!$this->title_en) {
+			return $this->title;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->title_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->title_en;
+		}
+	}
+	
+	public function getDescr($language = null)
+	{
+		if (!$this->descr_en) {
+			return $this->description;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descr_en;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descr_en;
+		}
 	}
 }

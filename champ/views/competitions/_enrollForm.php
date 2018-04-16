@@ -15,31 +15,31 @@ $championship = $stage->championship;
 ?>
 
 <div class="modal fade" id="enrollForm" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<?php $form = ActiveForm::begin(['options' => ['class' => 'newRegistration',
-            'data-action' => 'add-unauthorized-registration']]) ?>
-			<div class="modal-body">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+			<?php $form = ActiveForm::begin(['options' => ['class'       => 'newRegistration',
+			                                               'data-action' => 'add-unauthorized-registration']]) ?>
+            <div class="modal-body">
                 <div class="help-for-athlete">
                     <small>
-                        Если Вы зарегистрированы у нас на сайте - пожалуйста, сперва
-						<?= \yii\bootstrap\Html::a('ВОЙДИТЕ В ЛИЧНЫЙ КАБИНЕТ', ['/site/login']) ?>
+						<?= \yii\bootstrap\Html::a(\Yii::t('app', 'Если Вы зарегистрированы у нас на сайте - пожалуйста, сперва ВОЙДИТЕ В ЛИЧНЫЙ КАБИНЕТ'),
+							['/site/login']) ?>
                     </small>
                 </div>
-                
+				
 				<?= $form->field($participant, 'stageId')->hiddenInput()->label(false)->error(false) ?>
 				<?= $form->field($participant, 'championshipId')->hiddenInput()->label(false)->error(false) ?>
-                
+
                 <h4 class="text-center">Укажите информацию о себе</h4>
-				<?= $form->field($participant, 'lastName')->textInput(['placeholder' => 'Ваша фамилия']) ?>
-				<?= $form->field($participant, 'firstName')->textInput(['placeholder' => 'Полное имя']) ?>
-                <?php if (!$participant->countryId) { ?>
-                    <?php $participant->countryId = 1 ?>
-                <?php } ?>
+				<?= $form->field($participant, 'lastName')->textInput(['placeholder' => \Yii::t('app', 'Ваша фамилия')]) ?>
+				<?= $form->field($participant, 'firstName')->textInput(['placeholder' => \Yii::t('app', 'Полное имя')]) ?>
+				<?php if (!$participant->countryId) { ?>
+					<?php $participant->countryId = 1 ?>
+				<?php } ?>
 				<?= $form->field($participant, 'countryId')->widget(Select2::classname(), [
 					'data'    => \common\models\Country::getAll(true),
 					'options' => [
-						'placeholder' => 'Выберите страну...',
+						'placeholder' => \Yii::t('app', 'Выберите страну') . '...',
 						'id'          => 'country-id',
 					],
 				]); ?>
@@ -50,19 +50,19 @@ $championship = $stage->championship;
 					->orderBy(['title' => SORT_ASC])->limit(50)->all(),
 					'id', 'title');
 				?>
-                
+
                 <div class="registration-city">
                     <div id="city-list">
 						<?= $form->field($participant, 'cityId')->widget(DepDrop::classname(), [
 							'data'           => $participant,
-							'options'        => ['placeholder' => 'Выберите город...'],
+							'options'        => ['placeholder' => \Yii::t('app', 'Выберите город') . '...'],
 							'type'           => DepDrop::TYPE_SELECT2,
 							'select2Options' => [
 								'pluginOptions' => [
 									'allowClear'         => true,
 									'minimumInputLength' => 3,
 									'language'           => [
-										'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+										'errorLoading' => new JsExpression("function () { return " . \Yii::t('app', 'Поиск результатов') . "'...'; }"),
 									],
 									'ajax'               => [
 										'url'      => $url,
@@ -77,51 +77,55 @@ $championship = $stage->championship;
 							'pluginOptions'  => [
 								'depends'     => ['country-id'],
 								'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
-								'loadingText' => 'Для выбранной страны нет городов...',
-								'placeholder' => 'Выберите город...',
+								'loadingText' => \Yii::t('app', 'Для выбранной страны не найдено городов') . '...',
+								'placeholder' => \Yii::t('app', 'Выберите город') . '...',
 							]
 						]); ?>
                     </div>
                     <div class="small">
-                        <a href="#" class="list" id="cityNotFound">Нажмите, если вашего города нет в списке</a>
+                        <a href="#" class="list"
+                           id="cityNotFound"><?= \Yii::t('app', 'Нажмите, если вашего города нет в списке') ?></a>
                     </div>
                     <div id="city-text" class="inactive">
-						<?= $form->field($participant, 'city')->textInput(['placeholder' => 'Введите Ваш город и регион', 'id' => 'city-text-input']) ?>
+						<?= $form->field($participant, 'city')->textInput(['placeholder' => \Yii::t('app', 'Введите Ваш город и регион'), 'id' => 'city-text-input']) ?>
                     </div>
                 </div>
-				<?= $form->field($participant, 'phone')->textInput(['placeholder' => 'Номер телефона']) ?>
-				<?= $form->field($participant, 'email')->textInput(['placeholder' => 'Email']) ?>
-                
-				<h4 class="text-center">Укажите мотоцикл, на котором будете участвовать</h4>
-				<?= $form->field($participant, 'motorcycleMark')->textInput(['placeholder' => 'Марка, напр. kawasaki']) ?>
-				<?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => 'Модель, напр. ER6-F']) ?>
-                
-                <h4 class="text-center">Желаемый номер</h4>
+				<?= $form->field($participant, 'phone')->textInput(['placeholder' => \Yii::t('app', 'Номер телефона')]) ?>
+				<?= $form->field($participant, 'email')->textInput(['placeholder' => \Yii::t('app', 'Email')]) ?>
+
+                <h4 class="text-center">Укажите мотоцикл, на котором будете участвовать</h4>
+				<?= $form->field($participant, 'motorcycleMark')->textInput(['placeholder' => \Yii::t('app', 'Марка, напр. kawasaki')]) ?>
+				<?= $form->field($participant, 'motorcycleModel')->textInput(['placeholder' => \Yii::t('app', 'Модель, напр. ER6-F')]) ?>
+
+                <h4 class="text-center"><?= \Yii::t('app', 'Желаемый номер') ?></h4>
                 <div class="help-for-athlete">
                     <small>
-                        Выберите значение от <?= $championship->minNumber ?> до <?= $championship->maxNumber ?>
-                        или оставьте поле пустым
+						<?= \Yii::t('app', 'Выберите значение от {minNumber} до {maxNumber} или оставьте поле пустым', [
+							'minNumber' => $championship->minNumber,
+							'maxNumber' => $championship->maxNumber
+						]) ?>
                     </small>
                 </div>
 				<?= $form->field($participant, 'number')->textInput(['placeholder' => 'номер участника'])->label(false) ?>
-                <a href="#" class="freeNumbersList" data-id = "<?= $stage->id ?>">Посмотреть список свободных номеров</a>
-			</div>
+                <a href="#" class="freeNumbersList"
+                   data-id="<?= $stage->id ?>"><?= \Yii::t('app', 'Посмотреть список свободных номеров') ?></a>
+            </div>
             <div class="alerts"></div>
             <div class="alert alert-danger" style="display: none"></div>
             <div class="alert alert-success" style="display: none"></div>
-			<div class="modal-footer">
-				<div class="form-text"></div>
-				<div class="button">
-					<?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-lg btn-block btn-dark']) ?>
-				</div>
-				
-				<div class="free-numbers text-left">
-					<hr>
-					<h4 class="text-center">Свободные номера</h4>
-					<div class="list"></div>
-				</div>
-			</div>
+            <div class="modal-footer">
+                <div class="form-text"></div>
+                <div class="button">
+					<?= Html::submitButton(\Yii::t('app', 'Зарегистрироваться'), ['class' => 'btn btn-lg btn-block btn-dark']) ?>
+                </div>
+
+                <div class="free-numbers text-left">
+                    <hr>
+                    <h4 class="text-center"><?= \Yii::t('app', 'Свободные номера') ?></h4>
+                    <div class="list"></div>
+                </div>
+            </div>
 			<?php $form->end() ?>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>

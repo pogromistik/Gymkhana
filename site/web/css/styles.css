@@ -6,6 +6,7 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: "Exo";
     src: url(../fonts/Exo%202%20Regular%20Expanded.otf);
@@ -13,7 +14,7 @@
     font-style: normal;
 }
 
-.main-menu-content .col-md-6, .main-menu-content .col-md-3{
+.main-menu-content .col-md-6, .main-menu-content .col-md-3 {
     border-bottom: 1px solid #242423;
     border-right: 1px solid #242423;
 }
@@ -24,8 +25,9 @@
     background: #333;
     float: left;
     position: relative;
-    overflow:hidden;
+    overflow: hidden;
 }
+
 .col2-3 {
     width: 100%;
     margin-bottom: 1px;
@@ -33,25 +35,31 @@
     float: left;
     position: relative
 }
+
 .col1-3.grey {
     padding: 90px 35px 17px 35px;
     width: 100%;
     text-align: center
 }
+
 .col1-3.auto, .col2-3.auto {
     height: auto;
 }
+
 .col1-3.double {
     height: 560px;
 }
+
 .col2-3.half {
     height: 280px;
 }
+
 .col2-3.grey, .col3-3.grey, .col4-3.grey {
     padding: 75px 80px;
     background: #333;
     text-align: center;
 }
+
 .grey.heading-section {
     padding: 60px 55px 43px 55px
 }
@@ -65,20 +73,23 @@
     background: #333;
     z-index: 33;
 }
+
 .col2-3.grey-bottom {
     padding: 45px 50px 32px 50px;
     background: #333;
 }
+
 .element .col1-3, .element .col2-3, .element .col3-3 {
     margin: 0
 }
 
 /* основная часть */
-.main-menu-content{
+.main-menu-content {
     color: #56a025;
 }
-.main-menu-content .menu{
-    background: #56a025!important;
+
+.main-menu-content .menu {
+    background: #56a025 !important;
     width: 100%;
     height: 60px;
     border-bottom: 1px solid #232324;
@@ -100,11 +111,13 @@
     padding: 23px 35px 12px;
     bottom: 0px;
 }
+
 a:hover .bottom {
     background: #393939;
     -webkit-transition: all 0.2s ease 0s;
     transition: all 0.2s ease 0s;
 }
+
 a:hover .bottom p {
     color: #fff;
     -webkit-transition: all 0.2s ease 0s;
@@ -124,21 +137,26 @@ a:hover .bottom p {
     max-width: 100% !important;
     z-index: 9
 }
+
 .images.dark img {
     opacity: 0.3;
     background: #000;
 }
+
 img {
     box-shadow: #000 0 0 0
 }
 
+.sliphover-overlay {
+    background-color: #333 !important;
+}
 
 .sliphoveritemTitle {
     font-size: 20px;
     font-weight: 400;
     letter-spacing: 0px;
     font-family: 'Exo';
-    padding: 0px!important;
+    padding: 0px !important;
 }
 
 .sliphoveritemTitle span {
@@ -170,19 +188,23 @@ ol {
     font-size: 16px;
     font-family: 'Lora', Georgia, "Times New Roman", Times, serif;
 }
+
 .child ul.unordered-list, .child .hentry ul, .child ol {
     padding: 10px 30px 0 50px;
 }
+
 ul.unordered-list li a, .hentry ul li a, ol li a {
     color: #ccc;
     text-decoration: none;
     border-bottom: 1px solid #ccc;
 }
+
 ul.unordered-list li a:hover, .hentry ul li a:hover, ol li a:hover {
     color: #fff;
     text-decoration: none;
     border-bottom: 1px solid #fff;
 }
+
 ul.unordered-list.services-list {
     font-size: 24px;
     line-height: 1.3;
@@ -192,12 +214,14 @@ ul.unordered-list.services-list {
     position: absolute;
     width: 100%
 }
+
 ul.unordered-list.services-list li {
     padding: 32px 75px 33px 55px;
     border-top: 1px solid #242423;
     text-align: left !important;
     position: relative
 }
+
 ul.unordered-list.services-list li span.arrow {
     position: absolute;
     right: 55px;
@@ -210,6 +234,7 @@ ul.unordered-list.services-list a li {
     -webkit-transition: all 0.2s ease 0s;
     transition: all 0.2s ease 0s;
 }
+
 ul.unordered-list.services-list a:hover li {
     color: #fff;
     background: #393939;
@@ -220,26 +245,31 @@ ul.unordered-list.services-list a:hover li {
 #bottom-menu-mobile {
     display: none;
 }
+
 .bottom-menu-mobile {
     text-align: center;
 }
+
 .bottom-menu-mobile h2 {
     padding: 10px 20px;
 }
+
 .bottom-menu-mobile li {
     padding: 20px 10px;
     border-top: 1px solid #242423;
 }
 
 /* Новости */
-.main_news img{
+.main_news img {
     width: 100%;
-    padding: 0!important;
+    padding: 0 !important;
 }
-.main_news{
+
+.main_news {
     position: relative;
 }
-.main_news .text_title{
+
+.main_news .text_title {
     position: absolute;
     left: 20px;
     top: 20px;
@@ -249,7 +279,8 @@ ul.unordered-list.services-list a:hover li {
     text-transform: uppercase;
     font-size: 22px;
 }
-.main_news .text_descript{
+
+.main_news .text_descript {
     position: absolute;
     right: 20px;
     bottom: 20px;
@@ -269,6 +300,7 @@ ul.unordered-list.services-list a:hover li {
     height: 100%;
     width: 100%;
 }
+
 .my-button-top {
     position: absolute;
     width: 80%;
@@ -283,6 +315,7 @@ ul.unordered-list.services-list a:hover li {
     font-size: 22px;
     font-weight: 700;
 }
+
 .my-button-bottom {
     position: absolute;
     width: 80%;
@@ -294,6 +327,7 @@ ul.unordered-list.services-list a:hover li {
     right: -100%;
     transition: all 1.5s;
 }
+
 .news-mobile-top {
     position: absolute;
     width: 80%;
@@ -308,6 +342,7 @@ ul.unordered-list.services-list a:hover li {
     font-size: 22px;
     font-weight: 700;
 }
+
 .news-mobile-bottom {
     position: absolute;
     width: 80%;

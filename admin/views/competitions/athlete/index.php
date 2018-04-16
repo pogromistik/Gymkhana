@@ -13,7 +13,7 @@ $this->title = 'Спортсмены';
 ?>
 <div class="athlete-index">
     <p>
-		<?= Html::a('Добавить спортсмена', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Добавить спортсмена', ['create'], ['class' => 'btn btn-my-style btn-green']) ?>
     </p>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -22,44 +22,27 @@ $this->title = 'Спортсмены';
 			['class' => 'yii\grid\SerialColumn'],
 			
 			[
-				'attribute' => 'lastName',
-				'filter'    => Select2::widget([
-					'model'         => $searchModel,
-					'attribute'     => 'lastName',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['lastName' => SORT_ASC])->all(), 'lastName', 'lastName'),
-					'theme'         => Select2::THEME_BOOTSTRAP,
-					'pluginOptions' => [
-						'allowClear' => true
-					],
-					'options'       => [
-						'placeholder' => 'Укажите фамилию...',
-					]
-				]),
-				'format'    => 'raw',
-				'value'     => function (\common\models\Athlete $athlete) {
-					if (\Yii::$app->user->can('developer')) {
-						return Html::a($athlete->lastName, ['/competitions/developer/logs',
-							'modelClass' => \common\models\Athlete::class,
-							'modelId'    => $athlete->id]);
-					}
-					
-					return $athlete->lastName;
-				}
+				'attribute' => 'id',
+				'visible'   => \Yii::$app->user->can('developer')
 			],
 			[
-				'attribute' => 'firstName',
-				'filter'    => Select2::widget([
-					'model'         => $searchModel,
-					'attribute'     => 'firstName',
-					'data'          => \yii\helpers\ArrayHelper::map(\common\models\Athlete::find()->orderBy(['firstName' => SORT_ASC])->all(), 'firstName', 'firstName'),
-					'theme'         => Select2::THEME_BOOTSTRAP,
-					'pluginOptions' => [
-						'allowClear' => true
-					],
-					'options'       => [
-						'placeholder' => 'Укажите имя...',
-					]
-				])
+				'label'  => 'Имя',
+				'format' => 'raw',
+				'filter' => '<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+' . Html::activeInput('text', $searchModel, 'firstOrLastName',
+						['class' => 'form-control', 'placeholder' => 'Имя или фамилия...']) . '
+</div>',
+				'value'  => function (\common\models\Athlete $athlete) {
+					if (\Yii::$app->user->can('developer')) {
+						return Html::a($athlete->getFullName(), ['/competitions/developer/logs',
+							'modelClass' => \common\models\Athlete::class,
+							'modelId'    => $athlete->id
+						], ['class' => 'dev-logs']);
+					}
+					
+					return $athlete->getFullName();
+				}
 			],
 			[
 				'attribute' => 'phone',
@@ -74,6 +57,36 @@ $this->title = 'Спортсмены';
   <span class="input-group-addon"><i class="fa fa-search"></i></span>
 ' . Html::activeInput('text', $searchModel, 'email', ['class' => 'form-control']) . '
 </div>',
+			],
+			[
+				'attribute' => 'regionId',
+				'filter'    => Select2::widget([
+					'model'         => $searchModel,
+					'attribute'     => 'regionId',
+					'data'          => $searchModel->regionId ? [$searchModel->regionId => $searchModel->region->title] : [],
+					'theme'         => Select2::THEME_BOOTSTRAP,
+					'pluginOptions' => [
+						'allowClear'         => true,
+						'minimumInputLength' => 3,
+						'language'           => [
+							'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
+						],
+						'ajax'               => [
+							'url'      => \yii\helpers\Url::to(['/competitions/help/region-list']),
+							'dataType' => 'json',
+							'data'     => new JsExpression('function(params) { return {title:params.term}; }')
+						],
+						'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+						'templateResult'     => new JsExpression('function(city) { return city.text; }'),
+						'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
+					],
+					'options'       => [
+						'placeholder' => 'Укажите регион...',
+					]
+				]),
+				'value'     => function (\common\models\Athlete $athlete) {
+					return $athlete->region->title;
+				}
 			],
 			[
 				'attribute' => 'cityId',
@@ -132,24 +145,10 @@ $this->title = 'Спортсмены';
 </div>',
 			],
 			[
-				'attribute' => 'hasAccount',
-				'format'    => 'raw',
-				'filter'    => false,
-				'value'     => function (\common\models\Athlete $athlete) {
-					$html = $athlete->hasAccount ? 'Да' : 'Нет';
-					if (\Yii::$app->user->can('developer') && $athlete->lastActivityDate) {
-						$html .= '<br>';
-						$html .= '<small class="very">' . date('d.m.y, H:i', $athlete->lastActivityDate) . '</small>';
-					}
-					
-					return $html;
-				}
-			],
-			[
 				'format' => 'raw',
 				'value'  => function (\common\models\Athlete $athlete) {
 					return Html::a('<span class="fa fa-eye"></span>', ['view', 'id' => $athlete->id], [
-						'class' => 'btn btn-info',
+						'class' => 'btn btn-my-style btn-light-blue',
 						'title' => 'Просмотр'
 					]);
 				}
@@ -159,7 +158,7 @@ $this->title = 'Спортсмены';
 				'value'  => function (\common\models\Athlete $athlete) {
 					return \common\helpers\UserHelper::accessAverage($athlete->regionId, $athlete->creatorUserId) ?
 						Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $athlete->id], [
-							'class' => 'btn btn-primary',
+							'class' => 'btn btn-my-style btn-blue',
 							'title' => 'Редактирование'
 						]) : '';
 				}

@@ -12,7 +12,10 @@ use yii\bootstrap\Html;
 $this->title = 'Расчёт результата заезда спортсмена';
 ?>
 
-    <div class="alert alert-info">
+    <div class="alert help-alert alert-info">
+        <div class="text-right">
+            <span class="fa fa-remove closeHintBtn"></span>
+        </div>
         Необходимо указать время лучшего заезда (с учётом штрафов) спортсмена, класс спортсмена и эталонное время
         трассы.
     </div>
@@ -45,7 +48,7 @@ $this->title = 'Расчёт результата заезда спортсме�
         </div>
         <div class="col-sm-2">
             <label>&nbsp;</label><br>
-			<?= Html::submitButton('Результат заезда', ['class' => 'btn btn-primary']) ?>
+			<?= Html::submitButton('Результат заезда', ['class' => 'btn btn-my-style btn-aquamarine']) ?>
         </div>
     </div>
 <?php $form->end(); ?>
