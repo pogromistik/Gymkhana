@@ -53,10 +53,10 @@ class AssocNews extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['fullText', 'previewText'], 'string'],
+			[['fullText', 'previewText', 'previewText'], 'string'],
 			[['dateAdded', 'dateUpdated', 'previewText'], 'required'],
 			[['dateAdded', 'dateUpdated', 'datePublish', 'secure', 'canEditRegionId', 'creatorUserId', 'offerUserId', 'status'], 'integer'],
-			[['previewText', 'link', 'title', 'datePublishHuman'], 'string', 'max' => 255],
+			[['link', 'title', 'datePublishHuman'], 'string', 'max' => 255],
 			[['secure'], 'default', 'value' => 0],
 			[['status'], 'default', 'value' => 1]
 		];

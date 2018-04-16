@@ -8,7 +8,7 @@ use kartik\widgets\DatePicker;
 /* @var $this yii\web\View */
 /* @var $model common\models\AssocNews */
 /* @var $form yii\widgets\ActiveForm */
-$length = 255;
+$length = 400;
 if ($model->previewText) {
 	$length -= mb_strlen($model->previewText, 'UTF-8');
 }

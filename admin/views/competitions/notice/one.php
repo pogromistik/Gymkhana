@@ -13,7 +13,7 @@ use kartik\widgets\Select2;
 /* @var $model \common\models\Notice */
 
 $this->title = 'Уведомления для зарегистрировавшихся пользователей';
-$length = 255;
+$length = 400;
 ?>
 <div class="notice-index">
 	<?php if ($success) { ?>

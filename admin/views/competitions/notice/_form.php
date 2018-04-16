@@ -7,7 +7,7 @@ use kartik\widgets\Select2;
 /* @var $this yii\web\View */
 /* @var $model common\models\Notice */
 /* @var $form yii\widgets\ActiveForm */
-$length = 255;
+$length = 400;
 ?>
 
 <div class="notice-form">

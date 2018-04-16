@@ -44,7 +44,8 @@ class Notice extends \yii\db\ActiveRecord
 		return [
 			[['athleteId', 'text', 'dateAdded', 'senderId'], 'required'],
 			[['athleteId', 'status', 'dateAdded', 'senderId'], 'integer'],
-			[['link', 'text'], 'string', 'max' => 255],
+			[['link'], 'string', 'max' => 255],
+			[['text'], 'string'],
 			['senderId', 'default', 'value' => UserHelper::CONSOLE_LOG_USER_ID]
 		];
 	}

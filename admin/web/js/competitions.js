@@ -774,7 +774,7 @@ $(document).on("submit", '#figureTimeForm', function (e) {
 $(document).ready(function () {
     $("#smallText").keyup(function () {
         var box = $(this).val();
-        var count = 255 - box.length;
+        var count = 400 - box.length;
 
         if (count >= 0) {
             $('#length').removeClass('color-red');

@@ -9,7 +9,7 @@ use kartik\select2\Select2;
  * @var int                         $success
  */
 $this->title = 'Изменение класса спортсмену';
-$length = 255;
+$length = 400;
 ?>
 
 <div class="alert help-alert alert-info">
