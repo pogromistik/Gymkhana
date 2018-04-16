@@ -18,7 +18,7 @@ $formModel->dateHuman = date("d.m.Y");
 ?>
 
 <div class="registration-form">
-    <h3><?= \Yii::t('ap', 'Заполните все поля') ?></h3>
+    <h3><?= \Yii::t('app', 'Заполните все поля') ?></h3>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'specialStageForAuth']]); ?>
 	
