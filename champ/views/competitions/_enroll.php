@@ -9,7 +9,6 @@ use kartik\widgets\Select2;
 use common\models\City;
 use kartik\widgets\DepDrop;
 use yii\web\JsExpression;
-
 $participant = \common\models\TmpParticipant::createForm($stage->id);
 $championship = $stage->championship;
 ?>
@@ -35,14 +34,13 @@ $championship = $stage->championship;
 			<?php if (!$participant->countryId) { ?>
 				<?php $participant->countryId = 1 ?>
 			<?php } ?>
-			<?php /*$form->field($participant, 'countryId')->widget(Select2::classname(), [
+			<?= $form->field($participant, 'countryId')->widget(Select2::classname(), [
 				'data'    => \common\models\Country::getAll(true),
 				'options' => [
 					'placeholder' => \Yii::t('app', 'Выберите страну') . '...',
 					'id'          => 'country-id',
 				],
-			]);*/ ?>
-            <?= $form->field($participant, 'countryId')->dropDownList(\common\models\Country::getAll(true)); ?>
+			]); ?>
 			
 			<?php
 			$url = \yii\helpers\Url::to(['/help/city-list']);
@@ -52,8 +50,8 @@ $championship = $stage->championship;
 			?>
 
             <div class="registration-city">
-                <div id="city-list" class="inactive">
-					<?php /*$form->field($participant, 'cityId')->widget(DepDrop::classname(), [
+                <div id="city-list">
+					<?= $form->field($participant, 'cityId')->widget(DepDrop::classname(), [
 						'data'           => $participant,
 						'options'        => ['placeholder' => \Yii::t('app', 'Выберите город') . '...'],
 						'type'           => DepDrop::TYPE_SELECT2,
@@ -62,7 +60,7 @@ $championship = $stage->championship;
 								'allowClear'         => true,
 								'minimumInputLength' => 3,
 								'language'           => [
-									'errorLoading' => new JsExpression("function () { return " . \Yii::t('app', 'Поиск результатов') . "'...'; }"),
+									'errorLoading' => new JsExpression("function () { return 'Поиск результатов...'; }"),
 								],
 								'ajax'               => [
 									'url'      => $url,
@@ -77,22 +75,22 @@ $championship = $stage->championship;
 						'pluginOptions'  => [
 							'depends'     => ['country-id'],
 							'url'         => \yii\helpers\Url::to(['/help/country-category', 'type' => \champ\controllers\HelpController::TYPE_CITY]),
-							'loadingText' => \Yii::t('app', 'Для выбранной страны не найдено городов') . '...',
-							'placeholder' => \Yii::t('app', 'Выберите город') . '...',
+							'loadingText' => 'Для выбранной страны нет городов...',
+							'placeholder' => 'Выберите город...',
 						]
-					]);*/ ?>
+					]); ?>
                 </div>
 				<?php if (!$championship->isClosed) { ?>
-                    <?php /*<div class="small">
+                    <div class="small">
                         <a href="#" class="list"
                            id="cityNotFound"><?= \Yii::t('app', 'Нажмите, если вашего города нет в списке') ?></a>
-                    </div>*/ ?>
+                    </div>
 				<?php } else { ?>
                     <div class="small">
 						<?= \Yii::t('app', 'Для регистрации доступны только города областей:') ?> <?= $championship->getRegionsFor(true) ?>
                     </div>
 				<?php } ?>
-                <div id="city-text">
+                <div id="city-text" class="inactive">
 					<?= $form->field($participant, 'city')->textInput(['placeholder' => \Yii::t('app', 'Введите Ваш город и регион'), 'id' => 'city-text-input']) ?>
                 </div>
             </div>
