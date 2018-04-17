@@ -191,7 +191,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 	{
 		parent::afterSave($insert, $changedAttributes);
 		$stage = $this->stage;
-		if ($stage->dateResult < time()) {
+		if ($stage->dateResult && $stage->dateResult < time()) {
 			if (($this->status == self::STATUS_APPROVE && array_key_exists('resultTime', $changedAttributes))
 				|| array_key_exists('status', $changedAttributes)
 			) {
