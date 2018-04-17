@@ -362,6 +362,9 @@ class SpecialChampController extends BaseController
 				$motorcycle->athleteId = $athlete->id;
 				$motorcycle->mark = $data['motorcycleMark'];
 				$motorcycle->model = $data['motorcycleModel'];
+				$motorcycle->cbm = $data['cbm'];
+				$motorcycle->power = $data['power'];
+				$motorcycle->isCruiser = $data['isCruiser'];
 				if (!$motorcycle->save()) {
 					$transaction->rollBack();
 					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
@@ -501,6 +504,9 @@ class SpecialChampController extends BaseController
 			$motorcycle->athleteId = $athlete->id;
 			$motorcycle->mark = $data['motorcycleMark'];
 			$motorcycle->model = $data['motorcycleModel'];
+			$motorcycle->cbm = $data['cbm'];
+			$motorcycle->power = $data['power'];
+			$motorcycle->isCruiser = $data['isCruiser'];
 			if (!$motorcycle->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
