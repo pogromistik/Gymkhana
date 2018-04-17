@@ -158,6 +158,9 @@ class TmpParticipantController extends BaseController
 			$motorcycle->athleteId = $athlete->id;
 			$motorcycle->mark = $tmpParticipant->motorcycleMark;
 			$motorcycle->model = $tmpParticipant->motorcycleModel;
+			$motorcycle->cbm = $tmpParticipant->cbm;
+			$motorcycle->power = $tmpParticipant->power;
+			$motorcycle->isCruiser = $tmpParticipant->isCruiser;
 			if (!$motorcycle->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
@@ -364,6 +367,9 @@ class TmpParticipantController extends BaseController
 			$motorcycle->athleteId = $athlete->id;
 			$motorcycle->mark = $tmpParticipant->motorcycleMark;
 			$motorcycle->model = $tmpParticipant->motorcycleModel;
+			$motorcycle->cbm = $tmpParticipant->cbm;
+			$motorcycle->power = $tmpParticipant->power;
+			$motorcycle->isCruiser = $tmpParticipant->isCruiser;
 			if (!$motorcycle->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('TmpParticipants-' . $tmpParticipant->id);
