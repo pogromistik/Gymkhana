@@ -20,6 +20,9 @@ use yii\helpers\Html;
     <!-- /.navbar-header -->
 
     <ul class="nav navbar-top-links navbar-right">
+        <li class="support">
+            <div title="Если возникнут проблемы при проведении соревнований - звоните">Техподдержка: +79028609524</div>
+        </li>
 		<?php if (\Yii::$app->user->can('refereeOfCompetitions')) { ?>
 			<?php $countNewLK = \common\models\TmpAthlete::find()
 				->where(['status' => \common\models\TmpAthlete::STATUS_NEW])->count() ?>
