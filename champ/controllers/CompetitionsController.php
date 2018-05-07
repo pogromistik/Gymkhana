@@ -147,6 +147,11 @@ class CompetitionsController extends BaseController
 			$event->start = date('Y-m-d', $stage->dateStart);
 			$events[] = $event;
 		}
+		foreach ($dates as $key => $item) {
+			usort($dates[$key], function($a, $b){
+				return ($a['date'] - $b['date']);
+			});
+		}
 		ksort($dates);
 		$this->layout = 'main-with-img';
 		$this->background = 'background5.png';
