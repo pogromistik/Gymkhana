@@ -1,0 +1,30 @@
+stages:
+  - build
+  - deploy
+
+build-job-php:
+  stage: build
+  image: sonicgd/php7-nodejs-docker
+  artifacts:
+    untracked: true
+  variables:
+    GIT_STRATEGY: fetch
+  script:
+    - /usr/bin/composer install —no-dev —prefer-dist -o
+    - find vendor -type d -name \.git | xargs rm -rf
+    - /usr/bin/npm install
+    ./init —env=Production
+
+deploy-job:
+  stage: deploy
+  image: instrumentisto/rsync-ssh
+  only:
+    - master
+  when: manual
+  script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" > /tmp/key && chmod 0600 /tmp/key && ssh-add /tmp/key && rm /tmp/key
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - rsync -Oaz —exclude='.git/' —exclude='.*' . $DEPLOY_USER@$DEPLOY_HOST:$SITE_PATH
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "docker exec docker_php7_1 bash -c 'cd $SITE_PATH && php artisan migrate && cp env_prod .env'"
