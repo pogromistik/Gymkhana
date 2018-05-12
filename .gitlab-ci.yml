@@ -13,7 +13,7 @@ build-job-php:
     - /usr/bin/composer install --no-dev --prefer-dist -o
     - find vendor -type d -name \.git | xargs rm -rf
     - /usr/bin/npm install
-    - php init --env=Production
+    - php init --env=Production --overwrite=All
 
 deploy-job:
   stage: deploy
