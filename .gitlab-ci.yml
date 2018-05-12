@@ -27,4 +27,4 @@ deploy-job:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - rsync -Oaz --exclude='.git/' --exclude='.*' . $DEPLOY_USER@$DEPLOY_HOST:$SITE_PATH
-    - ssh $DEPLOY_USER@$DEPLOY_HOST "docker exec docker_php7_1 bash -c 'cd $SITE_PATH && php yii migrate'"
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "docker exec dockerjupiter_php7_1 bash -c 'cd $SITE_PATH && php yii migrate'"
