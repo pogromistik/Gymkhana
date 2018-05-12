@@ -26,6 +26,6 @@ deploy-job:
     - echo "$SSH_PRIVATE_KEY" > /tmp/key && chmod 0600 /tmp/key && ssh-add /tmp/key && rm /tmp/key
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - rsync -Oaz --exclude='.git/' --exclude='.*' . $DEPLOY_USER@$DEPLOY_HOST:$SITE_PATH
     - echo $PROD_CONFIG > common/config/main-local.php
+    - rsync -Oaz --exclude='.git/' --exclude='.*' . $DEPLOY_USER@$DEPLOY_HOST:$SITE_PATH
     - ssh $DEPLOY_USER@$DEPLOY_HOST "docker exec dockerjupiter_php7_1 bash -c 'cd $SITE_PATH && php yii migrate'"
