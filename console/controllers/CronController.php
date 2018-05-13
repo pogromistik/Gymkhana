@@ -197,7 +197,7 @@ class CronController extends Controller
 		return true;
 	}
 	
-	public function actionCheckSize()
+	/*public function actionCheckSize()
 	{
 		exec('df -h', $output, $return_var);
 		if ($output) {
@@ -259,7 +259,7 @@ class CronController extends Controller
 		}
 		
 		return true;
-	}
+	}*/
 	
 	public function actionSendSubscriptions()
 	{

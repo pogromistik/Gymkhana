@@ -444,7 +444,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 				 самостоятельно. Пароль: ' . $password;
 		}*/
 		if (YII_ENV == 'prod') {
-			\Yii::$app->mailer->compose('new-account', ['athlete' => $this, 'password' => $password])
+			\Yii::$app->mailer->compose('@common/mail/new-account', ['athlete' => $this, 'password' => $password])
 				->setTo($this->email)
 				->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 				->setSubject('gymkhana-cup: ' . \Yii::t('app', 'регистрация на сайте', [], $this->language))
@@ -532,7 +532,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			$resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/new-password', 'token' => $this->passwordResetToken]);
 			
 			if (YII_ENV == 'prod') {
-				\Yii::$app->mailer->compose('reset-password', ['resetLink' => $resetLink])
+				\Yii::$app->mailer->compose('@common/mail/reset-password', ['resetLink' => $resetLink])
 					->setTo($this->email)
 					->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 					->setSubject('gymkhana-cup: ' . \Yii::t('app', 'восстановление пароля', [], $this->language))

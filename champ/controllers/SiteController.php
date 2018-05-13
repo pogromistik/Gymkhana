@@ -331,7 +331,7 @@ class SiteController extends BaseController
 					$text .= '<b>Город: </b>' . $form->city;
 					$text .= '<br>';
 					$text .= '<b>Количество мотоциклов: </b>' . count($motorcycles);
-					\Yii::$app->mailer->compose('text', ['text' => $text])
+					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $text])
 						->setTo('nadia__@bk.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: запрос на регистрацию')

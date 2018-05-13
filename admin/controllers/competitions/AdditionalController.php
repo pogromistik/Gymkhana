@@ -395,7 +395,7 @@ class AdditionalController extends BaseController
 			$count = 0;
 			foreach ($emails as $email) {
 				if (mb_stripos($email, '@', null, 'UTF-8')) {
-					\Yii::$app->mailer->compose('text', ['text' => $message->text])
+					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $message->text])
 						->setTo($email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject($message->title)

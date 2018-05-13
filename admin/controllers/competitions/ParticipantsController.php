@@ -530,7 +530,7 @@ class ParticipantsController extends BaseStageController
 					['stageTitle' => $stage->title, 'champTitle' => $stage->championship->title, 'motorcycle' => $participant->motorcycle->getFullTitle()],
 					$athlete->language);
 				if (YII_ENV != 'dev') {
-					\Yii::$app->mailer->compose('text', ['text' => $text])
+					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $text])
 						->setTo($athlete->email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: ' . \Yii::t('app', 'регистрация на этап отклонена', [], $athlete->language))

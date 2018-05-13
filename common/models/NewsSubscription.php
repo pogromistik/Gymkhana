@@ -222,7 +222,7 @@ class NewsSubscription extends \yii\db\ActiveRecord
 		$count = 0;
 		foreach ($emails as $item) {
 			if (YII_ENV == 'prod') {
-				\Yii::$app->mailer->compose('subscriptions/_content', [
+				\Yii::$app->mailer->compose('@common/mail/subscriptions/_content', [
 					'msgType'  => $msgFor,
 					'model'    => $model,
 					'token'    => $item['token'],

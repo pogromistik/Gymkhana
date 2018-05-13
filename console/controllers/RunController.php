@@ -776,7 +776,7 @@ class RunController extends Controller
 	
 	public function actionMailTest()
 	{
-		\Yii::$app->mailer->compose('text', ['text' => 'проверка почты'])
+		\Yii::$app->mailer->compose('@common/mail/text', ['text' => 'проверка почты'])
 			->setTo('nadia__@bk.ru')
 			->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup.ru: проверка почты')
@@ -1313,7 +1313,7 @@ class RunController extends Controller
 		if (!$stage) {
 			echo 'Stage not found' . PHP_EOL;
 		}
-		\Yii::$app->mailer->compose('subscriptions/_content', ['msgType' => NewsSubscription::MSG_FOR_REGISTRATIONS,
+		\Yii::$app->mailer->compose('@common/mail/subscriptions/_content', ['msgType' => NewsSubscription::MSG_FOR_REGISTRATIONS,
 		                                                       'model'   => $stage, 'token' => 'test'])
 			->setTo($email)
 			->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])

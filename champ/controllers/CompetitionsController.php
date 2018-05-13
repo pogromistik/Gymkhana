@@ -912,7 +912,7 @@ class CompetitionsController extends BaseController
 		}
 		if ($stage->participantsLimit > 0 && $email && mb_stripos($email, '@', null, 'UTF-8')) {
 			if (YII_ENV == 'prod') {
-				\Yii::$app->mailer->compose('confirm-request', [
+				\Yii::$app->mailer->compose('@common/mail/confirm-request', [
 					'championship'   => $championship,
 					'stage'          => $stage,
 					'tmpParticipant' => $tmpParticipant,
