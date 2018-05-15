@@ -81,14 +81,14 @@ class CronController extends Controller
 		//Добавить рассылку в очередь
 		//открыта регистрация на обычные этапы
 		$stages = Stage::find()->where(['status' => Stage::STATUS_START_REGISTRATION])
-			->andWhere(['>=', 'startRegistration', $timeStart])->all();
+			->andWhere(['>=', 'startRegistration', $timeStart])->andWhere(['<=', 'startRegistration', $time])->all();
 		foreach ($stages as $stage) {
 			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_REGISTRATIONS,
 				NewsSubscription::MSG_FOR_REGISTRATIONS, $stage->id);
 		}
 		//начался приём заявок на специальные этапы
 		$stages = SpecialStage::find()->where(['status' => SpecialStage::STATUS_START])
-			->andWhere(['>=', 'dateStart', $timeStart])->all();
+			->andWhere(['>=', 'dateStart', $timeStart])->andWhere(['<=', 'dateStart', $time])->all();
 		foreach ($stages as $stage) {
 			SubscriptionQueue::addToQueue(NewsSubscription::TYPE_REGISTRATIONS,
 				NewsSubscription::MSG_FOR_SPECIAL_REGISTRATIONS, $stage->id);
