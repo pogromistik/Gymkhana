@@ -1,4 +1,5 @@
 <?php
+
 namespace admin\components;
 
 use admin\controllers\BaseController;
@@ -37,7 +38,10 @@ class BaseStageController extends BaseController
 			//этап ещё не прошел
 			if ($this->stage->status != Stage::STATUS_CANCEL && $this->stage->status != Stage::STATUS_PAST) {
 				$actualClass = $this->stage->classCalculate();
-				if ($this->stage->class != $actualClass->id) {
+				if (!$actualClass) {
+					$this->errors[] = 'Установленный класс соревнования отличается от актуального: ' .
+						'установлен - ' . $this->stage->classModel->title . ', актуальный - невозможно посчитать';
+				} elseif ($this->stage->class != $actualClass->id) {
 					$this->errors[] = 'Установленный класс соревнования отличается от актуального: ' .
 						'установлен - ' . $this->stage->classModel->title . ', актуальный - ' . $actualClass->title;
 				}
