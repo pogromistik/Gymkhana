@@ -29,7 +29,7 @@ $championship = $stage->championship;
         <div class="pl-10">
             <h4><?= $stage->getTitle() ?>
                 <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
-					'label-danger' : 'label-success' ?>"><?= SpecialStage::$statusesTitle[$stage->status] ?></span></h4>
+					'label-danger' : 'label-success' ?>"><?= \Yii::t('app', SpecialStage::$statusesTitle[$stage->status]) ?></span></h4>
 			
 			<?php if ($stage->getDescr()) { ?>
                 <p><?= $stage->getDescr() ?></p>
