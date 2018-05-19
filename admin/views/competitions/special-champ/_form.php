@@ -16,9 +16,11 @@ use yii\helpers\ArrayHelper;
 	<?php $form = ActiveForm::begin(); ?>
 	
 	<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-	
+	<?php /*
+ <iframe width="560" height="315" src="https://www.youtube.com/embed/5kZv2HIPn0Y" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+ */ ?>
 	<?= $form->field($model, 'description')->widget(CKEditor::className(), [
-		'preset' => 'full', 'clientOptions' => ['height' => 150, 'filebrowserImageUploadUrl' => '/help/upload',]
+		'preset' => 'full', 'clientOptions' => ['allowedContent' => true, 'height' => 150, 'filebrowserImageUploadUrl' => '/help/upload']
 	]) ?>
 
     <a href="#" class="btn btn-my-style btn-gray small" id="enInfo">Добавить информацию на английском</a>
@@ -27,7 +29,7 @@ use yii\helpers\ArrayHelper;
                 скроете блок и нажмёте "сохранить" - информация сохранится</b></small>
 		<?= $form->field($model, 'title_en')->textInput(['maxlength' => true]) ?>
 		<?= $form->field($model, 'descr_en')->widget(CKEditor::className(), [
-			'preset' => 'full', 'clientOptions' => ['height' => 150]
+			'preset' => 'full', 'clientOptions' => ['allowedContent' => true, 'height' => 150]
 		]) ?>
     </div>
 	
