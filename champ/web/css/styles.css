@@ -1530,6 +1530,11 @@ figure.effect-julia:hover p {
         text-align: center;
     }
 
+    .content .detail-news p{
+        padding: 0 10px;
+        text-align: left;
+    }
+
     .grid figure {
         display: inline-block;
         float: none;
