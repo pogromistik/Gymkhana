@@ -86,7 +86,7 @@ $formModel->countryId = 1;
 	
 	<?= $form->field($formModel, 'motorcycleMark')->textInput(['placeholder' => \Yii::t('app', 'Марка, напр. kawasaki')]) ?>
 	<?= $form->field($formModel, 'motorcycleModel')->textInput(['placeholder' => \Yii::t('app', 'Модель, напр. ER6-F')]) ?>
-	<?= $form->field($formModel, 'cbm')->textInput(['placeholder' => \Yii::t('app', 'Объём, м3')]) ?>
+	<?= $form->field($formModel, 'cbm')->textInput(['placeholder' => \Yii::t('app', 'Объём, см3')]) ?>
 	<?= $form->field($formModel, 'power')->textInput(['placeholder' => \Yii::t('app', 'Мощность, л.с.')]) ?>
 	
 	<?= $form->field($formModel, 'dateHuman')->widget(DatePicker::classname(), [
