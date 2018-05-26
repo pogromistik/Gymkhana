@@ -225,4 +225,18 @@ class HelpModel extends Model
 		
 		return $result;
 	}
+	
+	/**
+	 * @param $time
+	 *
+	 * @return bool
+	 */
+	public static function checkTimeFormat($time)
+	{
+		$digits = preg_replace('~\D+~','',$time);
+		if (mb_strlen($digits) == 6) {
+			return true;
+		}
+		return false;
+	}
 }

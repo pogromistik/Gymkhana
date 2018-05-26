@@ -148,7 +148,7 @@ class CompetitionsController extends BaseController
 			$events[] = $event;
 		}
 		foreach ($dates as $key => $item) {
-			usort($dates[$key], function($a, $b){
+			usort($dates[$key], function ($a, $b) {
 				return ($a['date'] - $b['date']);
 			});
 		}
@@ -1106,84 +1106,93 @@ class CompetitionsController extends BaseController
 			'error' => false,
 			'data'  => null
 		];
-		
-		$form = new RequestForSpecialStage();
-		if ($form->load(\Yii::$app->request->post())) {
-			if (!$form->athleteId || !$form->stageId) {
-				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+		try {
+			$form = new RequestForSpecialStage();
+			if ($form->load(\Yii::$app->request->post())) {
+				if (!$form->athleteId || !$form->stageId) {
+					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+					
+					return $response;
+				}
+				$stage = SpecialStage::findOne($form->stageId);
+				if (!$stage) {
+					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+					
+					return $response;
+				}
+				if (!$stage->dateStart || $stage->dateStart > time()) {
+					$response['error'] = \Yii::t('app', 'Приём результатов ещё не начался');
+					
+					return $response;
+				}
+				if ($stage->dateEnd && $stage->dateEnd < time()) {
+					$response['error'] = \Yii::t('app', 'Приём заявок завершен');
+					
+					return $response;
+				}
+				if (!$form->motorcycle) {
+					$response['error'] = \Yii::t('app', 'Необходимо выбрать мотоцикл');
+					
+					return $response;
+				}
+				if (!$form->dateHuman) {
+					$response['error'] = \Yii::t('app', 'Необходимо указать дату заезда');
+					
+					return $response;
+				}
+				if (!$form->timeHuman) {
+					$response['error'] = \Yii::t('app', 'Укажите время');
+					
+					return $response;
+				}
+				if (!HelpModel::checkTimeFormat($form->timeHuman)) {
+					$response['error'] = \Yii::t('app', 'Неправильно указано время: формат должен быть "минуты:секунды.миллисекунды". Обязательно должны быть указаны все 6 цифр, к примеру 00:37.00');
+					
+					return $response;
+				}
 				
-				return $response;
-			}
-			$stage = SpecialStage::findOne($form->stageId);
-			if (!$stage) {
-				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+				if (!$form->videoLink) {
+					$response['error'] = \Yii::t('app', 'Ссылка на видео обязательна');
+					
+					return $response;
+				}
+				if (!$form->fine) {
+					$form->fine = 0;
+				}
+				if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
+					$response['error'] = \Yii::t('app', 'Ссылка на видео должна начинаться с http: или https:');
+					
+					return $response;
+				}
+				if (!$form->validate()) {
+					$response['error'] = var_dump($form->errors);
+					
+					return $response;
+				}
+				$old = RequestForSpecialStage::find()->where(['athleteId' => $form->athleteId, 'stageId' => $form->stageId])
+					->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
+					->andWhere(['time' => $form->time, 'fine' => $form->fine])
+					->one();
+				if ($old) {
+					$response['error'] = \Yii::t('app', 'Для данного этапа у вас уже есть такой результат');
+					
+					return $response;
+				}
+				if (!$form->save(false)) {
+					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+					
+					return $response;
+				}
 				
-				return $response;
-			}
-			if (!$stage->dateStart || $stage->dateStart > time()) {
-				$response['error'] = \Yii::t('app', 'Приём результатов ещё не начался');
-				
-				return $response;
-			}
-			if ($stage->dateEnd && $stage->dateEnd < time()) {
-				$response['error'] = \Yii::t('app', 'Приём заявок завершен');
-				
-				return $response;
-			}
-			if (!$form->motorcycle) {
-				$response['error'] = \Yii::t('app', 'Необходимо выбрать мотоцикл');
-				
-				return $response;
-			}
-			if (!$form->dateHuman) {
-				$response['error'] = \Yii::t('app', 'Необходимо указать дату заезда');
-				
-				return $response;
-			}
-			if (!$form->timeHuman) {
-				$response['error'] = \Yii::t('app', 'Укажите время');
-				
-				return $response;
-			}
-			if (!$form->videoLink) {
-				$response['error'] = \Yii::t('app', 'Ссылка на видео обязательна');
-				
-				return $response;
-			}
-			if (!$form->fine) {
-				$form->fine = 0;
-			}
-			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
-				$response['error'] = \Yii::t('app', 'Ссылка на видео должна начинаться с http: или https:');
-				
-				return $response;
-			}
-			if (!$form->validate()) {
-				$response['error'] = var_dump($form->errors);
-				
-				return $response;
-			}
-			$old = RequestForSpecialStage::find()->where(['athleteId' => $form->athleteId, 'stageId' => $form->stageId])
-				->andWhere(['not', ['status' => RequestForSpecialStage::STATUS_CANCEL]])
-				->andWhere(['time' => $form->time, 'fine' => $form->fine])
-				->one();
-			if ($old) {
-				$response['error'] = \Yii::t('app', 'Для данного этапа у вас уже есть такой результат');
-				
-				return $response;
-			}
-			if (!$form->save(false)) {
-				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+				$response['data'] = \Yii::t('app', 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. В любом случае, Вам будет отправлено соответствующее уведомление.');
 				
 				return $response;
 			}
 			
-			$response['data'] = \Yii::t('app', 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. В любом случае, Вам будет отправлено соответствующее уведомление.');
-			
-			return $response;
+			$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+		} catch (\Throwable $ex) {
+			$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Проверьте правильность заполнения формы и попробуйте ещё раз, или напишите нам удобным вам способом: через форму обратной связи; на почту gymkhana.cup@gmail.com; или в вк: https://vk.com/id19792817');
 		}
-		
-		$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 		
 		return $response;
 	}
@@ -1196,136 +1205,145 @@ class CompetitionsController extends BaseController
 			'data'  => null
 		];
 		
-		$form = new SpecialStageForm();
-		if ($form->load(\Yii::$app->request->post())) {
-			$form->lastName = trim($form->lastName);
-			$form->firstName = trim($form->firstName);
-			$form->cityTitle = trim($form->cityTitle);
-			$form->motorcycleModel = trim($form->motorcycleModel);
-			$form->motorcycleMark = trim($form->motorcycleMark);
-			
-			$stage = SpecialStage::findOne($form->stageId);
-			if (!$stage) {
-				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+		try {
+			$form = new SpecialStageForm();
+			if ($form->load(\Yii::$app->request->post())) {
+				$form->lastName = trim($form->lastName);
+				$form->firstName = trim($form->firstName);
+				$form->cityTitle = trim($form->cityTitle);
+				$form->motorcycleModel = trim($form->motorcycleModel);
+				$form->motorcycleMark = trim($form->motorcycleMark);
 				
-				return $response;
-			}
-			
-			if (!$stage->dateStart || $stage->dateStart > time()) {
-				$response['error'] = \Yii::t('app', 'Приём результатов ещё не начался');
-				
-				return $response;
-			}
-			if ($stage->dateEnd && $stage->dateEnd < time()) {
-				$response['error'] = \Yii::t('app', 'Приём заявок завершен');
-				
-				return $response;
-			}
-			
-			if (!$form->lastName) {
-				$response['error'] = \Yii::t('app', 'Укажите фамилию');
-				
-				return $response;
-			}
-			
-			if (!$form->firstName) {
-				$response['error'] = \Yii::t('app', 'Укажите имя');
-				
-				return $response;
-			}
-			
-			if (!$form->motorcycleMark) {
-				$response['error'] = \Yii::t('app', 'Укажите марку мотоцикла');
-				
-				return $response;
-			}
-			
-			if (!$form->motorcycleMark) {
-				$response['error'] = \Yii::t('app', 'Укажите модель мотоцикла');
-				
-				return $response;
-			}
-			
-			if (!$form->cbm) {
-				$response['error'] = \Yii::t('app', 'Укажите объём мотоцикла');
-				
-				return $response;
-			}
-			
-			if (!$form->power) {
-				$response['error'] = \Yii::t('app', 'Укажите мощность мотоцикла');
-				
-				return $response;
-			}
-			
-			if (!$form->countryId) {
-				$response['error'] = \Yii::t('app', 'Выберите страну');
-				
-				return $response;
-			}
-			
-			if (!$form->cityTitle && !$form->cityId) {
-				$response['error'] = \Yii::t('app', 'Укажите город');
-				
-				return $response;
-			} elseif ($form->cityId) {
-				$city = City::findOne($form->cityId);
-				if (!$city) {
+				$stage = SpecialStage::findOne($form->stageId);
+				if (!$stage) {
 					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 					
 					return $response;
 				}
-				$form->cityTitle = TranslitHelper::translitCity($city->title);
-			} elseif ($form->cityTitle) {
-				$city = City::findOne(['title' => $form->cityTitle, 'countryId' => $form->countryId]);
-				if ($city) {
-					$form->cityId = $city->id;
+				
+				if (!$stage->dateStart || $stage->dateStart > time()) {
+					$response['error'] = \Yii::t('app', 'Приём результатов ещё не начался');
+					
+					return $response;
 				}
+				if ($stage->dateEnd && $stage->dateEnd < time()) {
+					$response['error'] = \Yii::t('app', 'Приём заявок завершен');
+					
+					return $response;
+				}
+				
+				if (!$form->lastName) {
+					$response['error'] = \Yii::t('app', 'Укажите фамилию');
+					
+					return $response;
+				}
+				
+				if (!$form->firstName) {
+					$response['error'] = \Yii::t('app', 'Укажите имя');
+					
+					return $response;
+				}
+				
+				if (!$form->motorcycleMark) {
+					$response['error'] = \Yii::t('app', 'Укажите марку мотоцикла');
+					
+					return $response;
+				}
+				
+				if (!$form->motorcycleMark) {
+					$response['error'] = \Yii::t('app', 'Укажите модель мотоцикла');
+					
+					return $response;
+				}
+				
+				if (!$form->cbm) {
+					$response['error'] = \Yii::t('app', 'Укажите объём мотоцикла');
+					
+					return $response;
+				}
+				
+				if (!$form->power) {
+					$response['error'] = \Yii::t('app', 'Укажите мощность мотоцикла');
+					
+					return $response;
+				}
+				
+				if (!$form->countryId) {
+					$response['error'] = \Yii::t('app', 'Выберите страну');
+					
+					return $response;
+				}
+				
+				if (!$form->cityTitle && !$form->cityId) {
+					$response['error'] = \Yii::t('app', 'Укажите город');
+					
+					return $response;
+				} elseif ($form->cityId) {
+					$city = City::findOne($form->cityId);
+					if (!$city) {
+						$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+						
+						return $response;
+					}
+					$form->cityTitle = TranslitHelper::translitCity($city->title);
+				} elseif ($form->cityTitle) {
+					$city = City::findOne(['title' => $form->cityTitle, 'countryId' => $form->countryId]);
+					if ($city) {
+						$form->cityId = $city->id;
+					}
+				}
+				
+				if (!$form->dateHuman) {
+					$response['error'] = \Yii::t('app', 'Необходимо указать дату заезда');
+					
+					return $response;
+				}
+				if (!$form->timeHuman) {
+					$response['error'] = \Yii::t('app', 'Укажите время');
+					
+					return $response;
+				}
+				if (!HelpModel::checkTimeFormat($form->timeHuman)) {
+					$response['error'] = \Yii::t('app', 'Неправильно указано время: формат должен быть "минуты:секунды.миллисекунды". Обязательно должны быть указаны все 6 цифр, к примеру 00:37.00');
+					
+					return $response;
+				}
+				if (!$form->videoLink) {
+					$response['error'] = \Yii::t('app', 'Ссылка на видео обязательна');
+					
+					return $response;
+				}
+				if (!$form->fine) {
+					$form->fine = 0;
+				}
+				if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
+					$response['error'] = \Yii::t('app', 'Ссылка на видео должна начинаться с http: или https:');
+					
+					return $response;
+				}
+				if (!$form->validate()) {
+					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+					
+					return $response;
+				}
+				
+				if (!$form->save()) {
+					$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+					
+					return $response;
+				}
+				
+				$response['data'] = \Yii::t('app', 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. В случае отклонения результата, вам будет отправлено письмо на email {email}.', [
+					'email' => $form->email
+				]);
+				
+				return $response;
 			}
 			
-			if (!$form->dateHuman) {
-				$response['error'] = \Yii::t('app', 'Необходимо указать дату заезда');
-				
-				return $response;
-			}
-			if (!$form->timeHuman) {
-				$response['error'] = \Yii::t('app', 'Укажите время');
-				
-				return $response;
-			}
-			if (!$form->videoLink) {
-				$response['error'] = \Yii::t('app', 'Ссылка на видео обязательна');
-				
-				return $response;
-			}
-			if (!$form->fine) {
-				$form->fine = 0;
-			}
-			if (mb_strpos($form->videoLink, 'http:') === false && mb_strpos($form->videoLink, 'https:') === false) {
-				$response['error'] = \Yii::t('app', 'Ссылка на видео должна начинаться с http: или https:');
-				
-				return $response;
-			}
-			if (!$form->validate()) {
-				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
-				
-				return $response;
-			}
-			
-			if (!$form->save()) {
-				$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
-				
-				return $response;
-			}
-			
-			$response['data'] = \Yii::t('app', 'Ваш результат успешно сохранён. После проверки организаторами он будет подтверждён или отклонён. В случае отклонения результата, вам будет отправлено письмо на email {email}.', [
-				'email' => $form->email
-			]);
-			
-			return $response;
+			$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
+		} catch (\Throwable $ex) {
+			$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Проверьте правильность заполнения формы и попробуйте ещё раз, или напишите нам удобным вам способом: через форму обратной связи; на почту gymkhana.cup@gmail.com; или в вк: https://vk.com/id19792817');
 		}
-		
-		$response['error'] = \Yii::t('app', 'Возникла ошибка при отправке данных. Свяжитесь с разработчиком');
 		
 		return $response;
 	}
