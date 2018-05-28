@@ -141,6 +141,17 @@ $championship = $stage->championship;
                 </div>
 			<?php } else { ?>
 				<?php if ($stage->isOpen()) { ?>
+                    <div class="stage-danger-info">
+                        <b><?= \Yii::t('app', 'Обратите внимание!') ?></b>
+                        <?= \Yii::t('app', 'После отправки результата должно появиться сообщение о том, что он сохранён. Не спешите закрывать страницу!') ?>
+                        <br>
+                        <?= \Yii::t('app', 'Если у вас не получается отправить результат, или через сутки его всё ещё не приняли и не отклонили (при отклонении придёт уведомление на почту), напишите нам:') ?>
+                        <br>
+                        <a href="mailto:gymkhana.cup@gmail.com">gymkhana.cup@gmail.com</a><br>
+                        <a href="https://vk.com/id19792817">https://vk.com/id19792817</a><br>
+                        <a href="#" data-toggle="modal" data-target="#feedbackForm"><?= \Yii::t('app', 'форма обратной связи') ?></a>
+                        
+                    </div>
 					<?php if (\Yii::$app->user->isGuest) { ?>
                         <a href="#"
                            class="btn btn-dark sendResultForStage"><?= \Yii::t('app', 'Отправить результат') ?></a>

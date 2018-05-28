@@ -1550,3 +1550,15 @@ small.spb {
 small.spb a {
     white-space: nowrap;
 }
+
+.stage-danger-info {
+    background: #fdfbfb;
+    padding: 10px;
+    margin-bottom: 10px;
+    /*border: 1px solid #0a0a0a;*/
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.7);
+}
+
+.stage-danger-info b {
+    color: #b7211f;
+}
