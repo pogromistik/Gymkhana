@@ -128,9 +128,14 @@ $this->params['breadcrumbs'][] = 'Участники';
 				]),
 				'format'    => 'raw',
 				'value'     => function (RequestForSpecialStage $item) {
-					return $item->athleteId ?
-						Html::a($item->athlete->getFullName() . ', ' .
-                            $item->athleteClass->title, ['/competitions/athlete/view', 'id' => $item->athleteId]) : '';
+					if ($item->athleteId) {
+						return Html::a($item->athlete->getFullName() . ', ' .
+							$item->athleteClass->title, ['/competitions/athlete/view', 'id' => $item->athleteId]);
+					}
+					$data = $item->getData();
+					
+					return $data['lastName'] . ' ' . $data['firstName'] . ', ' .
+						($item->cityId ? $item->city->title : $data['cityTitle']) . ' ' . $data['email'];
 				}
 			],
 			[
