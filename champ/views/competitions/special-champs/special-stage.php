@@ -202,7 +202,8 @@ $championship = $stage->championship;
                 </div>
 				<?php if ($stage->status != SpecialStage::STATUS_PAST && !empty($tmpPlaces)) { ?>
                     <div>
-                        <small><?= \Yii::t('app', 'Места предварительные и могут поменяться') ?></small>
+                        <small style="color: #d02421">
+                            <b><?= \Yii::t('app', 'Места предварительные и могут поменяться') ?></b></small>
                     </div>
 				<?php } ?>
 				<?= $this->render('_pk-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
