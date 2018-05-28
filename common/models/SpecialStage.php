@@ -313,6 +313,7 @@ class SpecialStage extends BaseActiveRecord
 				if ($prevResult && $prevResult->resultTime == $item->resultTime) {
 					$result[$item->athleteId] = $prevResult->place;
 				}
+				$item->place = $result[$item->athleteId];
 				$prevResult = $item;
 			} else {
 				$result[$item->athleteId] = '';
