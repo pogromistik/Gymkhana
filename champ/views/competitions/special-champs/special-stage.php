@@ -200,6 +200,11 @@ $championship = $stage->championship;
                     <br>
                     <small><?= \Yii::t('app', 'Для просмотра прогресса нажмите на время') ?></small>
                 </div>
+				<?php if ($stage->status != SpecialStage::STATUS_PAST && !empty($tmpPlaces)) { ?>
+                    <div>
+                        <small><?= \Yii::t('app', 'Места предварительные и могут поменяться') ?></small>
+                    </div>
+				<?php } ?>
 				<?= $this->render('_pk-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
 				<?= $this->render('_mobile-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
 			<?php } ?>
