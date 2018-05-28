@@ -301,6 +301,27 @@ class SpecialStage extends BaseActiveRecord
 		return null;
 	}
 	
+	public function tmpPlaces()
+	{
+		$requests = $this->activeRequests;
+		$prevResult = null;
+		$place = 1;
+		$result = [];
+		foreach ($requests as $item) {
+			if ($item->resultTime && $item->resultTime < 1800000) {
+				$result[$item->athleteId] = $place++;
+				if ($prevResult && $prevResult->resultTime == $item->resultTime) {
+					$result[$item->athleteId] = $prevResult->place;
+				}
+				$prevResult = $item;
+			} else {
+				$result[$item->athleteId] = '';
+			}
+		}
+		
+		return $result;
+	}
+	
 	public function placesCalculate()
 	{
 		$this->refresh();

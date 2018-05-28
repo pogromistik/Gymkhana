@@ -1,4 +1,5 @@
 <?php
+
 use common\models\SpecialStage;
 use common\models\Stage;
 use kartik\widgets\Select2;
@@ -10,6 +11,7 @@ use yii\helpers\Html;
  * @var \common\models\RequestForSpecialStage[] $activeParticipants
  * @var array                                   $regionIds
  * @var \common\models\Region[]                 $regions
+ * @var array                                   $tmpPlaces
  */
 
 $timezone = '(' . \Yii::t('app', 'Москва') . ', UTC +3)';
@@ -29,7 +31,8 @@ $championship = $stage->championship;
         <div class="pl-10">
             <h4><?= $stage->getTitle() ?>
                 <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
-					'label-danger' : 'label-success' ?>"><?= \Yii::t('app', SpecialStage::$statusesTitle[$stage->status]) ?></span></h4>
+					'label-danger' : 'label-success' ?>"><?= \Yii::t('app', SpecialStage::$statusesTitle[$stage->status]) ?></span>
+            </h4>
 			
 			<?php if ($stage->getDescr()) { ?>
                 <p><?= $stage->getDescr() ?></p>
@@ -143,14 +146,15 @@ $championship = $stage->championship;
 				<?php if ($stage->isOpen()) { ?>
                     <div class="stage-danger-info">
                         <b><?= \Yii::t('app', 'Обратите внимание!') ?></b>
-                        <?= \Yii::t('app', 'После отправки результата должно появиться сообщение о том, что он сохранён. Не спешите закрывать страницу!') ?>
+						<?= \Yii::t('app', 'После отправки результата должно появиться сообщение о том, что он сохранён. Не спешите закрывать страницу!') ?>
                         <br>
-                        <?= \Yii::t('app', 'Если у вас не получается отправить результат, или через сутки его всё ещё не приняли и не отклонили (при отклонении придёт уведомление на почту), напишите нам:') ?>
+						<?= \Yii::t('app', 'Если у вас не получается отправить результат, или через сутки его всё ещё не приняли и не отклонили (при отклонении придёт уведомление на почту), напишите нам:') ?>
                         <br>
                         <a href="mailto:gymkhana.cup@gmail.com">gymkhana.cup@gmail.com</a><br>
                         <a href="https://vk.com/id19792817">https://vk.com/id19792817</a><br>
-                        <a href="#" data-toggle="modal" data-target="#feedbackForm"><?= \Yii::t('app', 'форма обратной связи') ?></a>
-                        
+                        <a href="#" data-toggle="modal"
+                           data-target="#feedbackForm"><?= \Yii::t('app', 'форма обратной связи') ?></a>
+
                     </div>
 					<?php if (\Yii::$app->user->isGuest) { ?>
                         <a href="#"
@@ -196,8 +200,8 @@ $championship = $stage->championship;
                     <br>
                     <small><?= \Yii::t('app', 'Для просмотра прогресса нажмите на время') ?></small>
                 </div>
-				<?= $this->render('_pk-results', ['participants' => $activeParticipants]) ?>
-				<?= $this->render('_mobile-results', ['participants' => $activeParticipants]) ?>
+				<?= $this->render('_pk-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
+				<?= $this->render('_mobile-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
 			<?php } ?>
         </div>
     </div>

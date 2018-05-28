@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \common\models\RequestForSpecialStage[] $participants
+ * @var array                                   $tmpPlaces
  */
 $id = null;
 if (!\Yii::$app->user->isGuest) {
@@ -28,7 +29,7 @@ if (!\Yii::$app->user->isGuest) {
 			?>
             <tr class="<?= $class ?>">
                 <td>
-					<?= $participant->place ?>
+					<?= $participant->place ?? $tmpPlaces[$participant->athleteId] ?? '' ?>
                 </td>
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>

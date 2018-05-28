@@ -1071,13 +1071,18 @@ class CompetitionsController extends BaseController
 				$needTime[$last]['percent'] = '> ' . $prev->percent;
 			}
 		}
+		$tmpPlaces = [];
+		if ($stage->status != SpecialStage::STATUS_PAST) {
+			$tmpPlaces = $stage->tmpPlaces();
+		}
 		
 		return $this->render('special-champs/special-stage', [
 			'stage'              => $stage,
 			'needTime'           => $needTime,
 			'activeParticipants' => $activeParticipants,
 			'regionIds'          => $regionIds,
-			'regions'            => $regions
+			'regions'            => $regions,
+			'tmpPlaces'          => $tmpPlaces
 		]);
 	}
 	
