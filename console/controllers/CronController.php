@@ -263,7 +263,6 @@ class CronController extends Controller
 	
 	public function actionSendSubscriptions()
 	{
-		return true;
 		if (\Yii::$app->mutex->acquire('SendSubscriptions', 10)) {
 			$items = SubscriptionQueue::findAll(['isActual' => 1]);
 			$countLetters = 0;

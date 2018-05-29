@@ -78,8 +78,20 @@ class SubscriptionQueue extends \yii\db\ActiveRecord
 		parent::afterSave($insert, $changedAttributes);
 	}
 	
+	private static function isExist($type, $messageType, $modelId)
+	{
+		if (self::find()->where(['type' => $type])->andWhere(['messageType' => $messageType])->andWhere(['modelId' => $modelId])->one()) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static function addToQueue($type, $messageType, $modelId)
 	{
+		//Если такая рассылка уже была - не создаём её повторно
+		if (self::isExist($type, $messageType, $modelId)) {
+			return true;
+		}
 		$item = new self();
 		$item->type = $type;
 		$item->messageType = $messageType;
