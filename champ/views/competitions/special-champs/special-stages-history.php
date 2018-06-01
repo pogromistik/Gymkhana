@@ -34,6 +34,7 @@ use common\models\RequestForSpecialStage;
 			],
 			[
 				'attribute' => 'cancelReason',
+				'format'    => 'html',
 				'value'     => function (RequestForSpecialStage $item) {
 					return $item->cancelReason ?: '';
 				}

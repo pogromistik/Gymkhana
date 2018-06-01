@@ -439,10 +439,11 @@ class SpecialChampController extends BaseController
 			}
 			
 			if (YII_ENV == 'prod') {
-				$text = 'Ваш результат для этапа "' . $request->stage->title . '" чемпионата "' . $request->stage->championship->title . '"' .
+				$sendText = 'Ваш результат для этапа "' . $request->stage->title . '" чемпионата "' . $request->stage->championship->title . '"' .
 					' отклонён.<br>';
+				$sendText .= $text;
 				if (mb_stripos($email, '@', null, 'UTF-8')) {
-					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $text])
+					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $sendText])
 						->setTo($email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: ваш результат отклонён')
