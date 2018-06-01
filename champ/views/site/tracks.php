@@ -9,12 +9,14 @@ use yii\widgets\LinkPager;
 
 ?>
 
-    <h1><?= $this->context->pageTitle ?></h1>
-    <p>
-        <?= \Yii::t('app', 'Обратите внимание - указан не класс соревнований, а класс спортсмена, показавшего лучшее время трассы. Чтобы узнать подробную информацию о результатах этапа, перейдите на его страницу.') ?>
-    </p>
+    <div class="card-box">
+        <h1><?= $this->context->pageTitle ?></h1>
+        <p>
+		    <?= \Yii::t('app', 'Обратите внимание - указан не класс соревнований, а класс спортсмена, показавшего лучшее время трассы. Чтобы узнать подробную информацию о результатах этапа, перейдите на его страницу.') ?>
+        </p>
+    </div>
 
-    <div class="tracks-gallery">
+    <div class="tracks-gallery card-box">
         <div class="row">
 			<?php foreach ($data as $date => $info) { ?>
 				<?php foreach ($info['items'] as $item) { ?>

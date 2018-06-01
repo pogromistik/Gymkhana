@@ -22,7 +22,7 @@ use yii\bootstrap\Html;
 				$class .= ' yellow-title-with-bg';
 			}
 			?>
-            <div class="item">
+            <div class="item card-box">
 				<?php if ($item->title) { ?>
                     <div class="<?= $class ?>">
 						<?= $item->title ?>

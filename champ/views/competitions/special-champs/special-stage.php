@@ -29,52 +29,54 @@ $championship = $stage->championship;
         </div>
 
         <div class="pl-10">
-            <h4><?= $stage->getTitle() ?>
-                <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
-					'label-danger' : 'label-success' ?>"><?= \Yii::t('app', SpecialStage::$statusesTitle[$stage->status]) ?></span>
-            </h4>
+            <div class="card-box">
+                <h4><?= $stage->getTitle() ?>
+                    <span class="label <?= ($stage->status == SpecialStage::STATUS_CANCEL) ?
+			            'label-danger' : 'label-success' ?>"><?= \Yii::t('app', SpecialStage::$statusesTitle[$stage->status]) ?></span>
+                </h4>
+	
+	            <?php if ($stage->getDescr()) { ?>
+                    <p><?= $stage->getDescr() ?></p>
+	            <?php } ?>
+	
+	            <?php if ($stage->dateStart) { ?>
+		            <?= \Yii::t('app', 'Начало приёма результатов') ?>: <?= $stage->dateStartHuman ?> <?= $timezone ?><br>
+	            <?php } ?>
+	            <?php if ($stage->dateEnd) { ?>
+		            <?= \Yii::t('app', 'Завершение приёма результатов') ?>: <?= $stage->dateEndHuman ?> <?= $timezone ?><br>
+	            <?php } ?>
+	            <?php if ($stage->dateResult) { ?>
+		            <?= \Yii::t('app', 'Подведение итогов') ?>: <?= $stage->dateResultHuman ?><br>
+	            <?php } ?>
+	
+	            <?php if ($stage->classId) { ?>
+                    <div>
+			            <?php $stageClassTitle = $stage->class->title; ?>
+			            <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stageClassTitle]) ?>
 			
-			<?php if ($stage->getDescr()) { ?>
-                <p><?= $stage->getDescr() ?></p>
-			<?php } ?>
-			
-			<?php if ($stage->dateStart) { ?>
-				<?= \Yii::t('app', 'Начало приёма результатов') ?>: <?= $stage->dateStartHuman ?> <?= $timezone ?><br>
-			<?php } ?>
-			<?php if ($stage->dateEnd) { ?>
-				<?= \Yii::t('app', 'Завершение приёма результатов') ?>: <?= $stage->dateEndHuman ?> <?= $timezone ?><br>
-			<?php } ?>
-			<?php if ($stage->dateResult) { ?>
-				<?= \Yii::t('app', 'Подведение итогов') ?>: <?= $stage->dateResultHuman ?><br>
-			<?php } ?>
-			
-			<?php if ($stage->classId) { ?>
-                <div>
-					<?php $stageClassTitle = $stage->class->title; ?>
-					<?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stageClassTitle]) ?>
-					
-					<?php if ($stageClassTitle == \common\models\Stage::CLASS_UNPERCENT) { ?>
-                        <div><b>
-								<?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
-									'classTitle' => $stageClassTitle
-								]) ?></b></div>
-					<?php } ?>
-                </div>
-			<?php } ?>
-			
-			<?php if ($stage->photoPath) { ?>
-                <div class="track-photo pt-20 pb-20">
-                    <div class="toggle">
-                        <div class="title btn btn-green"><?= \Yii::t('app', 'Посмотреть схему трассы') ?></div>
-                        <div class="toggle-content">
-							<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->photoPath) ?>
+			            <?php if ($stageClassTitle == \common\models\Stage::CLASS_UNPERCENT) { ?>
+                            <div><b>
+						            <?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
+							            'classTitle' => $stageClassTitle
+						            ]) ?></b></div>
+			            <?php } ?>
+                    </div>
+	            <?php } ?>
+	
+	            <?php if ($stage->photoPath) { ?>
+                    <div class="track-photo pt-20 pb-20">
+                        <div class="toggle">
+                            <div class="title btn btn-green"><?= \Yii::t('app', 'Посмотреть схему трассы') ?></div>
+                            <div class="toggle-content">
+					            <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->photoPath) ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-			<?php } ?>
+	            <?php } ?>
+            </div>
 			
 			<?php if ($stage->referenceTime && $stage->class && $stage->class->title != Stage::CLASS_UNPERCENT) { ?>
-                <div>
+                <div class="card-box">
 					<?= \Yii::t('app', 'Эталонное время трассы') ?>: <?= $stage->referenceTimeHuman ?>
                     <br>
 					<?= \Yii::t('app', 'Время, необходимое для повышения класса') ?>:
@@ -157,12 +159,14 @@ $championship = $stage->championship;
 
                     </div>
 					<?php if (\Yii::$app->user->isGuest) { ?>
-                        <a href="#"
-                           class="btn btn-dark sendResultForStage"><?= \Yii::t('app', 'Отправить результат') ?></a>
+                        <div>
+                            <a href="#"
+                               class="btn btn-dark sendResultForStage"><?= \Yii::t('app', 'Отправить результат') ?></a>
+                        </div>
 						<?php $view = '_guest-registration'; ?>
 					<?php } else { ?>
-                        <a href="#"
-                           class="btn btn-dark sendResultForStage"><?= \Yii::t('app', 'Отправить результат') ?></a>
+                        <div><a href="#"
+                                class="btn btn-dark sendResultForStage"><?= \Yii::t('app', 'Отправить результат') ?></a></div>
 						<?php $view = '_auth-registration'; ?>
 					<?php } ?>
                     <div class="special-stage-form">
@@ -170,44 +174,46 @@ $championship = $stage->championship;
                     </div>
 				<?php } ?>
 
-                <div class="filters pt-20 pb-20">
-					<?= \yii\bootstrap\Html::beginForm('/competitions/special-stage', 'get') ?>
-					<?= \yii\bootstrap\Html::hiddenInput('id', $stage->id) ?>
-                    <div class="row">
-                        <div class="col-md-10 col-xs-8 input-with-sm-pt">
-							<?= Select2::widget([
-								'name'          => 'regionIds',
-								'value'         => $regionIds,
-								'data'          => \yii\helpers\ArrayHelper::map($regions, 'id', 'title'),
-								'options'       => [
-									'placeholder' => \Yii::t('app', 'Выберите регионы') . '...',
-									'multiple'    => true
-								],
-								'pluginOptions' => [
-									'allowClear' => true
-								]
-							]) ?>
+                <div class="card-box">
+                    <div class="filters pt-20 pb-20">
+		                <?= \yii\bootstrap\Html::beginForm('/competitions/special-stage', 'get') ?>
+		                <?= \yii\bootstrap\Html::hiddenInput('id', $stage->id) ?>
+                        <div class="row">
+                            <div class="col-md-10 col-xs-8 input-with-sm-pt">
+				                <?= Select2::widget([
+					                'name'          => 'regionIds',
+					                'value'         => $regionIds,
+					                'data'          => \yii\helpers\ArrayHelper::map($regions, 'id', 'title'),
+					                'options'       => [
+						                'placeholder' => \Yii::t('app', 'Выберите регионы') . '...',
+						                'multiple'    => true
+					                ],
+					                'pluginOptions' => [
+						                'allowClear' => true
+					                ]
+				                ]) ?>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+				                <?= Html::submitButton(\Yii::t('app', 'ок'), ['class' => 'btn btn-success']) ?>
+                            </div>
                         </div>
-                        <div class="col-md-2 col-xs-4">
-							<?= Html::submitButton(\Yii::t('app', 'ок'), ['class' => 'btn btn-success']) ?>
-                        </div>
+		                <?= \yii\bootstrap\Html::endForm() ?>
                     </div>
-					<?= \yii\bootstrap\Html::endForm() ?>
-                </div>
 
-                <div class="text-right">
-					<?= \Yii::t('app', 'Количество участников') ?>: <?= count($activeParticipants) ?>
-                    <br>
-                    <small><?= \Yii::t('app', 'Для просмотра прогресса нажмите на время') ?></small>
-                </div>
-				<?php if ($stage->status != SpecialStage::STATUS_PAST && !empty($tmpPlaces)) { ?>
-                    <div>
-                        <small style="color: #d02421">
-                            <b><?= \Yii::t('app', 'Места предварительные и могут поменяться') ?></b></small>
+                    <div class="text-right">
+		                <?= \Yii::t('app', 'Количество участников') ?>: <?= count($activeParticipants) ?>
+                        <br>
+                        <small><?= \Yii::t('app', 'Для просмотра прогресса нажмите на время') ?></small>
                     </div>
-				<?php } ?>
-				<?= $this->render('_pk-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
-				<?= $this->render('_mobile-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
+	                <?php if ($stage->status != SpecialStage::STATUS_PAST && !empty($tmpPlaces)) { ?>
+                        <div>
+                            <small style="color: #d02421">
+                                <b><?= \Yii::t('app', 'Места предварительные и могут поменяться') ?></b></small>
+                        </div>
+	                <?php } ?>
+	                <?= $this->render('_pk-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
+	                <?= $this->render('_mobile-results', ['participants' => $activeParticipants, 'tmpPlaces' => $tmpPlaces]) ?>
+                </div>
 			<?php } ?>
         </div>
     </div>

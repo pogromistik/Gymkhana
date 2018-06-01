@@ -18,7 +18,7 @@ use yii\bootstrap\Html;
     <hr>
 </div>
 
-<div class="figures pt-10">
+<div class="figures pt-10 card-box">
     <h4>
         <?= \Yii::t('app', 'Результаты базовых фигур') ?><br>
         <small>
@@ -64,7 +64,7 @@ use yii\bootstrap\Html;
 </div>
 
 <?php if ($history) { ?>
-    <div class="history pt-10">
+    <div class="history pt-10 card-box">
         <h4>
             <?= \Yii::t('app', 'История переходов между классами') ?><br>
             <small><?= \Yii::t('app', 'показано не более 30 последних записей') ?></small>

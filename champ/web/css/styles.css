@@ -1562,3 +1562,16 @@ small.spb a {
 .stage-danger-info b {
     color: #b7211f;
 }
+
+.card-box {
+    background: #ffffff none repeat scroll 0 0;
+    margin: 15px 0;
+    padding: 20px;
+    box-shadow: 0 5px 20px 0 rgba(0,0,0,0.15);
+    position: relative;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+}

@@ -25,7 +25,7 @@ $time = time();
         </div>
 
         <div class="pt-20">
-            <div class="description pb-20">
+            <div class="description pb-20 card-box">
 				<?php if ($figure->description) { ?>
                     <p><?= $figure->description ?></p>
 				<?php } ?>
@@ -60,7 +60,7 @@ $time = time();
 
             <div>
 				<?php if ($needTime && $figure->useForClassesCalculate) { ?>
-                    <div>
+                    <div class="card-box">
                         <?= \Yii::t('app', 'Время, необходимое для повышения класса') ?>:
                         <table class="table">
                             <tr>
@@ -129,7 +129,7 @@ $time = time();
                     </b></div>
 			<?php } ?>
 
-            <div class="filters">
+            <div class="filters card-box">
 				<?= \yii\bootstrap\Html::beginForm('', 'post', ['id' => 'figureFilterForm']) ?>
 				<?= \yii\bootstrap\Html::hiddenInput('figureId', $figure->id) ?>
 				<?= \yii\bootstrap\Html::hiddenInput('yearId', $year ? $year->id : null) ?>
@@ -249,13 +249,15 @@ $time = time();
                 </div>
 				
 				<?php if ($figure->severalRecords) { ?>
-                    <?= \Yii::t('app', 'С момента добавления результатов мировой рекорд по фигуре {figureTitle} был обновлён. В связи с этим, в таблице выводится два рейтинга',
-                        ['figureTitle' => $figure->title]) ?>:<br>
-                    — <?= \Yii::t('app', '"Начальный рейтинг" - рейтинг на момент добавления результата') ?><br>
-                    — <?= \Yii::t('app', '"Актуальный рейтинг" - процент отставания от текущего мирового рекорда') ?><br>
-                    <div class="show-pk">
-                        <?= \Yii::t('app', 'При наведении на начальный рейтинг показывается рекорд, который был в момент добавления результата на сайт.') ?>
-                    </div>
+                   <div class="card-box">
+	                   <?= \Yii::t('app', 'С момента добавления результатов мировой рекорд по фигуре {figureTitle} был обновлён. В связи с этим, в таблице выводится два рейтинга',
+		                   ['figureTitle' => $figure->title]) ?>:<br>
+                       — <?= \Yii::t('app', '"Начальный рейтинг" - рейтинг на момент добавления результата') ?><br>
+                       — <?= \Yii::t('app', '"Актуальный рейтинг" - процент отставания от текущего мирового рекорда') ?><br>
+                       <div class="show-pk">
+		                   <?= \Yii::t('app', 'При наведении на начальный рейтинг показывается рекорд, который был в момент добавления результата на сайт.') ?>
+                       </div>
+                   </div>
 				<?php } ?>
 
                 <div class="small text-right">

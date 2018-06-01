@@ -27,7 +27,7 @@ use yii\widgets\LinkPager;
 						/** @var \common\models\Year[] $years */
 						$years = $figureData['years'];
 						?>
-                        <div class="item">
+                        <div class="item card-box">
                             <div class="toggle">
                                 <div class="background"></div>
                                 <div class="title">

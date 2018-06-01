@@ -21,7 +21,7 @@ $this->registerMetaTag([
 <h2><?= $this->context->pageTitle ?></h2>
 
 <div class="z-100">
-	<div class="detail-news">
+	<div class="detail-news card-box">
 		<div class="item">
 			<div class="preview_text">
 				<?= $news->fullText ? $news->fullText : $news->previewText ?>
