@@ -19,7 +19,7 @@ $formModel->dateHuman = date("d.m.Y");
 $formModel->countryId = \common\helpers\GeoHelper::getUserCountryId();
 ?>
 
-<div class="registration-form">
+<div class="registration-form card-box">
     <h3><?= \Yii::t('app', 'Заполните все поля') ?></h3>
 	
 	<?php $form = ActiveForm::begin(['options' => ['id' => 'specialStageForGuest']]); ?>

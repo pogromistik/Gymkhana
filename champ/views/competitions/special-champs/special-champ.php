@@ -13,7 +13,7 @@ use yii\helpers\Html;
         <b><?= \Yii::t('app', '{year} год', ['year' => $championship->year->year]) ?></b>
         <span class="label label-info"><?= \Yii::t('app', \common\models\SpecialChamp::$statusesTitle[$championship->status]) ?></span>
 		<?php if ($championship->getDescr()) { ?>
-            <div class="pt-20">
+            <div class="pt-20 card-box">
 				<?= $championship->getDescr() ?>
             </div>
 		<?php } ?>

@@ -11,7 +11,7 @@ use common\models\RequestForSpecialStage;
  */
 ?>
 <h3><?= $this->context->pageTitle ?></h3>
-<div class="request-for-special-stage-index pt-20">
+<div class="request-for-special-stage-index pt-20 card-box">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'columns'      => [

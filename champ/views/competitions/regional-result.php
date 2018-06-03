@@ -24,7 +24,7 @@ use yii\bootstrap\Html;
                     <div class="title">
 						<?= $regionGroupInfo['title'] ?>
                     </div>
-                    <div class="info">
+                    <div class="info card-box">
                         <div class="pl-10">
 							<?php foreach ($regionGroupInfo['years'] as $yearId => $yearInfo) { ?>
 								<?= $yearInfo['year'] ?>

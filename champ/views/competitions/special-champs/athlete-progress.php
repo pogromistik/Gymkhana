@@ -8,7 +8,7 @@
 
 <h3><?= '"' . $stage->getTitle() . '": ' . $athlete->getFullName() ?></h3>
 
-<div class="table-responsive">
+<div class="table-responsive card-box">
     <table class="table">
         <tbody>
 		<?php foreach ($requests as $request) { ?>

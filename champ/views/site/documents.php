@@ -14,7 +14,7 @@ use yii\bootstrap\Html;
 		<?php foreach ($sections as $section) {
 			$files = $section->actualFiles;
 			?>
-            <div class="item">
+            <div class="item card-box">
                 <div class="toggle">
                     <div class="background"></div>
                     <div class="title">

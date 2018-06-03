@@ -13,7 +13,7 @@ use common\models\TmpFigureResult;
 
 <h2><?= $this->context->pageTitle ?></h2>
 
-<div class="tmp-participant-index table-responsive">
+<div class="tmp-participant-index table-responsive card-box">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $searchModel,
