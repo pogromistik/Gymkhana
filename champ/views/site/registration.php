@@ -21,7 +21,7 @@ use kartik\widgets\DepDrop;
 	<?= $form->field($registration, 'lastName')->textInput(['placeholder' => \Yii::t('app', 'Ваша фамилия')]) ?>
 	<?= $form->field($registration, 'firstName')->textInput(['placeholder' => \Yii::t('app', 'Полное имя')]) ?>
 	<?php if (!$registration->countryId) { ?>
-		<?php $registration->countryId = 1 ?>
+		<?php $registration->countryId = \common\helpers\GeoHelper::getUserCountryId(); ?>
 	<?php } ?>
 	<?= $form->field($registration, 'countryId')->widget(Select2::classname(), [
 		'data'    => Country::getAll(true),

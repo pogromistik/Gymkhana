@@ -8,5 +8,18 @@ return [
 		'mutex'  => [
 			'class' => \yii\mutex\FileMutex::class,
 		],
+		'db' => [
+			'schemaMap'         => [
+				'pgsql' => [
+					'class'             => yii\db\pgsql\Schema::class,
+					'columnSchemaClass' => [
+						'class'                                   => \yii\db\pgsql\ColumnSchema::class,
+						'disableJsonSupport'                      => true,
+						'disableArraySupport'                     => true,
+						'deserializeArrayColumnToArrayExpression' => false,
+					],
+				],
+			]
+		],
 	]
 ];

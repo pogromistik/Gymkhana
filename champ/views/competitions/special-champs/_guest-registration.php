@@ -16,7 +16,7 @@ $athlete = \common\models\Athlete::findOne(\Yii::$app->user->id);
 $formModel = new \champ\models\SpecialStageForm();
 $formModel->stageId = $stage->id;
 $formModel->dateHuman = date("d.m.Y");
-$formModel->countryId = 1;
+$formModel->countryId = \common\helpers\GeoHelper::getUserCountryId();
 ?>
 
 <div class="registration-form">

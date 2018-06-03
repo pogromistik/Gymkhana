@@ -445,4 +445,15 @@ class SiteController extends BaseController
 		
 		return $this->render('offer-news', ['news' => $news]);
 	}
+	
+	public function actionTest()
+	{
+		$ip = \Yii::$app->geoip->ip("5.102.48.0");
+		
+		echo $ip->city . PHP_EOL; // "San Francisco"
+		echo $ip->country . PHP_EOL; // "United States"
+		echo $ip->location->lng . PHP_EOL; // 37.7898
+		echo $ip->location->lat . PHP_EOL; // -122.3942
+		echo $ip->isoCode . PHP_EOL; // "US"
+	}
 }

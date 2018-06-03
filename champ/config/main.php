@@ -17,6 +17,7 @@ return [
 	'modules'             => [
 	],
 	'components'          => [
+		'geoip' => ['class' => lysenkobv\GeoIP\GeoIP::class],
 		'request'      => [
 			'csrfParam' => '_csrf-champ',
 		],
