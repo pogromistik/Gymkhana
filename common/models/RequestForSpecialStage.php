@@ -38,6 +38,7 @@ use yii\db\Expression;
  * @property AthletesClass $athleteClass
  * @property AthletesClass $newAthleteClass
  * @property City          $city
+ * @property Country       $country
  */
 class RequestForSpecialStage extends BaseActiveRecord
 {
@@ -256,6 +257,11 @@ class RequestForSpecialStage extends BaseActiveRecord
 	public function getCity()
 	{
 		return $this->cityId ? $this->hasOne(City::className(), ['id' => 'cityId']) : null;
+	}
+	
+	public function getCountry()
+	{
+		return $this->hasOne(Country::className(), ['id' => 'countryId']);
 	}
 	
 	public function getAthleteClass()

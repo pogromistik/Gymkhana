@@ -23,7 +23,9 @@ $this->title = 'Регистрации на особые этапы, требу�
     </thead>
 
     <tbody>
-	<?php foreach ($result as $i => $item) {
+	<?php foreach ($result
+	
+	               as $i => $item) {
 		$request = $item['request'];
 		$coincidences = $item['coincidences'];
 		?>
@@ -44,52 +46,32 @@ $this->title = 'Регистрации на особые этапы, требу�
 					<?php $data = $request->getData(); ?>
 					<?= $data['lastName'] . ' ' . $data['firstName'] ?>
                     <br>
-                    <small><?= $request->cityId ? $request->city->title : $data['cityTitle'] ?></small>
+                    <small><?= $request->cityId ? $request->city->title . '(' . $request->country->title . ')' : $data['cityTitle'] ?></small>
                     <br>
                     <div>
                         <div id="tmp-motorcycle-<?= $request->id ?>-1" class="small">
-								<?= $data['motorcycleMark'] . ' ' . $data['motorcycleModel'] ?>,
-								<?= $data['cbm'] ?>м<sup>3</sup>, <?= $data['power'] ?>л.с.
-                                <br>
-								<?php if (isset($data['isCruiser']) && $data['isCruiser'] == 1) { ?>
-                                    <b>круизёр</b>
-								<?php } else { ?>
-                                    <b>не круизёр</b>
-								<?php } ?>
+							<?= $data['motorcycleMark'] . ' ' . $data['motorcycleModel'] ?>,
+							<?= $data['cbm'] ?>м<sup>3</sup>, <?= $data['power'] ?>л.с.
+                            <br>
+							<?php if (isset($data['isCruiser']) && $data['isCruiser'] == 1) { ?>
+                                <b>круизёр</b>
+							<?php } else { ?>
+                                <b>не круизёр</b>
+							<?php } ?>
                         </div>
                         <a href="#" data-id="<?= $request->id ?>" data-motorcycle-id="<?= 1 ?>" data-mode="stage"
                            class="changeTmpMotorcycle">изменить</a>
                     </div>
 					
 					<?php if (!$request->cityId) { ?>
-						<?= Html::beginForm('', 'post', ['id' => 'cityForNewRequest' . $request->id]) ?>
-						<?= Html::hiddenInput('id', $request->id) ?>
-						<?= Select2::widget([
-							'name'          => 'city',
-							'data'          => [],
-							'maintainOrder' => true,
-							'options'       => ['placeholder' => 'Выберите город...', 'multiple' => false],
-							'pluginOptions' => [
-								'maximumInputLength' => 10,
-								'ajax'               => [
-									'url'      => \yii\helpers\Url::to(['/competitions/help/city-list']),
-									'dataType' => 'json',
-									'data'     => new JsExpression('function(params) { return {title:params.term, countryId:' . $request->countryId . '}; }')
-								],
-								'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
-								'templateResult'     => new JsExpression('function(city) { return city.text; }'),
-								'templateSelection'  => new JsExpression('function (city) { return city.text; }'),
-							],
-							'pluginEvents'  => [
-								'change' => 'function(e){
-				cityForNewRequest(' . $request->id . ');
-			}',
-							],
-						]);
-						?>
-						<?= Html::endForm() ?>
+                        <b>Город не привязан к списку. Отредактируйте заявку.</b>
 					<?php } ?>
 				<?php } ?>
+                <div>
+                    <a href="#" data-id="<?= $request->id ?>"
+                       class="btn btn-default btn-xs change-special-request">Редактировать заявку</a>
+                    <div id="changeTmpRequest<?= $request->id ?>"></div>
+                </div>
                 <div class="dark-green-text bold">
                     <div>Дата: <?= $request->dateHuman ?></div>
                     <div>Время: <?= $request->timeHuman ?></div>

@@ -256,6 +256,7 @@ function AddAllResults(form) {
         }
     });
 }
+
 /*
  $('.saveAllStageResult').click(function (e) {
  e.preventDefault();
@@ -1270,7 +1271,7 @@ var equalizer = function (equalizer) {
     equalizer.height(maxHeight);
 };
 
-$(window).on('load', function() {
+$(window).on('load', function () {
     if ($(document).width() >= 975) {
         equalizer($('.with-hr-border > div'));
     }
@@ -1490,6 +1491,46 @@ $('.changeTmpMotorcycle').click(function (e) {
     });
 });
 
+$('.change-special-request').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    var elem = $(this);
+    var id = elem.data('id');
+    $.get('/competitions/special-champ/find-tmp-athlete', {
+        id: id
+    }).done(function (data) {
+        hideBackDrop();
+        $('#changeTmpRequest' + id).html(data);
+    }).fail(function (error) {
+        hideBackDrop();
+        BootboxError(error.responseText);
+    });
+});
+
+$(document).on("submit", '#changeTmpAthleteForm', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var id = $('#tmp-id').val();
+    showBackDrop();
+    $.ajax({
+        url: "/competitions/special-champ/update-info?id=" + id,
+        type: "POST",
+        data: form.serialize(),
+        success: function (result) {
+            if (result == true) {
+                location.reload();
+            } else {
+                hideBackDrop();
+                alert(result);
+            }
+        },
+        error: function (result) {
+            hideBackDrop();
+            alert(result);
+        }
+    });
+});
+
 $(document).on("submit", '#changeTmpMotorcycleForm', function (e) {
     e.preventDefault();
     var form = $(this);
@@ -1537,7 +1578,7 @@ $(document).on("submit", '#firstStepMerge', function (e) {
     });
 });
 
-$(document).on('click', '#appendMotorcycle', function(e){
+$(document).on('click', '#appendMotorcycle', function (e) {
     e.preventDefault();
     var elem = $(this);
     var i = elem.data('i');
@@ -1554,10 +1595,10 @@ $(document).on('click', '#appendMotorcycle', function(e){
         hideBackDrop();
         alert(error.responseText);
     });
-}).on('click', '.deleteMergeMotorcycle', function(e) {
+}).on('click', '.deleteMergeMotorcycle', function (e) {
     e.preventDefault();
     $(this).parent().parent().remove();
-}).on("submit", "#secondStepMerge", function(e) {
+}).on("submit", "#secondStepMerge", function (e) {
     e.preventDefault();
     var form = $(this);
     showBackDrop();
@@ -1574,7 +1615,7 @@ $(document).on('click', '#appendMotorcycle', function(e){
             alert(result);
         }
     });
-}).on("submit", "#confirmMerge", function(e) {
+}).on("submit", "#confirmMerge", function (e) {
     e.preventDefault();
     var form = $(this);
     showBackDrop();

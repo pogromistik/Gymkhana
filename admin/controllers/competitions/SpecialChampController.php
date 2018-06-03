@@ -4,6 +4,7 @@ namespace admin\controllers\competitions;
 
 use admin\controllers\BaseController;
 use admin\models\ParticipantForm;
+use admin\models\SpecialRequestForm;
 use common\models\Athlete;
 use common\models\City;
 use common\models\ClassHistory;
@@ -364,7 +365,7 @@ class SpecialChampController extends BaseController
 				$motorcycle->model = $data['motorcycleModel'];
 				$motorcycle->cbm = $data['cbm'];
 				$motorcycle->power = $data['power'];
-				$motorcycle->isCruiser = $data['isCruiser']??0;
+				$motorcycle->isCruiser = $data['isCruiser'] ?? 0;
 				if (!$motorcycle->save()) {
 					$transaction->rollBack();
 					\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
@@ -507,7 +508,7 @@ class SpecialChampController extends BaseController
 			$motorcycle->model = $data['motorcycleModel'];
 			$motorcycle->cbm = $data['cbm'];
 			$motorcycle->power = $data['power'];
-			$motorcycle->isCruiser = $data['isCruiser']??0;
+			$motorcycle->isCruiser = $data['isCruiser'] ?? 0;
 			if (!$motorcycle->save()) {
 				$transaction->rollBack();
 				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
@@ -810,5 +811,66 @@ class SpecialChampController extends BaseController
 			'stages'           => $stages,
 			'outOfChampStages' => $outOfChampStages
 		]);
+	}
+	
+	/**
+	 * @param $id
+	 *
+	 * @return string
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
+	public function actionFindTmpAthlete($id)
+	{
+		$this->can('competitions');
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Ошибка!';
+		}
+		$model = SpecialRequestForm::set($request);
+		
+		return $this->renderAjax('_tmp_athlete', ['formModel' => $model, 'id' => $id]);
+	}
+	
+	/**
+	 * @param $id
+	 *
+	 * @return string
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
+	public function actionUpdateInfo($id)
+	{
+		$this->can('competitions');
+		$request = RequestForSpecialStage::findOne($id);
+		if (!$request) {
+			return 'Ошибка!';
+		}
+		$model = new SpecialRequestForm();
+		if ($model->load(\Yii::$app->request->post())) {
+			if ($request->athleteId) {
+				$request->timeHuman = $model->timeHuman;
+				$request->dateHuman = $model->dateHuman;
+				if ($request->save()) {
+					return true;
+				}
+			} else {
+				if (!$model->cityId) {
+					return 'Необходимо выбрать город';
+				}
+				$data = $request->getData();
+				foreach ($model->attributeLabels() as $attr => $label) {
+					$data[$attr] = $model->$attr;
+				}
+				$request->data = json_encode($data);
+				$request->timeHuman = $model->timeHuman;
+				$request->dateHuman = $model->dateHuman;
+				$request->cityId = $model->cityId;
+				$request->countryId = $model->countryId;
+				if ($request->save()) {
+					return true;
+				}
+			}
+		}
+		
+		return 'Ошибка! Напишите Наде';
 	}
 }
