@@ -1575,3 +1575,14 @@ small.spb a {
     min-width: 0;
     word-wrap: break-word;
 }
+
+.global-stage {
+    margin-top: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.global-stage a {
+    color: #56a025;
+}

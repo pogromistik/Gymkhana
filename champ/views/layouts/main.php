@@ -43,6 +43,7 @@ if (!\Yii::$app->user->isGuest) {
 					'links'    => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 				]) ?>
             </div>
+	        <?= $this->render('_global_stage') ?>
 			<?= $content ?>
         </div>
     </div>

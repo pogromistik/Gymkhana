@@ -50,6 +50,7 @@ if (!\Yii::$app->user->isGuest) {
                     </div>
                 </div>
 	        <?php } ?>
+	        <?= $this->render('_global_stage') ?>
 			<?= $content ?>
         </div>
         <!-- /#page-wrapper -->

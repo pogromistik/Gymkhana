@@ -1,10 +1,13 @@
 <?php
+
 namespace champ\controllers;
 
 use common\models\Athlete;
 use common\models\HelpModel;
 use common\models\MainPhoto;
 use common\models\OverallFile;
+use common\models\SpecialStage;
+use common\models\Stage;
 use common\models\TranslateMessage;
 use common\models\Work;
 use Yii;
@@ -47,11 +50,20 @@ class BaseController extends Controller
 				\Yii::$app->language = TranslateMessage::LANGUAGE_RU;
 		}
 		
-		if(!\Yii::$app->user->isGuest) {
+		if (!\Yii::$app->user->isGuest) {
 			$user = Athlete::findOne(\Yii::$app->user->id);
 			$user->lastActivityDate = time();
 			$user->save();
 			\Yii::$app->language = $user->language;
+		}
+		
+		if (!\Yii::$app->cache->get('special_stage')) {
+			$now = time();
+			$specialStage = SpecialStage::find()->where(['<=', 'dateStart', $now])
+				->andWhere(['>=', 'dateEnd', $now])->andWhere(['not', ['dateStart' => null]])->one();
+			if ($specialStage) {
+				\Yii::$app->cache->set('special_stage', $specialStage);
+			}
 		}
 	}
 }

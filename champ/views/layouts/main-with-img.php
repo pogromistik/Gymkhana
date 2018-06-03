@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use champ\assets\AppAsset;
@@ -18,13 +19,13 @@ if (!\Yii::$app->user->isGuest) {
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
-	<meta charset="<?= Yii::$app->charset ?>">
-	<meta name="description" content="<?= $this->context->description ?>">
-	<meta name="keywords" content="<?= $this->context->keywords ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="64x64">
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta name="description" content="<?= $this->context->description ?>">
+    <meta name="keywords" content="<?= $this->context->keywords ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="64x64">
 	<?= Html::csrfMetaTags() ?>
-	<title><?= Html::encode($this->context->pageTitle) ?></title>
+    <title><?= Html::encode($this->context->pageTitle) ?></title>
 	<?php $this->head() ?>
 </head>
 <body>
@@ -35,18 +36,18 @@ if (!\Yii::$app->user->isGuest) {
 <h1 style="display: none"><?= $this->context->pageTitle ?></h1>
 
 <div class="background-img">
-	<?= Html::img('/img/'.$this->context->background) ?>
+	<?= Html::img('/img/' . $this->context->background) ?>
 </div>
 
 <div class="container-fluid">
-	<div class="content">
-		<div id="page-wrapper">
-			<div class="breadcrumbs">
+    <div class="content">
+        <div id="page-wrapper">
+            <div class="breadcrumbs">
 				<?= Breadcrumbs::widget([
 					'homeLink' => false,
 					'links'    => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 				]) ?>
-			</div>
+            </div>
 			<?php if (YII_ENV == 'betta') { ?>
                 <div class="pt-20">
                     <div class="alert alert-danger">
@@ -54,10 +55,11 @@ if (!\Yii::$app->user->isGuest) {
                     </div>
                 </div>
 			<?php } ?>
+            <?= $this->render('_global_stage') ?>
 			<?= $content ?>
-		</div>
-	</div>
-	<!-- /#page-wrapper -->
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
 </div>
 
 <?= $this->render('_footer') ?>
