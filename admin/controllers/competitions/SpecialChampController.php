@@ -863,6 +863,7 @@ class SpecialChampController extends BaseController
 				$request->data = json_encode($data);
 				$request->timeHuman = $model->timeHuman;
 				$request->dateHuman = $model->dateHuman;
+				$request->fine = $model->fine;
 				$request->cityId = $model->cityId;
 				$request->countryId = $model->countryId;
 				if ($request->save()) {
