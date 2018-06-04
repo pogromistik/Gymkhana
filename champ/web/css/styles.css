@@ -1569,11 +1569,6 @@ small.spb a {
     padding: 20px;
     box-shadow: 0 5px 20px 0 rgba(0,0,0,0.15);
     position: relative;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
 }
 
 .global-stage {
