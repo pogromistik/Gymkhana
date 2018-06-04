@@ -806,6 +806,12 @@ class SpecialChampController extends BaseController
 		return true;
 	}
 	
+	/**
+	 * @param $id
+	 *
+	 * @return string
+	 * @throws NotFoundHttpException
+	 */
 	public function actionResults($id)
 	{
 		$championship = $this->findModel($id);
