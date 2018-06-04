@@ -605,7 +605,7 @@ LIMIT 1) order by "bestTime" asc) n'])
 				/** @var AthletesClass $presumablyClass */
 				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])->orderBy(['title' => SORT_ASC])->one();
 				if (Participant::find()
-						->from(new Expression('Participants a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
+						->from(new Expression('"Participants" a, (SELECT *, rank() over (partition by "athleteId" order by "motorcycleId" asc) n
 			from "Participants" WHERE "stageId"=' . $this->id . ') b'))
 						->where(new Expression('n=1'))
 						->andWhere(['a.stageId' => $this->id, 'a.status' => Participant::STATUS_ACTIVE, 'a.isArrived' => 1])
