@@ -325,6 +325,9 @@ class SpecialStage extends BaseActiveRecord
 	
 	public function placesCalculate()
 	{
+		if (!$this->classId) {
+			return true;
+		}
 		$this->refresh();
 		RequestForSpecialStage::updateAll(['place' => null], ['stageId' => $this->id]);
 		/** @var RequestForSpecialStage[] $requests */
