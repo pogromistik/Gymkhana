@@ -5,12 +5,14 @@ namespace champ\controllers;
 use common\models\Athlete;
 use common\models\AthletesClass;
 use common\models\ClassHistory;
+use common\models\Country;
 use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Participant;
 use common\models\Region;
 use common\models\RequestForSpecialStage;
 use common\models\search\AthleteSearch;
+use common\models\TranslateMessage;
 use Yii;
 use yii\db\Expression;
 use yii\db\Query;
@@ -70,12 +72,12 @@ class AthletesController extends BaseController
 		
 		$specialHistory = RequestForSpecialStage::find()->where(['status'    => RequestForSpecialStage::STATUS_APPROVE,
 		                                                         'athleteId' => $athlete->id])->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();;
-		                                                         
+		
 		$participants = Participant::find()->where(['athleteId' => $athlete->id])
 			->andWhere(['status' => [Participant::STATUS_OUT_COMPETITION, Participant::STATUS_ACTIVE]])
 			->orderBy(['dateAdded' => SORT_DESC])->limit(30)->all();
 		
-		$this->pageTitle = \Yii::t('app', 'Спортсмены') .': ' . $athlete->getFullName();
+		$this->pageTitle = \Yii::t('app', 'Спортсмены') . ': ' . $athlete->getFullName();
 		$this->description = $athlete->getFullName();
 		
 		return $this->render('view', [
@@ -94,13 +96,15 @@ class AthletesController extends BaseController
 		$this->layout = 'main-with-img';
 		$this->background = 'background7.png';
 		
+		$countryAttr = (\Yii::$app->language == TranslateMessage::LANGUAGE_RU) ? 'title' : 'title_en';
 		$query = new Query();
-		$query->from(['a' => Athlete::tableName(), 'b' => Region::tableName(), 'c' => AthletesClass::tableName()]);
-		$query->select(['count("a"."id")', '"b"."title" as "region"', '"c"."title" as "class"']);
+		$query->from(['a' => Athlete::tableName(), 'b' => Region::tableName(), 'c' => AthletesClass::tableName(), 'd' => Country::tableName()]);
+		$query->select(['count("a"."id")', '"b"."title" as "region"', '"c"."title" as "class"', '"d"."' . $countryAttr . '" as "country"']);
 		$query->where(new Expression('"a"."athleteClassId" = "c"."id"'))
-			->andWhere(new Expression('"a"."regionId" = "b"."id"'));
+			->andWhere(new Expression('"a"."regionId" = "b"."id"'))
+			->andWhere(new Expression('"b"."countryId" = "d"."id"'));
 		$query->orderBy(['"b"."title"' => SORT_ASC, '"c"."title"' => SORT_ASC]);
-		$query->groupBy(['"b"."title"', '"c"."title"']);
+		$query->groupBy(['"b"."title"', '"c"."title"', '"d"."' . $countryAttr . '"']);
 		$items = $query->all();
 		
 		$stats = [];
@@ -111,8 +115,9 @@ class AthletesController extends BaseController
 		foreach ($items as $item) {
 			if (!isset($stats[$item['region']])) {
 				$stats[$item['region']] = [
-					'total'  => 0,
-					'groups' => []
+					'total'   => 0,
+					'groups'  => [],
+					'country' => $item['country']
 				];
 				foreach ($classes as $class) {
 					$stats[$item['region']]['groups'][$class] = 0;
