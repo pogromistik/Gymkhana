@@ -379,7 +379,7 @@ class ProfileController extends AccessController
 			$result = FigureTime::find()->where(['figureId' => $figure->id, 'athleteId' => $athlete->id])
 				->orderBy(['resultTime' => SORT_ASC])->one();
 			$bestResults = FigureTime::find();
-			$bestResults->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n
+			$bestResults->from(new Expression('"Athletes", (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n
        from "FigureTimes" where "figureId" = ' . $figure->id . ') A'));
 			$bestResults->select('*');
 			$bestResults->where(new Expression('n=1'));

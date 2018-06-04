@@ -497,7 +497,7 @@ class CompetitionsController extends BaseController
 			$results = $results->all();
 		} else {
 			$results = FigureTime::find();
-			$results->from(new Expression('Athletes, (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n 
+			$results->from(new Expression('"Athletes", (SELECT *, rank() over (partition by "athleteId" order by "resultTime" asc, "dateAdded" asc) n
 			from "FigureTimes" where "figureId" = ' . $id . ') A'));
 			$results->select('*');
 			$results->where(new Expression('n=1'));
