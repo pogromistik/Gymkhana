@@ -773,6 +773,12 @@ class SpecialChampController extends BaseController
 		return true;
 	}
 	
+	/**
+	 * @param $id
+	 *
+	 * @return bool|string
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
 	public function actionCancelAllClasses($id)
 	{
 		$this->can('competitions');
