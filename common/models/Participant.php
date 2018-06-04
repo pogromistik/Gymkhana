@@ -47,6 +47,8 @@ class Participant extends BaseActiveRecord
 	
 	public $humanBestTime;
 	
+	public $needUpdatePlaces = true;
+	
 	public $resultClass;
 	public $n;
 	public $tmpPlace;
@@ -295,7 +297,7 @@ class Participant extends BaseActiveRecord
 	{
 		parent::afterSave($insert, $changedAttributes);
 		$stage = $this->stage;
-		if ($stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
+		if ($this->needUpdatePlaces && $stage->status == Stage::STATUS_PAST || $stage->status == Stage::STATUS_CALCULATE_RESULTS) {
 			if ($this->status != Participant::STATUS_OUT_COMPETITION && array_key_exists('bestTime', $changedAttributes)) {
 				$stage->placesCalculate();
 			}

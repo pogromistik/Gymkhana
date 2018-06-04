@@ -48,6 +48,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 	public $resultTimeHuman;
 	public $timeHuman;
 	
+	public $needUpdatePlaces = true;
+	
 	const STATUS_NEED_CHECK = 1;
 	const STATUS_APPROVE = 2;
 	const STATUS_IN_ACTIVE = 3;
@@ -192,7 +194,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 	{
 		parent::afterSave($insert, $changedAttributes);
 		$stage = $this->stage;
-		if ($stage->dateResult && $stage->dateResult < time()) {
+		if ($this->needUpdatePlaces && $stage->dateResult && $stage->dateResult < time()) {
 			if (($this->status == self::STATUS_APPROVE && array_key_exists('resultTime', $changedAttributes))
 				|| array_key_exists('status', $changedAttributes)
 			) {

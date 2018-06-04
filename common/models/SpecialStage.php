@@ -361,6 +361,7 @@ class SpecialStage extends BaseActiveRecord
 		$prevResult = null;
 		$place = 1;
 		foreach ($requests as $item) {
+			$item->needUpdatePlaces = false;
 			if ($item->resultTime && $item->resultTime < 1800000) {
 				$item->place = $place++;
 				if ($prevResult && $prevResult->resultTime == $item->resultTime) {

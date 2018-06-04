@@ -380,6 +380,7 @@ class Stage extends BaseActiveRecord
 		/** @var Participant $prevResult */
 		$prevResult = null;
 		foreach ($participants as $participant) {
+			$participant->needUpdatePlaces = false;
 			if ($participant->bestTime && $participant->bestTime < 1800000) {
 				$participant->place = $participant->tmpPlace;
 				$participant->placeOfClass = $participant->tmpPlaceInInternalClass;

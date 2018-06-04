@@ -663,7 +663,7 @@ class SpecialChampController extends BaseController
 		if (!$request) {
 			return 'Участник не найден';
 		}
-		
+		$request->needUpdatePlaces = false;
 		$result = $this->approveClassForParticipant($request);
 		if ($result !== true) {
 			return $result;
@@ -732,7 +732,7 @@ class SpecialChampController extends BaseController
 		if (!$request) {
 			return 'Участник не найден';
 		}
-		
+		$request->needUpdatePlaces = false;
 		if ($request->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) {
 			return 'Запись уже была обработана';
 		}
@@ -760,6 +760,7 @@ class SpecialChampController extends BaseController
 			->andWhere(['newAthleteClassStatus' => Participant::NEW_CLASS_STATUS_NEED_CHECK])->all();
 		$errors = null;
 		foreach ($requests as $request) {
+			$request->needUpdatePlaces = false;
 			$result = $this->approveClassForParticipant($request);
 			if ($result !== true) {
 				$errors .= $result . PHP_EOL . PHP_EOL;
@@ -785,6 +786,7 @@ class SpecialChampController extends BaseController
 		$requests = $stage->getActiveRequests()->andWhere(['not', ['newAthleteClassId' => null]])
 			->andWhere(['newAthleteClassStatus' => RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK])->all();
 		foreach ($requests as $request) {
+			$request->needUpdatePlaces = false;
 			if ($request->newAthleteClassStatus != RequestForSpecialStage::NEW_CLASS_STATUS_NEED_CHECK) {
 				return 'Запись уже была обработана';
 			}
