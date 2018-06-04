@@ -131,7 +131,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if ($notEmail === $login) {
 			$athlete = static::findOne(['login' => $login, 'status' => self::STATUS_ACTIVE]);
 		} else {
-			$athlete = static::findOne(['upper("email")' => mb_strtoupper($login), 'status' => self::STATUS_ACTIVE]);
+			$athlete = static::find()->where(['upper("email")' => mb_strtoupper($login), 'status' => self::STATUS_ACTIVE])->one();
 		}
 		
 		return $athlete;

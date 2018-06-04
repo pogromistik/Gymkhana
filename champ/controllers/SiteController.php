@@ -313,7 +313,7 @@ class SiteController extends BaseController
 			if (!$form->email) {
 				return \Yii::t('app', 'Необходимо указать email');
 			}
-			if (Athlete::findOne(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])
+			if (Athlete::find()->where(['upper("email")' => mb_strtoupper($form->email), 'hasAccount' => 1])->one()
 				|| TmpAthlete::find()->where(['upper("email")' => mb_strtoupper($form->email)])
 					->andWhere(['status' => TmpAthlete::STATUS_NEW])->one()
 			) {
@@ -372,7 +372,7 @@ class SiteController extends BaseController
 	{
 		$model = new PasswordResetRequestForm();
 		if ($model->load(\Yii::$app->request->post())) {
-			$athlete = Athlete::findOne(['upper("email")' => mb_strtoupper($model->login)]);
+			$athlete = Athlete::find()->where(['upper("email")' => mb_strtoupper($model->login)])->one();
 			if (!$athlete) {
 				$login = preg_replace('~\D+~', '', $model->login);
 				if ($login == $model->login) {

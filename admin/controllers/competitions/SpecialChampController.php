@@ -349,7 +349,7 @@ class SpecialChampController extends BaseController
 				$athlete->countryId = $city->countryId;
 				$athlete->regionId = $city->regionId;
 				
-				if (!Athlete::findOne(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])) {
+				if (!Athlete::find()->where(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])->one()) {
 					$athlete->email = $data['email'];
 				}
 				if (!$athlete->save()) {
@@ -492,7 +492,7 @@ class SpecialChampController extends BaseController
 			
 			$transaction = \Yii::$app->db->beginTransaction();
 			
-			if (!$athlete->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])) {
+			if (!$athlete->email && !Athlete::find()->where(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])->one()) {
 				$athlete->email = $data['email'];
 				if (!$athlete->save()) {
 					$transaction->rollBack();
@@ -565,7 +565,7 @@ class SpecialChampController extends BaseController
 			
 			$transaction = \Yii::$app->db->beginTransaction();
 			
-			if (!$athlete->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])) {
+			if (!$athlete->email && !Athlete::find()->where(['upper("email")' => mb_strtoupper($data['email'], 'UTF-8')])->one()) {
 				$athlete->email = $data['email'];
 				if (!$athlete->save()) {
 					$transaction->rollBack();

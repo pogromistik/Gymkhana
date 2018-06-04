@@ -144,7 +144,8 @@ class TmpParticipantController extends BaseController
 			$athlete->countryId = $city->countryId;
 			$athlete->regionId = $city->regionId;
 			$athlete->phone = $tmpParticipant->phone;
-			if ($tmpParticipant->email && !Athlete::findOne(['upper("email")' => mb_strtoupper($tmpParticipant->email, 'UTF-8')])) {
+			if ($tmpParticipant->email &&
+				!Athlete::find()->where(['upper("email")' => mb_strtoupper($tmpParticipant->email, 'UTF-8')])->one()) {
 				$athlete->email = $tmpParticipant->email;
 			}
 			if (!$athlete->save()) {

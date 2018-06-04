@@ -72,7 +72,7 @@ class HelpController extends BaseController
 		}
 		
 		$cityTitle = trim($cityTitle);
-		$city = City::findOne(['upper(title)' => mb_strtoupper($cityTitle, 'UTF-8')]);
+		$city = City::find()->where(['upper(title)' => mb_strtoupper($cityTitle, 'UTF-8')])->one();
 		if ($city) {
 			$result['hasCity'] = true;
 			
@@ -111,7 +111,7 @@ class HelpController extends BaseController
 			return $result;
 		}
 		
-		$region = Region::findOne(['upper(title)' => mb_strtoupper($region, 'UTF-8')]);
+		$region = Region::find()->where(['upper(title)' => mb_strtoupper($region, 'UTF-8')])->one();
 		if ($region) {
 			$result['hasRegion'] = true;
 			

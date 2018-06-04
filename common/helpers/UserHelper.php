@@ -64,7 +64,7 @@ class UserHelper
 		if (\Yii::$app->user->can('globalWorkWithCompetitions')) {
 			return true;
 		}
-		$region = Region::findOne(['upper("title")' => mb_strtoupper($regionTitle, 'UTF-8')]);
+		$region = Region::find()->where(['upper("title")' => mb_strtoupper($regionTitle, 'UTF-8')])->one();
 		if ($region && $region->id == \Yii::$app->user->identity->regionId) {
 			return true;
 		}
