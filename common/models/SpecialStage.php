@@ -273,10 +273,14 @@ class SpecialStage extends BaseActiveRecord
 				/** @var AthletesClass $presumablyClass */
 				$presumablyClass = AthletesClass::find()->where(['percent' => $percent, 'id' => $classIds])
 					->orderBy(['title' => SORT_ASC])->one();
+				$count = 3;
+				if ($presumablyClass->id === 1) {
+					$count = 1;
+				}
 				if (RequestForSpecialStage::find()
 						->where(['stageId' => $this->id, 'status' => RequestForSpecialStage::STATUS_APPROVE])
 						->andWhere(['athleteClassId' => $presumablyClass->id])
-						->count() >= 3
+						->count() >= $count
 				) {
 					$class = $presumablyClass;
 					break;

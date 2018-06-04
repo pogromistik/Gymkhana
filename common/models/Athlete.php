@@ -63,6 +63,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	];
 	
 	public $photoFile;
+	public $addHistory = true;
 	
 	const STATUS_BLOCKED = 0;
 	const STATUS_ACTIVE = 1;
@@ -307,7 +308,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 	
 	public function afterSave($insert, $changedAttributes)
 	{
-		if (array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']
+		if ($this->addHistory && array_key_exists('athleteClassId', $changedAttributes) && $changedAttributes['athleteClassId']
 			&& $changedAttributes['athleteClassId'] != $this->athleteClassId
 		) {
 			$old = $changedAttributes['athleteClassId'];

@@ -1335,4 +1335,24 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionRevertClasses()
+	{
+		$history = ClassHistory::findAll(['event' => 'Gymkhana GP, 1 этап Gymkhana GP']);
+		echo 'find ' . count($history) . ' items' . PHP_EOL;
+		foreach ($history as $item) {
+			$athlete = Athlete::findOne($item->athleteId);
+			echo $athlete->getFullName() . ' ' . $item->oldClassId . ' -> ' . $item->newClassId . PHP_EOL;
+			$athlete->athleteClassId = $item->oldClassId;
+			$athlete->addHistory = false;
+			if ($athlete->save(false)) {
+				$item->delete();
+				if ($athlete->hasAccount) {
+					$text = 'В связи с участием спортсменов класса А производится перерасчёт рейтинга и классов';
+					Notice::add($athlete->id, $text);
+				}
+			}
+		}
+		return true;
+	}
 }
