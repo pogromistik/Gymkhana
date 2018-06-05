@@ -84,6 +84,7 @@ use yii\helpers\Url;
                         </li>
                         <li class="mobile-menu-items"><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a></li>
                         <li class="mobile-menu-items"><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
+                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a></li>
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::t('app', 'Соревнования') ?> <b
