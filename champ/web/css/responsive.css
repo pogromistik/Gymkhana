@@ -312,7 +312,7 @@
         margin-bottom: 90px;
     }
 
-    .container, .container-fluid, .content {
+    .container, .container-fluid, .content, .full-content {
         padding-left: 0;
         padding-right: 0;
     }
