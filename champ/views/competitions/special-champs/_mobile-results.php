@@ -26,6 +26,11 @@ if (!\Yii::$app->user->isGuest) {
 			if ($id && $id == $athlete->id) {
 				$class = 'my-row';
 			}
+			$oldClassTitle = $participant->athleteClass->title;
+			if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($oldClassTitle, 'UTF-8')])) {
+				$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($oldClassTitle, 'UTF-8')];
+				$class .= " result-{$cssClass}";
+			}
 			?>
             <tr class="<?= $class ?>">
                 <td>
@@ -38,7 +43,7 @@ if (!\Yii::$app->user->isGuest) {
                     <br>
 					<?= $participant->motorcycle->getFullTitle() ?>
                     <br>
-					<?= $participant->athleteClass->title ?>
+					<?= $oldClassTitle ?>
                 </td>
                 <td><?= \yii\helpers\Html::a($participant->resultTimeHuman, ['athlete-progress', 'id' => $participant->id]) ?>
                     &nbsp;
