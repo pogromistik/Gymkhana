@@ -649,6 +649,36 @@ LIMIT 1) order by "bestTime" asc) n'])
 		}
 	}
 	
+	public function getFullTitle($language = null)
+	{
+		if (!$this->title_en) {
+			$stageTitle = $this->title;
+		} else {
+			if (!$language) {
+				$language = \Yii::$app->language;
+			}
+			switch ($language) {
+				case TranslateMessage::LANGUAGE_EN:
+					$stageTitle = $this->title_en;
+					break;
+				case TranslateMessage::LANGUAGE_RU:
+					$stageTitle = $this->title;
+					break;
+				default:
+					$stageTitle = $this->title_en;
+					break;
+			}
+		}
+		$champTitle = $this->championship->getTitle();
+		if (mb_strlen($champTitle) == mb_strlen($stageTitle)) {
+			return $stageTitle;
+		} elseif (mb_strlen($stageTitle) >= 20) {
+			return $stageTitle;
+		}
+		
+		return $champTitle . ', ' . $stageTitle;
+	}
+	
 	public function getDescr($language = null)
 	{
 		if (!$this->descr_en) {

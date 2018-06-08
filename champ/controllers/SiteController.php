@@ -9,6 +9,7 @@ use champ\models\ResetPasswordForm;
 use common\models\AssocNews;
 use common\models\Athlete;
 use common\models\AthletesClass;
+use common\models\ClassHistory;
 use common\models\DocumentSection;
 use common\models\Feedback;
 use common\models\HelpModel;
@@ -18,10 +19,13 @@ use common\models\RequestForSpecialStage;
 use common\models\SpecialStage;
 use common\models\Stage;
 use common\models\TmpAthlete;
+use common\models\Year;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\base\UserException;
 use yii\data\Pagination;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -43,6 +47,107 @@ class SiteController extends BaseController
 	
 	public function actionIndex()
 	{
+		$this->layout = 'full-content';
+		$this->pageTitle = \Yii::t('app', 'Мотоджимхана: события');
+		$this->description = \Yii::t('app', 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.');
+		$this->keywords = \Yii::t('app', 'мотоджимхана') .
+			', motogymkhana, moto gymkhana, джимхана кап, gymkhana cup, '
+			. \Yii::t('app', 'новости мото джимханы') . ', '
+			. \Yii::t('app', 'события мото джимханы');
+		
+		//Последние новости
+		$news = AssocNews::find()->where(['<=', 'datePublish', time()])->andWhere(['status' => AssocNews::STATUS_ACTIVE])
+			->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC, 'dateAdded' => SORT_DESC])->limit(3)->all();
+		
+		//Открытые регистрации
+		$time = time();
+		$newStages = Stage::find()->where(['<=', 'startRegistration', $time])
+			->andWhere(['or', ['endRegistration' => null], ['>=', 'endRegistration', $time]])
+			->andWhere(['not', ['status' => Stage::STATUS_CANCEL]])->andWhere(['registrationFromSite' => 1])->all();
+		if (count($newStages) > 3) {
+			if (count($newStages) < 7) {
+				$lastLimit = 3;
+			} else {
+				$lastLimit = 0;
+			}
+		} else {
+			$lastLimit = 7;
+		}
+		
+		//Последние этапы
+		$lastStages = null;
+		if ($lastLimit) {
+			$lastStages = $this->getLastStages($lastLimit);
+		}
+		
+		//События
+		$athleteIds = ClassHistory::find()->select(new Expression('DISTINCT "athleteId", max(date), "id"'))->groupBy('athleteId, id')->orderBy(['max(date)' => SORT_DESC])
+			->limit(10)->asArray()->all();
+		$ids = ArrayHelper::getColumn($athleteIds, 'id');
+		$history = ClassHistory::find()->where(['id' => $ids])->andWhere(['not', ['oldClassId' => null]])
+			->andWhere(['not', ['newClassId' => null]])->all();
+		
+		$graphs = Athlete::classesStats();
+		/*die(var_dump($graphs, [
+		
+		]));*/
+		
+		return $this->render('index', [
+			'news'       => $news,
+			'newStages'  => $newStages,
+			'lastStages' => $lastStages,
+			'history'    => $history,
+			'graphs'     => $graphs
+		]);
+	}
+	
+	private function getLastStages($limit = 10)
+	{
+		/** @var Stage[] $lastRegionalStages */
+		$lastRegionalStages = Stage::find()->where(['status' => Stage::STATUS_PAST])->andWhere(['registrationFromSite' => 1])
+			->andWhere(['>=', 'dateOfThe', Year::getCurrentStartDate()])
+			->orderBy(['dateOfThe' => SORT_DESC])->limit($limit)->all();
+		/** @var SpecialStage[] $lastSpecialStages */
+		$lastSpecialStages = SpecialStage::find()->where(['status' => SpecialStage::STATUS_PAST])
+			->orderBy(['dateResult' => SORT_DESC])->limit($limit)->all();
+		$toArray = [];
+		foreach ($lastRegionalStages as $lastRegionalStage) {
+			$toArray[$lastRegionalStage->dateOfThe][] = [
+				'title' => $lastRegionalStage->getFullTitle() . ', ' .
+					\common\helpers\TranslitHelper::translitCity($lastRegionalStage->city->title),
+				'link'  => Url::to(['/competitions/stage', 'id' => $lastRegionalStage->id])
+			];
+		}
+		
+		foreach ($lastSpecialStages as $lastSpecialStage) {
+			$toArray[$lastSpecialStage->dateResult][] = [
+				'title' => $lastSpecialStage->championship->getTitle() . ', ' .
+					$lastSpecialStage->getTitle(),
+				'link'  => Url::to(['/competitions/stage', 'id' => $lastSpecialStage->id])
+			];
+		}
+		krsort($toArray);
+		
+		$result = [];
+		$count = 0;
+		foreach ($toArray as $items) {
+			foreach ($items as $item) {
+				$result[] = $item;
+				$count++;
+				if ($count == $limit) {
+					break;
+				}
+			}
+			if ($count == $limit) {
+				break;
+			}
+		}
+		
+		return $result;
+	}
+	
+	public function actionNewsList()
+	{
 		$this->layout = 'main-with-img';
 		$this->pageTitle = \Yii::t('app', 'Мотоджимхана: события');
 		$this->description = \Yii::t('app', 'Сайт, посвященный соревнованиям по мото джимхане в России. Новости мото джимханы.');
@@ -58,7 +163,7 @@ class SiteController extends BaseController
 		]);
 		$news = $news->orderBy(['secure' => SORT_DESC, 'datePublish' => SORT_DESC, 'dateAdded' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
 		
-		return $this->render('index', [
+		return $this->render('news-list', [
 			'news'       => $news,
 			'pagination' => $pagination
 		]);
@@ -73,7 +178,7 @@ class SiteController extends BaseController
 		$this->pageTitle = $news->title ? $news->title :
 			\Yii::t('app', 'Новость от {date}', [
 				'date' => date("d.m.Y", $news->datePublish)
-				]);
+			]);
 		$this->layout = 'main-with-img';
 		
 		return $this->render('news', [
@@ -102,7 +207,7 @@ class SiteController extends BaseController
 			$items[] = ['type' => 'specialStage', 'stage' => $stage, 'date' => $stage->dateStart ? $stage->dateStart : 0];
 		}
 		
-		usort($items, function($a, $b){
+		usort($items, function ($a, $b) {
 			return ($a['date'] <= $b['date']);
 		});
 		
@@ -173,7 +278,7 @@ class SiteController extends BaseController
 		$this->pageTitle = \Yii::t('app', 'Документы');
 		$this->description = \Yii::t('app', 'Документы, относящиеся к мото джимхане');
 		$this->keywords = \Yii::t('app', 'регламент соревнований') . ', '
-		. \Yii::t('app', 'правила проведения соревнований') . ', '
+			. \Yii::t('app', 'правила проведения соревнований') . ', '
 			. \Yii::t('app', 'классы мотоджимханы') . ', '
 			. \Yii::t('app', 'мотоджимхана правила');
 		

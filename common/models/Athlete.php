@@ -422,6 +422,7 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		if (\Yii::$app->language != TranslateMessage::LANGUAGE_RU) {
 			return TranslitHelper::translitFio($fullName);
 		}
+		
 		return $fullName;
 	}
 	
@@ -544,5 +545,27 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 		}
 		
 		return false;
+	}
+	
+	public static function classesStats()
+	{
+		$query = new Query();
+		$query->from(['a' => self::tableName(), 'b' => AthletesClass::tableName()])
+			->select(['b.title', 'count(a.id)'])
+			->where(new Expression('"a"."athleteClassId"="b"."id"'))
+			->groupBy('b.title');
+		$stats = $query->all();
+		$count = Athlete::find()->count();
+		$result = [];
+		foreach ($stats as $item) {
+			$result[] = [
+				'name'      => $item['title'],
+				'y'         => round(($item['count'] / $count) * 100, 2),
+				'c'         => $item['count'],
+				'drilldown' => $item['title'] . ($item['count'])
+			];
+		}
+		
+		return $result;
 	}
 }
