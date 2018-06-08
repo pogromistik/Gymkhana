@@ -451,7 +451,7 @@ class SiteController extends BaseController
 	
 	public function actionCalculate()
 	{
-		$this->pageTitle = 'Расчёт рейтинга';
+		$this->pageTitle = \Yii::t('app', 'Расчёт рейтинга');
 		$model = new ReferenceTimeForm();
 		/** @var AthletesClass[] $classes */
 		$classes = AthletesClass::find()->orderBy(['percent' => SORT_ASC, 'title' => SORT_ASC])->all();
