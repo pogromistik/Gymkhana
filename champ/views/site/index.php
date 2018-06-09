@@ -10,7 +10,7 @@
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 use yii\bootstrap\Html;
-use miloschuman\highcharts\Highcharts;
+//use miloschuman\highcharts\Highcharts;
 
 ?>
 <div class="z-100">
@@ -87,7 +87,7 @@ use miloschuman\highcharts\Highcharts;
             <h3><?= \Yii::t('app', 'Статистика по классам') ?></h3>
             <div class="card-box">
 	            <?php
-	            $people = \Yii::t('app', 'чел.');
+	            /*$people = \Yii::t('app', 'чел.');
 	            echo Highcharts::widget([
 		            'options' => [
 			            'chart'       => [
@@ -121,7 +121,7 @@ use miloschuman\highcharts\Highcharts;
 				            ]
 			            ]
 		            ]
-	            ]); ?>
+	            ]);*/ ?>
             </div>
         </div>
         <div class="col-lg-8 col-md-6 col-sm-12 main-history">
