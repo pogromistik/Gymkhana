@@ -71,4 +71,9 @@ class Year extends \yii\db\ActiveRecord
 		
 		return $year;
 	}
+	
+	public static function getCurrentStartDate()
+	{
+		return mktime(0, 0, 0, 1, 1, date('Y'));
+	}
 }

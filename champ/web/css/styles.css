@@ -1581,3 +1581,20 @@ small.spb a {
 .global-stage a {
     color: #56a025;
 }
+
+.main-stages .item {
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.main-stages .item  a {
+   text-decoration: none;
+}
+
+.main-history small {
+    font-size: 10px;
+}
+
+.light-color {
+    color: #8c8c8c;
+}
