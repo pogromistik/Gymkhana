@@ -86,42 +86,46 @@ use miloschuman\highcharts\Highcharts;
         <div class="col-lg-4 col-md-6 col-sm-12">
             <h3><?= \Yii::t('app', 'Статистика по классам') ?></h3>
             <div class="card-box">
-	            <?php
-	            $people = \Yii::t('app', 'чел.');
-	            echo Highcharts::widget([
-		            'options' => [
-			            'chart'       => [
-				            'type'                => 'pie',
-				            'plotBackgroundColor' => null,
-				            'plotBorderWidth'     => null,
-				            'plotShadow'          => null,
-				            'spacingTop'          => 0,
-				            'spacingLeft'         => 0,
-				            'spacingRight'        => 0,
-				            'spacingBottom'       => 0
-			            ],
-			            'title'       => [
-				            'text' => ''
-			            ],
-			            'tooltip'     => [
-				            'headerFormat' => '<span style="font-size:11px">{series.name}</span><br>',
-				            'pointFormat'  => '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-			            ],
-			            'plotOptions' => [
-				            'series' => [
-					            'dataLabels' => [
-						            'enabled' => true,
-						            'format'  => "{point.name} ({point.c}{$people})"
-					            ]
-				            ]
-			            ],
-			            "series"      => [
-				            [
-					            "data" => $graphs
-				            ]
-			            ]
-		            ]
-	            ]); ?>
+				<?php
+				$people = \Yii::t('app', 'чел.');
+				echo Highcharts::widget([
+					'options' => [
+						'chart'       => [
+							'type'                => 'pie',
+							'plotBackgroundColor' => null,
+							'plotBorderWidth'     => null,
+							'plotShadow'          => null,
+							'spacingTop'          => 0,
+							'spacingLeft'         => 0,
+							'spacingRight'        => 0,
+							'spacingBottom'       => 0
+						],
+						'title'       => [
+							'text' => ''
+						],
+						'tooltip'     => [
+							'headerFormat' => '<span style="font-size:11px">{series.name}</span><br>',
+							'pointFormat'  => '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+						],
+						'plotOptions' => [
+							'series' => [
+								'dataLabels' => [
+									'enabled' => true,
+									'format'  => "{point.name} ({point.c}{$people})"
+								],
+								'showInLegend'     => true
+							],
+						],
+                        'legend' => [
+	                        'labelFormat' => "{name} ({c}{$people})"
+],
+						"series"      => [
+							[
+								"data" => $graphs
+							]
+						]
+					]
+				]); ?>
             </div>
         </div>
         <div class="col-lg-8 col-md-6 col-sm-12 main-history">
