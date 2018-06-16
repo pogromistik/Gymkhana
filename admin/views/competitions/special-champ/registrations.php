@@ -23,9 +23,7 @@ $this->title = 'Регистрации на особые этапы, требу�
     </thead>
 
     <tbody>
-	<?php foreach ($result
-	
-	               as $i => $item) {
+	<?php foreach ($result as $i => $item) {
 		$request = $item['request'];
 		$coincidences = $item['coincidences'];
 		?>
