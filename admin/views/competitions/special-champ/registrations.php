@@ -33,7 +33,7 @@ $this->title = 'Регистрации на особые этапы, требу�
                 <br>
                 <small><?= $request->stage->title ?></small>
                 <br>
-                Прислано: <?= date("d.m.Y, H:i", $request->dateAdded) ?>
+                <small>Прислан: <?= date("d.m.Y, H:i", $request->dateAdded) ?></small>
             </td>
             <td>
 				<?php if ($request->athleteId) { ?>
