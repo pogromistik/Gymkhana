@@ -286,7 +286,9 @@ class SpecialChampController extends BaseController
 	
 	public function actionRegistrations()
 	{
-		$requests = RequestForSpecialStage::findAll(['status' => RequestForSpecialStage::STATUS_NEED_CHECK]);
+		/** @var RequestForSpecialStage[] $requests */
+		$requests = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_NEED_CHECK])
+		->orderBy(['dateAdded' => SORT_ASC])->all();
 		$result = [];
 		foreach ($requests as $request) {
 			$item = [
