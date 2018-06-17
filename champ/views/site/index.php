@@ -62,7 +62,7 @@ use miloschuman\highcharts\Highcharts;
 					<?php foreach ($newStages as $newStage) { ?>
                         <div class="item">
 							<?= Html::a(
-								$newStage->getFullTitle() .
+								$newStage->getFullTitle() . ', ' .
 								\common\helpers\TranslitHelper::translitCity($newStage->city->title)
 								, ['/competitions/stage', 'id' => $newStage->id]) ?>
                         </div>
