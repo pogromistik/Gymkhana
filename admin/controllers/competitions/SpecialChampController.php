@@ -288,7 +288,7 @@ class SpecialChampController extends BaseController
 	{
 		/** @var RequestForSpecialStage[] $requests */
 		$requests = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_NEED_CHECK])
-		->orderBy(['dateAdded' => SORT_ASC])->all();
+			->orderBy(['dateAdded' => SORT_ASC])->all();
 		$result = [];
 		foreach ($requests as $request) {
 			$item = [
@@ -865,6 +865,7 @@ class SpecialChampController extends BaseController
 			if ($request->athleteId) {
 				$request->timeHuman = $model->timeHuman;
 				$request->dateHuman = $model->dateHuman;
+				$request->fine = $model->fine;
 				if ($request->save()) {
 					return true;
 				}
