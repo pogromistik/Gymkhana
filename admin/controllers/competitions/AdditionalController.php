@@ -11,12 +11,14 @@ use common\models\ClassesRequest;
 use common\models\Message;
 use common\models\Participant;
 use common\models\Region;
+use common\models\RequestForSpecialStage;
 use common\models\search\CheSchemeSearch;
 use common\models\search\ClassesRequestSearch;
 use common\models\search\MessagesSearch;
 use common\models\search\TmpAthletesSearch;
 use common\models\search\TmpFigureResultSearch;
 use common\models\search\TmpParticipantSearch;
+use common\models\SpecialStage;
 use common\models\Stage;
 use common\models\TmpAthlete;
 use common\models\User;
@@ -428,5 +430,33 @@ class AdditionalController extends BaseController
 		$this->can('competitions');
 		
 		return $this->render('mails');
+	}
+	
+	/**
+	 * @param null $id
+	 *
+	 * @return string
+	 * @throws NotFoundHttpException
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
+	public function actionSpecialStageStats($id = null)
+	{
+		$this->can('globalWorkWithCompetitions');
+		$stats = RequestForSpecialStage::find()->select(["COUNT(id)", "status"])->groupBy('status');
+		$cancelRequests = RequestForSpecialStage::find()->where(['status' => RequestForSpecialStage::STATUS_CANCEL]);
+		$stage = null;
+		if ($id) {
+			$stage = SpecialStage::findOne($id);
+			if (!$stage) {
+				throw new NotFoundHttpException("Stage not found");
+			}
+			$stats->andWhere(['stageId' => $id]);
+			$cancelRequests->andWhere(['stageId' => $id]);
+		}
+		$stats = $stats->orderBy('status')->indexBy('status')->asArray()->all();
+		$cancelRequests = $cancelRequests->orderBy('cityId')->all();
+		
+		
+		return $this->render('special-stage-stats', ['stats' => $stats, 'cancelRequests' => $cancelRequests, 'stage' => $stage]);
 	}
 }

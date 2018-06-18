@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -63,12 +64,12 @@ use yii\helpers\Url;
                 <a data-addr="/competitions/athlete"
                    href="<?= Url::to(['/competitions/athlete/index']) ?>"> Спортсмены</a>
             </li>
-	        <?php if (\Yii::$app->user->can('developer')) { ?>
+			<?php if (\Yii::$app->user->can('developer')) { ?>
                 <li>
                     <a data-addr="/competitions/motorcycles"
                        href="<?= Url::to(['/competitions/motorcycles/index']) ?>"> Мотоциклы</a>
                 </li>
-	        <?php } ?>
+			<?php } ?>
             <li class="level-2 active">
                 <a href="#"> Чемпионаты<span
                             class="fa arrow"></span></a>
@@ -136,9 +137,20 @@ use yii\helpers\Url;
                 </li>
 			<?php } ?>
 			<?php if (\Yii::$app->user->can('competitions')) { ?>
-                <li>
-                    <a href="<?= Url::to(['/competitions/additional/stats']) ?>"> Статистика</a>
-                </li>
+				<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
+                    <li class="level-2">
+                        <a href="#"> Статистика<span
+                                    class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="<?= Url::to(['/competitions/additional/stats']) ?>">По регионам</a></li>
+                            <li><a href="<?= Url::to(['/competitions/additional/special-stage-stats']) ?>">По спец. этапам</a></li>
+                        </ul>
+                    </li>
+				<?php } else { ?>
+                    <li>
+                        <a href="<?= Url::to(['/competitions/additional/stats']) ?>"> Статистика</a>
+                    </li>
+				<?php } ?>
 			<?php } ?>
 			<?php if (\Yii::$app->user->can('projectOrganizer')) { ?>
                 <li>
