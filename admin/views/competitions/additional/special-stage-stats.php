@@ -3,9 +3,11 @@
  * @var \common\models\SpecialStage             $stage
  * @var array                                   $stats
  * @var \common\models\RequestForSpecialStage[] $cancelRequests
+ * @var \yii\web\View $this
  */
 $countActive = 0;
 $countInActive = 0;
+$this->title = 'Статистика';
 ?>
 
 <?= \yii\helpers\Html::beginForm(['special-stage-stats', $stage ? $stage->id : 'null'], 'get') ?>
