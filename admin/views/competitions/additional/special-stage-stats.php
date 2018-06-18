@@ -56,6 +56,14 @@ if (isset($stats[\common\models\RequestForSpecialStage::STATUS_APPROVE])) {
                     <td><?= \yii\helpers\Html::a($request->resultTimeHuman, $request->videoLink, ['target' => '_blank']) ?></td>
                     <td><?= $request->cancelReason ?></td>
                 </tr>
+			<?php } else { ?>
+				<?php $data = $request->getData(); ?>
+                <tr>
+                    <td><?= $request->cityId ? $request->city->title . '(' . $request->country->title . ')' : $data['cityTitle'] ?></td>
+                    <td><?= $data['lastName'] . ' ' . $data['firstName'] ?></td>
+                    <td><?= \yii\helpers\Html::a($request->resultTimeHuman, $request->videoLink, ['target' => '_blank']) ?></td>
+                    <td><?= $request->cancelReason ?></td>
+                </tr>
 			<?php }
 		} ?>
         </tbody>
