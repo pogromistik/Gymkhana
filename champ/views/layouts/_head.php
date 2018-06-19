@@ -55,10 +55,10 @@ use yii\helpers\Url;
                                     <b
                                             class="caret"></b></a>
                                 <ul role="menu" class="dropdown-menu">
-                                    <li><a href="http:\\gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
+                                    <li><a href="//gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
 				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
                                         </a></li>
-                                    <li><a href="http:\\gymkhana-cup.com<?= \Yii::$app->request->url ?>">
+                                    <li><a href="//gymkhana-cup.com<?= \Yii::$app->request->url ?>">
 				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
                                         </a></li>
                                 </ul>
@@ -110,7 +110,7 @@ use yii\helpers\Url;
                             <a href="/athletes/list"><?= \Yii::t('app', 'Спортсмены') ?></a>
                         </li>
                         <li>
-                            <a href="http://gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
+                            <a href="//gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
                         </li>
 						<?php if (\Yii::$app->user->isGuest) { ?>
                             <li class="dropdown pk-menu-items">
@@ -119,10 +119,10 @@ use yii\helpers\Url;
                                     <b
                                             class="caret"></b></a>
                                 <ul role="menu" class="dropdown-menu">
-                                    <li><a href="http:\\gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
+                                    <li><a href="//gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
 											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
                                         </a></li>
-                                    <li><a href="http:\\gymkhana-cup.com<?= \Yii::$app->request->url ?>">
+                                    <li><a href="//gymkhana-cup.com<?= \Yii::$app->request->url ?>">
 											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
                                         </a></li>
                                 </ul>

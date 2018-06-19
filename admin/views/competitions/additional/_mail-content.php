@@ -31,7 +31,7 @@
                                             <td valign="top"
                                                 style="text-align: center;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #656565;font-family: Helvetica;font-size: 12px;line-height: 150%;padding: 0px 18px 9px;"
                                             >
-                                                <a href="http://gymkhana-cup.ru">
+                                                <a href="//gymkhana-cup.ru">
                                                     <h1 style="display: block;color: #454545;font-family: 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-size: 42px;font-style: normal;font-weight: normal;line-height: 125%;letter-spacing: normal;text-align: left;margin: 0;padding: 0;"
                                                         align="left">
                                                         Gymkhana Cup</h1>
