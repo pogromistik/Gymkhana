@@ -1,4 +1,5 @@
 <?php
+
 use common\models\Stage;
 use yii\bootstrap\Html;
 
@@ -36,55 +37,55 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                     <h4><?= $stage->getTitle() ?>
                         , <?= \common\helpers\TranslitHelper::translitCity($stage->city->title) ?> <?php if ($stage->dateOfThe) { ?>, <?= $stage->dateOfTheHuman ?><?php } ?>
                         <span class="label <?= ($stage->status == Stage::STATUS_CANCEL) ?
-			                'label-danger' : 'label-success' ?>"><?= \Yii::t('app', Stage::$statusesTitle[$stage->status]) ?></span>
+							'label-danger' : 'label-success' ?>"><?= \Yii::t('app', Stage::$statusesTitle[$stage->status]) ?></span>
                     </h4>
-	                <?php if ($stage->location) { ?>
+					<?php if ($stage->location) { ?>
                         <p><?= \Yii::t('app', 'Место проведения этапа: {location}', [
-				                'location' => $stage->location
-			                ]) ?></p>
-	                <?php } ?>
-	
-	                <?php if ($stage->getDescr()) { ?>
+								'location' => $stage->location
+							]) ?></p>
+					<?php } ?>
+					
+					<?php if ($stage->getDescr()) { ?>
                         <p><?= $stage->getDescr() ?></p>
-	                <?php } ?>
-	                <?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
-		                <?php if ($stage->startRegistration || $stage->endRegistration) { ?>
+					<?php } ?>
+					<?php if ($stage->status == Stage::STATUS_UPCOMING || $stage->status == Stage::STATUS_START_REGISTRATION) { ?>
+						<?php if ($stage->startRegistration || $stage->endRegistration) { ?>
                             <p>
-				                <?php if ($stage->startRegistration) { ?>
-					                <?= \Yii::t('app', 'Начало регистрации:') ?> <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
-				                <?php } ?>
-				                <?php if ($stage->endRegistration) { ?>
+								<?php if ($stage->startRegistration) { ?>
+									<?= \Yii::t('app', 'Начало регистрации:') ?> <?= $stage->startRegistrationHuman ?> <?= $timezone ?>
+								<?php } ?>
+								<?php if ($stage->endRegistration) { ?>
                                     <br>
-					                <?= \Yii::t('app', 'Завершение регистрации:') ?> <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
-				                <?php } ?>
+									<?= \Yii::t('app', 'Завершение регистрации:') ?> <?= $stage->endRegistrationHuman ?> <?= $timezone ?>
+								<?php } ?>
                             </p>
-		                <?php } ?>
-	                <?php } ?>
-	                <?php if ($stage->documentIds) { ?>
+						<?php } ?>
+					<?php } ?>
+					<?php if ($stage->documentIds) { ?>
                         <div class="regulations">
-			                <?= \Yii::t('app', 'Документы') ?>:
+							<?= \Yii::t('app', 'Документы') ?>:
                             <ul>
-				                <?php foreach ($stage->getDocuments() as $document) { ?>
+								<?php foreach ($stage->getDocuments() as $document) { ?>
                                     <li><?= Html::a($document->title, ['/base/download', 'id' => $document->id]) ?></li>
-				                <?php } ?>
+								<?php } ?>
                             </ul>
                         </div>
-	                <?php } ?>
-	
-	                <?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
+					<?php } ?>
+					
+					<?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
                         <div>
-			                <?= \Yii::t('app', 'Классы награждения: {classes}', [
-				                'classes' => $internalClassesTitle
-			                ]) ?>
+							<?= \Yii::t('app', 'Классы награждения: {classes}', [
+								'classes' => $internalClassesTitle
+							]) ?>
                         </div>
-	                <?php } ?>
-	
-	                <?php if ($stage->participantsLimit) { ?>
+					<?php } ?>
+					
+					<?php if ($stage->participantsLimit) { ?>
                         <div>
-			                <?= \Yii::t('app', 'Допустимое количество участников в зачёте: {count}. Цифра может быть изменена организатором.',
-				                ['count' => $stage->participantsLimit]) ?>
+							<?= \Yii::t('app', 'Допустимое количество участников в зачёте: {count}. Цифра может быть изменена организатором.',
+								['count' => $stage->participantsLimit]) ?>
                         </div>
-	                <?php } ?>
+					<?php } ?>
                 </div>
 
                 <div class="pb-10">
@@ -151,42 +152,43 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         </table>
                     </div>
 				<?php } ?>
-                
-                <?php if ($stage->class || ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH)
-                || ($qualification && isset($qualification['figureTitles']))) { ?>
+				
+				<?php if ($stage->class || ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH)
+					|| ($qualification && isset($qualification['figureTitles']))) { ?>
                     <div class="card-box">
-	                    <?php if ($stage->class) { ?>
+						<?php if ($stage->class) { ?>
                             <div>
-			                    <?php $stageClassTitle = $stage->classModel->title; ?>
-			                    <?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
-			                    <?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
-                                    <div><b><?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
-							                    'classTitle' => $stageClassTitle
-						                    ]) ?></b></div>
-			                    <?php } ?>
+								<?php $stageClassTitle = $stage->classModel->title; ?>
+								<?= \Yii::t('app', 'Класс соревнования: {class}', ['class' => $stage->classModel->title]) ?>
+								<?php if ($stageClassTitle == Stage::CLASS_UNPERCENT) { ?>
+                                    <div>
+                                        <b><?= \Yii::t('app', 'Т.к. класс соревнования {classTitle}, рейтинг спортсменов и эталонное время трассы не рассчитывается', [
+												'classTitle' => $stageClassTitle
+											]) ?></b></div>
+								<?php } ?>
                             </div>
-	                    <?php } ?>
-	
-	                    <?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
+						<?php } ?>
+						
+						<?php if ($stage->trackPhoto && $stage->trackPhotoStatus == Stage::PHOTO_PUBLISH) { ?>
                             <div class="track-photo">
                                 <div class="toggle">
                                     <div class="title"><?= \Yii::t('app', 'Посмотреть схему трассы') ?></div>
                                     <div class="toggle-content">
-					                    <?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
+										<?= \yii\bootstrap\Html::img(\Yii::getAlias('@filesView') . '/' . $stage->trackPhoto) ?>
                                     </div>
                                 </div>
                             </div>
-	                    <?php } ?>
-	
-	                    <?php if ($qualification && isset($qualification['figureTitles'])) { ?>
+						<?php } ?>
+						
+						<?php if ($qualification && isset($qualification['figureTitles'])) { ?>
                             <div>
                                 <h5><?= Html::a(\Yii::t('app', 'Нажмите, чтобы посмотреть результаты квалификации') . '
                         (' . implode($qualification['figureTitles'], ', ') . ')',
-					                    ['/competitions/qualification', 'stageId' => $stage->id],
-					                    ['class' => 'qualification-link']) ?>
+										['/competitions/qualification', 'stageId' => $stage->id],
+										['class' => 'qualification-link']) ?>
                                 </h5>
                             </div>
-	                    <?php } ?>
+						<?php } ?>
                     </div>
 				<?php } ?>
 				
@@ -200,34 +202,34 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 				<?php } else {
 					if ($stage->registrationFromSite == 1) {
 						?><?php if ($stage->startRegistration && $time >= $stage->startRegistration
-						&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
-					) { ?>
-                        <div class="pt-30 enroll">
-							<?php if ($stage->participantsLimit > 0) { ?>
-                                <div class="warning">
-									<?= \Yii::t('app', 'ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению организатора соревнований. В этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки, требующие подтверждения организатора, выделены на сайте серым цветом.') ?>
-                                </div>
-							<?php } ?>
-							<?php if (\Yii::$app->user->isGuest) { ?>
-                                <a href="#" class="btn btn-dark" id="enrollFormHref"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
-                                <div class="card-box">
+							&& (!$stage->endRegistration || $time <= $stage->endRegistration) && $stage->status != Stage::STATUS_PAST
+						) { ?>
+                            <div class="pt-30 enroll">
+								<?php if ($stage->participantsLimit > 0) { ?>
+                                    <div class="warning">
+										<?= \Yii::t('app', 'ОБРАТИТЕ ВНИМАНИЕ! Ваша заявка может быть отклонена по решению организатора соревнований. В этом случае вам придёт сообщение на почту и уведомление в личный кабинет. Заявки, требующие подтверждения организатора, выделены на сайте серым цветом.') ?>
+                                    </div>
+								<?php } ?>
+								<?php if (\Yii::$app->user->isGuest) { ?>
+                                    <a href="#" class="btn btn-dark"
+                                       id="enrollFormHref"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
                                     <div class="enrollForm">
-		                                <?= $this->render('_enroll', ['stage' => $stage]) ?>
+										<?= $this->render('_enroll', ['stage' => $stage]) ?>
                                     </div>
                                     <div class="enrollForm-success pt-10"></div>
-                                </div>
-							<?php } else { ?>
-								<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
-                                    <a href="#" class="btn btn-dark" data-toggle="modal"
-                                       data-target="#enrollAuthorizedForm"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
 								<?php } else { ?>
-                                    <?= \Yii::t('app', 'Чемпионат закрыт для вашего города, регистрация невозможна.') ?>
+									<?php if ($championship->checkAccessForRegion(\Yii::$app->user->identity->regionId)) { ?>
+                                        <a href="#" class="btn btn-dark" data-toggle="modal"
+                                           data-target="#enrollAuthorizedForm"><?= \Yii::t('app', 'Зарегистрироваться') ?></a>
+									<?php } else { ?>
+										<?= \Yii::t('app', 'Чемпионат закрыт для вашего города, регистрация невозможна.') ?>
+									<?php } ?>
 								<?php } ?>
-							<?php } ?>
-                        </div>
-					<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
-                        <div class="warning text-centertext-uppercase"><?= \Yii::t('app', 'Предварительная регистрация на этап завершена') ?></div>
-					<?php } }?>
+                            </div>
+						<?php } elseif ($stage->status == Stage::STATUS_END_REGISTRATION) { ?>
+                            <div class="warning text-centertext-uppercase"><?= \Yii::t('app', 'Предварительная регистрация на этап завершена') ?></div>
+						<?php }
+					} ?>
 					
 					<?php if (($stage->startRegistration && $time >= $stage->startRegistration) || $stage->status != Stage::STATUS_UPCOMING
 						|| $time >= $stage->dateOfThe
@@ -241,8 +243,8 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
 									'type'    => \champ\controllers\ExportController::TYPE_STAGE
 								]), ['class' => 'btn btn-light']) ?>
                             </div>
-							
-							<div class="card-box">
+
+                            <div class="card-box">
 								<?php if ($participantsByInternalClasses) { ?>
                                     <div class="result-scheme active">
                                         <div class="change-type">
