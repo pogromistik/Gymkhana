@@ -439,11 +439,15 @@ class SiteController extends BaseController
 					$text .= '<b>Город: </b>' . $form->city;
 					$text .= '<br>';
 					$text .= '<b>Количество мотоциклов: </b>' . count($motorcycles);
-					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $text])
-						->setTo('nadia__@bk.ru')
-						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup: запрос на регистрацию')
-						->send();
+					try {
+						\Yii::$app->mailer->compose('@common/mail/text', ['text' => $text])
+							->setTo('nadia__@bk.ru')
+							->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
+							->setSubject('gymkhana-cup: запрос на регистрацию')
+							->send();
+					} catch (\Exception $ex) {
+						return true;
+					}
 					/*\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
 						->setTo('lyadetskaya.ns@yandex.ru')
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
