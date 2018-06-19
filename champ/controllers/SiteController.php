@@ -448,11 +448,6 @@ class SiteController extends BaseController
 					} catch (\Exception $ex) {
 						return true;
 					}
-					/*\Yii::$app->mailer->compose('text', ['text' => 'Новый запрос на регистрацию в личном кабинете.'])
-						->setTo('lyadetskaya.ns@yandex.ru')
-						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup: запрос на регистрацию')
-						->send();*/
 				}
 				
 				return true;
