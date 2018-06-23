@@ -1314,7 +1314,7 @@ class RunController extends Controller
 			echo 'Stage not found' . PHP_EOL;
 		}
 		\Yii::$app->mailer->compose('@common/mail/subscriptions/_content', ['msgType' => NewsSubscription::MSG_FOR_REGISTRATIONS,
-		                                                       'model'   => $stage, 'token' => 'test'])
+		                                                                    'model'   => $stage, 'token' => 'test'])
 			->setTo($email)
 			->setFrom(['newsletter@gymkhana-cup.ru' => 'GymkhanaCup'])
 			->setSubject('gymkhana-cup: тест рассылки')
@@ -1353,6 +1353,33 @@ class RunController extends Controller
 				}
 			}
 		}
+		
+		return true;
+	}
+	
+	public function actionDeleteRegions()
+	{
+		$regions = Region::findAll(['countryId' => 1]);
+		$deleteRegions = $deleteCities = 0;
+		foreach ($regions as $region) {
+			$cities = City::findAll(['regionId' => $region->id]);
+			if (count($cities) < 5) {
+				foreach ($cities as $city) {
+					if (!Athlete::findOne(['cityId' => $city->id]) || !Stage::findOne(['cityId' => $city->id])) {
+						$city->delete();
+						$deleteCities++;
+					}
+				}
+				if (!City::findOne(['regionId' => $region->id]) || !Championship::findOne(['regionId' => $region->id])) {
+					$region->delete();
+					$deleteRegions++;
+				}
+			}
+		}
+		
+		echo 'Drop regions: ' . $deleteRegions . PHP_EOL;
+		echo 'Drop cities: ' . $deleteCities . PHP_EOL;
+		
 		return true;
 	}
 }
