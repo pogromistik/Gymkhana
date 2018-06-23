@@ -196,4 +196,6 @@ $this->params['breadcrumbs'][] = 'Редактирование';
             </tbody>
         </table>
 	<?php } ?>
+    
+    <?= $this->render('_img_edit', ['athlete' => $model]) ?>
 </div>
