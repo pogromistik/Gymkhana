@@ -17,6 +17,7 @@ use common\models\Participant;
 use common\models\RequestForSpecialStage;
 use common\models\search\ClassesRequestSearch;
 use common\models\Stage;
+use common\models\TranslateMessage;
 use common\models\Year;
 use dosamigos\editable\EditableAction;
 use yii\base\UserException;
@@ -59,6 +60,21 @@ class ProfileController extends AccessController
 		}
 		
 		throw new NotFoundHttpException();
+	}
+	
+	public function actionChangeLanguage()
+	{
+		$athlete = Athlete::findOne(\Yii::$app->user->identity->id);
+		if (!$athlete) {
+			throw new NotFoundHttpException(\Yii::t('app', 'Ошибка! Спортсмен не найден'));
+		}
+		if ($athlete->language == TranslateMessage::LANGUAGE_RU) {
+			$athlete->language = TranslateMessage::LANGUAGE_EN;
+		} else {
+			$athlete->language = TranslateMessage::LANGUAGE_RU;
+		}
+		$athlete->save();
+		return true;
 	}
 	
 	public function actionIndex($success = false)

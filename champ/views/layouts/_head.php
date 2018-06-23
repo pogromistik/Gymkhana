@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Url;
 
 ?>
@@ -45,27 +46,49 @@ use yii\helpers\Url;
                                 </ul>
                             </li>
                         </ul>
+                        <div class="navbar-mobile-items">
+                            <div class="mobile-language flags">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<?= \yii\helpers\Html::img(\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]) ?>
+                                    <b
+                                            class="caret"></b></a>
+                                <ul role="menu" class="dropdown-menu">
+                                    <li><a href="#" class="change-language">
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
+											) ?>
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
+                                        </a></li>
+                                    <li><a href="#" class="change-language">
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
+											) ?>
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
+                                        </a></li>
+                                </ul>
+                            </div>
+                        </div>
 					<?php } else { ?>
                         <div class="navbar-mobile-items">
                             <a href="/site/login" class="notices"><span class="fa fa-user"></span>
                                 <span id="newNotices"></span></a>
                             <div class="mobile-language flags">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-		                            <?= \yii\helpers\Html::img(\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]) ?>
+									<?= \yii\helpers\Html::img(\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]) ?>
                                     <b
                                             class="caret"></b></a>
                                 <ul role="menu" class="dropdown-menu">
                                     <li><a href="//gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
-		                                    <?= \yii\helpers\Html::img(
-			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
-		                                    ) ?>
-				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
+											) ?>
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
                                         </a></li>
                                     <li><a href="//gymkhana-cup.com<?= \Yii::$app->request->url ?>">
-		                                    <?= \yii\helpers\Html::img(
-			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
-		                                    ) ?>
-				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
+											) ?>
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
                                         </a></li>
                                 </ul>
                             </div>
@@ -83,14 +106,22 @@ use yii\helpers\Url;
                                href="#"><?= \Yii::t('app', 'Информация') ?> <b
                                         class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu">
-                                <li><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a></li>
+                                <li><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a>
+                                </li>
                                 <li><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
-                                <li><a href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a></li>
+                                <li>
+                                    <a href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a>
+                                </li>
                             </ul>
                         </li>
-                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a></li>
-                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
-                        <li class="mobile-menu-items"><a href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a></li>
+                        <li class="mobile-menu-items"><a
+                                    href="<?= Url::to(['site/documents']) ?>"><?= \Yii::t('app', 'Документы') ?></a>
+                        </li>
+                        <li class="mobile-menu-items"><a
+                                    href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
+                        <li class="mobile-menu-items"><a
+                                    href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a>
+                        </li>
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle"
                                href="#"><?= \Yii::t('app', 'Соревнования') ?> <b
@@ -123,25 +154,50 @@ use yii\helpers\Url;
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 									<?= \yii\helpers\Html::img(
 										\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]
-                                    ) ?>
+									) ?>
                                     <b
                                             class="caret"></b></a>
                                 <ul role="menu" class="dropdown-menu">
                                     <li><a href="//gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
-		                                    <?= \yii\helpers\Html::img(
-			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
-		                                    ) ?>
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
+											) ?>
 											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
                                         </a></li>
                                     <li><a href="//gymkhana-cup.com<?= \Yii::$app->request->url ?>">
-		                                    <?= \yii\helpers\Html::img(
-			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
-		                                    ) ?>
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
+											) ?>
 											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
                                         </a></li>
                                 </ul>
                             </li>
-						<?php  } ?>
+						<?php } else {
+							?>
+                            <li class="dropdown pk-menu-items flags">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<?= \yii\helpers\Html::img(
+										\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]
+									) ?>
+                                    <b
+                                            class="caret"></b></a>
+                                <ul role="menu" class="dropdown-menu">
+                                    <li><a href="#" class="change-language">
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
+											) ?>
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
+                                        </a></li>
+                                    <li><a href="#" class="change-language">
+											<?= \yii\helpers\Html::img(
+												\common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
+											) ?>
+											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
+                                        </a></li>
+                                </ul>
+                            </li>
+							<?php
+						} ?>
                         <li><?php if (Yii::$app->user->isGuest) { ?>
                                 <a href="/site/login"><?= \Yii::t('app', 'Вход') ?></a>
 							<?php } else { ?>

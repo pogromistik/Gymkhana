@@ -16,6 +16,16 @@ $('.changeMotorcycleStatus').click(function (e) {
     });
 });
 
+$('.change-language').click(function (e) {
+    e.preventDefault();
+    showBackDrop();
+    $.get('/profile/change-language').done(function (data) {
+        location.reload(true);
+    }).fail(function (error) {
+        alert(error.responseText);
+    });
+});
+
 $(document).on("submit", '.newQuestion', function (e) {
     e.preventDefault();
     var form = $(this);
@@ -64,7 +74,7 @@ $(document).on("submit", '.newRegistration', function (e) {
                 $('#enrollFormHref').show();
                 if ($('.alerts').hasClass('no-scroll')) {
                 } else {
-                    $('body').animate({scrollTop: $('#enrollFormHref').offset().top-20}, 500);
+                    $('body').animate({scrollTop: $('#enrollFormHref').offset().top - 20}, 500);
                 }
             } else {
                 form.find('.alert-danger').text(result).show();
