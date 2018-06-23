@@ -86,17 +86,20 @@ class AthleteSearch extends Athlete
 			$this->lastName = $array[0];
 			if (isset($array[1])) {
 				$this->firstName = $array[1];
+				$query->andFilterWhere(['ilike', 'firstName', $this->firstName])
+					->andFilterWhere(['ilike', 'lastName', $this->lastName]);
 			} else {
 				$query->andFilterWhere(['or',
-					['like', 'firstName', $this->firstOrLastName],
-					['like', 'lastName', $this->firstOrLastName]
+					['ilike', 'firstName', $this->firstOrLastName],
+					['ilike', 'lastName', $this->firstOrLastName]
 				]);
 			}
+		} else {
+			$query->andFilterWhere(['ilike', 'firstName', $this->firstName])
+				->andFilterWhere(['ilike', 'lastName', $this->lastName]);
 		}
 		
-		$query->andFilterWhere(['like', 'firstName', $this->firstName])
-			->andFilterWhere(['like', 'lastName', $this->lastName])
-			->andFilterWhere(['like', 'phone', $this->phone])
+		$query->andFilterWhere(['like', 'phone', $this->phone])
 			->andFilterWhere(['like', 'email', $this->email])
 			->andFilterWhere(['like', 'authKey', $this->authKey])
 			->andFilterWhere(['like', 'passwordHash', $this->passwordHash])
