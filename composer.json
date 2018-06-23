@@ -35,7 +35,8 @@
         "yiisoft/yii2-imagine": "dev-upd-imagine",
         "2amigos/yii2-tinymce-widget" : "~1.1",
         "lysenkobv/yii2-geoip": "~1.0",
-        "miloschuman/yii2-highcharts-widget": "*"
+        "miloschuman/yii2-highcharts-widget": "*",
+        "boundstate/yii2-mailgun": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
