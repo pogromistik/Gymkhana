@@ -14,6 +14,8 @@ use yii\db\Query;
  */
 class TranslateMessageSourceSearch extends TranslateMessageSource
 {
+	public $translation;
+	
 	/**
 	 * @inheritdoc
 	 */
@@ -21,7 +23,7 @@ class TranslateMessageSourceSearch extends TranslateMessageSource
 	{
 		return [
 			[['id', 'status'], 'integer'],
-			[['category', 'message'], 'safe'],
+			[['category', 'message', 'translation'], 'safe'],
 		];
 	}
 	
@@ -51,7 +53,7 @@ class TranslateMessageSourceSearch extends TranslateMessageSource
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-			'sort' => ['defaultOrder' => ['message' => SORT_ASC]]
+			'sort'  => ['defaultOrder' => ['message' => SORT_ASC]]
 		]);
 		
 		$this->load($params);
@@ -62,9 +64,16 @@ class TranslateMessageSourceSearch extends TranslateMessageSource
 			return $dataProvider;
 		}
 		
+		if ($this->translation) {
+			$query->joinWith('messages');
+			$query->andFilterWhere(
+				['like', 'upper("translation")', mb_strtoupper($this->translation, 'UTF-8')]
+			);
+		}
+		
 		// grid filtering conditions
 		$query->andFilterWhere([
-			'id' => $this->id,
+			'id'     => $this->id,
 			'status' => $this->status,
 		]);
 		

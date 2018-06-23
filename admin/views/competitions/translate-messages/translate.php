@@ -59,12 +59,13 @@ $listView = new \yii\widgets\ListView([
 				<?= $dataProvider->sort->link('message') ?>
 				<?= $form->field($searchModel, 'message')->textInput()->label(false) ?>
             </th>
-            <th style="width: 20%">Комментарий для переводчика</th>
+            <th style="width: 20%; padding-bottom: 56px">Комментарий для переводчика</th>
             <!--<th>
 				Язык
 			</th>-->
             <th>
                 Перевод
+	            <?= $form->field($searchModel, 'translation')->textInput()->label(false) ?>
             </th>
             <th>
                 <button type="submit" style="visibility: hidden;" title="Сохранить"></button>

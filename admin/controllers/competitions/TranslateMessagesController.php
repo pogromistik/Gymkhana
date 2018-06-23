@@ -19,6 +19,7 @@ class TranslateMessagesController extends BaseController
 	 * Lists all SourceMessage models.
 	 *
 	 * @return mixed
+	 * @throws \yii\web\ForbiddenHttpException
 	 */
 	public function actionIndex()
 	{
