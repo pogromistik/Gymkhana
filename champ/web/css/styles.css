@@ -223,6 +223,10 @@ nav .navbar-toggle .icon-bar {
     color: #fff;
 }
 
+nav .flags img {
+    width: 30px;
+}
+
 .dropdown-menu > li > a:hover {
     padding-left: 15px;
     background: #686c73;

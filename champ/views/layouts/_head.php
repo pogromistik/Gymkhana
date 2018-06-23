@@ -49,16 +49,22 @@ use yii\helpers\Url;
                         <div class="navbar-mobile-items">
                             <a href="/site/login" class="notices"><span class="fa fa-user"></span>
                                 <span id="newNotices"></span></a>
-                            <div class="mobile-language">
+                            <div class="mobile-language flags">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-		                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\Yii::$app->language] ?>
+		                            <?= \yii\helpers\Html::img(\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]) ?>
                                     <b
                                             class="caret"></b></a>
                                 <ul role="menu" class="dropdown-menu">
                                     <li><a href="//gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
+		                                    <?= \yii\helpers\Html::img(
+			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
+		                                    ) ?>
 				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
                                         </a></li>
                                     <li><a href="//gymkhana-cup.com<?= \Yii::$app->request->url ?>">
+		                                    <?= \yii\helpers\Html::img(
+			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
+		                                    ) ?>
 				                            <?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
                                         </a></li>
                                 </ul>
@@ -113,16 +119,24 @@ use yii\helpers\Url;
                             <a href="http://gymkhana74.ru/russia" target="_blank"><?= \Yii::t('app', 'Россия') ?></a>
                         </li>
 						<?php if (\Yii::$app->user->isGuest) { ?>
-                            <li class="dropdown pk-menu-items">
+                            <li class="dropdown pk-menu-items flags">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-									<?= \common\models\TranslateMessage::$smallLanguagesTitle[\Yii::$app->language] ?>
+									<?= \yii\helpers\Html::img(
+										\common\models\TranslateMessage::$smallLanguagesImg[\Yii::$app->language]
+                                    ) ?>
                                     <b
                                             class="caret"></b></a>
                                 <ul role="menu" class="dropdown-menu">
                                     <li><a href="//gymkhana-cup.ru<?= \Yii::$app->request->url ?>">
+		                                    <?= \yii\helpers\Html::img(
+			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_RU]
+		                                    ) ?>
 											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_RU] ?>
                                         </a></li>
                                     <li><a href="//gymkhana-cup.com<?= \Yii::$app->request->url ?>">
+		                                    <?= \yii\helpers\Html::img(
+			                                    \common\models\TranslateMessage::$smallLanguagesImg[\common\models\TranslateMessage::LANGUAGE_EN]
+		                                    ) ?>
 											<?= \common\models\TranslateMessage::$smallLanguagesTitle[\common\models\TranslateMessage::LANGUAGE_EN] ?>
                                         </a></li>
                                 </ul>

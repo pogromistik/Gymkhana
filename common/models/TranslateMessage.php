@@ -32,6 +32,11 @@ class TranslateMessage extends \yii\db\ActiveRecord
 		self::LANGUAGE_EN => 'EN'
 	];
 	
+	public static $smallLanguagesImg = [
+		self::LANGUAGE_RU => '/img/ru.jpg',
+		self::LANGUAGE_EN => '/img/en.jpg'
+	];
+	
 	/**
 	 * @inheritdoc
 	 */
