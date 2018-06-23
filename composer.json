@@ -61,5 +61,10 @@
             "type": "vcs",
             "url": "https://github.com/pogromistik/yii2-imagine.git"
         }
-    ]
+    ],
+    "autoload": {
+        "files": [
+            "common/components/mailgun/MessageBuilder.php"
+        ]
+    }
 }
