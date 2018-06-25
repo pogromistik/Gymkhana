@@ -62,7 +62,7 @@ class BaseController extends Controller
 			$specialStage = SpecialStage::find()->where(['<=', 'dateStart', $now])
 				->andWhere(['>=', 'dateEnd', $now])->andWhere(['not', ['dateStart' => null]])->orderBy(['dateStart' => SORT_DESC])->one();
 			if ($specialStage) {
-				\Yii::$app->cache->set('special_stage', $specialStage);
+				\Yii::$app->cache->set('special_stage', $specialStage, 3600);
 			}
 		}
 	}
