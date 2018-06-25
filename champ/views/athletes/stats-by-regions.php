@@ -34,7 +34,7 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th><?= \Yii::t('app', \Yii::t('app', 'Итого по России')) ?></th>
+                    <th><?= \Yii::t('app', \Yii::t('app', 'Итого')) ?></th>
 				    <?php foreach ($classes as $class) { ?>
                         <th class="text-center"><?= isset($totalClasses[$class]) ? $totalClasses[$class] : null ?></th>
 				    <?php } ?>
