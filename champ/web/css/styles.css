@@ -358,6 +358,14 @@ h2 {
     text-transform: uppercase;
 }
 
+.detail-news {
+    font-family: 'Verdana', 'sans-serif';
+}
+
+.detail-news ol li, .detail-news ul li {
+    padding-bottom: 5px;
+}
+
 .detail-news .date {
     padding-top: 20px;
     color: #909294;
