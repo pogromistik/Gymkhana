@@ -109,7 +109,7 @@ use yii\bootstrap\Html;
         </div>
     </div>
 	
-	<?php if ($participants) { ?>
+	<?php if ($participants || $specialHistory) { ?>
        <div class="card-box">
            <div class="history pt-10">
                <h4>
