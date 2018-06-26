@@ -139,4 +139,58 @@ class TmpFigureResult extends BaseActiveRecord
 	{
 		return $this->hasOne(Motorcycle::className(), ['id' => 'motorcycleId']);
 	}
+	
+	/**
+	 * @return AthletesClass|null
+	 */
+	public function getNewTmpClass()
+	{
+		$figure = Figure::findOne($this->figureId);
+		if ($figure->useForClassesCalculate) {
+			$resultTime = $this->time;
+			if ($this->fine) {
+				$resultTime += $this->fine * 100;
+			}
+			if ($figure->bestTime) {
+				$percent = round($resultTime / $figure->bestTime * 100, 2);
+			} else {
+				$percent = 100;
+			}
+			$athlete = $this->athlete;
+			/** @var AthletesClass $newClass */
+			$newClass = AthletesClass::find()->where(['>', 'percent', $percent])
+				->andWhere(['status' => AthletesClass::STATUS_ACTIVE])
+				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
+			if ($newClass && $newClass->id != $athlete->athleteClassId) {
+				$oldClass = $athlete->athleteClass;
+				if ($oldClass->id != $newClass->id && $oldClass->percent > $newClass->percent) {
+					return $newClass;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @return int|null
+	 */
+	public function getNewRecord()
+	{
+		$figure = Figure::findOne($this->figureId);
+		$resultTime = $this->time;
+		if ($this->fine) {
+			$resultTime += $this->fine * 100;
+		}
+		if (!$figure->bestTime || $resultTime < $figure->bestTime) {
+			return FigureTime::RECORD_IN_WORLD;
+		} elseif (!$figure->bestTimeInRussia || $resultTime < $figure->bestTimeInRussia) {
+			$athlete = $this->athlete;
+			if ($athlete->countryId == Country::RUSSIA_ID) {
+				return FigureTime::RECORD_IN_RUSSIA;
+			}
+		}
+		
+		return null;
+	}
 }

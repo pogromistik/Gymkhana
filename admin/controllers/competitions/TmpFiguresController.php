@@ -5,6 +5,9 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\Athlete;
 use common\models\City;
+use common\models\ClassHistory;
+use common\models\Country;
+use common\models\Figure;
 use common\models\FigureTime;
 use common\models\Motorcycle;
 use common\models\Notice;
@@ -96,6 +99,12 @@ class TmpFiguresController extends BaseController
 		return $this->renderAjax('_athletes', ['athletes' => $athletes, 'lastName' => $lastName]);
 	}
 	
+	/**
+	 * @param $id
+	 *
+	 * @return bool|string
+	 * @throws \yii\db\Exception
+	 */
 	public function actionApprove($id)
 	{
 		$tmp = TmpFigureResult::findOne($id);
@@ -158,11 +167,102 @@ class TmpFiguresController extends BaseController
 			
 			Notice::add($tmp->athleteId, $text, $link);
 			
+			if (!$this->changeClass($tmp->athlete, $figureResult)) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				$transaction->rollBack();
+				
+				return 'В момент изменения класса спортсмену возникла ошибка. Обратитесь к администратору.';
+			}
+			
+			if (!$this->setRecord($figureResult)) {
+				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				$transaction->rollBack();
+				
+				return 'В момент установления рекорда для фигуры возникла ошибка. Обратитесь к администратору.';
+			}
+			
 			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
 			$transaction->commit();
 		} else {
 			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			
 			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
+		}
+		
+		return true;
+	}
+	
+	private function changeClass(Athlete $athlete, FigureTime $item)
+	{
+		if (!$item->newAthleteClass) {
+			return true;
+		}
+		if ($athlete->athleteClassId && $athlete->athleteClass->percent < $item->newAthleteClass->percent) {
+			return true;
+		}
+		if ($athlete->athleteClassId && $athlete->athleteClass->percent == $item->newAthleteClass->percent) {
+			return true;
+		}
+		
+		if ($athlete->athleteClassId != $item->newAthleteClassId) {
+			$event = $item->figure->title;
+			$history = ClassHistory::create($athlete->id, $item->motorcycleId,
+				$athlete->athleteClassId, $item->newAthleteClassId, $event,
+				$item->resultTime, $item->figure->bestTime, $item->percent);
+			if (!$history) {
+				return false;
+			}
+			
+			$athlete->athleteClassId = $item->newAthleteClassId;
+			if (!$athlete->save()) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private function setRecord(FigureTime $item)
+	{
+		if (!$item->recordType) {
+			return true;
+		}
+		$figure = Figure::findOne($item->figureId);
+		switch ($item->recordType) {
+			case FigureTime::RECORD_IN_RUSSIA:
+				if ($figure->bestTimeInRussia && $figure->bestTimeInRussia <= $item->resultTime) {
+					return true;
+				}
+				$figure->bestTimeInRussia = $item->resultTime;
+				$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				
+				$text = \Yii::t('app', 'Поздравляем! Вы установили новый Российский рекорд для фигуры {title}! Это восхитительно :)',
+					['title' => $figure->title], $item->athlete->language);
+				$link = \Yii::$app->urlManager->createUrl(['/competitions/figure', 'id' => $figure->id]);
+				Notice::add($item->athleteId, $text, $link);
+				break;
+			case FigureTime::RECORD_IN_WORLD:
+				if ($figure->bestTime && $figure->bestTime <= $item->resultTime) {
+					return true;
+				}
+				$figure->bestTime = $item->resultTime;
+				$figure->bestAthlete = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				
+				if ($item->athlete->countryId == Country::RUSSIA_ID) {
+					$figure->bestTimeInRussia = $item->resultTime;
+					$figure->bestAthleteInRussia = $item->athlete->getFullName() . ', ' . $item->motorcycle->getFullTitle();
+				}
+				
+				$text = \Yii::t('app',
+					'Поздравляем! Вы установили новый Российский рекорд для фигуры {title}!! Это восхитительно! Вы - восхитительны!!',
+					['title' => $figure->title], $item->athlete->language);
+				$link = \Yii::$app->urlManager->createUrl(['/competitions/figure', 'id' => $figure->id]);
+				Notice::add($item->athleteId, $text, $link);
+				break;
+		}
+		
+		if (!$figure->save(false)) {
+			return false;
 		}
 		
 		return true;
@@ -194,6 +294,7 @@ class TmpFiguresController extends BaseController
 			$tmp->cancelReason = $text;
 			if (!$tmp->save()) {
 				\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+				
 				return 'Возникла ошибка при сохранении данных';
 			}
 			
@@ -205,6 +306,7 @@ class TmpFiguresController extends BaseController
 			Notice::add($tmp->athleteId, $text, $link);
 		} else {
 			\Yii::$app->mutex->release('TmpFigures-' . $tmp->id);
+			
 			return 'Информация устарела. Пожалуйста, перезагрузите страницу';
 		}
 		

@@ -196,23 +196,23 @@ class FigureTime extends BaseActiveRecord
 						$oldClass = $this->athleteClass;
 						if ($oldClass->id != $newClass->id && $oldClass->percent > $newClass->percent) {
 							$this->newAthleteClassId = $newClass->id;
-							$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_NEED_CHECK;
+							$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_APPROVE;
 						}
 					} else {
 						$this->newAthleteClassId = $newClass->id;
-						$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_NEED_CHECK;
+						$this->newAthleteClassStatus = self::NEW_CLASS_STATUS_APPROVE;
 					}
 				}
 			}
 			
 			if (!$figure->bestTime || $this->resultTime < $figure->bestTime) {
 				$this->recordType = self::RECORD_IN_WORLD;
-				$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
+				$this->recordStatus = self::NEW_RECORD_APPROVE;
 			} elseif (!$figure->bestTimeInRussia || $this->resultTime < $figure->bestTimeInRussia) {
 				$athlete = $this->athlete;
-				if (mb_strtoupper($athlete->country->title, 'UTF-8') == 'РОССИЯ') {
+				if ($athlete->countryId == Country::RUSSIA_ID) {
 					$this->recordType = self::RECORD_IN_RUSSIA;
-					$this->recordStatus = self::NEW_RECORD_NEED_CHECK;
+					$this->recordStatus = self::NEW_RECORD_APPROVE;
 				}
 			}
 		}

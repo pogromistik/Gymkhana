@@ -88,7 +88,8 @@ $this->title = 'Результаты фигур, требующие одобре
 				'label'  => 'Данные о спортсмене',
 				'format' => 'raw',
 				'value'  => function (TmpFigureResult $figureResult) {
-					return $figureResult->athlete->getFullName() . '<br>' . $figureResult->motorcycle->getFullTitle();
+					return Html::a($figureResult->athlete->getFullName(), ['/competitions/athlete/view', 'id' => $figureResult->athleteId])
+						. '<br>' . $figureResult->motorcycle->getFullTitle();
 				}
 			],
 			[
@@ -133,7 +134,15 @@ $this->title = 'Результаты фигур, требующие одобре
 				'filter'    => false,
 				'format'    => 'raw',
 				'value'     => function (TmpFigureResult $figureResult) {
-					return Html::a($figureResult->videoLink, $figureResult->videoLink, ['target' => '_blank']);
+					$html = Html::a($figureResult->videoLink, $figureResult->videoLink, ['target' => '_blank']);
+					if ($newClass = $figureResult->getNewTmpClass()) {
+						$html .= '<br><span class="red">' . $newClass->title . '</span> ';
+					}
+					if ($newRecord = $figureResult->getNewRecord()) {
+						$html .= '<br><span class="red">' . \common\models\FigureTime::$recordsTitle[$newRecord] . '</span>';
+					}
+					
+					return $html;
 				}
 			],
 			[
