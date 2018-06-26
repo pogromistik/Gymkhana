@@ -8,6 +8,7 @@ if (!\Yii::$app->user->isGuest) {
 	$id = \Yii::$app->user->id;
 }
 $path = '/img/table/';
+$lang = \Yii::$app->language;
 if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
 	$path = '/img/table/en/';
 }
@@ -47,6 +48,16 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                     <br>
+					<?php
+					if ($flagInfo = \common\models\HelpModel::getFlagInfo($participant->countryId, $lang)) {
+						?>
+						<?= \yii\helpers\Html::img('/img/flags/' . $flagInfo['flag'], [
+							'alt'   => $flagInfo['title'],
+							'title' => $flagInfo['title']
+						]) ?>
+						<?php
+					}
+					?>
 					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                 </td>
                 <td><?= $participant->motorcycle->getFullTitle() ?></td>

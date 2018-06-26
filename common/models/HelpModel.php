@@ -86,6 +86,63 @@ class HelpModel extends Model
 		12 => 'Декабрь'
 	];
 	
+	public static function getFlagInfo($countryId, $lang)
+	{
+		$flag = null;
+		$countryTitle = null;
+		switch ($countryId) {
+			case 1:
+				$flag = 'rf.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Россия' : 'Russia';
+				break;
+			case 87:
+				$flag = 'spain.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Испания' : 'Spain';
+				break;
+			case 3:
+				$flag = 'rb.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Беларусь' : 'Belarus';
+				break;
+			case 12:
+				$flag = 'latvia.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Латвия' : 'Latvia';
+				break;
+			case 109:
+				$flag = 'livan.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Ливан' : 'Lebanon';
+				break;
+			case 130:
+				$flag = 'niderland.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Нидерланды' : 'Netherlands';
+				break;
+			case 15:
+				$flag = 'moldova.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Молдова' : 'Moldova';
+				break;
+			case 14:
+				$flag = 'eesti.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Эстония' : 'Estonia';
+				break;
+			case 215:
+				$flag = 'chej.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Чехия' : 'Czech Republic';
+				break;
+			case 4:
+				$flag = 'kz.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Казахстан' : 'Kazakhstan';
+				break;
+			case 229:
+				$flag = 'japan.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Япония' : 'Japan';
+				break;
+		}
+		if ($flag) {
+			return ['flag' => $flag, 'title' => $countryTitle];
+		} else {
+			return null;
+		}
+	}
+	
 	public static function getMonth($id)
 	{
 		return \Yii::t('app', self::$month[$id]);
