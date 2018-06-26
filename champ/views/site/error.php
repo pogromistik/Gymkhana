@@ -13,6 +13,7 @@ $statusCode = 404;
 $text = '';
 $title = 'not found';
 if ($exception && isset($exception->statusCode)) {
+    $statusCode = $exception->statusCode;
 	switch ($exception->statusCode) {
 		case 404:
 			$title = 'not found';
