@@ -7,6 +7,7 @@ $id = null;
 if (!\Yii::$app->user->isGuest) {
 	$id = \Yii::$app->user->id;
 }
+$lang = \Yii::$app->language;
 ?>
 
 <div class="show-mobile">
