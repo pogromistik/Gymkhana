@@ -39,6 +39,16 @@ if (!\Yii::$app->user->isGuest) {
                 <td>
 					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                     <br>
+	                <?php
+	                if ($flagInfo = \common\models\HelpModel::getFlagInfo($participant->countryId, $lang)) {
+		                ?>
+		                <?= \yii\helpers\Html::img('/img/flags/' . $flagInfo['flag'], [
+			                'alt'   => $flagInfo['title'],
+			                'title' => $flagInfo['title']
+		                ]) ?>
+		                <?php
+	                }
+	                ?>
 					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                     <br>
 					<?= $participant->motorcycle->getFullTitle() ?>
