@@ -1539,6 +1539,9 @@ figure.effect-julia:hover p {
 @media screen and (max-width: 50em) {
     .content {
         padding: 0 10px;
+    }
+
+    .content h4, .athlete .athlete .card-box:first-child {
         text-align: center;
     }
 
