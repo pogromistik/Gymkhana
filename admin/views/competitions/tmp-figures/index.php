@@ -20,12 +20,6 @@ $this->title = 'Результаты фигур, требующие одобре
     (или <a href="https://vk.com/topic-35972290_30425335?offset=0" target="_blank">МотоДжимхана</a> для GP8)
 </div>
 
-<div class="alert required-alert-info">
-    После добавления результатов зайдите на страницу фигуры, чтобы подтвердить переходы спортсменов в новые классы и
-    при необходимости
-    установить новые рекорды.
-</div>
-
 <div class="tmp-participant-index">
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
