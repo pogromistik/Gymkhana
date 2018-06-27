@@ -22,7 +22,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
 	    'plugins/fancybox/dist/jquery.fancybox.min.js',
-	    'js/smoothscroll.min.js',
+	    /*'js/smoothscroll.min.js',*/
 	    'js/owl.carousel.min.js',
 	    'js/site.js',
 	    'js/jquery-ui.js',
