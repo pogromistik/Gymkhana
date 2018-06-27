@@ -221,9 +221,11 @@ class HelpController extends BaseController
 						$out = self::getRegionsSubCatList($countryId);
 						break;
 				}
+				
 				return Json::encode(['output' => $out, 'selected' => '']);
 			}
 		}
+		
 		return Json::encode(['output' => '', 'selected' => '']);
 	}
 	
@@ -271,9 +273,9 @@ class HelpController extends BaseController
 			if ($countryId) {
 				$query->andWhere(['"Cities"."countryId"' => $countryId]);
 			}
-			$query->orderBy('CASE WHEN upper("Cities"."title") LIKE \''.$title.'\' THEN 0
-			 WHEN upper("Cities"."title") LIKE \''.$title.'%\' THEN 1
-			WHEN upper("Cities"."title") LIKE \'%'.$title.'%\' THEN 2 ELSE 3 END');
+			$query->orderBy('CASE WHEN upper("Cities"."title") LIKE \'' . $title . '\' THEN 0
+			 WHEN upper("Cities"."title") LIKE \'' . $title . '%\' THEN 1
+			WHEN upper("Cities"."title") LIKE \'%' . $title . '%\' THEN 2 ELSE 3 END');
 			$query->limit(50);
 			$command = $query->createCommand();
 			$data = $command->queryAll();
@@ -300,9 +302,9 @@ class HelpController extends BaseController
 			if ($countryId) {
 				$query->andWhere(['"Regions"."countryId"' => $countryId]);
 			}
-			$query->orderBy('CASE WHEN upper("Regions"."title") LIKE \''.$title.'\' THEN 0
-			 WHEN upper("Regions"."title") LIKE \''.$title.'%\' THEN 1
-			WHEN upper("Regions"."title") LIKE \'%'.$title.'%\' THEN 2 ELSE 3 END');
+			$query->orderBy('CASE WHEN upper("Regions"."title") LIKE \'' . $title . '\' THEN 0
+			 WHEN upper("Regions"."title") LIKE \'' . $title . '%\' THEN 1
+			WHEN upper("Regions"."title") LIKE \'%' . $title . '%\' THEN 2 ELSE 3 END');
 			$query->limit(50);
 			$command = $query->createCommand();
 			$data = $command->queryAll();
@@ -335,8 +337,9 @@ class HelpController extends BaseController
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
 			$title = mb_strtoupper(trim($city->title), 'UTF-8');
-			$oldCity = City::findOne(['countryId' => $city->countryId, 'regionId' => $city->regionId,
-			'upper("title")' => $title]);
+			/** @var City $oldCity */
+			$oldCity = City::find()->where(['countryId'      => $city->countryId, 'regionId' => $city->regionId,
+			                                'upper("title")' => $title])->one();
 			if ($oldCity) {
 				$error = 'В выбранном регионе уже есть город с таким названием';
 			} else {
@@ -359,8 +362,9 @@ class HelpController extends BaseController
 		$error = null;
 		if ($city->load(\Yii::$app->request->post())) {
 			$title = mb_strtoupper(trim($city->title), 'UTF-8');
-			$oldCity = City::findOne(['countryId' => $city->countryId, 'regionId' => $city->regionId,
-			                          'upper("title")' => $title]);
+			/** @var City $oldCity */
+			$oldCity = City::find()->where(['countryId'      => $city->countryId, 'regionId' => $city->regionId,
+			                                'upper("title")' => $title])->one();
 			if ($oldCity && $oldCity->id != $city->id) {
 				$error = 'В выбранном регионе уже есть город с таким названием';
 			} else {
@@ -383,8 +387,9 @@ class HelpController extends BaseController
 		$error = null;
 		if ($region->load(\Yii::$app->request->post())) {
 			$title = mb_strtoupper(trim($region->title), 'UTF-8');
-			$oldRegion = Region::findOne(['countryId'      => $region->countryId,
-			                              'upper("title")' => $title]);
+			/** @var Region $oldRegion */
+			$oldRegion = Region::find()->where(['countryId'      => $region->countryId,
+			                                    'upper("title")' => $title])->one();
 			if ($oldRegion) {
 				$error = 'В выбранной стране уже есть регион с таким названием';
 			} else {
@@ -408,7 +413,7 @@ class HelpController extends BaseController
 		if ($country->load(\Yii::$app->request->post())) {
 			$title = mb_strtoupper(trim($country->title), 'UTF-8');
 			$oldCountry = Country::find()->where(['upper("title")' => $title])
-			->orWhere(['upper("title_en")' => $title])
+				->orWhere(['upper("title_en")' => $title])
 				->orWhere(['upper("title_original")' => $title])->one();
 			if ($oldCountry) {
 				$error = 'Уже есть страна с таким названием';
