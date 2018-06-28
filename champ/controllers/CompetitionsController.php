@@ -934,6 +934,7 @@ class CompetitionsController extends BaseController
 	
 	public function actionChampionshipResult($championshipId, $showAll = null)
 	{
+		$this->layout = 'full-content';
 		$championship = Championship::findOne($championshipId);
 		if (!$championship) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Чемпионат не найден'));
@@ -1378,6 +1379,7 @@ class CompetitionsController extends BaseController
 	
 	public function actionSpecialChampResult($championshipId)
 	{
+		$this->layout = 'full-content';
 		$championship = SpecialChamp::findOne($championshipId);
 		if (!$championship) {
 			throw new NotFoundHttpException(\Yii::t('app', 'Чемпионат не найден'));
