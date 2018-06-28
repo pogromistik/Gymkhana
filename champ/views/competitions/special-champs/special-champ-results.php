@@ -15,21 +15,10 @@ $this->title = \Yii::t('app', 'Результаты: {title}', [
 
 <div class="about pt-10">
     <div class="card-box">
-        <h4><?= \Yii::t('app', 'Таблица, по которой прозводился расчёт баллов за каждый этап:') ?></h4>
-        <table class="table table-responsive table-bordered text-center">
-            <tr>
-                <td class="text-left"><b><?= \Yii::t('app', 'место') ?></b></td>
-			    <?php foreach (\common\models\SpecialStage::$points as $place => $point) { ?>
-                    <td><?= $place ?></td>
-			    <?php } ?>
-            </tr>
-            <tr>
-                <td class="text-left"><b><?= \Yii::t('app', 'балл') ?></b></td>
-			    <?php foreach (\common\models\SpecialStage::$points as $place => $point) { ?>
-                    <td><?= $point ?></td>
-			    <?php } ?>
-            </tr>
-        </table>
+        <h4><?= \Yii::t('app', 'Формула, по которой прозводился расчёт баллов за каждый этап:') ?></h4>
+        Х=1809*k<sup>2</sup>+7885.7*k+8076.7,<br>
+        Где k - отношение времени спортсмена к эталонному времени трассы<br>
+        Баллы начисляются только спортсменам с рейтингом < 200%
     </div>
 	
 	<?php if ($outOfChampStages) { ?>
