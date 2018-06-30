@@ -173,4 +173,9 @@ class Interview extends BaseActiveRecord
 	{
 		return Vote::findOne(['interviewId' => $this->id, 'athleteId' => \Yii::$app->user->identity->id]);
 	}
+	
+	public function getTotalVotes()
+	{
+		return count($this->votes);
+	}
 }

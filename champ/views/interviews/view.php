@@ -38,7 +38,12 @@
     </div>
 <?php } ?>
 
-    <h4><?= \Yii::t('app', 'Голосование:') ?></h4>
+    <h3><?= \Yii::t('app', 'Голосование') ?></h3>
+<?php
+$totalCount = $interview->getTotalVotes();
+if ($totalCount > 0) { ?>
+	<?= \Yii::t('app', 'Количество проголосовавших: {count}', ['count' => $totalCount]) ?>
+<?php } ?>
 <?php if ($interview->dateEnd < time()) {
 	echo $this->render('_results', ['interview' => $interview]);
 } else { ?>
@@ -49,7 +54,7 @@
 					'signup' => \yii\helpers\Html::a('зарегистрируйтесь', ['/registration'])
 				]) ?></p>
         <p>
-            <?= \Yii::t('app', 'Или вы можете прислать свой голос одним из указанных способов:') ?>
+			<?= \Yii::t('app', 'Или вы можете прислать свой голос одним из указанных способов:') ?>
             <a href="mailto:gymkhana.cup@gmail.com">gymkhana.cup@gmail.com</a><br>
             <a href="https://vk.com/id19792817">https://vk.com/id19792817</a><br>
             <a href="#" data-toggle="modal"
