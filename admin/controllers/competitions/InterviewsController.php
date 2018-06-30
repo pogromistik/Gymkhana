@@ -5,6 +5,7 @@ namespace admin\controllers\competitions;
 use admin\controllers\BaseController;
 use common\models\HelpModel;
 use common\models\InterviewAnswer;
+use common\models\Vote;
 use Yii;
 use common\models\Interview;
 use common\models\search\InterviewSearch;
@@ -194,5 +195,36 @@ class InterviewsController extends BaseController
 		$model->delete();
 		
 		return $this->redirect(['index']);
+	}
+	
+	/**
+	 * @param $id
+	 *
+	 * @return string|\yii\web\Response
+	 * @throws NotFoundHttpException
+	 * @throws UserException
+	 */
+	public function actionResults($id)
+	{
+		$model = $this->findModel($id);
+		$vote = new Vote();
+		$vote->interviewId = $model->id;
+		if ($vote->load(\Yii::$app->request->post())) {
+			$mutexName = 'addVote-' . $model->id . '-athlete-' . $vote->athleteId;
+			if (\Yii::$app->mutex->acquire($mutexName, 10)) {
+				if (Vote::findOne(['interviewId' => $model->id, 'athleteId' => $vote->athleteId])) {
+					\Yii::$app->mutex->release($mutexName);
+					throw new UserException('Голос от этого спортсена уже есть');
+				}
+				if ($vote->save()) {
+					return $this->redirect(['results', 'id' => $model->id]);
+				}
+			} else {
+				\Yii::$app->mutex->release($mutexName);
+				throw new UserException('Голос от этого спортсена уже есть');
+			}
+		}
+		
+		return $this->render('results', ['model' => $model, 'vote' => $vote]);
 	}
 }

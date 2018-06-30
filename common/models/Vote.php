@@ -49,9 +49,9 @@ class Vote extends \yii\db\ActiveRecord
 	{
 		return [
 			'id'          => 'ID',
-			'athleteId'   => 'Athlete ID',
-			'interviewId' => 'Interview ID',
-			'answerId'    => 'Answer ID',
+			'athleteId'   => 'Спортсмен',
+			'interviewId' => 'Опрос',
+			'answerId'    => 'Вариант ответа',
 			'dateAdded'   => 'Date Added',
 		];
 	}
@@ -83,7 +83,7 @@ class Vote extends \yii\db\ActiveRecord
 	public function beforeValidate()
 	{
 		$this->dateAdded = time();
-
+		
 		return parent::beforeValidate();
 	}
 }

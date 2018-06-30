@@ -25,6 +25,13 @@ $this->title = 'Опросы';
 			[
 				'format' => 'raw',
 				'value'  => function (\common\models\Interview $interview) {
+					return Html::a('<span class="fa fa-edit"></span>', ['results', 'id' => $interview->id],
+						['class' => 'btn btn-my-style btn-warning btn-sm', 'title' => 'Результаты']);
+				}
+			],
+			[
+				'format' => 'raw',
+				'value'  => function (\common\models\Interview $interview) {
 					return Html::a('<span class="fa fa-edit"></span>', ['update', 'id' => $interview->id],
 						['class' => 'btn btn-my-style btn-primary btn-sm', 'title' => 'Редактировать']);
 				}
@@ -40,7 +47,7 @@ $this->title = 'Опросы';
 				'format' => 'raw',
 				'value'  => function (\common\models\Interview $interview) {
 					return Html::a('<span class="fa fa-remove"></span>', ['delete', 'id' => $interview->id],
-						['class' => 'btn btn-my-style btn-red btn-sm', 'title' => 'Список вопросов',
+						['class' => 'btn btn-my-style btn-red btn-sm', 'title' => 'Удалить',
 						 'data'  => [
 							 'confirm' => 'Уверены, что хотите безвозвратно удалить опрос?'
 						 ]
