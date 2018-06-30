@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = 'Результаты опроса';
         <tr>
             <th>Вариант ответа</th>
             <th>Количество голосов</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -29,6 +30,8 @@ $this->params['breadcrumbs'][] = 'Результаты опроса';
             <tr>
                 <td><?= $answer->text ?></td>
                 <td><?= $answer->getVotesCount() ?></td>
+                <td><?= Html::a('Подробнее', ['answer-detail', 'id' => $answer->id],
+                        ['class' => 'btn btn-my-style btn-blue btn-xs']) ?></td>
             </tr>
 		<?php } ?>
         </tbody>

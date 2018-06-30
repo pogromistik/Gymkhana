@@ -227,4 +227,19 @@ class InterviewsController extends BaseController
 		
 		return $this->render('results', ['model' => $model, 'vote' => $vote]);
 	}
+	
+	/**
+	 * @param $id
+	 *
+	 * @return string
+	 * @throws NotFoundHttpException
+	 */
+	public function actionAnswerDetail($id)
+	{
+		$answer = InterviewAnswer::findOne($id);
+		if (!$answer) {
+			throw new NotFoundHttpException();
+		}
+		return $this->render('answer-detail', ['answer' => $answer]);
+	}
 }
