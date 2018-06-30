@@ -28,6 +28,9 @@ use yii\helpers\Url;
             </li>
 			<?php if (\Yii::$app->user->can('globalWorkWithCompetitions')) { ?>
                 <li>
+                    <a href="<?= Url::to(['/competitions/interviews/index']) ?>"> Опросы</a>
+                </li>
+                <li>
                     <a data-addr="/competitions/classes"
                        href="<?= Url::to(['/competitions/classes/index']) ?>"> Классы
                         спортсменов</a>
