@@ -1545,7 +1545,7 @@ figure.effect-julia:hover p {
         text-align: center;
     }
 
-    .content .detail-news p{
+    .content .detail-news p {
         padding: 0 10px;
         text-align: left;
     }
@@ -1582,7 +1582,7 @@ small.spb a {
     background: #ffffff none repeat scroll 0 0;
     margin: 15px 0;
     padding: 20px;
-    box-shadow: 0 5px 20px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
     position: relative;
 }
 
@@ -1602,8 +1602,8 @@ small.spb a {
     padding: 10px 0;
 }
 
-.main-stages .item  a {
-   text-decoration: none;
+.main-stages .item a {
+    text-decoration: none;
 }
 
 .main-history small {
@@ -1632,4 +1632,27 @@ small.spb a {
 
 .answers .item a:hover {
     color: #0f0f0f;
+}
+
+.votes .text {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.votes .item {
+    background: #eaf0f3;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    position: relative;
+}
+
+.votes .percent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    height: 30px;
+    background: #7695ad;
 }

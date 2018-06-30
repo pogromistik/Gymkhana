@@ -110,6 +110,11 @@ $(document).ready(function () {
         $(this).parent().toggleClass('open');
     });
     initAffixCheck();
+
+    equalizer($('.votes .text'));
+    var height = $('.votes .text').height()+10;
+    $('.votes .item').innerHeight(height);
+    $('.votes .percent').innerHeight(height);
 });
 
 $('.toggle .title').click(function () {
