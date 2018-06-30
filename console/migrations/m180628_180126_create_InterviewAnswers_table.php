@@ -17,8 +17,7 @@ class m180628_180126_create_InterviewAnswers_table extends Migration
 			'interviewId' => $this->integer()->notNull(),
 			'imgPath'     => $this->string(),
 			'text'        => $this->string()->notNull(),
-			'textEn'      => $this->string(),
-			'votesCount'  => $this->integer()->notNull()->defaultValue(0)
+			'textEn'      => $this->string()
 		]);
 		$this->addForeignKey('fk_InterviewAnswers_interviewId', 'InterviewAnswers', 'interviewId', 'Interviews', 'id', 'CASCADE', 'CASCADE');
 	}

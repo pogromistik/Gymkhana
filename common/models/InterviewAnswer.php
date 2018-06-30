@@ -15,7 +15,6 @@ use yii\web\UploadedFile;
  * @property int       $imgPath
  * @property string    $text
  * @property string    $textEn
- * @property int       $votesCount
  *
  * @property Interview $interview
  * @property Vote[]    $votes
@@ -41,7 +40,7 @@ class InterviewAnswer extends BaseActiveRecord
 	{
 		return [
 			[['interviewId', 'text'], 'required'],
-			[['interviewId', 'votesCount'], 'integer'],
+			[['interviewId'], 'integer'],
 			[['text', 'textEn', 'imgPath'], 'string', 'max' => 255],
 			['photoFile', 'file', 'extensions' => 'png, jpg', 'maxFiles' => 1, 'maxSize' => 2097152,
 			                      'tooBig'     => 'Размер файла не должен превышать 2MB'],
@@ -62,15 +61,11 @@ class InterviewAnswer extends BaseActiveRecord
 			'photoFile'   => 'Изображение',
 			'text'        => 'Текст',
 			'textEn'      => 'Текст En',
-			'votesCount'  => 'Коилчество голосов',
 		];
 	}
 	
 	public function beforeValidate()
 	{
-		if (!$this->votesCount) {
-			$this->votesCount = 0;
-		}
 		return parent::beforeValidate();
 	}
 	
@@ -110,5 +105,28 @@ class InterviewAnswer extends BaseActiveRecord
 	public function getVotes()
 	{
 		return $this->hasMany(Vote::class, ['answerId' => 'id']);
+	}
+	
+	public function getText($language = null)
+	{
+		if (!$this->textEn) {
+			return $this->text;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->textEn;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->text;
+			default:
+				return $this->textEn;
+		}
+	}
+	
+	public function getVotesCount()
+	{
+		return Vote::find()->where(['interviewId' => $this->interviewId, 'answerId' => $this->id])->count();
 	}
 }

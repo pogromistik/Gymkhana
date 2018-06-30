@@ -1,11 +1,13 @@
 function showBackDrop() {
     $('<div class="modal-backdrop fade in"></div>').appendTo(document.body);
 }
+
 $("[data-fancybox]").fancybox({
-    buttons : [
+    buttons: [
         'close',
     ]
 });
+
 function hideBackDrop() {
     $(".modal-backdrop").remove();
 }
@@ -249,3 +251,31 @@ function countDown(second, endMinute, endHour, endDay, endMonth) {
         now.setSeconds(now.getSeconds() + 1); //увеличиваем текущее время на 1 секунду
     }, 1000);
 }
+
+var voteClickCount = 0;
+$('.addVote').click(function (e) {
+    voteClickCount++;
+    e.preventDefault();
+    if (voteClickCount === 1) {
+        showBackDrop();
+        $('.alert').hide();
+        var elem = $(this);
+        var interviewId = elem.data('interview');
+        var answerId = elem.data('answer');
+        $.get('/interviews/add-vote', {
+            interviewId: interviewId, answerId: answerId
+        }).done(function (resp) {
+            voteClickCount = 0;
+            if (resp.success === true) {
+                location.reload();
+            } else {
+                hideBackDrop();
+                $('.alert-danger').html(resp.errors).show();
+            }
+        }).fail(function (error) {
+            voteClickCount = 0;
+            hideBackDrop();
+            alert(error.responseText);
+        });
+    }
+});

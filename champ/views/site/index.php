@@ -5,6 +5,7 @@
  * @var \common\models\Stage[]        $newStages
  * @var array                         $lastStages
  * @var \common\models\ClassHistory[] $history
+ * @var \common\models\Interview[]    $interviews
  */
 
 use yii\widgets\LinkPager;
@@ -16,6 +17,17 @@ use miloschuman\highcharts\Highcharts;
 <div class="z-100">
     <div class="row">
         <div class="col-lg-8 col-md-6 col-sm-12">
+			<?php if ($interviews) { ?>
+                <h3><?= \Yii::t('app', 'Опросы:') ?></h3>
+                <div class="card-box">
+					<?php foreach ($interviews as $interview) { ?>
+						<?= Html::a($interview->getTitle(), ['/interviews/view', 'id' => $interview->id]) ?>
+                        &nbsp;
+						<?= Html::a('подробнее...', ['/interviews/view', 'id' => $interview->id],
+                            ['class' => 'btn btn-green btn-xs']) ?>
+					<?php } ?>
+                </div>
+			<?php } ?>
             <div class="news">
 				<?php foreach ($news as $item) {
 					$class = 'title-with-bg';
@@ -109,16 +121,16 @@ use miloschuman\highcharts\Highcharts;
 						],
 						'plotOptions' => [
 							'series' => [
-								'dataLabels' => [
+								'dataLabels'   => [
 									'enabled' => true,
 									'format'  => "{point.name} ({point.c}{$people})"
 								],
-								'showInLegend'     => true
+								'showInLegend' => true
 							],
 						],
-                        'legend' => [
-	                        'labelFormat' => "{name} ({c}{$people})"
-],
+						'legend'      => [
+							'labelFormat' => "{name} ({c}{$people})"
+						],
 						"series"      => [
 							[
 								"data" => $graphs

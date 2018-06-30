@@ -129,4 +129,48 @@ class Interview extends BaseActiveRecord
 			$this->dateEndHuman = date('d.m.Y, H:i', $this->dateEnd);
 		}
 	}
+	
+	public function getTitle($language = null)
+	{
+		if (!$this->titleEn) {
+			return $this->title;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->titleEn;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->title;
+			default:
+				return $this->titleEn;
+		}
+	}
+	
+	public function getDescription($language = null)
+	{
+		if (!$this->descriptionEn) {
+			return $this->title;
+		}
+		if (!$language) {
+			$language = \Yii::$app->language;
+		}
+		switch ($language) {
+			case TranslateMessage::LANGUAGE_EN:
+				return $this->descriptionEn;
+			case TranslateMessage::LANGUAGE_RU:
+				return $this->description;
+			default:
+				return $this->descriptionEn;
+		}
+	}
+	
+	/**
+	 * @return Vote|null
+	 */
+	public function getMyVote()
+	{
+		return Vote::findOne(['interviewId' => $this->id, 'athleteId' => \Yii::$app->user->identity->id]);
+	}
 }

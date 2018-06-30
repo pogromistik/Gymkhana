@@ -13,6 +13,7 @@ use common\models\ClassHistory;
 use common\models\DocumentSection;
 use common\models\Feedback;
 use common\models\HelpModel;
+use common\models\Interview;
 use common\models\NewsSubscription;
 use common\models\Participant;
 use common\models\RequestForSpecialStage;
@@ -88,16 +89,18 @@ class SiteController extends BaseController
 			->andWhere(['not', ['newClassId' => null]])->all();
 		
 		$graphs = Athlete::classesStats();
-		/*die(var_dump($graphs, [
 		
-		]));*/
+		//Опросы
+		$now = time();
+		$interviews = Interview::find()->where(['<=', 'dateStart', $now])->andWhere(['>=', 'dateEnd', $now])->all();
 		
 		return $this->render('index', [
 			'news'       => $news,
 			'newStages'  => $newStages,
 			'lastStages' => $lastStages,
 			'history'    => $history,
-			'graphs'     => $graphs
+			'graphs'     => $graphs,
+			'interviews' => $interviews
 		]);
 	}
 	
