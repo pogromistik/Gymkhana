@@ -4,12 +4,30 @@ namespace champ\controllers;
 
 use common\models\Interview;
 use common\models\InterviewAnswer;
+use common\models\search\InterviewSearch;
 use common\models\Vote;
+use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class InterviewsController extends BaseController
 {
+	public function actionIndex()
+	{
+		$this->pageTitle = \Yii::t('app', 'Опросы');
+		$interviews = InterviewSearch::find()->where(['<=', 'dateStart', time()]);
+		$pagination = new Pagination([
+			'defaultPageSize' => 10,
+			'totalCount'      => $interviews->count(),
+		]);
+		$interviews = $interviews->orderBy(['dateStart' => SORT_DESC, 'dateAdded' => SORT_DESC])->offset($pagination->offset)->limit($pagination->limit)->all();
+		
+		return $this->render('index', [
+			'interviews' => $interviews,
+			'pagination' => $pagination,
+		]);
+	}
+	
 	/**
 	 * @param $id
 	 *

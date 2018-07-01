@@ -48,10 +48,10 @@ if ($totalCount > 0) { ?>
 	echo $this->render('_results', ['interview' => $interview]);
 } else { ?>
 	<?php if (\Yii::$app->user->isGuest) { ?>
-        <p><?= \Yii::t('app', 'Голосовать могут только авторизованные пользователи. Чтобы проголосовать , {login} или {signup}.',
+        <p><?= \Yii::t('app', 'Голосовать могут только авторизованные пользователи. Чтобы проголосовать, {login} или {signup}.',
 				[
 					'login'  => \yii\helpers\Html::a(\Yii::t('app', 'войдите в личный кабинет'), ['/site/login']),
-					'signup' => \yii\helpers\Html::a('зарегистрируйтесь', ['/registration'])
+					'signup' => \yii\helpers\Html::a(\Yii::t('app', 'зарегистрируйтесь'), ['/registration'])
 				]) ?></p>
         <p>
 			<?= \Yii::t('app', 'Или вы можете прислать свой голос одним из указанных способов:') ?>

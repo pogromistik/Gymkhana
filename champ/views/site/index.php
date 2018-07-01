@@ -21,10 +21,12 @@ use miloschuman\highcharts\Highcharts;
                 <h3><?= \Yii::t('app', 'Опросы:') ?></h3>
                 <div class="card-box">
 					<?php foreach ($interviews as $interview) { ?>
-						<?= Html::a($interview->getTitle(), ['/interviews/view', 'id' => $interview->id]) ?>
-                        &nbsp;
-						<?= Html::a('подробнее...', ['/interviews/view', 'id' => $interview->id],
-                            ['class' => 'btn btn-green btn-xs']) ?>
+						<div>
+							<?= Html::a($interview->getTitle(), ['/interviews/view', 'id' => $interview->id]) ?>
+                            &nbsp;
+							<?= Html::a('подробнее...', ['/interviews/view', 'id' => $interview->id],
+								['class' => 'btn btn-green btn-xs']) ?>
+                        </div>
 					<?php } ?>
                 </div>
 			<?php } ?>

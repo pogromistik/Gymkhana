@@ -112,6 +112,9 @@ use yii\helpers\Url;
                                 <li>
                                     <a href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a>
                                 </li>
+                                <li>
+                                    <a href="<?= Url::to(['/interviews/index']) ?>"><?= \Yii::t('app', 'Опросы') ?></a>
+                                </li>
                             </ul>
                         </li>
                         <li class="mobile-menu-items"><a
@@ -121,6 +124,9 @@ use yii\helpers\Url;
                                     href="<?= Url::to(['site/tracks']) ?>"><?= \Yii::t('app', 'Трассы') ?></a></li>
                         <li class="mobile-menu-items"><a
                                     href="<?= Url::to(['site/calculate']) ?>"><?= \Yii::t('app', 'Калькулятор') ?></a>
+                        </li>
+                        <li class="mobile-menu-items">
+                            <a href="<?= Url::to(['/interviews/index']) ?>"><?= \Yii::t('app', 'Опросы') ?></a>
                         </li>
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle"
