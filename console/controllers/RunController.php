@@ -1382,4 +1382,37 @@ class RunController extends Controller
 		
 		return true;
 	}
+	
+	public function actionRecalcPoints($stageId)
+	{
+		$stage = SpecialStage::findOne($stageId);
+		if (!$stage) {
+			echo "Stage {$stageId} not found" . PHP_EOL;
+			
+			return false;
+		}
+		$requests = $stage->activeRequests;
+		$bestTime = $stage->referenceTime;
+		if (!$bestTime) {
+			echo "Not reference time" . PHP_EOL;
+			
+			return true;
+		}
+		foreach ($requests as $request) {
+			$request->needUpdatePlaces = false;
+			$coeff = round($request->resultTime / $bestTime, 5);
+			$x = 1809*$coeff*$coeff-7885.7*$coeff+8076.7;
+			$request->points = round($x);
+			if ($request->points < 0) {
+				$request->points = 0;
+			} elseif ($request->percent >=200) {
+				$request->percent = 0;
+			}
+			file_put_contents('points.csv', $request->athlete->getFullName() . ';' . $coeff . ';' .
+				$request->points . PHP_EOL, FILE_APPEND);
+			$request->save();
+		}
+		
+		return true;
+	}
 }
