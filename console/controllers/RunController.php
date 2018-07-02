@@ -1400,15 +1400,8 @@ class RunController extends Controller
 		}
 		foreach ($requests as $request) {
 			$request->needUpdatePlaces = false;
-			$coeff = round($request->resultTime / $bestTime, 5);
-			$x = 1809*$coeff*$coeff-7885.7*$coeff+8076.7;
-			$request->points = round($x);
-			if ($request->points < 0) {
-				$request->points = 0;
-			} elseif ($request->percent >=200) {
-				$request->percent = 0;
-			}
-			file_put_contents('points.csv', $request->athlete->getFullName() . ';' . $coeff . ';' .
+			$request->points = $stage->calculatePoints($request);
+			file_put_contents('points.csv', $request->athlete->getFullName() .
 				$request->points . PHP_EOL, FILE_APPEND);
 			$request->save();
 		}

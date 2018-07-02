@@ -394,11 +394,7 @@ class SpecialStage extends BaseActiveRecord
 				}
 				
 				//Баллы
-				if (isset(self::$points[$item->place])) {
-					$item->points = self::$points[$item->place];
-				} else {
-					$item->points = 0;
-				}
+				$item->points = $this->calculatePoints($item);
 				
 				if (!$item->save()) {
 					$transaction->rollBack();
@@ -422,6 +418,23 @@ class SpecialStage extends BaseActiveRecord
 		$transaction->commit();
 		
 		return true;
+	}
+	
+	public function calculatePoints(RequestForSpecialStage $request)
+	{
+		if (!$this->referenceTime || $this->referenceTime <= 0) {
+			return 0;
+		}
+		$coeff = round($request->resultTime / $this->referenceTime, 5);
+		$x = 1809*$coeff*$coeff-7885.7*$coeff+8076.7;
+		$points = round($x);
+		if ($request->points < 0) {
+			$points = 0;
+		} elseif ($request->percent > 160) {
+			$points = 0;
+		}
+		
+		return $points;
 	}
 	
 	public function getTitle($language = null)
