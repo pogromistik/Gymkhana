@@ -135,6 +135,10 @@ class HelpModel extends Model
 				$flag = 'japan.jpg';
 				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Япония' : 'Japan';
 				break;
+			case 65:
+				$flag = 'germany.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Германия' : 'Germany';
+				break;
 		}
 		if ($flag) {
 			return ['flag' => $flag, 'title' => $countryTitle];
@@ -290,10 +294,11 @@ class HelpModel extends Model
 	 */
 	public static function checkTimeFormat($time)
 	{
-		$digits = preg_replace('~\D+~','',$time);
+		$digits = preg_replace('~\D+~', '', $time);
 		if (mb_strlen($digits) == 6) {
 			return true;
 		}
+		
 		return false;
 	}
 }
