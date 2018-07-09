@@ -1341,6 +1341,11 @@ ul.news-carousel {
     padding: 4px;
 }
 
+.tracks-gallery.stages .item .info {
+    height: 50px;
+    text-transform: uppercase;
+}
+
 .tracks-gallery .item .img a {
     display: flex;
 }
