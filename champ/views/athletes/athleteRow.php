@@ -25,6 +25,7 @@ if ($athlete->athleteClassId) {
             </div>
             <div class="info">
                 <h4><?= $athlete->getFullName() ?></h4>
+                <?= $athlete->country->getTitle() ?>,
 				<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                 <h5><?= \Yii::t('app', 'мотоциклы:') ?></h5>
 				<?php $motorcycles = $athlete->getMotorcycles()->andWhere(['status' => \common\models\Motorcycle::STATUS_ACTIVE])->limit(2)->all();

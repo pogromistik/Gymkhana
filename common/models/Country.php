@@ -83,4 +83,13 @@ class Country extends \yii\db\ActiveRecord
 	{
 		return self::findOne(['title' => 'Россия']);
 	}
+	
+	public function getTitle()
+	{
+		if (\Yii::$app->language == TranslateMessage::LANGUAGE_RU) {
+			return $this->title;
+		} else {
+			return $this->title_en ?? $this->title;
+		}
+	}
 }

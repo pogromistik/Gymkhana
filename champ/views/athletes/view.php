@@ -28,8 +28,9 @@ use yii\bootstrap\Html;
             <div class="info">
                 <div class="item">
                     <b><?= \Yii::t('app', 'Город') ?>: </b>
+                    <?= $athlete->country->getTitle() ?>,
 					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>,
-					<?= \common\helpers\TranslitHelper::translitRegion($athlete->region->title) ?>
+	                <?= \common\helpers\TranslitHelper::translitRegion($athlete->region->title) ?>
                 </div>
 				<?php if ($athlete->athleteClassId) {
 					$athleteClass = $athlete->athleteClass;
