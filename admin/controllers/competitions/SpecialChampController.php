@@ -878,7 +878,7 @@ class SpecialChampController extends BaseController
 				foreach ($model->attributeLabels() as $attr => $label) {
 					$data[$attr] = $model->$attr;
 				}
-				$request->videoLink = $model->videoLinkl
+				$request->videoLink = $model->videoLink;
 				$request->data = json_encode($data);
 				$request->timeHuman = $model->timeHuman;
 				$request->dateHuman = $model->dateHuman;
