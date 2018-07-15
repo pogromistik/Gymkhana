@@ -865,6 +865,7 @@ class SpecialChampController extends BaseController
 			if ($request->athleteId) {
 				$request->timeHuman = $model->timeHuman;
 				$request->dateHuman = $model->dateHuman;
+				$request->videoLink = $model->videoLink;
 				$request->fine = $model->fine;
 				if ($request->save()) {
 					return true;
@@ -877,6 +878,7 @@ class SpecialChampController extends BaseController
 				foreach ($model->attributeLabels() as $attr => $label) {
 					$data[$attr] = $model->$attr;
 				}
+				$request->videoLink = $model->videoLinkl
 				$request->data = json_encode($data);
 				$request->timeHuman = $model->timeHuman;
 				$request->dateHuman = $model->dateHuman;
