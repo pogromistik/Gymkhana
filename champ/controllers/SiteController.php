@@ -126,7 +126,7 @@ class SiteController extends BaseController
 			$toArray[$lastSpecialStage->dateResult][] = [
 				'title' => $lastSpecialStage->championship->getTitle() . ', ' .
 					$lastSpecialStage->getTitle(),
-				'link'  => Url::to(['/competitions/stage', 'id' => $lastSpecialStage->id])
+				'link'  => Url::to(['/competitions/special-stage', 'id' => $lastSpecialStage->id])
 			];
 		}
 		krsort($toArray);
