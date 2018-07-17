@@ -76,7 +76,7 @@ $this->title = \Yii::t('app', 'Результаты: {title}', [
                 <td><?= $place ?></td>
                 <td><?= $athlete->athleteClassId ? $athlete->athleteClass->title : null ?></td>
                 <td>
-					<?= $athlete->getFullName() ?>
+					<?= \yii\helpers\Html::a($athlete->getFullName(), ['/athletes/view', 'id' => $athlete->id]) ?>
                     <br>
 					<?= \common\helpers\TranslitHelper::translitCity($athlete->city->title) ?>
                 </td>
