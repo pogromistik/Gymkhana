@@ -696,4 +696,33 @@ LIMIT 1) order by "bestTime" asc) n'])
 				return $this->descr_en;
 		}
 	}
+	
+	public function getInternalClassesTitle($asArray = false)
+	{
+		$internalClasses = [];
+		if ($this->status !== self::STATUS_PAST) {
+			$internalClasses = $this->championship->activeInternalClasses;
+		} else {
+			$classIds = $this->getActiveParticipants()->select(["internalClassId"])->asArray()->column();
+			if ($classIds) {
+				$internalClasses = InternalClass::findAll(['id' => $classIds]);
+			}
+		}
+		if (count($internalClasses) === 0) {
+			return null;
+		}
+		$classes = [];
+		foreach ($internalClasses as $class) {
+			$classes[] = $class->title;
+		}
+		if ($asArray) {
+			return $classes;
+		}
+		
+		if ($classes) {
+			return implode(', ', $classes);
+		}
+		
+		return null;
+	}
 }
