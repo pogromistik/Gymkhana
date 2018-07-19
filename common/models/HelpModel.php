@@ -139,6 +139,9 @@ class HelpModel extends Model
 				$flag = 'germany.jpg';
 				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Германия' : 'Germany';
 				break;
+			case 36:
+				$flag = 'belgium.jpg';
+				$countryTitle = $lang == TranslateMessage::LANGUAGE_RU ? 'Бельгия' : 'Belgium';
 		}
 		if ($flag) {
 			return ['flag' => $flag, 'title' => $countryTitle];

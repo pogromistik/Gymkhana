@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 class GeoHelper
@@ -43,9 +44,22 @@ class GeoHelper
 				return 139;
 			case 'PL':
 				return 160;
+			case 'ES':
+				return 87;
+			case 'LV':
+				return 12;
+			case 'LB':
+				return 109;
+			case 'MD':
+				return 15;
+			case 'DE':
+				return 65;
+			case 'BE':
+				return 36;
 			default:
 				return 1;
 		}
+		
 		return 1;
 	}
 }
