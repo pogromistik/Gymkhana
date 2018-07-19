@@ -72,7 +72,7 @@ $countParticipants = count($participantsByJapan) + count($tmpParticipants) + cou
                         </div>
 					<?php } ?>
 					
-					<?php if ($internalClassesTitle = $championship->getInternalClassesTitle()) { ?>
+					<?php if ($internalClassesTitle = $championship->getActiveInternalClassesTitle()) { ?>
                         <div>
 							<?= \Yii::t('app', 'Классы награждения: {classes}', [
 								'classes' => $internalClassesTitle
