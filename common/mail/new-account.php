@@ -26,3 +26,5 @@ switch ($athlete->language) {
 <a href="https://vk.com/famalata" target="_blank">vk.com/famalata</a><br>
 <a href="https://vk.com/id19792817" target="_blank">vk.com/id19792817</a><br>
 <?= \Yii::t('app', 'Или по почте', [], $athlete->language) ?>: gymkhana.cup@gmail.com
+
+<?= $this->render('_footer', ['language' => \Yii::$app->language]) ?>
