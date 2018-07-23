@@ -111,7 +111,7 @@ class StatsController extends BaseController
 		$result = [];
 		
 		if (!$type || $type == self::TYPE_SPECIAL_STAGE) {
-			$specialChamps = SpecialChamp::find()->where(['status' => SpecialStage::STATUS_PAST]);
+			$specialChamps = SpecialChamp::find();
 			if ($yearId) {
 				$specialChamps->andWhere(['yearId' => $yearId]);
 			}
@@ -119,7 +119,8 @@ class StatsController extends BaseController
 			
 			/** @var SpecialChamp[] $specialChamps */
 			foreach ($specialChamps as $specialChamp) {
-				foreach ($specialChamp->stages as $specialStage) {
+				/** @var SpecialStage $specialStage */
+				foreach ($specialChamp->getStages()->andWhere(['status' => SpecialStage::STATUS_PAST])->all() as $specialStage) {
 					foreach ($specialStage->activeRequests as $request) {
 						if (!isset($result[$request->athleteId])) {
 							$result[$request->athleteId] = [];
@@ -141,7 +142,7 @@ class StatsController extends BaseController
 		}
 		
 		if (!$type || $type == self::TYPE_STAGE) {
-			$champs = Championship::find()->where(['status' => Stage::STATUS_PAST]);
+			$champs = Championship::find();
 			if ($yearId) {
 				$champs->andWhere(['yearId' => $yearId]);
 			}
@@ -149,7 +150,8 @@ class StatsController extends BaseController
 			
 			/** @var Championship[] $champs */
 			foreach ($champs as $champ) {
-				foreach ($champ->stages as $stage) {
+				/** @var Stage $stage */
+				foreach ($champ->getStages()->andWhere(['status' => Stage::STATUS_PAST])->all() as $stage) {
 					foreach ($stage->activeParticipants as $participant) {
 						if (!isset($result[$participant->athleteId])) {
 							$result[$participant->athleteId] = [];
