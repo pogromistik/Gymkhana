@@ -50,6 +50,11 @@ class BaseController extends Controller
 				\Yii::$app->language = TranslateMessage::LANGUAGE_RU;
 		}
 		
+		if (mb_stripos(\Yii::$app->request->referrer, 'login') === false &&
+			mb_stripos(\Yii::$app->request->referrer, 'logout') === false) {
+			\Yii::$app->session->set('referrer', \Yii::$app->request->referrer);
+		}
+		
 		if (!\Yii::$app->user->isGuest) {
 			$user = Athlete::findOne(\Yii::$app->user->id);
 			$user->lastActivityDate = time();

@@ -309,10 +309,15 @@ class SiteController extends BaseController
 		
 		$model = new LoginForm();
 		if ($model->load(Yii::$app->request->post()) && $model->login()) {
+			$referrer = \Yii::$app->session->get('referrer');
+			if ($referrer && $referrer !== \Yii::$app->request->hostInfo . '/') {
+				return $this->redirect($referrer);
+			}
+			
 			return $this->redirect(['/profile/info']);
 		} else {
 			return $this->render('login', [
-				'model' => $model,
+				'model' => $model
 			]);
 		}
 	}
