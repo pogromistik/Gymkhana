@@ -327,6 +327,13 @@ class SpecialChampController extends BaseController
 					
 					return 'Возникла ошибка при сохранении';
 				}
+				$text = \Yii::t('app', 'Результат {result} для этапа "{stage}" подтверждён',
+					[
+						'result' => $request->resultTimeHuman,
+						'stage'  => $request->stage->title
+					],
+					$request->athlete->language);
+				Notice::add($request->athleteId, $text);
 				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
 				
 				return true;
