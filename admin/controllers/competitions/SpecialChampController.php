@@ -387,11 +387,6 @@ class SpecialChampController extends BaseController
 					return 'Возникла ошибка при сохранении';
 				}
 				
-				if ($athlete->hasAccount) {
-					$text = 'Результат ' . $request->resultTimeHuman . ' для этапа ' . $request->stage->title . ' подтверждён';
-					Notice::add($request->athleteId, $text);
-				}
-				
 				$transaction->commit();
 				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
 				
@@ -426,13 +421,17 @@ class SpecialChampController extends BaseController
 			if ($request->athleteId) {
 				$athlete = $request->athlete;
 				if ($athlete->hasAccount) {
-					$sendText = 'Результат отклонён';
+					$sendText = \Yii::t('app', 'Результат отклонён', [], $athlete->language);
 					$link = null;
 					if ((mb_strlen($text, 'UTF-8') + mb_strlen($sendText, 'UTF-8')) < 253) {
 						$sendText .= ': ' . $text;
 					} else {
-						$sendText = 'Результат ' . $request->resultTimeHuman . ' для этапа "'
-							. $request->stage->title . '" отклонён. Подробности по ссылке';
+						$sendText = \Yii::t('app', 'Результат {time} для этапа "{stage}" отклонён. Подробности по ссылке',
+							[
+								'time'  => $request->resultTimeHuman,
+								'stage' => $request->stage->title
+							],
+							$athlete->language);
 						$link = '/competitions/special-stages-history';
 					}
 					Notice::add($request->athleteId, $sendText, $link);
@@ -539,6 +538,16 @@ class SpecialChampController extends BaseController
 				return 'Возникла ошибка при сохранении';
 			}
 			
+			if ($athlete->hasAccount) {
+				$text = \Yii::t('app', 'Результат {result} для этапа "{stage}" подтверждён',
+					[
+						'result' => $request->resultTimeHuman,
+						'stage'  => $request->stage->title
+					],
+					$athlete->language);
+				Notice::add($request->athleteId, $text);
+			}
+			
 			$transaction->commit();
 			\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
 			
@@ -596,6 +605,16 @@ class SpecialChampController extends BaseController
 				\Yii::$app->mutex->release('SpecialStageRequests-' . $request->id);
 				
 				return 'Возникла ошибка при сохранении';
+			}
+			
+			if ($athlete->hasAccount) {
+				$text = \Yii::t('app', 'Результат {result} для этапа "{stage}" подтверждён',
+					[
+						'result' => $request->resultTimeHuman,
+						'stage'  => $request->stage->title
+					],
+					$athlete->language);
+				Notice::add($request->athleteId, $text);
 			}
 			
 			$transaction->commit();
