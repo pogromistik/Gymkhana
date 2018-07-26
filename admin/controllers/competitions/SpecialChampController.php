@@ -8,6 +8,7 @@ use admin\models\SpecialRequestForm;
 use common\models\Athlete;
 use common\models\City;
 use common\models\ClassHistory;
+use common\models\Country;
 use common\models\HelpModel;
 use common\models\Motorcycle;
 use common\models\Notice;
@@ -16,6 +17,7 @@ use common\models\RequestForSpecialStage;
 use common\models\search\RequestForSpecialStageSearch;
 use common\models\SpecialStage;
 use common\models\Stage;
+use common\models\TranslateMessage;
 use Yii;
 use common\models\SpecialChamp;
 use common\models\search\SpecialChampsSearch;
@@ -442,14 +444,23 @@ class SpecialChampController extends BaseController
 			}
 			
 			if (YII_ENV == 'prod') {
-				$sendText = 'Ваш результат для этапа "' . $request->stage->title . '" чемпионата "' . $request->stage->championship->title . '"' .
-					' отклонён.<br>';
-				$sendText .= $text;
+				$language = TranslateMessage::LANGUAGE_RU;
+				if ($request->countryId) {
+					if ($request->countryId != Country::RUSSIA_ID) {
+						$language = TranslateMessage::LANGUAGE_EN;
+					}
+				}
+				$sendText =
+					\Yii::t('app', 'Ваш результат для этапа "{stage}" чемпионата "{champ}" отклонён.', [
+						'stage' => $request->stage->title,
+						'champ' => $request->stage->championship->title
+					], $language);
+				$sendText .= '<br>' . $text;
 				if (mb_stripos($email, '@', null, 'UTF-8')) {
 					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $sendText])
 						->setTo($email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
-						->setSubject('gymkhana-cup: ваш результат отклонён')
+						->setSubject('gymkhana-cup: ' . \Yii::t('app', 'ваш результат отклонён', [], $language))
 						->send();
 				}
 			}
