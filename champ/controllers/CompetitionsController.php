@@ -1099,7 +1099,7 @@ class CompetitionsController extends BaseController
 		}
 		$this->pageTitle = \Yii::t('app', 'Все результаты участника') . ': ' . $participant->athlete->getFullName();
 		$requests = RequestForSpecialStage::find()->where(['athleteId' => $participant->athleteId, 'stageId' => $participant->stageId])
-			->andWhere(['status' => RequestForSpecialStage::STATUS_APPROVE])
+			->andWhere(['status' => [RequestForSpecialStage::STATUS_APPROVE, RequestForSpecialStage::STATUS_IN_ACTIVE]])
 			->orderBy(['date' => SORT_ASC])->all();
 		
 		return $this->render('special-champs/athlete-progress', [
