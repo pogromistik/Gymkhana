@@ -1664,3 +1664,11 @@ small.spb a {
     height: 30px;
     background: #7695ad;
 }
+
+.answer-votes {
+    display: none;
+}
+
+.votes .item {
+    cursor: pointer;
+}

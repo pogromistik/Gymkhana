@@ -112,7 +112,7 @@ $(document).ready(function () {
     initAffixCheck();
 
     equalizer($('.votes .text'));
-    var height = $('.votes .text').height()+10;
+    var height = $('.votes .text').height() + 10;
     $('.votes .item').innerHeight(height);
     $('.votes .percent').innerHeight(height);
 });
@@ -123,6 +123,11 @@ $('.toggle .title').click(function () {
         elem.parent().find('.toggle-content').find('img').css({'max-height': $(window).height() - 65});
     }
     elem.parent().find('.toggle-content').slideToggle();
+});
+
+$('.votes .item').click(function (e) {
+    var elem = $(this);
+    elem.closest('.vote').find('.answer-votes').slideToggle();
 });
 
 $('#cityNotFound').click(function (e) {
