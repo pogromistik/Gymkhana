@@ -335,7 +335,7 @@ class RequestForSpecialStage extends BaseActiveRecord
 			/** @var AthletesClass $resultClass */
 			$resultClass = AthletesClass::find()->where(['>', 'percent', $request->percent])
 				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
-			if ($resultClass && $resultClass->id != $request->id) {
+			if ($resultClass && $resultClass->id != $request->athleteClassId) {
 				if ($stageClass->percent > $resultClass->percent) {
 					if ($stageClass->id != $request->athleteClassId && $stageClass->percent < $request->athleteClass->percent
 						&& $stageClass->id != $request->newAthleteClassId
@@ -345,6 +345,8 @@ class RequestForSpecialStage extends BaseActiveRecord
 				} elseif (!$request->athleteClassId ||
 					$request->athleteClass->percent > $resultClass->percent && $request->newAthleteClassId != $resultClass->id
 				) {
+					return $resultClass->id;
+				} elseif ($resultClass->id == $request->newAthleteClassId) {
 					return $resultClass->id;
 				}
 			}
