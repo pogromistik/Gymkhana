@@ -249,7 +249,7 @@ class Participant extends BaseActiveRecord
 			/** @var AthletesClass $resultClass */
 			$resultClass = AthletesClass::find()->where(['>', 'percent', $participant->percent])
 				->orderBy(['percent' => SORT_ASC, 'title' => SORT_DESC])->one();
-			if ($resultClass && $resultClass->id != $participant->id) {
+			if ($resultClass && $resultClass->id != $participant->athleteClassId) {
 				if ($stageClass->percent > $resultClass->percent) {
 					if ($stageClass->id != $participant->athleteClassId && $stageClass->percent < $participant->athleteClass->percent
 						&& $stageClass->id != $participant->newAthleteClassId
@@ -260,6 +260,8 @@ class Participant extends BaseActiveRecord
 					$participant->athleteClass->percent > $resultClass->percent && $participant->newAthleteClassId != $resultClass->id
 				) {
 					return $resultClass->id;
+				} elseif ($participant->newAthleteClassId == $resultClass->id) {
+					return $participant->newAthleteClassId;
 				}
 			}
 		}
