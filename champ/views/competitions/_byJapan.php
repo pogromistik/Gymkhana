@@ -39,20 +39,8 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
 				if ($times) {
 					$first = reset($times);
 				}
-				$cssClass = 'default';
-				$participantClass = null;
-				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
-					$cssClass = 'needClarificationParticipant';
-				} else {
-					if ($participant->athleteClassId) {
-						$participantClass = $participant->athleteClass;
-						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
-						}
-					}
-				}
 				?>
-                <tr class="result-<?= $cssClass ?>">
+                <tr class="<?= $participant->getCssClass() ?>">
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->athleteClassId ? $participant->athleteClass->title : null ?></td>
                     <td rowspan="<?= $stage->countRace ?>">
 						<?= $participant->tmpPlaceInAthleteClass ?: $participant->placeOfAthleteClass ?>
@@ -84,7 +72,7 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"><?= $participant->tmpPlace ?: $participant->place ?></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $participant->percent ?>%
+                    <td rowspan="<?= $stage->countRace ?>" class="<?= $participant->getCssClass(true) ?>"><?= $participant->percent ?>%
 						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
                             (<?= $participant->newAthleteClass->title ?>)
 						<?php } ?>
@@ -98,7 +86,7 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
 						$next = next($times);
 					}
 					?>
-                    <tr class="result-<?= $cssClass ?>">
+                    <tr class="<?= $participant->getCssClass() ?>">
                         <td><?= $attempt ?>.</td>
 						<?php if ($next) { ?>
                             <td>
@@ -230,7 +218,7 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
 					<?php } ?>
                     <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->humanBestTime ?></td>
                     <td rowspan="<?= $stage->countRace ?>"></td>
-                    <td rowspan="<?= $stage->countRace ?>"><?= $outParticipant->percent ?>%
+                    <td rowspan="<?= $stage->countRace ?>" class="<?= $participant->getCssClass(true) ?>"><?= $outParticipant->percent ?>%
 						<?php if ($outParticipant->newAthleteClassId && $outParticipant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
                             (<?= $outParticipant->newAthleteClass->title ?>)
 						<?php } ?>
@@ -298,21 +286,8 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
 			foreach ($participants as $participant) {
 				$athlete = $participant->athlete;
 				$times = $participant->times;
-				
-				$cssClass = 'default';
-				$participantClass = null;
-				if ($participant->status === \common\models\Participant::STATUS_NEED_CLARIFICATION) {
-					$cssClass = 'needClarificationParticipant';
-				} else {
-					if ($participant->athleteClassId) {
-						$participantClass = $participant->athleteClass;
-						if (isset(\common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
-							$cssClass = \common\models\Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
-						}
-					}
-				}
 				?>
-                <tr class="result-<?= $cssClass ?>">
+                <tr class="<?= $participant->getCssClass() ?>">
                     <td><?= $participant->tmpPlace ?: $participant->place ?>
                         / <?= $participant->tmpPlaceInAthleteClass ?: $participant->placeOfAthleteClass ?></td>
                     <td>
@@ -364,7 +339,7 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
                             <br><?= $video ?>
 						<?php } ?>
                     </td>
-                    <td><?= $participant->percent ?>%
+                    <td class="<?= $participant->getCssClass(true) ?>"><?= $participant->percent ?>%
 						<?php if ($participant->newAthleteClassId && $participant->newAthleteClassStatus == \common\models\Participant::NEW_CLASS_STATUS_APPROVE) { ?>
                             (<?= $participant->newAthleteClass->title ?>)
 						<?php } ?>

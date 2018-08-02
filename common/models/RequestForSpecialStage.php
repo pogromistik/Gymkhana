@@ -354,4 +354,21 @@ class RequestForSpecialStage extends BaseActiveRecord
 		
 		return null;
 	}
+	
+	public function getCssClass($forNewClass = false)
+	{
+		$participantClass = $forNewClass ? $this->newAthleteClass : $this->athleteClass;
+		$cssClass = 'default';
+		if ($this->status === self::STATUS_NEED_CLARIFICATION) {
+			$cssClass = 'needClarificationParticipant';
+		} else {
+			if ($participantClass) {
+				if (isset(Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+					$cssClass = Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				}
+			}
+		}
+		
+		return 'result-' . $cssClass;
+	}
 }

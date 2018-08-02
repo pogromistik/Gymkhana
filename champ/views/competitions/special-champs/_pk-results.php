@@ -64,14 +64,18 @@ if (\Yii::$app->language != \common\models\TranslateMessage::LANGUAGE_RU) {
                 <td><?= \yii\helpers\Html::a($participant->timeHuman, ['athlete-progress', 'id' => $participant->id]) ?></td>
                 <td><?= $participant->fine ?></td>
                 <td><?= \yii\helpers\Html::a($participant->resultTimeHuman, ['athlete-progress', 'id' => $participant->id]) ?></td>
-                <td>
-					<?= $participant->percent ? $participant->percent . '%' : '' ?>
-					<?php if ($participant->newAthleteClassId
-						&& $participant->newAthleteClassStatus == \common\models\RequestForSpecialStage::STATUS_APPROVE
-					) { ?>
+				<?php if ($participant->newAthleteClassId
+					&& $participant->newAthleteClassStatus == \common\models\RequestForSpecialStage::STATUS_APPROVE
+				) { ?>
+                    <td class="result-<?= \common\models\Athlete::$classesCss[$participant->newAthleteClass->title] ?>">
+						<?= $participant->percent ? $participant->percent . '%' : '' ?>
                         &nbsp;(<?= $participant->newAthleteClass->title ?>)
-					<?php } ?>
-                </td>
+                    </td>
+				<?php } else { ?>
+                    <td class="result-default">
+						<?= $participant->percent ? $participant->percent . '%' : '' ?>
+                    </td>
+				<?php } ?>
                 <th><a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a>
                 </th>
             </tr>

@@ -383,4 +383,24 @@ class Participant extends BaseActiveRecord
 	{
 		return $this->hasOne(AthletesClass::className(), ['id' => 'newAthleteClassId']);
 	}
+	
+	public function getCssClass($forNewClass = false)
+	{
+		$participantClass = $forNewClass ? $this->newAthleteClass : $this->athleteClass;
+		$cssClass = 'default';
+		if ($forNewClass && $this->newAthleteClassStatus != self::NEW_CLASS_STATUS_APPROVE) {
+			return 'result-' . $cssClass;
+		}
+		if ($this->status === self::STATUS_NEED_CLARIFICATION) {
+			$cssClass = 'needClarificationParticipant';
+		} else {
+			if ($participantClass) {
+				if (isset(Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')])) {
+					$cssClass = Athlete::$classesCss[mb_strtoupper($participantClass->title, 'UTF-8')];
+				}
+			}
+		}
+		
+		return 'result-' . $cssClass;
+	}
 }

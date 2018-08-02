@@ -839,11 +839,14 @@ a.deletePhoto {
 
 .result-white {
     background: #ffffff;
-    color: #000000;
 }
 
 .result-scheme {
     display: none;
+}
+
+.result-default {
+    background: #f4f4f4;
 }
 
 .result-scheme.active {

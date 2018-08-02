@@ -60,14 +60,18 @@ $lang = \Yii::$app->language;
                     &nbsp;
                     <a href="<?= $participant->videoLink ?>" class="big-icon"><span class="fa fa-youtube"></span></a>
                 </td>
-                <td>
+	            <?php if ($participant->newAthleteClassId
+	            && $participant->newAthleteClassStatus == \common\models\RequestForSpecialStage::STATUS_APPROVE
+	            ) { ?>
+                <td class="result-<?= \common\models\Athlete::$classesCss[$participant->newAthleteClass->title] ?>">
 					<?= $participant->percent ? $participant->percent . '%' : '' ?>
-					<?php if ($participant->newAthleteClassId
-						&& $participant->newAthleteClassStatus == \common\models\RequestForSpecialStage::STATUS_APPROVE
-					) { ?>
                         &nbsp;(<?= $participant->newAthleteClass->title ?>)
-					<?php } ?>
                 </td>
+	            <?php } else { ?>
+                    <td class="result-default">
+			            <?= $participant->percent ? $participant->percent . '%' : '' ?>
+                    </td>
+	            <?php } ?>
             </tr>
 		<?php } ?>
         </tbody>
