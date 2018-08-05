@@ -6,10 +6,20 @@
 ?>
 
     <div class="card-box">
-        <h3><?= $interview->getTitle() ?></h3>
+        <h3><?= $interview->getTitle() ?>
+			<?php if ($interview->dateEnd < time()) { ?>
+                <small><label class="label label-primary"><?= \Yii::t('app', 'опрос завершён') ?></label></small>
+			<?php } ?>
+        </h3>
         <div>
 			<?= $interview->getDescription() ?>
         </div>
+		<?php if ($interview->dateEnd >= time()) { ?>
+            <div>
+				<?= \Yii::t('app', 'Завершение голосования:') ?> <?= $interview->dateEndHuman ?>
+                (<?= \Yii::t('app', 'Москва') ?>, UTC +3)
+            </div>
+		<?php } ?>
     </div>
 
     <h4><?= \Yii::t('app', 'Варианты:') ?></h4>
