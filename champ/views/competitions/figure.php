@@ -16,7 +16,7 @@ $time = time();
 ?>
 
 <div class="row figure">
-    <div class="col-bg-7 col-lg-9 col-md-10 col-sm-12">
+    <div class="col-bg-8 col-lg-9 col-md-10 col-sm-12">
         <div class="title-with-bg">
 			<?= $figure->title ?>
 			<?php if ($year) { ?>
@@ -282,7 +282,7 @@ $time = time();
             <?= \Yii::t('app', 'Вернуться к фигурам') ?></a>
     </div>
 
-    <div class="col-bg-5 col-lg-3 col-md-2 col-sm-12 list-nav">
+    <div class="col-bg-4 col-lg-3 col-md-2 col-sm-12 list-nav">
 		<?php
 		$all = Figure::getAll($figure->id);
 		if ($all) {
