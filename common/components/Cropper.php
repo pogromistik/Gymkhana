@@ -50,10 +50,15 @@ class Cropper extends CutterBehavior {
 			$palette = new \Imagine\Image\Palette\RGB();
 			$color = $palette->color('fff', 0);
 			
+			if ($cropping['dataWidth'] >= 600) {
+				$resizeBox = new Box(600, 800);
+			} else {
+				$resizeBox = new Box($cropping['dataWidth'], $cropping['dataHeight']);
+			}
 			Image::frame($uploadImage->tempName, 0, 'fff', 0)
 				->rotate($cropping['dataRotate'], $color)
 				->crop($point, $box)
-				->resize(new Box(600, 800))
+				->resize($resizeBox)
 				->save($fileSavePath, ['quality' => $this->quality]);
 			
 			$this->owner->{$attribute} = '/' . $this->baseDir . '/' . $croppingFileName . $croppingFileExt;
