@@ -15,7 +15,7 @@ class Cropper extends CutterBehavior {
 		$class = \yii\helpers\StringHelper::basename(get_class($this->owner)) . 'Cutter';
 		
 		if ($uploadImage = UploadedFile::getInstance($this->owner, $attribute)) {
-			if ($uploadImage->size > 512000) {
+			if ($uploadImage->size > 1500000) {
 				return false;
 			}
 
