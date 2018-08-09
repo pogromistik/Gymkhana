@@ -53,6 +53,7 @@ class Cropper extends CutterBehavior {
 			Image::frame($uploadImage->tempName, 0, 'fff', 0)
 				->rotate($cropping['dataRotate'], $color)
 				->crop($point, $box)
+				->resize(new Box(600, 800))
 				->save($fileSavePath, ['quality' => $this->quality]);
 			
 			$this->owner->{$attribute} = '/' . $this->baseDir . '/' . $croppingFileName . $croppingFileExt;
