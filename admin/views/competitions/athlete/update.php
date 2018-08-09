@@ -22,12 +22,14 @@ $this->params['breadcrumbs'][] = 'Редактирование';
         <div class="alert alert-success">Изменения успешно сохранены</div>
 	<?php } ?>
 	
-	<?php if (!$model->hasAccount) { ?>
-		<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-			['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
-	<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
-		<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
-			['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
+	<?php if (\common\helpers\UserHelper::accessAverage($model->regionId, $model->creatorUserId)) { ?>
+		<?php if (!$model->hasAccount) { ?>
+			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
+				['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
+		<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
+			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
+				['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
+		<?php } ?>
 	<?php } ?>
 
     <div class="with-bottom-border">
@@ -167,7 +169,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 								'select'    => [
 									'width' => '124px'
 								],
-								'source'    =>  [
+								'source'    => [
 									2 => 'Нет',
 									1 => 'Да'
 								],
@@ -196,6 +198,6 @@ $this->params['breadcrumbs'][] = 'Редактирование';
             </tbody>
         </table>
 	<?php } ?>
-    
-    <?= $this->render('_img_edit', ['athlete' => $model]) ?>
+	
+	<?= $this->render('_img_edit', ['athlete' => $model]) ?>
 </div>

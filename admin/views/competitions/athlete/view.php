@@ -18,13 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
 		<?php if (\common\helpers\UserHelper::accessAverage($model->regionId, $model->creatorUserId)) { ?>
 			<?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-my-style btn-blue']) ?>
-		<?php } ?>
-		<?php if (!$model->hasAccount) { ?>
-			<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
-				['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
-		<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
-			<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
-				['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
+			<?php if (!$model->hasAccount) { ?>
+				<?= Html::a('Создать кабинет', ['create-cabinet', 'id' => $model->id],
+					['class' => 'btn btn-my-style btn-orange createCabinet', 'data-id' => $model->id]) ?>
+			<?php } elseif (\Yii::$app->user->can('projectOrganizer')) { ?>
+				<?= Html::a('Удалить кабинет', ['delete-cabinet', 'id' => $model->id],
+					['class' => 'btn btn-my-style btn-red deleteCabinet', 'data-id' => $model->id]) ?>
+			<?php } ?>
 		<?php } ?>
     </p>
 	
@@ -96,9 +96,12 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     Постарайтесь не перепутать марку и модель :)<br>
     Параметры для уже созданных мотоциклов можно редактировать - для этого необходимо нажать на нужное поле.
-    Если ничего не происходит - значит, у вас недостаточно прав для совершения этого действия. Для решения проблемы вы можете обратиться
-    к организатору своего региона или напрямую к <a href="https://vk.com/id19792817" target="_blank">разработчику</a>.<br>
-    Красная кнопка - "удаление" мотоцикла. Фактически, при этом он лишь блокируется и в любой момент его можно вернуть обратно
+    Если ничего не происходит - значит, у вас недостаточно прав для совершения этого действия. Для решения проблемы вы
+    можете обратиться
+    к организатору своего региона или напрямую к <a href="https://vk.com/id19792817"
+                                                    target="_blank">разработчику</a>.<br>
+    Красная кнопка - "удаление" мотоцикла. Фактически, при этом он лишь блокируется и в любой момент его можно вернуть
+    обратно
     (кнопка удаления сменится на кнопку возврата).
 </div>
 <?= $this->render('_motorcycle-form', [
