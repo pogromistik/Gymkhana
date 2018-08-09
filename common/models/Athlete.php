@@ -180,8 +180,8 @@ class Athlete extends BaseActiveRecord implements IdentityInterface
 			['number', 'integer', 'min' => 1],
 			['number', 'integer', 'max' => 999],
 			['photo', 'file', 'extensions' => 'jpg, jpeg, png', 'mimeTypes' => 'image/jpeg, image/png',
-			                  'maxFiles'   => 1, 'maxSize' => 1024000,
-			                  'tooBig'     => 'Размер файла не должен превышать 1024КБ'],
+			                  'maxFiles'   => 1, 'maxSize' => 1500000,
+			                  'tooBig'     => 'Размер файла не должен превышать 1.5МБ'],
 			['language', 'default', 'value' => TranslateMessage::LANGUAGE_RU]
 		];
 	}
