@@ -463,7 +463,7 @@ class SpecialChampController extends BaseController
 					], $language);
 				$sendText .= '<br>' . $text;
 				if (mb_stripos($email, '@', null, 'UTF-8')) {
-					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $sendText])
+					\Yii::$app->mailer->compose('@common/mail/text', ['text' => $sendText, 'language' => $language])
 						->setTo($email)
 						->setFrom(['support@gymkhana-cup.ru' => 'GymkhanaCup'])
 						->setSubject('gymkhana-cup: ' . \Yii::t('app', 'ваш результат отклонён', [], $language))
