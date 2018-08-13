@@ -23,8 +23,11 @@ $this->title = 'Статистика по Gymkhana GP 2018';
             <td><?= $countAll ?></td>
         </tr>
         <tr>
-            <td>Из них уникальных:</td>
-            <td><?= $byStatus[\common\models\RequestForSpecialStage::STATUS_IN_ACTIVE]["count"] ?></td>
+            <td>Из них уникальных:
+                <br>
+                <small>(т.е. если взять только лучшие результаты спортсменов)</small>
+            </td>
+            <td><?= $byStatus[\common\models\RequestForSpecialStage::STATUS_APPROVE]["count"] ?></td>
         </tr>
         <tr>
             <td>Отклонено из-за несоответствия требованиям:</td>
