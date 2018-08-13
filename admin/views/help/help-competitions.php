@@ -3,10 +3,27 @@
  * @var \yii\web\View $this
  */
 
-$this->title = 'Gymkhana Cup и все её обитатели приветствуют Вас в админке';
+$this->title = 'Gymkhana Cup: админка';
 ?>
 
+<?php if (\Yii::$app->user->can("changeSpecialChamps")) { ?>
+    <div class="pb-10">
+		<?= \yii\helpers\Html::a('Статистика по GGP 2018', ['/competitions/stats/special-champ'], ['class' => 'btn btn-my-style btn-warning']) ?>
+    </div>
+<?php } ?>
+
 <div class="alert required-alert-info">
+    <h4><b>Обновления от 13.08.2018</b></h4>
+    <ul>
+        <li>
+            Почти год не обновляла эту страницу. Это не значит, что ничего не менялось. Это значит, что я слишком ленива
+            для этого :(
+            Но ведь всё равно этот текст никто не читает, да ведь?
+        </li>
+    </ul>
+
+    <br>
+
     <h4><b>Обновления от 20.10.2017</b></h4>
     <ul>
         <li>
