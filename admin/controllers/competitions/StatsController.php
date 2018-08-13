@@ -71,6 +71,8 @@ class StatsController extends BaseController
 			}
 		}
 		ksort($byClasses);
+		uasort($byCountries, "self::cmp");
+		uasort($byCities, "self::cmp");
 		
 		return $this->render('special-champ', [
 			'byClasses'   => $byClasses,
@@ -80,5 +82,10 @@ class StatsController extends BaseController
 			'unique'      => $unique,
 			'countAll'    => $countAll
 		]);
+	}
+	
+	private function cmp($a, $b)
+	{
+		return ($a['count'] > $b['count']) ? -1 : 1;
 	}
 }
