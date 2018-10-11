@@ -1,3 +1,67 @@
+$('.groupByInternalClasses').click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    bootbox.dialog({
+        locale: 'ru',
+        title: 'Группировка спортсменов',
+        message: 'Нажатие на эту кнопку устанавливает порядок выступления: спортсмены будут сгруппированы по классам, а внутри классов отсортированы по стартовым номерам. Нажмите "подтвердить", чтобы продолжить',
+        className: 'info',
+        buttons: {
+            cancel: {
+                label: 'Отмена',
+                className: "btn-danger",
+                callback: function () {
+                    return true;
+                }
+            },
+            confirm: {
+                label: 'Подтвердить',
+                className: "btn-success",
+                callback: function () {
+                    showBackDrop();
+                    $.get('/competitions/participants/group-by-internal-classes', {
+                        id: id
+                    }).done(function (data) {
+                        hideBackDrop();
+                        if (data['success'] == true) {
+                            location.reload();
+                        } else {
+                            alert(data['text']);
+                        }
+                    }).fail(function (error) {
+                        hideBackDrop();
+                        alert(error.responseText);
+                    });
+                }
+            }
+        }
+    });
+});
+
+/*
+$('.printList').click(function (e) {
+    e.preventDefault();
+    var elem = $(this);
+    var win = window.open(elem.attr('href'));
+});
+*/
+
+$('.approveTrack').click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    $.get('/competitions/training-tracks/approve', {
+        id: id
+    }).done(function (data) {
+        if (data == true) {
+            location.reload(true);
+        } else {
+            BootboxError(data);
+        }
+    }).fail(function (error) {
+        BootboxError(error.responseText);
+    });
+});
+
 $(document).on("submit", '#newAthlete', function (e) {
     e.preventDefault();
     var form = $(this);
