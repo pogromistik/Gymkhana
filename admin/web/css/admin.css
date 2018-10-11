@@ -1,8 +1,20 @@
+@font-face {
+    font-family: JapanBrush; /* Гарнитура шрифта */
+    src: url(/fonts/JapanBrush.ttf); /* Для IE5-8 */
+    src: local(pompadur), url(/fonts/JapanBrush.ttf); /* Для остальных браузеров */
+}
+
+.diploma {
+    font-family: "JapanBrush";
+}
+
 html,
 body {
     height: 100%;
 }
-
+/** {
+    font-size: 14px;
+}*/
 .wrap {
     min-height: 100%;
     height: auto;
