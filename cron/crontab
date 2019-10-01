@@ -1,9 +1,0 @@
-SHELL=/bin/bash
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-0 * * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii cron/change-stages-status >> /var/log/cron.log
-0 0 * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii cron/change-championships-status >> /var/log/cron.log
-0 0 * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii cron/change-photo-status >> /var/log/cron.log
-0 0 * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii cron/check-size >> /var/log/cron.log
-30 * * * * docker exec docker_phpfpm_1 php /var/www/gymkhana/yii cron/send-subscriptions >> /var/log/cron.log
-0 0 * * * certbot renew
-0 0 * * * sh /hdd/backups/backup.sh >> /var/log/cron.log 2>&1
