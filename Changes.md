@@ -1,3 +1,6 @@
+# Лето 2020
+Hacktoberfest
+
 # Лето 2019
 Hacktoberfest
 
